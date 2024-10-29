@@ -10,6 +10,12 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        customBg: "#cad3cc",
+        customText: "var(--text-color)",
+        primary: "var(--primary-color)"
+      },
+      fontFamily: {
+        inter: "var(--theme-font)"
       },
     },
   },
