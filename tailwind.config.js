@@ -10,7 +10,8 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        customBg: "#cad3cc",
+        customBg: "#d6dee5",
+        customBg2: "#3C96B5",
         customText: "var(--text-color)",
         primary: "var(--primary-color)"
       },

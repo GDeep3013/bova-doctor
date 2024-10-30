@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+    @@map("session") // Map to the sessions table
+
+}
+
+
+
+model Order {
+  id              BigInt   @id @default(autoincrement())
+  order_id        BigInt
+  order_name      String
+  note            String?
+  customer_id     BigInt
+  customer_name   String
+  customer_email  String
+  item_count      String
+  total           String
+  payment_status  String
+  delivery_status String
+  delivery_method String
+  fullfilement    String
+  order_date      DateTime
+  patientId       BigInt?
+    @@map("orders") // Map to the orders table
+
+}
+
+model Doctor {
+  id               Int      @id @default(autoincrement())
+  firstName        String
+  lastName         String
+  email            String   @unique
+  password         String?   
+  phone            String?
+  specialty       String
+  resetToken       String?  // Token to reset password
+  resetTokenExpiry DateTime?
+  createdAt        DateTime @default(now())
+  @@map("doctors")
+}
+
+model Patient {
+  id         BigInt     @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  email      String     @unique
+  phone      String?
+  doctorId   BigInt?
+    @@map("patients") // Map to the patients table
+
+}
+
+model OrderItem {
+  id          BigInt   @id @default(autoincrement())
+  orderId     BigInt
+  productName String
+  quantity    Int
+  price       Float
+    @@map("order_items") // Map to the order_items table
+
+}
+
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+      @@map("users") // Map to the order_items table
+
+}

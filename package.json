@@ -9,14 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "19.0.0-rc-69d4b800-20241021",
-    "react-dom": "19.0.0-rc-69d4b800-20241021",
-    "next": "15.0.1"
+    "@prisma/client": "^5.21.1",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "bova-doctor": "file:",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "fs": "^0.0.1-security",
+    "js-cookie": "^3.0.5",
+    "next": "15.0.1",
+    "next-auth": "^4.24.10",
+    "nodemailer": "^6.9.16",
+    "prisma": "^5.21.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "server-only": "^0.0.1",
+    "sweetalert2": "^11.14.4"
   },
   "devDependencies": {
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8",
-    "eslint-config-next": "15.0.1"
+    "eslint-config-next": "15.0.1",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
   }
 }
