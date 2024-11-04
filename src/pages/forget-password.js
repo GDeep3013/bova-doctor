@@ -39,7 +39,7 @@ export default function Forget() {
           body: JSON.stringify({ email }),
         });
         const result = await response.json();
-        console.log('Response from API:', result); 
+    
         if (response.ok) {
           Swal.fire({
             title: 'Success!',

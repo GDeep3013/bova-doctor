@@ -7,7 +7,6 @@ export default async function handler(req, res) {
 
     const { firstName, lastName, email, phone, doctorId } = req.body;
 
-    console.log(firstName, lastName, email, phone, doctorId);
     // Server-side validation
     if (!firstName || !lastName || !email || !doctorId) {
       return res.status(400).json({ error: 'Required fields are missing' });

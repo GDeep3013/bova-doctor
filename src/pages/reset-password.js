@@ -48,7 +48,7 @@ export default function ResetPage() {
                     body: JSON.stringify({ token, newPassword: password }),
                 });
                 const result = await response.json();
-                console.log('Response from API:', result);
+  
                 if (response.ok) {
                     Swal.fire({
                         title: 'Success!',

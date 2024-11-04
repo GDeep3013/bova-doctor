@@ -26,13 +26,15 @@ export default function EditPatient() {
 
     const router = useRouter();
     const { id } = router.query; // Get patient ID from query
+  console.log(id)
 
     useEffect(() => {
-        // Fetch patient data by ID
+ 
         if (id) {
             const fetchPatientData = async () => {
-                const response = await fetch(`/api/patients/${id}`);
+                const response = await fetch(`/api/patients/profile/${id}`);
                 const data = await response.json();
+               
                 if (response.ok) {
                     setFirstName(data.firstName);
                     setLastName(data.lastName);
@@ -47,10 +49,10 @@ export default function EditPatient() {
                     });
                 }
             };
-
+    
             fetchPatientData();
         }
-    }, [id, setFirstName, setLastName, setEmail, setPhone]);
+    }, [id]);
 
     const validateForm = () => {
         let valid = true;
@@ -88,7 +90,7 @@ export default function EditPatient() {
         if (validateForm()) {
             let doctorId = session?.user?.id;
             try {
-                const response = await fetch(`/api/patients/update`, {
+                const response = await fetch(`/api/patients/profile/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -104,11 +106,11 @@ export default function EditPatient() {
                         confirmButtonText: 'OK',
                     });
                     setFormSuccess(true);
-                    // Optionally redirect or clear fields
-                    router.push('/patients'); // Redirect after successful edit
+                    router.push('/patients/listing'); 
                 } else {
                     const result = await response.json();
                     const apiErrors = result.error;
+                    
                     if (apiErrors.includes('Email already exists')) {
                         setErrors({ ...errors, email: 'Email already exists' });
                     }
