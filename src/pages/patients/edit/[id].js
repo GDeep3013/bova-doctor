@@ -125,42 +125,43 @@ export default function EditPatient() {
 
     return (
         <AppLayout>
-            <div className="login-outer">
+           <div className="login-outer min-h bg-gray-50 flex flex-col p-6">
+            <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit Patient</h1>
+            <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">
-                    <div className="flex flex-wrap bg-white rounded-lg shadow-lg min-h-screen">
-                        <form onSubmit={handleSubmit} className="space-y-4 py-5 w-full max-w-screen-sm">
+                    <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC] p-8">
+                        <form onSubmit={handleSubmit} className="space-y-4 w-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="relative">
-                                <UserIcon />
                                 <input
                                     type="text"
                                     placeholder="First Name"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
-                                    className={`w-full pl-10 pr-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                             </div>
 
                             <div className="relative">
-                                <UserIcon />
                                 <input
                                     type="text"
                                     placeholder="Last Name"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
-                                    className={`w-full pl-10 pr-4 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                             </div>
+                            </div>
 
                             <div className="relative">
-                                <img src="/images/email.svg" alt="Email icon" className="absolute left-3 top-3 w-4 h-4" />
                                 <input
                                     type="email"
                                     placeholder="Email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className={`w-full pl-10 pr-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
@@ -171,16 +172,16 @@ export default function EditPatient() {
                                     placeholder="Phone"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
-                                    className={`w-full pl-10 pr-4 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                             </div>
 
                             <button
                                 type="submit"
-                                className="w-full py-2 bg-customBg2 text-white font-bold rounded hover:bg-customText focus:outline-none"
+                                className="min-w-[200px] py-2 bg-customBg2 text-white font-medium rounded hover:bg-customText focus:outline-none"
                             >
-                                Update Patient
+                                Update Patient Details
                             </button>
                             {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
                         </form>
