@@ -23,7 +23,7 @@ export default function Listing() {
 
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`/api/patients/${id}`, {
+                const response = await fetch(`/api/patients/profile/${id}`, {
                     method: 'DELETE',
                 });
 

@@ -28,7 +28,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
         }`}
       >
         <div className="flex items-center space-x-2 mb-4">
-          <Link href="/">
+          <Link href="/dashboard">
             <img src='/images/dash-logo.png' alt='Logo' className='max-w-[187px]'/>
            </Link>
         </div>
