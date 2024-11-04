@@ -7,6 +7,7 @@ export default async function handler(req, res) {
 
     const { firstName, lastName, email, phone, doctorId } = req.body;
 
+    console.log(firstName, lastName, email, phone, doctorId);
     // Server-side validation
     if (!firstName || !lastName || !email || !doctorId) {
       return res.status(400).json({ error: 'Required fields are missing' });
@@ -25,11 +26,11 @@ export default async function handler(req, res) {
 
     if (existingDoctor) {
       const errors = [];
-      if (existingDoctor.email === email) {
-        errors.push('Email already exists');
-      }
       if (existingDoctor.phone === phone) {
         errors.push('Phone number already exists');
+      }
+      if (existingDoctor.email === email) {
+        errors.push('Email already exists');
       }
       return res.status(400).json({ error: errors });
     }
