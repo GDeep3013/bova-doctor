@@ -23,6 +23,10 @@ export default function MyApp({ Component, pageProps }) {
         router.push('/dashboard');
       }
     }
+
+    if (!session && !guestRoutes.includes(router.pathname)) {
+      router.push('/login');
+    }
   };
   
   useEffect(() => {
