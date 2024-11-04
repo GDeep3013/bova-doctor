@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import AppLayout from '../../components/Applayout';
 import { UserIcon } from '../../components/svg-icons/icons';
-import Link from 'next/link';
-
+import { useSession } from 'next-auth/react';
+import Swal from 'sweetalert2';
 export default function Create() {
+    const { data } = useSession()
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -45,26 +46,39 @@ export default function Create() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
+            let doctorId = data?.user?.id
             try {
                 const response = await fetch('/api/patients/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ firstName, lastName, email, phone }),
+                    body: JSON.stringify({ firstName, lastName, email, phone, doctorId }),
                 });
-                
+
                 if (response.ok) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Patient added successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
                     setFormSuccess(true);
                     // Clear form
                     setFirstName('');
                     setLastName('');
                     setEmail('');
                     setPhone('');
-                    setDoctorId('');
                 } else {
                     const result = await response.json();
-                    setErrors({ apiError: result.error });
+                    const errors = result.error;
+                    if (errors.includes('Email already exists')) {
+                        setErrors({ ...errors, email: 'Email already exists' });
+                    }
+                    if (errors.includes('Phone number already exists')) {
+                        setErrors({ ...errors, phone: 'Phone number already exists' });
+                    }
+                    // setErrors({ apiError: result.error });
                 }
             } catch (error) {
                 console.error('Error during patient creation:', error);
@@ -132,13 +146,15 @@ export default function Create() {
                             >
                                 Create Patient
                             </button>
-
-                            {formSuccess && <p className="text-green-500 text-sm mt-3">Patient created successfully!</p>}
                             {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
                         </form>
                     </div>
                 </div>
             </div>
+
+            {/* <Listing/> */}
         </AppLayout>
     );
 }
+
+

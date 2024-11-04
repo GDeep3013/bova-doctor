@@ -1,13 +1,21 @@
 
-import React, { useState } from 'react'
-import { signIn, getSession } from 'next-auth/react';
+import React, { useState, useEffect } from 'react'
+import { signIn } from 'next-auth/react';
 import Link from 'next/link'
+import { useRouter } from 'next/router';
 export default function LoginForm() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  
+  useEffect(() => {
+    if (router.query.error) {
+      setLoginError(router.query.error); // Display error from the URL query
+    }
+  }, [router.query.error]);
 
   const validateForm = () => {
     let valid = true;
@@ -36,7 +44,7 @@ export default function LoginForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (validateForm()) {
       try {
         const result = await signIn('credentials', {
@@ -44,12 +52,16 @@ export default function LoginForm() {
           email,
           password,
         });
-        console.log('result',result)
+        if (result?.error) {
+          setLoginError(result.error);
+        } else {
+          router.push('/dashboard');
+        }
 
-    
+
       } catch (error) {
         console.error('Error during login:', error);
-        setLoginError('Internal server error'); 
+        setLoginError('Internal server error');
       }
     }
   };
@@ -91,10 +103,10 @@ export default function LoginForm() {
                 </label>
                 <Link href="/forget-password" className="text-blue-600 text-sm">Forgot Password?</Link>
               </div>
-             
+
               <button type="submit" className="w-full py-2 bg-customBg text-white font-bold rounded hover:bg-customText focus:outline-none">Sign In</button>
-              <p className='text-center'> Don't have an account? <Link href="/register" className='font-bold text-customBg2'>Create Account</Link> </p>
-            
+              <p className='text-center'> Don&apos;t have an account? <Link href="/register" className='font-bold text-customBg2'>Create Account</Link> </p>
+
             </form>
           </div>
         </div>

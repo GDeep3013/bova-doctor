@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { signOut,getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 export default function Sidebar({ isOpen, isSidebarOpen }) {
+  const router = useRouter();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isPatientsOpen, setIsPatientsOpen] = useState(false);
@@ -11,12 +12,11 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const togglePatients = () => setIsPatientsOpen(!isPatientsOpen);
   const togglePlans = () => setIsPlansOpen(!isPlansOpen);
-  const router = useRouter();
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
     router.push('/');
-  };
+  }; 
 
   return (
     <div className={`flex ${isSidebarOpen ? 'menu-open' : ''}`}>
@@ -57,7 +57,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
             </button>
             {isPatientsOpen && (
               <ul className="pl-4 space-y-1">
-                <li><Link href="/search" className="block hover:text-gray-900">Search</Link></li>
+                <li><Link href="/patients/listing" className="block hover:text-gray-900">Search</Link></li>
               </ul>
             )}
           </div>
