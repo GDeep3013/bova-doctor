@@ -4,17 +4,9 @@ import prisma from '../../../lib/prisma';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        // Get the user's session
-        const session = await getSession({ req });
 
-        // Check if the user is logged in and retrieve doctorId
-        if (!session || !session.user || !session.user.id) {
-            return res.status(401).json({ error: 'Unauthorized: No user session found', session:session });
-        }
 
-        const doctorId = session.user.id; // Assuming doctorId is stored in session.user
-
-        const { firstName, lastName, email, phone } = req.body;
+        const { firstName, lastName, email, phone,doctorId } = req.body;
 
         // Server-side validation
         if (!firstName || !lastName || !email || !doctorId) {

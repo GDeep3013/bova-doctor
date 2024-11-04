@@ -32,7 +32,7 @@ export default NextAuth({
         }
 
         // If login is successful, return user object
-        return { id: user._id, email: user.email };
+        return { id: user.id, email: user.email };
       },
     }),
   ],

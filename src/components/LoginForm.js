@@ -93,7 +93,7 @@ export default function LoginForm() {
               </div>
              
               <button type="submit" className="w-full py-2 bg-customBg text-white font-bold rounded hover:bg-customText focus:outline-none">Sign In</button>
-              <p className='text-center'> Don't have an account? <Link href="/register" className='font-bold text-customBg2'>Create Account</Link> </p>
+              <p className='text-center'> Don&apos;t have an account? <Link href="/register" className='font-bold text-customBg2'>Create Account</Link> </p>
             
             </form>
           </div>

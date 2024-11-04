@@ -14,6 +14,8 @@ export default function MyApp({ Component, pageProps }) {
     const guestRoutes = ['/', '/login', '/forget-password','/register', '/reset-password', '/create-password'];
     const session = await getSession();
 
+    console.log('sessionsession',session)
+
     // Check if the user is logged in
     if (session) {
       // If on the login page, redirect to the dashboard
@@ -21,6 +23,11 @@ export default function MyApp({ Component, pageProps }) {
         router.push('/dashboard');
       }
     }
+
+    if (!session && !guestRoutes.includes(router.pathname)) {
+      router.push('/login');
+    }
+    
   };
   useEffect(() => {
     checkSession();

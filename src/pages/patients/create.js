@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import AppLayout from '../../components/Applayout';
 import { UserIcon } from '../../components/svg-icons/icons';
+import { useSession } from 'next-auth/react';
+
 import Link from 'next/link';
 
 export default function Create() {
+    const { data } = useSession()
+    console.log('dataddddddd',data)
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -45,13 +49,14 @@ export default function Create() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
+            let doctorId = data?.user?.id
             try {
                 const response = await fetch('/api/patients/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ firstName, lastName, email, phone }),
+                    body: JSON.stringify({ firstName, lastName, email, phone,doctorId }),
                 });
                 
                 if (response.ok) {
@@ -61,7 +66,6 @@ export default function Create() {
                     setLastName('');
                     setEmail('');
                     setPhone('');
-                    setDoctorId('');
                 } else {
                     const result = await response.json();
                     setErrors({ apiError: result.error });
@@ -142,3 +146,5 @@ export default function Create() {
         </AppLayout>
     );
 }
+
+

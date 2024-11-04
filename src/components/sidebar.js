@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { signOut,getSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 export default function Sidebar({ isOpen, isSidebarOpen }) {
+  const router = useRouter();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isPatientsOpen, setIsPatientsOpen] = useState(false);
@@ -11,6 +13,11 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const togglePatients = () => setIsPatientsOpen(!isPatientsOpen);
   const togglePlans = () => setIsPlansOpen(!isPlansOpen);
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push('/');
+  }; 
 
   return (
     <div className={`flex ${isSidebarOpen ? 'menu-open' : ''}`}>
@@ -69,7 +76,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               </ul>
             )}
           </div>
-          <button  onClick={signOut} className="block text-gray-700 hover:text-gray-900">
+          <button  onClick={handleLogout} className="block text-gray-700 hover:text-gray-900">
             Logout
           </button>
         </nav>
