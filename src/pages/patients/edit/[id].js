@@ -1,40 +1,22 @@
 // pages/patients/EditPatient.js
 
 import AppLayout from '../../../components/Applayout';
-import { UserIcon } from '../../../components/svg-icons/icons';
 import { useAppContext } from '../../../context/AppContext';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
 
 export default function EditPatient() {
-    const {
-        session,
-        firstName,
-        lastName,
-        setFirstName,
-        setLastName,
-        email,
-        setEmail,
-        phone,
-        setPhone,
-        errors,
-        setErrors,
-        formSuccess,
-        setFormSuccess,
-    } = useAppContext();
-
     const router = useRouter();
-    const { id } = router.query; // Get patient ID from query
-  console.log(id)
+    const { id } = router.query;
+    const { session, firstName, lastName, setFirstName, setLastName, email, setEmail, phone, setPhone, errors, setErrors, setFormSuccess, } = useAppContext();
 
     useEffect(() => {
- 
         if (id) {
             const fetchPatientData = async () => {
                 const response = await fetch(`/api/patients/profile/${id}`);
                 const data = await response.json();
-               
+
                 if (response.ok) {
                     setFirstName(data.firstName);
                     setLastName(data.lastName);
@@ -49,7 +31,7 @@ export default function EditPatient() {
                     });
                 }
             };
-    
+
             fetchPatientData();
         }
     }, [id]);
@@ -57,17 +39,14 @@ export default function EditPatient() {
     const validateForm = () => {
         let valid = true;
         const newErrors = {};
-
         if (!firstName) {
             newErrors.firstName = 'First name is required';
             valid = false;
         }
-
         if (!lastName) {
             newErrors.lastName = 'Last name is required';
             valid = false;
         }
-
         if (!email) {
             newErrors.email = 'Email is required';
             valid = false;
@@ -75,12 +54,10 @@ export default function EditPatient() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
-
         if (!phone) {
             newErrors.phone = 'Phone number is required';
             valid = false;
         }
-
         setErrors(newErrors);
         return valid;
     };
@@ -97,7 +74,6 @@ export default function EditPatient() {
                     },
                     body: JSON.stringify({ id, firstName, lastName, email, phone, doctorId }),
                 });
-
                 if (response.ok) {
                     Swal.fire({
                         title: 'Success!',
@@ -106,11 +82,11 @@ export default function EditPatient() {
                         confirmButtonText: 'OK',
                     });
                     setFormSuccess(true);
-                    router.push('/patients/listing'); 
+                    router.push('/patients/listing');
                 } else {
                     const result = await response.json();
                     const apiErrors = result.error;
-                    
+
                     if (apiErrors.includes('Email already exists')) {
                         setErrors({ ...errors, email: 'Email already exists' });
                     }
@@ -127,34 +103,34 @@ export default function EditPatient() {
 
     return (
         <AppLayout>
-           <div className="login-outer min-h bg-gray-50 flex flex-col p-6">
-            <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit Patient</h1>
-            <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+            <div className="login-outer min-h bg-gray-50 flex flex-col p-6">
+                <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit Patient</h1>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">
                     <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC] p-8">
                         <form onSubmit={handleSubmit} className="space-y-4 w-full">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="First Name"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                    className={`w-full px-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
-                                />
-                                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
-                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="First Name"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        className={`w-full px-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    />
+                                    {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                                </div>
 
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Last Name"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                    className={`w-full px-4 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
-                                />
-                                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
-                            </div>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Last Name"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        className={`w-full px-4 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    />
+                                    {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                                </div>
                             </div>
 
                             <div className="relative">

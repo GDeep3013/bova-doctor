@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import AppLayout from '../../components/Applayout';
-import Swal from 'sweetalert2';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 
@@ -9,11 +8,9 @@ export default function Listing() {
     console.log('sessionsession',session?.user?.id)
 
     const [patients, setPatients] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const router = useRouter(); // 
+    const router = useRouter();
+
     const handleDelete = async (id) => {
-        // Show confirmation dialog using SweetAlert2
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: 'Once deleted, you will not be able to recover this patient!',
@@ -30,12 +27,9 @@ export default function Listing() {
                 const response = await fetch(`/api/patients/profile/${id}`, {
                     method: 'DELETE',
                 });
-
                 if (!response.ok) {
                     throw new Error("Failed to delete patient");
                 }
-
-                // Remove the deleted patient from the state
                 setPatients(patients.filter(patient => patient.id !== id));
                 Swal.fire(
                     'Deleted!',
@@ -43,32 +37,30 @@ export default function Listing() {
                     'success'
                 );
             } catch (error) {
-                setError(error.message);
+                console.log(error.message);
             }
         }
     };
 
     const handleEdit = (id) => {
-        // Redirect to the edit page
         router.push(`/patients/edit/${id}`);
     };
-    useEffect(() => {
-        const fetchPatients = async () => {
-            try {
-                const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch patients");
-                }
-                const data = await response.json();
-                console.log(data)
-                setPatients(data);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
 
+    const fetchPatients = async () => {
+        try {
+            const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch patients");
+            }
+            const data = await response.json();
+            console.log(data)
+            setPatients(data);
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
+    useEffect(() => {
         fetchPatients();
     }, []);
 
