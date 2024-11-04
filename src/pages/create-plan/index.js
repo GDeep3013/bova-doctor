@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AppLayout from '../../components/AppLayout'
 
-export default function index() {
+export default function CreatePlan() {
     const [selectedProduct, setSelectedProduct] = useState('L-01');
     const [quantity, setQuantity] = useState('5 (recommended)');
     const [frequency, setFrequency] = useState('Once Per Day (Anytime)');

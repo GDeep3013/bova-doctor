@@ -1,24 +1,21 @@
 import AppLayout from '../../components/Applayout';
-import { UserIcon } from '../../components/svg-icons/icons';
 import { useAppContext } from '../../context/AppContext';
 import Swal from 'sweetalert2';
-
+import { useRouter } from 'next/router';
 export default function Create() {
-    const { session, firstName, lastName, setFirstName, setLastName, email, setEmail, phone, setPhone, errors, setErrors, formSuccess, setFormSuccess,} = useAppContext();
+    const { session, firstName, lastName, setFirstName, setLastName, email, setEmail, phone, setPhone, errors, setErrors } = useAppContext();
+    const router = useRouter();
     const validateForm = () => {
         let valid = true;
         const newErrors = {};
-
         if (!firstName) {
             newErrors.firstName = 'First name is required';
             valid = false;
         }
-
         if (!lastName) {
             newErrors.lastName = 'Last name is required';
             valid = false;
         }
-
         if (!email) {
             newErrors.email = 'Email is required';
             valid = false;
@@ -26,12 +23,10 @@ export default function Create() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
-
         if (!phone) {
             newErrors.phone = 'Phone number is required';
             valid = false;
         }
-
         setErrors(newErrors);
         return valid;
     };
@@ -56,8 +51,6 @@ export default function Create() {
                         icon: 'success',
                         confirmButtonText: 'OK',
                     });
-                    setFormSuccess(true);
-                    // Clear form
                     setFirstName('');
                     setLastName('');
                     setEmail('');
@@ -71,7 +64,6 @@ export default function Create() {
                     if (errors.includes('Phone number already exists')) {
                         setErrors({ ...errors, phone: 'Phone number already exists' });
                     }
-                    // setErrors({ apiError: result.error });
                 }
             } catch (error) {
                 console.error('Error during patient creation:', error);
@@ -83,33 +75,33 @@ export default function Create() {
     return (
         <AppLayout>
             <div className="login-outer min-h bg-gray-50 flex flex-col p-6">
-            <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Create Patient</h1>
-            <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+                <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Create Patient</h1>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">
                     <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC] p-8">
                         <form onSubmit={handleSubmit} className="space-y-4 w-full">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="First Name"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                    className={`w-full px-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
-                                />
-                                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
-                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="First Name"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        className={`w-full px-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    />
+                                    {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                                </div>
 
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Last Name"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                    className={`w-full px-4 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
-                                />
-                                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
-                            </div>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Last Name"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        className={`w-full px-4 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    />
+                                    {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                                </div>
                             </div>
 
                             <div className="relative">
@@ -145,8 +137,6 @@ export default function Create() {
                     </div>
                 </div>
             </div>
-
-            {/* <Listing/> */}
         </AppLayout>
     );
 }
