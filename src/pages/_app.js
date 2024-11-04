@@ -6,6 +6,7 @@ import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import { useEffect } from 'react';
+import { AppProvider } from '../context/AppContext';
 
  
 export default function MyApp({ Component, pageProps }) {
@@ -27,14 +28,16 @@ export default function MyApp({ Component, pageProps }) {
     if (!session && !guestRoutes.includes(router.pathname)) {
       router.push('/login');
     }
-    
+
   };
   useEffect(() => {
     checkSession();
   }, [router]);
   return (
     <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
+       <AppProvider>
+        <Component {...pageProps} />
+        </AppProvider>
     </SessionProvider>
   );
 }

@@ -1,20 +1,10 @@
-import React, { useState } from 'react';
 import AppLayout from '../../components/Applayout';
 import { UserIcon } from '../../components/svg-icons/icons';
-import { useSession } from 'next-auth/react';
+import { useAppContext } from '../../context/AppContext';
 
-import Link from 'next/link';
 
 export default function Create() {
-    const { data } = useSession()
-    console.log('dataddddddd',data)
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [errors, setErrors] = useState({});
-    const [formSuccess, setFormSuccess] = useState(false);
-
+    const { session, firstName, lastName, setFirstName, setLastName, email, setEmail, phone, setPhone, errors, setErrors, formSuccess, setFormSuccess,} = useAppContext();
     const validateForm = () => {
         let valid = true;
         const newErrors = {};
@@ -49,7 +39,7 @@ export default function Create() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            let doctorId = data?.user?.id
+            let doctorId = session?.user?.id
             try {
                 const response = await fetch('/api/patients/create', {
                     method: 'POST',

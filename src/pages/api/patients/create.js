@@ -1,5 +1,4 @@
 // pages/api/patients.js
-import { getSession } from 'next-auth/react';
 import prisma from '../../../lib/prisma';
 
 export default async function handler(req, res) {
@@ -35,20 +34,3 @@ export default async function handler(req, res) {
     }
 }
 
-
-export async function getServerSideProps(context) {
-    const session = await getSession(context);
-  
-    if (!session) {
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false,
-        },
-      };
-    }
-  
-    return {
-      props: { session },
-    };
-  }
