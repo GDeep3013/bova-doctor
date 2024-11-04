@@ -4,7 +4,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import prisma from '../../../lib/prisma';
-// For password hashing
+
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -14,35 +14,30 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-
         const user = await prisma.doctor.findUnique({
           where: { email: credentials.email },
         });
 
-        // If user does not exist, return null
         if (!user) {
           throw new Error('No user found with this email');
         }
 
-        // Compare the hashed password with the entered password
         const isValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isValid) {
           throw new Error('Invalid password');
         }
 
-        // If login is successful, return user object
         return { id: user.id, email: user.email };
       },
     }),
   ],
   pages: {
-    signIn: '/login',
-    signOut: '/logout',
-    error: '/login',
+    signIn: '/login'
   },
   session: {
-    jwt: true, // Use JSON Web Tokens for session
+    strategy: 'jwt', // Use JSON Web Tokens for session
+    maxAge: 24 * 60 * 60, // Set session to last 1 day (24 hours)
   },
   callbacks: {
     async jwt({ token, user }) {

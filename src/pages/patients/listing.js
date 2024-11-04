@@ -1,9 +1,12 @@
 import AppLayout from '../../components/Applayout';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
-
 export default function Listing() {
+    const { data: session } = useSession();
+    console.log('sessionsession',session?.user?.id)
+
     const [patients, setPatients] = useState([]);
     const router = useRouter();
 
@@ -45,16 +48,17 @@ export default function Listing() {
 
     const fetchPatients = async () => {
         try {
-            const response = await fetch('/api/patients/getPatients');
+            const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
             }
             const data = await response.json();
+            console.log(data)
             setPatients(data);
         } catch (error) {
-            console.log(error.message);
+            setError(error.message);
         }
-    };
+    }
 
     useEffect(() => {
         fetchPatients();

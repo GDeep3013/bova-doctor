@@ -34,7 +34,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
         </div>
 
         <nav className="space-y-4 pt-3">
-          <Link href="/" className="block text-gray-700 hover:text-gray-900">
+          <Link href="/dashboard" className="block text-gray-700 hover:text-gray-900">
             Home
           </Link>
           {/* Profile Dropdown */}
@@ -82,21 +82,4 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
 }
