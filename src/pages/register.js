@@ -1,20 +1,13 @@
 
-import React, { useState } from 'react'
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useAppContext } from '../context/AppContext';
 
 export default function RegisterPage() {
+  const { session,specialty, setSpecialty, phone, setPhone,firstName,setFirstName,lastName,setLastName,password, email,setEmail,showPassword,setPassword,setConfirmPassword,setShowPassword, errors, setErrors, setLoginError, loginError} = useAppContext();
+
   const router = useRouter()
-  const [firstName, setfirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [specialty, setSpecialty] = useState('');
-  const [errors, setErrors] = useState({ email: '', password: '' });
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginError, setLoginError] = useState("");
 
   const validateForm = () => {
     let valid = true;
@@ -127,7 +120,7 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-4 py-5 w-full max-w-screen-sm">
               <div className="relative">
 
-                <input type="text" placeholder="First Name" value={firstName} onChange={(e) => { setfirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' }); }} className={`w-full pl-2 pr-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
+                <input type="text" placeholder="First Name" value={firstName} onChange={(e) => { setFirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' }); }} className={`w-full pl-2 pr-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
                 {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
               </div>
 
