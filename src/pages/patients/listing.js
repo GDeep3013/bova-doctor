@@ -2,7 +2,7 @@ import AppLayout from '../../components/Applayout';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-
+import Swal from 'sweetalert2';
 export default function Listing() {
     const { data: session } = useSession();
     console.log('sessionsession',session?.user?.id)
