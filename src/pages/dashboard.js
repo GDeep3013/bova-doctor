@@ -1,4 +1,4 @@
-"use client";
+
 import { useAppContext } from '../context/AppContext';
 import Link from 'next/link';
 import AppLayout from '../components/Applayout'
