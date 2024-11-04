@@ -1,6 +1,7 @@
 import AppLayout from '../../components/Applayout';
 import { UserIcon } from '../../components/svg-icons/icons';
 import { useAppContext } from '../../context/AppContext';
+import Swal from 'sweetalert2';
 
 
 export default function Create() {
