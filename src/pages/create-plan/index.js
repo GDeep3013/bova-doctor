@@ -1,5 +1,6 @@
+
+import AppLayout from 'components/Applayout';
 import React, { useState } from 'react';
-import AppLayout from '../../components/AppLayout'
 
 export default function CreatePlan() {
     const [selectedProduct, setSelectedProduct] = useState('L-01');

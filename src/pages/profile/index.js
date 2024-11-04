@@ -1,12 +1,12 @@
 import React from 'react'
 import Link from 'next/link';
-import AppLayout from '../../components/AppLayout'
+import AppLayout from 'components/Applayout';
 
-export default function profile() {
+
+export default function Profile() {
     return (
         <AppLayout>
-            <div className="dashboard-outer flex">
-
+                 <div className="dashboard-outer flex">
                 <div className='dashboard-right w-full'>
                     <div className="min-h bg-gray-50 flex flex-col p-6">
                         <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Patient Profile</h1>
@@ -50,6 +50,6 @@ export default function profile() {
                     </div>
                 </div>
             </div>
-        </AppLayout>
+      </AppLayout>
     )
 }
