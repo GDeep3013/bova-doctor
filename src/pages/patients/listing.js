@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import AppLayout from '../../components/Applayout';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 export default function Listing() {
+    const { data: session } = useSession();
+    console.log('sessionsession',session?.user?.id)
+
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -51,7 +55,7 @@ export default function Listing() {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const response = await fetch('/api/patients/listing');
+                const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch patients");
                 }
