@@ -1,29 +1,9 @@
-.logincircle {
-    border-radius: 50%;
-    width: 524px;
-    height: 524px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) -5.48%, rgba(255, 255, 255, 0.00) 96.9%);
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-    position: relative;
-}
-.logincircle::after {
-    content: '';
-    width: 367px;
-    height: 367px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) -25.29%, rgba(255, 255, 255, 0.00) 97.21%);
-    border-radius: 50%;
-}
+.logincircle { border-radius: 50%; width: 524px; height: 524px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) -5.48%, rgba(255, 255, 255, 0.00) 96.9%); display: flex; align-items: center; flex-wrap: wrap; justify-content: center; align-content: center; position: relative; }
+.logincircle::after { content: ''; width: 367px; height: 367px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) -25.29%, rgba(255, 255, 255, 0.00) 97.21%); border-radius: 50%; }
 .form-checkbox{ accent-color: #cad3cc; }
 .user-icon path{ fill: #64748b; }
 .menu-open{ width: 100%; max-width:300px }
 .menu-open .-translate-x-full { --tw-translate-x: 0; }
-.min-h { height: calc(100vh - 72px); }
+.min-h { height: calc(100vh - 72px); overflow: hidden; overflow-y: auto; }
 .dashboard-right input{ accent-color: #51595B; }
+.bg-gray-200{ background-color: #D6DEE5; }

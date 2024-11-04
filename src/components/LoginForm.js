@@ -36,7 +36,7 @@ export default function LoginForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (validateForm()) {
       try {
         const result = await signIn('credentials', {
@@ -46,10 +46,10 @@ export default function LoginForm() {
         });
         console.log('result',result)
 
-    
+
       } catch (error) {
         console.error('Error during login:', error);
-        setLoginError('Internal server error'); 
+        setLoginError('Internal server error');
       }
     }
   };
@@ -89,12 +89,12 @@ export default function LoginForm() {
                   <input type="checkbox" className="form-checkbox" />
                   <span>Remember me</span>
                 </label>
-                <Link href="/forget-password" className="text-blue-600 text-sm">Forgot Password?</Link>
+                <Link href="/forget-password" className="font-medium text-customBg2">Forgot Password?</Link>
               </div>
-             
+
               <button type="submit" className="w-full py-2 bg-customBg text-white font-bold rounded hover:bg-customText focus:outline-none">Sign In</button>
               <p className='text-center'> Don&apos;t have an account? <Link href="/register" className='font-bold text-customBg2'>Create Account</Link> </p>
-            
+
             </form>
           </div>
         </div>

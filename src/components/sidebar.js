@@ -17,7 +17,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
   const handleLogout = async () => {
     await signOut({ redirect: false });
     router.push('/');
-  }; 
+  };
 
   return (
     <div className={`flex ${isSidebarOpen ? 'menu-open' : ''}`}>
@@ -44,7 +44,8 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               Profile
             </button>
             {isProfileOpen && (
-              <ul className="pl-4 space-y-1">
+              <ul className="pl-3 py-2 space-y-1">
+                <li> <Link href="/profile" className="block hover:text-gray-900">Profile</Link>  </li>
                 <li><Link href="/edit" className="block hover:text-gray-900">Edit</Link></li>
                 <li><Link href="/sales" className="block hover:text-gray-900">Sales</Link></li>
               </ul>
@@ -57,7 +58,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               Patients
             </button>
             {isPatientsOpen && (
-              <ul className="pl-4 space-y-1">
+              <ul className="pl-3 py-2 space-y-1">
                 <li><Link href="/search" className="block hover:text-gray-900">Search</Link></li>
               </ul>
             )}
@@ -69,7 +70,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               Plans
             </button>
             {isPlansOpen && (
-              <ul className="pl-4 space-y-1">
+              <ul className="pl-3 py-2 space-y-1">
                 <li><Link href="/create" className="block hover:text-gray-900">Create</Link></li>
                 <li><Link href="/review" className="block hover:text-gray-900">Review</Link></li>
                 <li><Link href="/incomplete" className="block hover:text-gray-900">Incomplete</Link></li>
