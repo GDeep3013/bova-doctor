@@ -10,7 +10,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
-  
+
   useEffect(() => {
     if (router.query.error) {
       setLoginError(router.query.error); // Display error from the URL query
@@ -101,7 +101,7 @@ export default function LoginForm() {
                   <input type="checkbox" className="form-checkbox" />
                   <span>Remember me</span>
                 </label>
-                <Link href="/forget-password" className="text-blue-600 text-sm">Forgot Password?</Link>
+                <Link href="/forget-password" className="font-medium text-customBg2">Forgot Password?</Link>
               </div>
 
               <button type="submit" className="w-full py-2 bg-customBg text-white font-bold rounded hover:bg-customText focus:outline-none">Sign In</button>
