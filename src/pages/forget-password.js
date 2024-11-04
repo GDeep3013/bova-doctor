@@ -1,14 +1,13 @@
 
 
-
-import React, { useState } from 'react'
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation'
+import { useAppContext } from '../context/AppContext';
+
 export default function Forget() {
+  const { session, email, setEmail, errors, setErrors, setLoginError, loginError} = useAppContext();
+
   const router = useRouter()
-  const [email, setEmail] = useState('');
-  const [errors, setErrors] = useState({ email: '' })
-  const [loginError, setLoginError] = useState('') 
  
   const validateForm = () => {
     let valid = true;

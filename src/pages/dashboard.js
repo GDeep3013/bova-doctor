@@ -1,21 +1,10 @@
-// src/pages/dashboard.js
-"use client";
 
-import { useState } from 'react';
-import Sidebar from '../components/sidebar';
-import Navbar from '../components/navbar';
-import { signOut,getSession } from 'next-auth/react';
+import { useAppContext } from '../context/AppContext';
 import Link from 'next/link';
 import AppLayout from '../components/Applayout'
-import { useSession } from 'next-auth/react';
 
-export default function page() {
-    const { data } = useSession()
-    console.log('data',data)
-
-    const [selectedPatient, setSelectedPatient] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+export default function Dashboard() {
+    const { session, selectedPatient, setSelectedPatient, isSidebarOpen, toggleSidebar } = useAppContext();
 
     return (
       <AppLayout>
@@ -82,21 +71,4 @@ export default function page() {
             </div>
         </AppLayout>
     )
-}
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
 }

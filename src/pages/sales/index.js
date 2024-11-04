@@ -4,7 +4,7 @@ import AppLayout from '../../components/AppLayout'
 const data = [
   { title: 'Total Patients Using BOVA', value: '24' },
   { title: 'Total of Plans', value: '100' },
-  { title: 'Total Number of Subscriptions', value: '45' },
+  { title: 'Total Number of Subscriptions ', value: '45' },
   { title: 'Total Amount Earned this Month', value: '$12,000.50' },
   { title: 'Total Amount Earned this Week', value: '$4,300.50' },
   { title: 'Total Amount Earned to Date', value: '$22,300.50' },
@@ -33,14 +33,15 @@ export default function Page() {
           <div key={index} className="p-4 border-b border-[#AFAAAC] last:border-b-0">
             <div
               className="flex justify-between items-center cursor-pointer"
-              onClick={() => togglePanel(index)}
+              // onClick={() => togglePanel(index)}
             >
               <span className="font-medium">
-                {item.title}: {openIndex === index ? item.value : ''}
+                {item.title} : {item.value}
+                 {/* {openIndex === index ? item.value : ''} */}
               </span>
               <svg
                 className={`w-5 h-5 transition-transform ${
-                  openIndex === index ? 'rotate-180' : ''
+                  openIndex === index ? '' : ''
                 }`}
                 fill="none"
                 stroke="currentColor"

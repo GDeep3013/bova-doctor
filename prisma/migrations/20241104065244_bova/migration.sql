@@ -1,12 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `user` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE `user`;
-
 -- CreateTable
 CREATE TABLE `session` (
     `id` VARCHAR(191) NOT NULL,
@@ -30,7 +21,7 @@ CREATE TABLE `session` (
 
 -- CreateTable
 CREATE TABLE `orders` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `order_id` BIGINT NOT NULL,
     `order_name` VARCHAR(191) NOT NULL,
     `note` VARCHAR(191) NULL,
@@ -44,19 +35,24 @@ CREATE TABLE `orders` (
     `delivery_method` VARCHAR(191) NOT NULL,
     `fullfilement` VARCHAR(191) NOT NULL,
     `order_date` DATETIME(3) NOT NULL,
-    `patientId` BIGINT NULL,
+    `patientId` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `doctors` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstName` VARCHAR(191) NOT NULL,
     `lastName` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NULL,
     `phone` VARCHAR(191) NULL,
-    `specialty` VARCHAR(191) NULL,
+    `specialty` VARCHAR(191) NOT NULL,
+    `resetToken` VARCHAR(191) NULL,
+    `resetTokenExpiry` DATETIME(3) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `doctors_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -64,12 +60,13 @@ CREATE TABLE `doctors` (
 
 -- CreateTable
 CREATE TABLE `patients` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstName` VARCHAR(191) NOT NULL,
     `lastName` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
-    `doctorId` BIGINT NULL,
+    `doctorId` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `patients_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -77,11 +74,12 @@ CREATE TABLE `patients` (
 
 -- CreateTable
 CREATE TABLE `order_items` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `orderId` BIGINT NOT NULL,
     `productName` VARCHAR(191) NOT NULL,
     `quantity` INTEGER NOT NULL,
     `price` DOUBLE NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -91,6 +89,7 @@ CREATE TABLE `users` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `users_email_key`(`email`),
     PRIMARY KEY (`id`)

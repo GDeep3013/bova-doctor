@@ -50,6 +50,8 @@ model Order {
   fullfilement    String
   order_date      DateTime
   patientId       Int?
+  createdAt        DateTime @default(now())
+
     @@map("orders") // Map to the orders table
 
 }
@@ -72,10 +74,11 @@ model Patient {
   id         Int     @id @default(autoincrement())
   firstName  String
   lastName   String
-  email      String     @unique
+  email      String     
   phone      String?
   doctorId   Int?
-    @@map("patients") // Map to the patients table
+  createdAt  DateTime @default(now())
+  @@map("patients") // Map to the patients table
 
 }
 
@@ -85,8 +88,8 @@ model OrderItem {
   productName String
   quantity    Int
   price       Float
-    @@map("order_items") // Map to the order_items table
-
+  createdAt        DateTime @default(now())
+ @@map("order_items") // Map to the order_items table
 }
 
 
@@ -94,6 +97,8 @@ model User {
   id       Int    @id @default(autoincrement())
   email    String @unique
   password String
+  createdAt        DateTime @default(now())
+
       @@map("users") // Map to the order_items table
 
 }

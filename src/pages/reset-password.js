@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2';
+import { useAppContext } from '../context/AppContext';
+import { useEffect} from 'react';
+
 
 export default function ResetPage() {
     const router = useRouter()
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [errors, setErrors] = useState({ confirmPassword: '', password: '' });
-    const [showPassword, setShowPassword] = useState(false);
-    const [loginError, setLoginError] = useState('')
+    const { session, token, setToken,password, confirmPassword,showPassword,setPassword,setConfirmPassword,setShowPassword, errors, setErrors, setLoginError, loginError} = useAppContext();
+
 
     const validateForm = () => {
         const newErrors = { confirmPassword: '', password: '' };
@@ -28,7 +27,7 @@ export default function ResetPage() {
         setErrors(newErrors);
         return isValid;
     };
-    const [token, setToken] = useState(null);
+   
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);

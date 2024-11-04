@@ -39,7 +39,7 @@ export default NextAuth({
   pages: {
     signIn: '/login',
     signOut: '/logout',
-    error: '/auth/error',
+    error: '/login',
   },
   session: {
     jwt: true, // Use JSON Web Tokens for session

@@ -1,13 +1,21 @@
 
-import React, { useState } from 'react'
-import { signIn, getSession } from 'next-auth/react';
+import React, { useState, useEffect } from 'react'
+import { signIn } from 'next-auth/react';
 import Link from 'next/link'
+import { useRouter } from 'next/router';
 export default function LoginForm() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+
+  useEffect(() => {
+    if (router.query.error) {
+      setLoginError(router.query.error); // Display error from the URL query
+    }
+  }, [router.query.error]);
 
   const validateForm = () => {
     let valid = true;
@@ -44,7 +52,11 @@ export default function LoginForm() {
           email,
           password,
         });
-        console.log('result',result)
+        if (result?.error) {
+          setLoginError(result.error);
+        } else {
+          router.push('/dashboard');
+        }
 
 
       } catch (error) {
