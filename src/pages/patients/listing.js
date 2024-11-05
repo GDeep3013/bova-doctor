@@ -8,6 +8,8 @@ export default function Listing() {
     console.log('sessionsession',session?.user?.id)
 
     const [patients, setPatients] = useState([]);
+    const [error, setError] = useState("");
+
     const router = useRouter();
 
     const handleDelete = async (id) => {
@@ -30,7 +32,7 @@ export default function Listing() {
                 if (!response.ok) {
                     throw new Error("Failed to delete patient");
                 }
-                setPatients(patients.filter(patient => patient.id !== id));
+                setPatients(patients.filter(patient => patient._id !== id));
                 Swal.fire(
                     'Deleted!',
                     'Your patient has been deleted.',
@@ -62,7 +64,7 @@ export default function Listing() {
 
     useEffect(() => {
         fetchPatients();
-    }, []);
+    }, [session]);
 
 
 
@@ -87,13 +89,13 @@ export default function Listing() {
                                 <td className="py-2 px-4">{patient.phone || "Not available"}</td>
                                 <td className="py-2 px-4">
                                     <button
-                                        onClick={() => handleEdit(patient.id)}
+                                        onClick={() => handleEdit(patient._id)}
                                         className="text-blue-600 hover:underline mr-2"
                                     >
                                         Edit
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(patient.id)}
+                                        onClick={() => handleDelete(patient._id)}
                                         className="text-red-600 hover:underline"
                                     >
                                         Delete
