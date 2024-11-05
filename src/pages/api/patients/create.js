@@ -1,5 +1,6 @@
 // pages/api/patients.js
-import prisma from '../../../lib/prisma';
+import connectDB from '../../../db/db';
+import Patient from '../../../models/patient';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -11,16 +12,15 @@ export default async function handler(req, res) {
     if (!firstName || !lastName || !email || !doctorId) {
       return res.status(400).json({ error: 'Required fields are missing' });
     }
-    const existingDoctor = await prisma.patient.findFirst({
-      where: {
-        OR: [{
+    const existingDoctor = await Patient.findOne({
+     OR: [{
           email
         },
         {
           phone
         },
         ],
-      },
+      
     });
 
     if (existingDoctor) {
@@ -36,14 +36,12 @@ export default async function handler(req, res) {
 
     try {
       // Create a new patient in the database associated with the doctor's ID
-      const newPatient = await prisma.patient.create({
-        data: {
+      const newPatient = await Patient.create({
           firstName,
           lastName,
           email,
           phone,
           doctorId,
-        },
       });
 
       res.status(201).json({ message: 'Patient created successfully', patient: newPatient });

@@ -1,5 +1,7 @@
-import prisma from '../../../lib/prisma';
+import connectDB from '../../../db/db';
+import Patient from '../../../models/patient';
 export default async function handler(req, res) {
+  connectDB()
   if (req.method === 'GET') {
     const { userId } = req.query;
 
@@ -7,11 +9,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'User ID is required' ,userId:userId });
     }
     try {
-      const doctors = await prisma.patient.findMany({
-        where: {
-          doctorId: parseInt(userId),
-        },
-    });
+      const doctors = await Patient.find({doctorId: userId});
       res.status(200).json(doctors);
     } catch (error) {
       console.error("Error fetching doctors:", error);

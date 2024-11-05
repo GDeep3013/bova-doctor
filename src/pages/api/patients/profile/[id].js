@@ -1,17 +1,17 @@
 // pages/api/patients/[id].js
 
-import prisma from '../../../../lib/prisma';
+import connectDB from '../../../../db/db';
+import Patient from '../../../../models/patient';
 
 export default async function handler(req, res) {
+    connectDB()
     const { method } = req;
     const { id } = req.query;
 
     switch (method) {
         case 'GET':
             try {
-                const patient = await prisma.patient.findUnique({
-                    where: { id: Number(id) },
-                });
+                const patient = await Patient.findById(id);
 
                 if (!patient) {
                     return res.status(404).json({ message: 'Patient not found' });
@@ -40,30 +40,28 @@ export default async function handler(req, res) {
                 //     return res.status(400).json({ message: 'Email or phone number already exists.' });
                 // }
         
-                const updatedPatient = await prisma.patient.update({
-                    where: { id: Number(id) },
-                    data: {
-                        email, // Assuming you are updating these fields
-                        phone,
-                        firstName,
-                        lastName,
+                const updatedPatient = await Patient.findByIdAndUpdate(
+                    id, 
+                    {
+                      email,
+                      phone,
+                      firstName,
+                      lastName,
                     },
-                });
-        
+                    { new: true } // This option returns the updated document
+                  );
                 return res.status(200).json(updatedPatient);
             } catch (error) {
                 console.error(error); // Log the error for debugging purposes
-                return res.status(500).json({ message: 'Error updating patient' });
+                return res.status(500).json({ error: error });
             }
 
         case 'DELETE':
             try {
-                await prisma.patient.delete({
-                    where: { id: Number(id) },
-                });
+                await Patient.findByIdAndDelete(id)
                 return res.status(204).end(); // No content
             } catch (error) {
-                return res.status(500).json({ message: 'Error deleting patient' });
+                return res.status(500).json({ error: error });
             }
 
         default:
