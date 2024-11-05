@@ -1,17 +1,17 @@
 // pages/api/doctors/[id].js
 
-import prisma from '../../../../lib/prisma';
+import connectDB from '../../../../db/db';
+import Doctor from '../../../../models/Doctor';
 
 export default async function handler(req, res) {
+    connectDB()
     const { method } = req;
     const { id } = req.query;
 
     switch (method) {
         case 'GET':
             try {
-                const doctor = await prisma.doctor.findUnique({
-                    where: { id: Number(id) },
-                });
+                const doctor = await Doctor.findById(id);
 
                 if (!doctor) {
                     return res.status(404).json({ message: 'doctor not found' });
@@ -25,7 +25,6 @@ export default async function handler(req, res) {
             case 'PUT':
                 try {
                     const {
-                        id,
                         firstName,
                         lastName,
                         email,
@@ -33,17 +32,15 @@ export default async function handler(req, res) {
                         userType,
                         specialty,
                     } = req.body;
-            
+        
                     // Check for existing doctor with the same email or phone, excluding the current doctor
-                    const existingDoctor = await prisma.doctor.findFirst({
-                        where: {
-                            OR: [
-                                { email: email, NOT: { id: Number(id) } }, // Check for email uniqueness, excluding the current doctor
-                                { phone: phone, NOT: { id: Number(id) } }, // Check for phone uniqueness, excluding the current doctor
-                            ],
-                        },
+                    const existingDoctor = await Doctor.findOne({
+                        $or: [
+                            { email: email, _id: { $ne: id } }, // Check for email uniqueness, excluding the current doctor
+                            { phone: phone, _id: { $ne: id } }, // Check for phone uniqueness, excluding the current doctor
+                        ],
                     });
-            
+        
                     if (existingDoctor) {
                         const errors = [];
                         if (existingDoctor.email === email) {
@@ -52,12 +49,13 @@ export default async function handler(req, res) {
                         if (existingDoctor.phone === phone) {
                             errors.push('Phone number already exists');
                         }
-                            return res.status(400).json({ error: errors });
+                        return res.status(400).json({ error: errors });
                     }
-
-                    const updatedDoctor = await prisma.doctor.update({
-                        where: { id: Number(id) },
-                        data: {
+        
+                    // Update the doctor information
+                    const updatedDoctor = await Doctor.findByIdAndUpdate(
+                        id,
+                        {
                             firstName,
                             lastName,
                             email,
@@ -65,19 +63,17 @@ export default async function handler(req, res) {
                             userType,
                             specialty,
                         },
-                    });
-            
-                    return res.status(200).json(updatedDoctor);
+                        { new: true, runValidators: true } // Return the updated document and apply validators
+                    );
+        
+                    return res.status(200).json(updatedDoctor); // Return the updated doctor
                 } catch (error) {
                     console.error(error); // Log the error for debugging purposes
-                    return res.status(500).json({  error:error, message: 'Error updating doctor' });
+                    return res.status(500).json({ error: error.message, message: 'Error updating doctor' });
                 }
-
         case 'DELETE':
             try {
-                await prisma.doctor.delete({
-                    where: { id: Number(id) },
-                });
+                await Doctor.findByIdAndDelete(id)
                 return res.status(204).end(); // No content
             } catch (error) {
                 return res.status(500).json({ error:error,message: 'Error deleting doctor' });

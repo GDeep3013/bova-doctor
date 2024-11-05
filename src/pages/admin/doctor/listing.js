@@ -28,7 +28,7 @@ export default function DoctorListing() {
                 if (!response.ok) {
                     throw new Error("Failed to delete doctor");
                 }
-                setDoctors(doctors.filter(doctors => doctors.id !== id));
+                setDoctors(doctors.filter(doctors => doctors._id !== id));
                 Swal.fire(
                     'Deleted!',
                     'Doctor has been deleted.',
@@ -53,12 +53,12 @@ export default function DoctorListing() {
             const data = await response.json();
             setDoctors(data);
         } catch (error) {
-            setError(error.message);
+            console.log(error.message);
         }
     }
     useEffect(() => {
         fetchDoctors();
-    }, []);
+    }, [session]);
     const currentUserId = session?.user?.id;
     return (
         <AppLayout>
@@ -92,13 +92,13 @@ export default function DoctorListing() {
                                 <td className="py-2 px-4">{doctor.specialty || "Not available"}</td>
                                 <td className="py-2 px-4">
                                     <button
-                                        onClick={() => handleEdit(doctor.id)}
+                                        onClick={() => handleEdit(doctor._id)}
                                         className="text-blue-600 hover:underline mr-2"
                                     >
                                         Edit
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(doctor.id)}
+                                        onClick={() => handleDelete(doctor._id)}
                                         className="text-red-600 hover:underline"
                                     >
                                         Delete

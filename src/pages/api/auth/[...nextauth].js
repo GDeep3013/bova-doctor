@@ -3,7 +3,10 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import prisma from '../../../lib/prisma';
+import connectDB from '../../../db/db';
+import Doctor from '../../../models/Doctor';
+
+connectDB(); 
 
 export default NextAuth({
   providers: [
@@ -14,9 +17,7 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const user = await prisma.doctor.findUnique({
-          where: { email: credentials.email },
-        });
+        const user = await Doctor.findOne({ email: credentials.email });
 
         if (!user) {
           throw new Error('No user found with this email');
@@ -34,7 +35,7 @@ export default NextAuth({
   ],
   pages: {
     signIn: '/login',
-    error:'/login',
+    error:'/login'
   },
   session: {
     strategy: 'jwt', // Use JSON Web Tokens for session

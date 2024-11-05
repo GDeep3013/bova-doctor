@@ -1,37 +1,37 @@
 
 
 
-import prisma from '../../lib/prisma';
+import connectDB from '../../db/db';
+import Doctor from '../../models/Doctor';
 import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
+  connectDB()
     if (req.method === 'POST') {
         try {
             const { token, newPassword } = await req.body;;
         
-            const user = await prisma.doctor.findFirst({
-              where: {
-                resetToken: token,
-                resetTokenExpiry: {
-                  gte: new Date(), // Check if the token is still valid
-                },
-              },
+            const user = await Doctor.findOne({
+              resetToken: token,
+              resetTokenExpiry: { $gte: new Date() } // Check if the token is still valid
             });
-        
+      
             if (!user) {
-              return res.status(400).json({ error: 'Invalid or expired token' }, { status: 400 });
+              return res.status(400).json({ error: 'Invalid or expired token' });
             }
-        
+      
+            // Hash the new password
             const hashedPassword = await bcrypt.hash(newPassword, 10);
-        
-            await prisma.doctor.update({
-              where: { id: user.id },
-              data: {
+      
+            // Update the user's password and clear the reset token fields
+            await Doctor.updateOne(
+              { _id: user._id }, // Find user by their unique ID
+              {
                 password: hashedPassword,
                 resetToken: null, // Clear the reset token
-                resetTokenExpiry: null, // Clear the token expiry
-              },
-            });
+                resetTokenExpiry: null // Clear the token expiry
+              }
+            );
         
             return res.status(200).json({ message: 'Password reset successful' });
           } catch (error) {

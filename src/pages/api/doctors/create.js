@@ -1,10 +1,11 @@
 // pages/api/doctors/create.js
-import prisma from '../../../lib/prisma';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import {sendEmail} from '../../../lib/sendEmail';
-
+import connectDB from '../../../db/db';
+import Doctor from '../../../models/Doctor';
 export default async function handler(req, res) {
+  connectDB(); 
   if (req.method === 'POST') {
     try {
       const {
@@ -16,11 +17,10 @@ export default async function handler(req, res) {
         specialty,
       } = req.body;
 
-      const existingDoctor = await prisma.doctor.findFirst({
-        where: {
-          OR: [{ email }, { phone }],
-        },
-      });
+    
+      const existingDoctor = await Doctor.findOne({ 
+        $or: [{ email }, { phone }] 
+    });
 
       if (existingDoctor) {
         const errors = [];
@@ -39,8 +39,7 @@ export default async function handler(req, res) {
       const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
 
       // Create new doctor in the database
-      const newDoctor = await prisma.doctor.create({
-        data: {
+      const newDoctor =  await Doctor.create({       
           firstName,
           lastName,
           email,
@@ -49,8 +48,9 @@ export default async function handler(req, res) {
           specialty,        
           resetToken,
           resetTokenExpiry,
-        },
+        
       });
+   
 
       // Send email with reset token
       const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}`;

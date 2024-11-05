@@ -9,7 +9,7 @@ export default function CreateDoctor() {
 
     const validateForm = () => {
         let valid = true;
-        const newErrors = { firstName: '', lastName: '', email: '', password: '', phone: '', specialty: "", userType:'' };
+        const newErrors = { firstName: '', lastName: '', email: '', password: '', phone: '', specialty: "", userType: '' };
         if (!firstName) {
             newErrors.firstName = 'First name is required';
             valid = false;
@@ -26,7 +26,7 @@ export default function CreateDoctor() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
-     
+
         if (!phone) {
             newErrors.phone = 'Phone number is required';
             valid = false;
@@ -34,7 +34,7 @@ export default function CreateDoctor() {
             newErrors.phone = 'Phone number must be exactly 10 digits and numeric';
             valid = false;
         }
-        if (userType=='') {
+        if (userType == '') {
             newErrors.userType = 'User type field is required';
             valid = false;
         }
@@ -46,7 +46,7 @@ export default function CreateDoctor() {
         setErrors(newErrors);
         return valid;
     };
-   
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
@@ -64,7 +64,7 @@ export default function CreateDoctor() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ firstName, lastName, email, phone, specialty,userType}),
+                    body: JSON.stringify({ firstName, lastName, email, phone, specialty, userType }),
                 });
 
                 if (response.ok) {
@@ -84,11 +84,14 @@ export default function CreateDoctor() {
                 } else {
                     const result = await response.json();
                     const errors = result.error;
-                    if (errors.includes('Email already exists')) {
-                        setErrors({ ...errors, email: 'Email already exists' });
-                    }
-                    if (errors.includes('Phone number already exists')) {
-                        setErrors({ ...errors, phone: 'Phone number already exists' });
+                    if (errors) {
+                     
+                        if (errors.includes('Email already exists')) {
+                            setErrors({ ...errors, email: 'Email already exists' });
+                        }
+                        if (errors.includes('Phone number already exists')) {
+                            setErrors({ ...errors, phone: 'Phone number already exists' });
+                        }
                     }
                 }
             } catch (error) {
@@ -179,7 +182,7 @@ export default function CreateDoctor() {
                             >
                                 Add Doctor
                             </button>
-                            
+
                             {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
                         </form>
                     </div>
