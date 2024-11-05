@@ -24,6 +24,7 @@ export function AppProvider({ children }) {
     const [showPassword, setShowPassword] = useState(false);
     const [token, setToken] = useState(null);
     const [specialty, setSpecialty] = useState('');
+    const [userType, setUserType] = useState('');
 
 
     // Shared state values
@@ -56,7 +57,10 @@ export function AppProvider({ children }) {
         token,
         setToken,
         specialty,
-        setSpecialty
+        setSpecialty,
+        userType,
+        setUserType
+
     };
 
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

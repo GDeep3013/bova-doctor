@@ -14,7 +14,7 @@ export default function EditPatient() {
     useEffect(() => {
         if (id) {
             const fetchPatientData = async () => {
-                const response = await fetch(`/api/patients/profile/${id}`);
+                const response = await fetch(`/api/patients/edit/${id}`);
                 const data = await response.json();
 
                 if (response.ok) {
@@ -67,7 +67,7 @@ export default function EditPatient() {
         if (validateForm()) {
             let doctorId = session?.user?.id;
             try {
-                const response = await fetch(`/api/patients/profile/${id}`, {
+                const response = await fetch(`/api/patients/edit/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

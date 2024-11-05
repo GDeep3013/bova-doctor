@@ -13,20 +13,38 @@ export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const checkSession = async () => {
     const guestRoutes = ['/', '/login', '/forget-password','/register', '/reset-password', '/create-password'];
+    const adminRoutes = ['/admin/doctor/listing', '/admin/doctor/create', '/admin/doctor/edit/[id]'];
+    const doctorRoutes = ['/dashboard','/patients/create', '/patients/edit/[id]','/patients/listing','/sale','/create-plan/index','/profile'];
     const session = await getSession();
-
-
-    // Check if the user is logged in
-    if (session) {
-      // If on the login page, redirect to the dashboard
-      if (guestRoutes.includes(router.pathname)) {
-        router.push('/dashboard');
+    const currentUrl = router.pathname; 
+    
+ 
+    if (!session) {
+      if (!guestRoutes.includes(currentUrl)) {
+        // Redirect to login if not authenticated and current page is not a guest route
+        router.push('/login');
+      }
+    } else {
+      const user = session.user;
+      if (user) {
+        if (guestRoutes.includes(currentUrl)) {
+          if (user.userType === 'Admin') {
+            router.push('/admin/doctor/listing');
+          } else {
+            router.push('/dashboard');
+          }
+        }
+  
+        if (user.userType === 'Admin' && !adminRoutes.includes(currentUrl)) {
+          router.push('/admin/doctor/listing'); 
+        }
+  
+        if (user.userType === 'Doctor' && !doctorRoutes.includes(currentUrl)) {      
+          router.push('/dashboard'); 
+        }
       }
     }
-
-    if (!session && !guestRoutes.includes(router.pathname)) {
-      router.push('/login');
-    }
+  
   };
   
   useEffect(() => {

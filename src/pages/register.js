@@ -120,7 +120,10 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-4 py-5 w-full max-w-screen-sm">
               <div className="relative">
 
-                <input type="text" placeholder="First Name" value={firstName} onChange={(e) => { setFirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' }); }} className={`w-full pl-2 pr-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
+                <input type="text" placeholder="First Name" value={firstName} onChange={(e) => {
+                  setFirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' });
+                }} className={`w-full pl-2 pr-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
+                
                 {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
               </div>
 

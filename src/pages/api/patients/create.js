@@ -11,24 +11,27 @@ export default async function handler(req, res) {
     if (!firstName || !lastName || !email || !doctorId) {
       return res.status(400).json({ error: 'Required fields are missing' });
     }
-    const existingDoctor = await prisma.patient.findFirst({
+    const existingPatient = await prisma.patient.findFirst({
       where: {
-        OR: [{
-          email
-        },
-        {
-          phone
-        },
-        ],
-      },
+        doctorId: doctorId, // Match the same doctorId
+        AND: [
+         
+          {
+            OR: [
+              { email }, 
+              { phone }, 
+            ]
+          }
+        ]
+      }
     });
 
-    if (existingDoctor) {
+    if (existingPatient) {
       const errors = [];
-      if (existingDoctor.phone === phone) {
+      if (existingPatient.phone === phone) {
         errors.push('Phone number already exists');
       }
-      if (existingDoctor.email === email) {
+      if (existingPatient.email === email) {
         errors.push('Email already exists');
       }
       return res.status(400).json({ error: errors });

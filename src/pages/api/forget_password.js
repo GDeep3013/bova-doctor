@@ -28,10 +28,11 @@ export default async function handler(req, res) {
                     resetTokenExpiry,
                 },
             });
-        
+            let firstName = user.firstName;
+            let lastName = user.lastName;        
            
             const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}`;
-            await sendEmail(email, 'Password Reset Request', `Reset your password using this link: ${resetLink}`);
+            await sendEmail(email, 'Password Reset Request',resetLink, firstName, lastName );
         
             return res.status(200).json({ message: 'Password reset email sent' });
         } catch (error) {

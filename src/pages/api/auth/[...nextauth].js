@@ -28,12 +28,13 @@ export default NextAuth({
           throw new Error('Invalid password');
         }
 
-        return { id: user.id, email: user.email };
+        return { id: user.id, email: user.email , userType:user.userType};
       },
     }),
   ],
   pages: {
-    signIn: '/login'
+    signIn: '/login',
+    error:'/login',
   },
   session: {
     strategy: 'jwt', // Use JSON Web Tokens for session
@@ -43,12 +44,14 @@ export default NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.userType = user.userType; 
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
+        session.user.userType = token.userType;
       }
       return session;
     },

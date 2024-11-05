@@ -1,13 +1,13 @@
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2';
 import { useAppContext } from '../context/AppContext';
-import { useEffect} from 'react';
+import { useEffect } from 'react';
+import Link from 'next/link';
 
 
 export default function ResetPage() {
     const router = useRouter()
-    const { session, token, setToken,password, confirmPassword,showPassword,setPassword,setConfirmPassword,setShowPassword, errors, setErrors, setLoginError, loginError} = useAppContext();
-
+    const { token, setToken, password, confirmPassword, showPassword, setPassword, setConfirmPassword, setShowPassword, errors, setErrors, setLoginError, loginError } = useAppContext();
 
     const validateForm = () => {
         const newErrors = { confirmPassword: '', password: '' };
@@ -27,7 +27,7 @@ export default function ResetPage() {
         setErrors(newErrors);
         return isValid;
     };
-   
+
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -39,7 +39,14 @@ export default function ResetPage() {
         e.preventDefault();
         if (validateForm()) {
             try {
-
+                Swal.fire({
+                    title: 'Sending...',
+                    html: 'please wait for a while.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
                 const response = await fetch('/api/reset', {
                     method: 'POST',
                     headers: {
@@ -48,15 +55,15 @@ export default function ResetPage() {
                     body: JSON.stringify({ token, newPassword: password }),
                 });
                 const result = await response.json();
-  
+
                 if (response.ok) {
                     Swal.fire({
                         title: 'Success!',
                         text: 'Password changed successfully',
                         icon: 'success',
                         confirmButtonText: 'OK',
-                      });
-                   router.push('/login');
+                    });
+                    router.push('/login');
                     setLoginError('');
                 } else {
                     setLoginError(result.error);
@@ -128,6 +135,8 @@ export default function ResetPage() {
                             {loginError && <p className="text-red-500 text-sm mt-1">{loginError}</p>}
 
                             <button type="submit" className="w-full py-2 bg-customBg text-white font-bold rounded hover:bg-customText focus:outline-none">Create New Password</button>
+                            <p className='text-center'> <Link href="/login" className='font-bold text-customBg2'>← Back to  Login Page</Link> </p>
+
                         </form>
                     </div>
                 </div>

@@ -1,19 +1,18 @@
-import AppLayout from '../../components/Applayout';
+import AppLayout from '../../../components/Applayout';
+import { useAppContext } from '../../../context/AppContext';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
-export default function Listing() {
-    const { data: session } = useSession();
-    console.log('sessionsession', session?.user?.id)
+import Link from 'next/link';
 
-    const [patients, setPatients] = useState([]);
+export default function DoctorListing() {
+    const { session, setError } = useAppContext();
+    const [doctors, setDoctors] = useState([]);
     const router = useRouter();
-
     const handleDelete = async (id) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
-            text: 'Once deleted, you will not be able to recover this patient!',
+            text: 'Once deleted, you will not be able to recover this doctor!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
@@ -21,19 +20,18 @@ export default function Listing() {
             confirmButtonText: 'Delete',
             cancelButtonText: 'Cancel',
         });
-
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`/api/patients/edit/${id}`, {
+                const response = await fetch(`/api/doctors/edit/${id}`, {
                     method: 'DELETE',
                 });
                 if (!response.ok) {
-                    throw new Error("Failed to delete patient");
+                    throw new Error("Failed to delete doctor");
                 }
-                setPatients(patients.filter(patient => patient.id !== id));
+                setDoctors(doctors.filter(doctors => doctors.id !== id));
                 Swal.fire(
                     'Deleted!',
-                    'Your patient has been deleted.',
+                    'Doctor has been deleted.',
                     'success'
                 );
             } catch (error) {
@@ -43,64 +41,64 @@ export default function Listing() {
     };
 
     const handleEdit = (id) => {
-        router.push(`/patients/edit/${id}`);
+        router.push(`/admin/doctor/edit/${id}`);
     };
-
     
-    const fetchPatients = async () => {
+    const fetchDoctors = async () => {
         try {
-            const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
+            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}`);
             if (!response.ok) {
-                throw new Error("Failed to fetch patients");
+                throw new Error("Failed to fetch doctors");
             }
             const data = await response.json();
-            console.log(data,'data')
-            setPatients(data);
+            setDoctors(data);
         } catch (error) {
             setError(error.message);
         }
     }
-
     useEffect(() => {
-        fetchPatients();
-    }, [session]);
-
-
-
+        fetchDoctors();
+    }, []);
+    const currentUserId = session?.user?.id;
     return (
         <AppLayout>
             <div className="container mx-auto mt-5">
-                <h1 className="text-2xl font-bold mb-4">Patient List</h1>
+                <h1 className="text-2xl font-bold mb-4">Doctors List</h1>
+                <Link href='/admin/doctor/create' className="min-w-[150px]  p-[14px] float-right  mb-2 py-2 bg-customBg2 text-white font-medium rounded hover:bg-customText focus:outline-none" >
+                    Add Doctor
+                </Link>
                 <table className="min-w-full bg-white border border-gray-200">
                     <thead>
                         <tr className="bg-gray-100 border-b">
                             <th className="py-2 px-4 text-left text-gray-600">Name</th>
                             <th className="py-2 px-4 text-left text-gray-600">Email</th>
                             <th className="py-2 px-4 text-left text-gray-600">Phone</th>
+                            <th className="py-2 px-4 text-left text-gray-600">Speciality</th>
                             <th className="py-2 px-4 text-left text-gray-600">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {patients.length === 0 ? (
+                        {doctors.length === 0 ? (
                             <tr>
                                 <td colSpan={4} className="py-2 px-4 text-center text-gray-500">
                                     No records found
                                 </td>
                             </tr>
-                        ) : patients.map((patient) => (
-                            <tr key={patient.id} className="hover:bg-gray-50 border-b">
-                                <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
-                                <td className="py-2 px-4">{patient.email}</td>
-                                <td className="py-2 px-4">{patient.phone || "Not available"}</td>
+                        ) : doctors.filter(doctor => doctor.id !== currentUserId).map((doctor) => (
+                            <tr key={doctor.id} className="hover:bg-gray-50 border-b">
+                                <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
+                                <td className="py-2 px-4">{doctor.email}</td>
+                                <td className="py-2 px-4">{doctor.phone || "Not available"}</td>
+                                <td className="py-2 px-4">{doctor.specialty || "Not available"}</td>
                                 <td className="py-2 px-4">
                                     <button
-                                        onClick={() => handleEdit(patient.id)}
+                                        onClick={() => handleEdit(doctor.id)}
                                         className="text-blue-600 hover:underline mr-2"
                                     >
                                         Edit
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(patient.id)}
+                                        onClick={() => handleDelete(doctor.id)}
                                         className="text-red-600 hover:underline"
                                     >
                                         Delete

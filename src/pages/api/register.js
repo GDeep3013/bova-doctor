@@ -10,6 +10,7 @@ export default async function handler(req, res) {
                 email,
                 password,
                 phone,
+                userType,
                 specialty
             } = req.body;
 
@@ -47,6 +48,7 @@ export default async function handler(req, res) {
                     email,
                     password: hashedPassword, // Store the hashed password
                     phone,
+                    userType,
                     specialty,
                 },
             });

@@ -1,18 +1,19 @@
 "use client";
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import Link from 'next/link';
-import { signOut,getSession } from 'next-auth/react';
+import { signOut, getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useAppContext } from 'context/AppContext';
 export default function Sidebar({ isOpen, isSidebarOpen }) {
   const router = useRouter();
-
+  const { session} = useAppContext();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isPatientsOpen, setIsPatientsOpen] = useState(false);
   const [isPlansOpen, setIsPlansOpen] = useState(false);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const togglePatients = () => setIsPatientsOpen(!isPatientsOpen);
   const togglePlans = () => setIsPlansOpen(!isPlansOpen);
-
+ 
   const handleLogout = async () => {
     await signOut({ redirect: false });
     router.push('/');
@@ -23,17 +24,21 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
 
       {/* Sidebar */}
       <div
-        className={`fixed w-full max-w-[300px] inset-y-0 left-0 bg-[#d6dee5] p-4 transition-transform duration-300 transform ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed w-full max-w-[300px] inset-y-0 left-0 bg-[#d6dee5] p-4 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="flex items-center space-x-2 mb-4">
           <Link href="/dashboard">
-            <img src='/images/dash-logo.png' alt='Logo' className='max-w-[187px]'/>
-           </Link>
+            <img src='/images/dash-logo.png' alt='Logo' className='max-w-[187px]' />
+          </Link>
         </div>
+        
 
         <nav className="space-y-4 pt-3">
+        {session?.user?.userType=='Admin'?  <Link href="/admin/doctor/listing" className="block text-gray-700 hover:text-gray-900">
+            Doctors
+          </Link> :
+            <>
           <Link href="/dashboard" className="block text-gray-700 hover:text-gray-900">
             Home
           </Link>
@@ -69,15 +74,17 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
             </button>
             {isPlansOpen && (
               <ul className="pl-3 py-2 space-y-1">
-                <li><Link href="/create" className="block hover:text-gray-900">Create</Link></li>
+                <li><Link href="/create-plan" className="block hover:text-gray-900">Create</Link></li>
                 <li><Link href="/review" className="block hover:text-gray-900">Review</Link></li>
                 <li><Link href="/incomplete" className="block hover:text-gray-900">Incomplete</Link></li>
               </ul>
             )}
           </div>
-          <button  onClick={handleLogout} className="block text-gray-700 hover:text-gray-900">
+          </>}
+          <button onClick={handleLogout} className="block text-gray-700 hover:text-gray-900">
             Logout
-          </button>
+              </button>
+            
         </nav>
       </div>
     </div>

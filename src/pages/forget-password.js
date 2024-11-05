@@ -3,15 +3,16 @@
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation'
 import { useAppContext } from '../context/AppContext';
+import Link from 'next/link';
 
 export default function Forget() {
-  const { session, email, setEmail, errors, setErrors, setLoginError, loginError} = useAppContext();
+  const { session, email, setEmail, errors, setErrors, setLoginError, loginError } = useAppContext();
 
   const router = useRouter()
- 
+
   const validateForm = () => {
     let valid = true;
-    const newErrors = { email: '',  };
+    const newErrors = { email: '', };
 
     // Basic email validation
     if (!email) {
@@ -20,17 +21,24 @@ export default function Forget() {
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'Email address is invalid';
       valid = false;
-    }  
+    }
 
     setErrors(newErrors);
     return valid;
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (validateForm()) {
       try {
-
+        Swal.fire({
+          title: 'Sending...',
+          html: 'Please wait while we send the email.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
         const response = await fetch('/api/forget_password', {
           method: 'POST',
           headers: {
@@ -39,26 +47,26 @@ export default function Forget() {
           body: JSON.stringify({ email }),
         });
         const result = await response.json();
-    
+
         if (response.ok) {
           Swal.fire({
             title: 'Success!',
             text: 'Password change link send on our email',
             icon: 'success',
             confirmButtonText: 'OK',
-          });   
+          });
           router.push('/login');
         } else {
-          setLoginError(result.error); 
+          setLoginError(result.error);
         }
       } catch (error) {
         console.error('Error during login:', error);
-        setLoginError('Internal server error'); 
+        setLoginError('Internal server error');
       }
     }
   };
 
- 
+
   return (
     <div className='login-outer'>
       <div className="container mx-auto max-w-full p-0">
@@ -86,9 +94,12 @@ export default function Forget() {
                 {loginError && <p className="text-red-500 text-sm mt-1">{loginError}</p>}
 
               </div>
-             
+
               <button type="submit" className="w-full py-2 bg-customBg text-white font-bold rounded hover:bg-customText focus:outline-none">Send Password Reset Link</button>
+              <p className='text-center'> <Link href="/login" className='font-bold text-customBg2'>← Back to  Login Page</Link> </p>
+
             </form>
+
           </div>
         </div>
       </div>

@@ -55,6 +55,7 @@ export default function Create() {
                     setLastName('');
                     setEmail('');
                     setPhone('');
+                    router.push('/patients/listing');
                 } else {
                     const result = await response.json();
                     const errors = result.error;
