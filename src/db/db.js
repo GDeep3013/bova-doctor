@@ -5,9 +5,8 @@ const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/doct
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(DATABASE_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+        await mongoose.connect(DATABASE_URL,{
+            dbName:process.env.MONGODB_DB_NAME
         });
         console.log('MongoDB connected successfully');
     } catch (error) {
