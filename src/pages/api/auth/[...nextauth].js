@@ -3,8 +3,9 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import prisma from '../../../lib/prisma';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -33,7 +34,8 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: '/login'
+    signIn: '/login',    // Redirect here if sign-in is required
+    error: '/login',     // Redirect here on error
   },
   session: {
     strategy: 'jwt', // Use JSON Web Tokens for session
