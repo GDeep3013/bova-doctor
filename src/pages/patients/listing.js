@@ -56,7 +56,7 @@ export default function Listing() {
                 throw new Error("Failed to fetch patients");
             }
             const data = await response.json();
-            console.log(data,'data')
+
             setPatients(data);
         } catch (error) {
             setError(error.message);

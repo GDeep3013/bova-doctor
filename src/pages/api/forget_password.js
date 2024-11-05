@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-=======
-
-
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
-
->>>>>>> 7d99ab8990531ad512de3560c160b42813ebb2b5
 import crypto from 'crypto'; // To generate a random token
 import { sendEmail } from '../../lib/sendEmail'; // Assume a sendEmail function is set up
 import Doctor from '../../models/Doctor'; // Adjust path as needed for your project
