@@ -1,28 +1,17 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+const mongoose = require('mongoose');
 
 async function main() {
-  console.log('prisma',prisma)
   try {
-    // Correctly using findMany to retrieve users
-      
-    //   const newDoctor = await prisma.doctor.create({
-    //     data: {
-    //         firstName:"Test",
-    //         lastName:"testUser2",
-    //         email:"610wedblab@gmail.com",
-    //         password: "doctor@610",
-    //         phone:"8523147852",
-    //         specialty:"Brain",
-    //     },
-    // });
-    // console.log(newDoctor);
+    let data = await mongoose.connect("mongodb://103.174.10.78:27017/dddd");
+    console.log(data);
+    return 'MongoDB connected successfully';
   } catch (error) {
-    console.error("Database connection error:", error);
-  } finally {
-    await prisma.$disconnect();
+    console.error('MongoDB connection error:', error);
+    return 'MongoDB connection failed';
   }
 }
 
-main();
+// Call the main function and handle the result
+main()
+  .then((message) => console.log(message))
+  .catch((error) => console.error(error));
