@@ -35,13 +35,8 @@ export default NextAuth({
     }),
   ],
   pages: {
-<<<<<<< HEAD
-    signIn: '/login',    // Redirect here if sign-in is required
-    error: '/login',     // Redirect here on error
-=======
     signIn: '/login',
     error:'/login'
->>>>>>> 9ca45f42a37d10808d53aaff8bf0a34fed527d20
   },
   session: {
     strategy: 'jwt', // Use JSON Web Tokens for session
