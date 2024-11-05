@@ -8,6 +8,7 @@ import Doctor from '../../../models/Doctor';
 
 connectDB(); 
 
+const prisma = new PrismaClient();
 export default NextAuth({
   providers: [
     CredentialsProvider({

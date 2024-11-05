@@ -1,7 +1,12 @@
 // pages/api/patients.js
+<<<<<<< HEAD
+import { PrismaClient } from '@prisma/client';
+=======
 import connectDB from '../../../db/db';
 import Patient from '../../../models/patient';
+>>>>>>> cdbb06444cbf226add06fac99a93ec7d4f7d70e8
 
+const prisma = new PrismaClient();
 export default async function handler(req, res) {
   if (req.method === 'POST') {
 

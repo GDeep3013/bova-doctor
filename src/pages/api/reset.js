@@ -1,6 +1,5 @@
 
 
-
 import connectDB from '../../db/db';
 import Doctor from '../../models/Doctor';
 import bcrypt from 'bcryptjs';

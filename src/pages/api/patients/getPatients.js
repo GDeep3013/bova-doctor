@@ -1,5 +1,11 @@
+<<<<<<< HEAD
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+=======
 import connectDB from '../../../db/db';
 import Patient from '../../../models/patient';
+>>>>>>> cdbb06444cbf226add06fac99a93ec7d4f7d70e8
 export default async function handler(req, res) {
   connectDB()
   if (req.method === 'GET') {
