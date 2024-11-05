@@ -1,17 +1,17 @@
 // pages/api/patients/[id].js
 
-import prisma from '../../../../lib/prisma';
+import connectDB from '../../../../db/db';
+import Patient from '../../../../models/patient';
 
 export default async function handler(req, res) {
+    connectDB()
     const { method } = req;
     const { id } = req.query;
 
     switch (method) {
         case 'GET':
             try {
-                const patient = await prisma.patient.findUnique({
-                    where: { id: Number(id) },
-                });
+                const patient = await Patient.findById(id);
 
                 if (!patient) {
                     return res.status(404).json({ message: 'Patient not found' });
@@ -22,61 +22,46 @@ export default async function handler(req, res) {
                 return res.status(500).json({ message: 'Error fetching patient' });
             }
 
-            case 'PUT':
-                try {
-                const { id,email, phone, firstName, lastName,doctorId } = req.body;
-            
+        case 'PUT':
+            try {
+                const { email, phone, firstName, lastName } = req.body;
+        
                 // Check for existing patient with the same email or phone, excluding the current patient
-                const existingPatient = await prisma.patient.findFirst({
-                    where: {
-                        doctorId: doctorId, // Scope check to the same doctor
-                        AND: [
-                            { id: { not: Number(id) } }, // Exclude the current patient by ID
-                            {
-                                OR: [
-                                    { email: email }, // Check if the email is already used by another patient of the same doctor
-                                    { phone: phone }, // Check if the phone is already used by another patient of the same doctor
-                                ]
-                            }
-                        ]
-                    }
-                });
-            
-                    if (existingPatient) {
-                        const errors = [];
-                        if (existingPatient.phone === phone) {
-                          errors.push('Phone number already exists');
-                        }
-                        if (existingPatient.email === email) {
-                          errors.push('Email already exists');
-                        }
-                        return res.status(400).json({ error: errors });
-                      }
-            
-                    const updatedPatient = await prisma.patient.update({
-                    where: { id: Number(id) },
-                        data: {
-                        email, // Assuming you are updating these fields
-                            phone,
-                            firstName,
-                            lastName,
-                        },
-                    });
-            
-                    return res.status(200).json(updatedPatient);
-                } catch (error) {
+                // const existingPatient = await prisma.patient.findFirst({
+                //     where: {
+                //         OR: [
+                //             { email: email, NOT: { id: Number(id) } }, // Check for email uniqueness, excluding the current patient
+                //             { phone: phone, NOT: { id: Number(id) } }, // Check for phone uniqueness, excluding the current patient
+                //         ],
+                //     },
+                // });
+        
+                // if (existingPatient) {
+                //     return res.status(400).json({ message: 'Email or phone number already exists.' });
+                // }
+        
+                const updatedPatient = await Patient.findByIdAndUpdate(
+                    id, 
+                    {
+                      email,
+                      phone,
+                      firstName,
+                      lastName,
+                    },
+                    { new: true } // This option returns the updated document
+                  );
+                return res.status(200).json(updatedPatient);
+            } catch (error) {
                 console.error(error); // Log the error for debugging purposes
-                    return res.status(500).json({ message: 'Error updating patient' });
-                }
+                return res.status(500).json({ error: error });
+            }
 
         case 'DELETE':
             try {
-                await prisma.patient.delete({
-                    where: { id: Number(id) },
-                });
+                await Patient.findByIdAndDelete(id)
                 return res.status(204).end(); // No content
             } catch (error) {
-                return res.status(500).json({ message: 'Error deleting patient' });
+                return res.status(500).json({ error: error });
             }
 
         default:

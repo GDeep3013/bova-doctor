@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 export default function Listing() {
     const { data: session } = useSession();
-    console.log('sessionsession', session?.user?.id)
+ 
 
     const [patients, setPatients] = useState([]);
     const [error, setError] = useState("");
