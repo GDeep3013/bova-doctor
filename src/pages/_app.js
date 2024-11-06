@@ -14,10 +14,10 @@ export default function MyApp({ Component, pageProps }) {
   const checkSession = async () => {
     const guestRoutes = ['/', '/login', '/forget-password','/register', '/reset-password', '/create-password'];
     const adminRoutes = ['/admin/doctor/listing', '/admin/doctor/create', '/admin/doctor/edit/[id]'];
-    const doctorRoutes = ['/dashboard','/patients/create', '/patients/edit/[id]','/patients/listing','/sale','/create-plan/index','/profile'];
+    const doctorRoutes = ['/dashboard','/patients/create', '/patients/edit/[id]','/patients/listing','/patients/detail/[id]','/sale','/create-plan','/profile'];
     const session = await getSession();
-    const currentUrl = router.pathname; 
     
+    const currentUrl = router.pathname;   
  
     if (!session) {
       if (!guestRoutes.includes(currentUrl)) {

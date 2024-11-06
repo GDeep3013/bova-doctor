@@ -87,12 +87,12 @@ export default function EditPatient() {
                     const result = await response.json();
                     const apiErrors = result.error;
 
-                    // if (apiErrors.includes('Email already exists')) {
-                    //     setErrors({ ...errors, email: 'Email already exists' });
-                    // }
-                    // if (apiErrors.includes('Phone number already exists')) {
-                    //     setErrors({ ...errors, phone: 'Phone number already exists' });
-                    // }
+                    if (apiErrors.includes('Email already exists')) {
+                        setErrors({ ...errors, email: 'Email already exists' });
+                    }
+                    if (apiErrors.includes('Phone number already exists')) {
+                        setErrors({ ...errors, phone: 'Phone number already exists' });
+                    }
                 }
             } catch (error) {
                 console.error('Error during patient updating:', error);

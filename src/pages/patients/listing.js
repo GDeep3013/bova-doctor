@@ -3,13 +3,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
+import Link from 'next/link'
 export default function Listing() {
     const { data: session } = useSession();
- 
-
     const [patients, setPatients] = useState([]);
     const [error, setError] = useState("");
-
     const router = useRouter();
 
     const handleDelete = async (id) => {
@@ -43,12 +41,19 @@ export default function Listing() {
             }
         }
     };
+    function formatPhoneNumber(phoneNumber) {
+        if (!phoneNumber) return phoneNumber; // Return as is if not 10 digits
+      
+        return `${phoneNumber.slice(0, 5)}-${phoneNumber.slice(5)}`;
+      }
 
     const handleEdit = (id) => {
         router.push(`/patients/edit/${id}`);
     };
 
-    
+    const handleView = (id) => {
+        router.push(`/patients/detail/${id}`);
+    };
     const fetchPatients = async () => {
         try {
             const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
@@ -93,8 +98,15 @@ export default function Listing() {
                             <tr key={patient.id} className="hover:bg-gray-50 border-b">
                                 <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
                                 <td className="py-2 px-4">{patient.email}</td>
-                                <td className="py-2 px-4">{patient.phone || "Not available"}</td>
+                                <td className="py-2 px-4">{formatPhoneNumber(patient.phone) || "Not available"}</td>
                                 <td className="py-2 px-4">
+                                    
+                                <button
+                                         onClick={() => handleView(patient._id)}
+                                        className="text-blue-600 hover:underline mr-2"
+                                    >
+                                        Veiw
+                                    </button>
                                     <button
                                         onClick={() => handleEdit(patient._id)}
                                         className="text-blue-600 hover:underline mr-2"

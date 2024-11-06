@@ -25,6 +25,7 @@ export function AppProvider({ children }) {
     const [token, setToken] = useState(null);
     const [specialty, setSpecialty] = useState('');
     const [userType, setUserType] = useState('');
+    const [createdDate, setCreatedDate] = useState('');
 
 
     // Shared state values
@@ -59,7 +60,9 @@ export function AppProvider({ children }) {
         specialty,
         setSpecialty,
         userType,
-        setUserType
+        setUserType,
+        createdDate,
+        setCreatedDate
 
     };
 

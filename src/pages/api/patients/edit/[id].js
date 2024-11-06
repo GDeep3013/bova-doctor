@@ -24,32 +24,41 @@ export default async function handler(req, res) {
 
         case 'PUT':
             try {
-                const { email, phone, firstName, lastName } = req.body;
-        
-                // Check for existing patient with the same email or phone, excluding the current patient
-                // const existingPatient = await prisma.patient.findFirst({
-                //     where: {
-                //         OR: [
-                //             { email: email, NOT: { id: Number(id) } }, // Check for email uniqueness, excluding the current patient
-                //             { phone: phone, NOT: { id: Number(id) } }, // Check for phone uniqueness, excluding the current patient
-                //         ],
-                //     },
-                // });
-        
-                // if (existingPatient) {
-                //     return res.status(400).json({ message: 'Email or phone number already exists.' });
-                // }
-        
+                const { email, phone, firstName, lastName, doctorId } = req.body;
+
+                const existingPatient = await Patient.findOne({
+                    doctorId: doctorId, // Scope check to the same doctor
+                    $and: [
+                        { _id: { $ne: id } }, // Exclude the current patient by ID
+                        {
+                            $or: [
+                                { email: email }, // Check if the email is already used by another patient of the same doctor
+                                { phone: phone }, // Check if the phone is already used by another patient of the same doctor
+                            ]
+                        }
+                    ]
+                });
+                if (existingPatient) {
+                    const errors = [];
+                    if (existingPatient.phone === phone) {
+                        errors.push('Phone number already exists');
+                    }
+                    if (existingPatient.email === email) {
+                        errors.push('Email already exists');
+                    }
+                    return res.status(400).json({ error: errors });
+                }
+
                 const updatedPatient = await Patient.findByIdAndUpdate(
-                    id, 
+                    id,
                     {
-                      email,
-                      phone,
-                      firstName,
-                      lastName,
+                        email,
+                        phone,
+                        firstName,
+                        lastName,
                     },
                     { new: true } // This option returns the updated document
-                  );
+                );
                 return res.status(200).json(updatedPatient);
             } catch (error) {
                 console.error(error); // Log the error for debugging purposes
