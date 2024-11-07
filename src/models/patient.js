@@ -5,7 +5,8 @@ const patientSchema = new mongoose.Schema({
   lastName: String,
   email: String,
   phone: String,
-  doctorId: String
+  doctorId: String,
+  message: String
 }, { timestamps: true });
 
 const Patient = mongoose.models.Patient || mongoose.model('Patient', patientSchema);

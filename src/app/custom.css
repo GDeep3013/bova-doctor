@@ -1,0 +1,26 @@
+.login-after::after{ content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0 0 0 / 25%); }
+.form-checkbox{ accent-color: #cad3cc; }
+.user-icon path{ fill: #64748b; }
+.menu-open{ width: 100%; max-width:300px }
+.menu-open .-translate-x-full { --tw-translate-x: 0; }
+.admin-logo{ transition: all 0.5s ease-in-out; }
+.admin-logo.sidebar-close{ max-width: 111px; }
+.admin-logo a{ position: absolute; left: 18px; transition: all 0.5s ease-in-out; }
+.admin-logo.sidebar-close a{ left: -100%; }
+button.bg-black svg.m-auto path { fill: #fff; }
+
+.sidebar{ transition: all 0.6s ease-in-out; }
+.min-h { height: calc(100vh - 161px); overflow: hidden; overflow-y: auto; }
+.dashboard-right input{ accent-color: #51595B; }
+.bg-gray-200{ background-color: #D6DEE5; }
+input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; /* Change `white` to your preferred background color */ box-shadow: 0 0 0px 1000px white inset; }
+.sidebar nav svg{ display: inline-block; margin-right: 10px; width: 24px; }
+.sidebar nav svg path{ fill: #000; }
+.sidebar nav .submenu{ position: relative; margin-left: 35px;}
+.sidebar nav .submenu::after{content: ''; position: absolute; top: 0; left: 0; border-radius: 12px; background-color: #F6F6F6; width: 4px; height: 100%; }
+.sidebar nav .submenu li a{ position: relative; padding: 8px 0 8px 28px;}
+.sidebar nav .submenu li a::after { content: ''; background-color: #EDEDED; position: absolute; left: -5px; top: 11px; width: 14px; height: 14px; border-radius: 50%; z-index: 1; }
+.order-form{ border-radius: 10px 10px 0 0; }
+
+.dashboard-inner .card-icon { transform: rotate(-13deg); }
+.dashboard-inner .card-icon .card-svg { transform: rotate(13deg); }
