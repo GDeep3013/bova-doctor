@@ -5,17 +5,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function DoctorListing () {
-    // const [session, setSession] = useState(null);
-   const session=  getSession()
-    // useEffect(() => {
-    //   const fetchSession = async () => {
-    //     const sessionData = await getSession();
-    //     setSession(sessionData);
-    //   };
-    //   fetchSession();
-    // }, []);
+    const { data: session } = useSession();
+
+    console.log(session?.user?.id)
     const [doctors, setDoctors] = useState([]);
     const router = useRouter();
     const handleDelete = async (id) => {
@@ -61,6 +56,7 @@ export default function DoctorListing () {
             }
             const data = await response.json();
             setDoctors(data);
+           
         } catch (error) {
             console.log(error.message);
         }

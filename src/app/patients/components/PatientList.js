@@ -101,6 +101,12 @@ export default function PatientList() {
                             <td className="py-2 px-4">{patient.email}</td>
                             <td className="py-2 px-4">{patient.phone || "Not available"}</td>
                             <td className="py-2 px-4">
+                            <button
+                                    onClick={() => handleView(patient._id)}
+                                    className="text-blue-600 hover:underline mr-2"
+                                >
+                                    view
+                                </button>
                                 <button
                                     onClick={() => handleEdit(patient._id)}
                                     className="text-blue-600 hover:underline mr-2"

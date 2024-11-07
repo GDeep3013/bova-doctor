@@ -55,49 +55,43 @@ export default function PatientDetial() {
 
     return (
         <AppLayout>
-            <div className="dashboard-outer flex">
-                <div className='dashboard-right w-full'>
-                    <div className="min-h bg-gray-50 flex flex-col p-6">
-                        <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Patient Profile</h1>
-                        <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back(); } } >&lt; Back</button>
+            <div className="flex flex-col p-6">
 
-                        <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
-                            {/* Header */}
-                            <div className="bg-gray-200 p-4 rounded-t-lg flex justify-between items-center">
-                                <span className="font-medium text-gray-700">
-                                    Patient Name: <span className="font-bold">{firstName +' ' + lastName}</span>
-                                </span>
-                                <span className="text-gray-600 text-sm">Date Created: {createdDate}</span>
-                            </div>
+                <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg">
 
-                            {/* Content */}
-                            <div className="p-4 space-y-2 text-gray-700">
-                                <p>
-                                    <span className="font-medium">Patient Email:</span> {email}
-                                </p>
-                                <p>
-                                    <span className="font-medium">Patient Phone Number:</span> {phone}
-                                </p>
-                                <p>
-                                    <span className="font-medium">Discount Rate:</span> 10%
-                                </p>
-                                <p>
-                                    <span className="font-medium">Current Subscriptions:</span> L-01
-                                </p>
-                            </div>
+                    <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Patient Profile</span></div>
 
-                            {/* Footer */}
-                            <div className="p-4 border-t border-gray-300 flex justify-end">
-                                <Link href="/create-plan">
-                                    <button className="py-2 px-4 bg-customBg2 text-white rounded hover:bg-customText">
-                                        Create Plan
-                                    </button>
-                                </Link>
-                            </div>
+                    <div className="p-7 space-y-2 text-gray-700">
+                        <div className="bg-[#EBEDEB] p-4 rounded-[8px] flex justify-between items-center">
+                            <span className="font-medium text-base text-gray-700">
+                                Patient Name: <span>{firstName +' ' + lastName}</span>
+                            </span>
+                            <span className="text-gray-600 text-base">Date Created: {createdDate}</span>
                         </div>
+                        <p className='flex justify-between p-2'>
+                            <span className="text-textColor text-base">Patient Email:</span> <span className='text-left min-w-[126px]'> {email} </span>
+                        </p>
+                        <p className='flex justify-between p-2'>
+                            <span className="text-textColor text-base">Patient Phone Number:</span> <span className='text-left min-w-[126px]'> {phone} </span>
+                        </p>
+                        <p className='flex justify-between p-2'>
+                            <span className="text-textColor text-base">Discount Rate:</span> <span className='text-left min-w-[126px]'> 10% </span>
+                        </p>
+                        <p className='flex justify-between p-2'>
+                            <span className="text-textColor text-base">Current Subscriptions:</span> <span className='text-left min-w-[126px]'> L-01 </span>
+                        </p>
+                    </div>
 
+                    {/* Footer */}
+                    <div className="p-4 flex justify-end">
+                        <Link href="/create-plan">
+                            <button className="py-2 px-4 bg-black text-white rounded-[8px] hover:bg-customText min-w-[196px] min-h-[50px]">
+                                Create Plan
+                            </button>
+                        </Link>
                     </div>
                 </div>
+
             </div>
         </AppLayout>
     );
