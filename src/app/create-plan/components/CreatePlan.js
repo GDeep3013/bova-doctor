@@ -254,9 +254,9 @@ export default function CreatePlan() {
                                 </div>
                             </div>
                             {/* Product Info */}
-                            {selectedItems.map((item) => {
+                            {selectedItems.map((item,index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
-                              return(  <div className="p-4 border-t border-[#AFAAAC] flex gap-4">
+                              return(  <div key={index} className="p-4 border-t border-[#AFAAAC] flex gap-4">
                                     <div className="pr-9 w-full max-w-[400px]">
                                         <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
                                         <div>
