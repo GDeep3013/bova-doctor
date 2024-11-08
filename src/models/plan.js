@@ -6,11 +6,14 @@ const PlanSchema = new mongoose.Schema({
         required: true,
         enum: ['pending', 'completed'],
     },
+    message: {
+        type: String
+    },
     patient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true, },
     items: [
         {
             id: { type: Number, required: true },
-            quantity: { type: Number, default: 1 },
+            quantity: { type: String, default: 1 },
             properties: {
                 frequency: { type: String, default: '' },
                 duration: { type: String, default: '' },
