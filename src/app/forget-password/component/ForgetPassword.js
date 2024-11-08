@@ -71,9 +71,9 @@ export default function ForgetPassword() {
   return (
     <div className='login-outer'>
     <div className="container mx-auto max-w-full p-0">
-      <div className="min-h-screen bg-[url('/images/login-bg.jpg')] relative login-after">
+      <div className="min-h-screen h-full p-[20px] pb-[40px] md:p-0 bg-[url('/images/login-bg.jpg')] bg-no-repeat bg-cover relative login-after">
 
-        <div className="w-full max-w-[720px] bg-[rgba(255,255,255,80%)] p-16 flex flex-col items-center justify-center absolute right-24 z-[1] top-[50%] translate-y-[-50%] rounded-[20px]">
+        <div className="w-full md:max-w-[720px] max-w-[100%] bg-[rgba(255,255,255,80%)] md:p-16 p-5 flex flex-col items-center justify-center md:absolute relative md:right-6 lg:right-24 z-[1] md:top-[50%] top-4 md:translate-y-[-50%] md:translate-x-[0] rounded-[20px]">
           <div className="text-center mb-6 w-full max-w-screen-sm">
             <h2 className="text-2xl font-bold">Forgot Password</h2>
             <p className="text-gray-600"> Please enter your email address.</p>

@@ -10,7 +10,7 @@ export default function Dashboard() {
  
     return (
         <AppLayout>
-            <div className="min-h bg-[#EBEDEB] flex flex-col p-6">
+            <div className="bg-[#EBEDEB] flex flex-col">
                 <div className="w-full bg-black relative text-white rounded-lg flex flex-col md:flex-row items-center py-12 px-16 mb-11 min-h-[293px] mt-4">
                     <div className="flex-1 mb-4 md:mb-0">
                         <h1 className="text-2xl font-semibold mb-2">Welcome to your BOVA {session?.user?.userName}</h1>
@@ -76,14 +76,8 @@ export default function Dashboard() {
 
                     </div>
                 </div>
-
-
-
-
             </div>
-            <footer className='text-center p-5 bg-[#EBEDEB]'>
-                <p>BOVA LABS 2024©</p>
-              </footer>
+     
         </AppLayout>
     )
 }

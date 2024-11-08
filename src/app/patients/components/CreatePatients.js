@@ -84,7 +84,7 @@ export default function Create() {
         }
     };
     const breadcrumbItems = [
-        { label: 'Plans', href: '/plans' },        
+        { label: 'Plans', href: '/create-plan' },        
         { label: 'Add Patient ', href: '/add-patient-info', active: true },
     ];
     return (

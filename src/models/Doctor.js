@@ -14,6 +14,8 @@ const doctorSchema = new mongoose.Schema({
     },
     phone: { type: String, required: true, unique: true },
     specialty: { type: String, required: true },
+    message: { type: String,  },
+    profileImage: { type: String }, 
     resetToken: { type: String }, // Token to reset password
     resetTokenExpiry: { type: Date },
 }, { timestamps: true });

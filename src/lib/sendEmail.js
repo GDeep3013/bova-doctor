@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
-export async function sendEmail(to, subject, resetLink, firstName, lastName) {
+export async function sendEmail(to, subject, resetLink, firstName, lastName ,mailtype) {
   
   const templatePath = path.join(process.cwd(), 'src/app/templates/resetPasswordTemplate.html');
 
@@ -12,7 +12,8 @@ export async function sendEmail(to, subject, resetLink, firstName, lastName) {
   templateContent = templateContent
     .replace('{{resetLink}}', resetLink)
     .replace('{{firstName}}', firstName)
-    .replace('{{lastName}}', lastName);
+    .replace('{{lastName}}', lastName)
+    .replace('{{mailtype}}', mailtype);
 
   const transporter = nodemailer.createTransport({
     service: 'Gmail',

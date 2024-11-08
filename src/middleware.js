@@ -7,7 +7,7 @@ export async function middleware(req) {
 
   // Define accessible routes based on user roles
   const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password'];
-  const adminRoutes = ['/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit'];
+  const adminRoutes = ['/admin/dashboard','/admin/patients','/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit'];
   const doctorRoutes = ['/dashboard', '/patients/create', '/patients/edit', '/patients/listing', '/patients/detail', '/sale', '/create-plan', '/profile'];
 
   // Redirect if no session (user not logged in) and accessing a protected route
@@ -25,7 +25,7 @@ export async function middleware(req) {
     // Check if the user has the correct role to access the route
     if (userRole === 'Admin' && !adminRoutes.some(route => pathname.startsWith(route))) {
       const url = req.nextUrl.clone();
-      url.pathname = '/admin/doctor';
+      url.pathname = '/admin/dashboard';
       return NextResponse.redirect(url);
     }
     
@@ -38,7 +38,7 @@ export async function middleware(req) {
     // If logged-in user tries to access guest route, redirect based on role
     if (guestRoutes.includes(pathname)) {
       const url = req.nextUrl.clone();
-      url.pathname = userRole === 'Admin' ? '/admin/doctor/listing' : '/dashboard';
+      url.pathname = userRole === 'Admin' ? '/admin/dashboard' : '/dashboard';
       return NextResponse.redirect(url);
     }
   }
@@ -49,5 +49,5 @@ export async function middleware(req) {
 
 // Configuring which paths the middleware should apply to
 export const config = {
-  matcher: ['/admin/:path*', '/dashboard', '/login', '/forget-password', '/register', '/reset-password', '/create-password'],
+  matcher: ['/admin/:path*', '/','/dashboard', '/login', '/forget-password', '/register', '/reset-password', '/create-password'],
 };

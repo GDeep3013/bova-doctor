@@ -199,11 +199,8 @@ export default function CreatePlan() {
       
       const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
     const breadcrumbItems = [
-        { label: 'Plans', href: '/plans' },
-        { label: 'Create Patient', href: '/create-patient' },
-        { label: 'Add Patient Information', href: '/add-patient-info' },
-        { label: 'Patient Profile', href: '/patient-profile' },
-        { label: 'Create Patient Plan', href: '/create-patient-plan', active: true },
+        { label: 'Plans', href: '/create-plan' },     
+        { label: 'Create Patient Plan', href: '/create-plan', active: true },
     ];
 
     return (

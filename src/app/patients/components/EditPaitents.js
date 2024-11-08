@@ -134,7 +134,7 @@ export default function EditPatient() {
             {/* <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button> */}
             <div className="container mx-auto max-w-full mt-6">
                 <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg shadow-lg">
-                    <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Add Patient Information</span></div>
+                    <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Patient Information</span></div>
                     <form onSubmit={handleSubmit} className="space-y-2 p-8 w-full">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="relative">
@@ -193,9 +193,9 @@ export default function EditPatient() {
                         <div className="text-right mt-5">
                             <button
                                 type="submit"
-                                className="min-w-[150px] py-2 bg-black text-white rounded-[8px] hover:bg-customText focus:outline-none"
+                                className="min-w-[200px] py-2 bg-black text-white rounded-[8px] hover:bg-customText focus:outline-none"
                             >
-                                Edit Patient
+                                Update Patient Detail
                             </button>
                         </div>
                         {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
