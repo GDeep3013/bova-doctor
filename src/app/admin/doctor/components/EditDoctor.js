@@ -150,7 +150,7 @@ export default function CreateDoctor() {
     
     return (
         <AppLayout>
-            <div className="login-outer flex flex-col p-6">
+            <div className="login-outer flex flex-col">
                 <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit  Doctors</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">

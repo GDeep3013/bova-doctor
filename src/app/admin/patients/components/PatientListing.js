@@ -3,7 +3,7 @@ import AppLayout from '../../../../components/Applayout';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-
+import Link from'next/link'
 export default function PatientList() {
     const { data: session } = useSession();
     const router = useRouter();
@@ -43,10 +43,30 @@ export default function PatientList() {
         setCurrentPage(page);
     };
 
+    const breadcrumbItems = [
+        { label: 'Dashboard', href: '/admin/dashboard' },     
+        { label: 'Patient Listing', href: '/admin/patients', active: true },
+    ]; 
     return (
         <AppLayout>
-        <div className="container mx-auto mt-5">
-            <h1 className="text-2xl font-bold mb-4">Patient List</h1>
+            <div className="container mx-auto ">
+            <nav aria-label="Breadcrumb" className="text-gray-600 text-sm ">
+                    <ol className="flex space-x-2">
+                        {breadcrumbItems.map((item, index) => (
+                            <li key={index} className="flex items-center">
+                                {index > 0 && <span className="mx-2 text-xl"> ›› </span>}
+                                {item.active ? (
+                                    <span className="font-medium text-black text-xl">{item.label}</span>
+                                ) : (
+                                    <Link href={item.href} className="text-[#757575] text-xl hover:underline">
+                                        {item.label}
+                                    </Link>
+                                )}
+                            </li>
+                        ))}
+                    </ol>
+                </nav>
+            <h1 className="text-2xl font-bold mt-2 mb-6">Patient Listing</h1>
             <table className="min-w-full bg-white doctor-listing rounded-[10px]">
                 <thead>
                     <tr className="bg-gray-100 border-b">
@@ -64,11 +84,11 @@ export default function PatientList() {
                             </td>
                         </tr>
                     ) : patients.map((patient) => (
-                        <tr key={patient._id} className="hover:bg-gray-50 border-b">
-                            <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
-                            <td className="py-2 px-4">{patient.email}</td>
-                            <td className="py-2 px-4">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
-                            <td className="py-2 px-4">
+                        <tr key={patient._id} className="hover:bg-gray-50 ">
+                            <td className="py-2 px-4 border-r border-[#B0BAAE]">{patient.firstName} {patient.lastName}</td>
+                            <td className="py-2 px-4 border-r border-[#B0BAAE]">{patient.email}</td>
+                            <td className="py-2 px-4 border-r border-[#B0BAAE]">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
+                            <td className="py-2 px-4 ">
                                 <img
                                     src='/images/eye-open.svg'
                                     alt="Toggle visibility"

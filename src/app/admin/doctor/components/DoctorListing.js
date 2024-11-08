@@ -65,12 +65,32 @@ export default function DoctorListing() {
             fetchDoctors(page);
         }
     }, [session, page]);
+    const breadcrumbItems = [
+        { label: 'Add Doctor', href: '/admin/doctor/create' },     
+        { label: 'Doctors Listing', href: '/admin/doctor', active: true },
+    ];
 
     return (
         <AppLayout>
-            <div className="container mx-auto mt-5">
-                <div className='flex justify-between'>
-                    <h1 className="text-2xl font-bold mb-4">Doctors Listing</h1>
+            <div className="container mx-auto">
+            <nav aria-label="Breadcrumb" className="text-gray-600 text-sm ">
+                    <ol className="flex space-x-2">
+                        {breadcrumbItems.map((item, index) => (
+                            <li key={index} className="flex items-center">
+                                {index > 0 && <span className="mx-2 text-xl"> ›› </span>}
+                                {item.active ? (
+                                    <span className="font-medium text-black text-xl">{item.label}</span>
+                                ) : (
+                                    <Link href={item.href} className="text-[#757575] text-xl hover:underline">
+                                        {item.label}
+                                    </Link>
+                                )}
+                            </li>
+                        ))}
+                    </ol>
+                </nav>
+                <div className='flex justify-between mt-2 mb-6'>
+                    <h1 className="text-2xl font-bold">Doctors Listing</h1>
                     <Link href='/admin/doctor/create' className="min-w-[150px] p-[14px] float-right mb-2 py-2 text-center bg-black text-white font-medium rounded hover:bg-customText focus:outline-none" >
                         Add Doctor
                     </Link>
@@ -79,6 +99,13 @@ export default function DoctorListing() {
                 <table className="min-w-full bg-white doctor-listing rounded-[8px]">
                     <thead>
                         <tr className="bg-gray-100 border-b">
+                        <th className='w-[100px]'>
+                                <input
+                                type="checkbox"
+                                className="w-6 h-6 border-2 border-black rounded-md checked:bg-black checked:border-black focus:outline-none"
+                                id="customCheckbox"
+                            />
+                            </th>
                             <th className="py-2 px-4 text-left text-gray-600">Name</th>
                             <th className="py-2 px-4 text-left text-gray-600">Email</th>
                             <th className="py-2 px-4 text-left text-gray-600">Phone</th>
@@ -89,16 +116,18 @@ export default function DoctorListing() {
                     <tbody>
                         {doctors.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="py-2 px-4 text-center text-gray-500">
+                                <td colSpan={5} className="py-2 px-4 text-center text-gray-500 border-r border-[#B0BAAE]">
                                     No records found
                                 </td>
                             </tr>
                         ) : doctors.map((doctor) => (
-                            <tr key={doctor._id} className="hover:bg-gray-50 border-b">
-                                <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
-                                <td className="py-2 px-4">{doctor.email}</td>
-                                <td className="py-2 px-4">{doctor.phone || "Not available"}</td>
-                                <td className="py-2 px-4">{doctor.specialty || "Not available"}</td>
+                            <tr key={doctor._id} className="hover:bg-gray-50">
+                                <td className='w-[100px] text-center'> <input type="checkbox" className="w-6 h-6 border-2 border-black rounded-md checked:bg-black checked:border-black focus:outline-none" id="customCheckbox" /> </td>
+
+                                <td className="py-2 px-4 border-r border-[#B0BAAE]">{doctor.firstName} {doctor.lastName}</td>
+                                <td className="py-2 px-4 border-r border-[#B0BAAE]">{doctor.email}</td>
+                                <td className="py-2 px-4 border-r border-[#B0BAAE]">{doctor.phone || "Not available"}</td>
+                                <td className="py-2 px-4 border-r border-[#B0BAAE]">{doctor.specialty || "Not available"}</td>
                                 <td className="py-2 px-4">
                                     <button
                                         onClick={() => handleEdit(doctor._id)}
