@@ -49,9 +49,6 @@ export default function EditPatient() {
         }
     }, [id]);
 
-    console.log(firstName, lastName, createdDate,email,phone);
-
-
     return (
         <AppLayout>
             <div className="dashboard-outer flex">
