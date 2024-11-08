@@ -24,3 +24,17 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; /* Chan
 
 .dashboard-inner .card-icon { transform: rotate(-13deg); }
 .dashboard-inner .card-icon .card-svg { transform: rotate(13deg); }
+.custom-table th{ color: #898989; font-weight: 500; }
+.custom-table tbody tr:nth-child(odd){ background-color: #F9F9F9; }
+
+.doctor-listing th{ background-color: #CDD3CC; padding: 21px 25px; }
+.doctor-listing th:first-child{ border-top-left-radius: 10px;  }
+.doctor-listing th:last-child{ border-top-right-radius: 10px; }
+
+.doctor-listing tbody tr:nth-child(odd){ background-color: #F5F9F4; }
+.doctor-listing tbody tr td{ padding: 21px 25px; }
+
+
+.loader { display: flex; justify-content: center; align-items: center; width: 150px; height: 150px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.loader img { width: 100%; height: auto; animation: zoom 5s infinite; }
+@keyframes zoom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }

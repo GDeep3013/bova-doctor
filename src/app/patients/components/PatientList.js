@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
+import { DeleteIcon, EditIcon } from 'components/svg-icons/icons';
+
 
 export default function PatientList() {
     const { data: session } = useSession();
@@ -77,19 +79,19 @@ export default function PatientList() {
 
     return (
         <AppLayout>
-        <div className="container mx-auto mt-5">
+        <div className="container mx-auto">
             <h1 className="text-2xl font-bold mb-4">Patient List</h1>
-            <table className="min-w-full bg-white border border-gray-200">
+            <table className="min-w-full bg-white doctor-listing rounded-[10px]">
                 <thead>
                     <tr className="bg-gray-100 border-b">
-                        <th className="py-2 px-4 text-left text-gray-600">Name</th>
-                        <th className="py-2 px-4 text-left text-gray-600">Email</th>
-                        <th className="py-2 px-4 text-left text-gray-600">Phone</th>
-                        <th className="py-2 px-4 text-left text-gray-600">Action</th>
+                        <th className="py-2 px-4 text-left text-gray-800">Name</th>
+                        <th className="py-2 px-4 text-left text-gray-800">Email</th>
+                        <th className="py-2 px-4 text-left text-gray-800">Phone</th>
+                        <th className="py-2 px-4 text-left text-gray-800">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {patients.length === 0 ? (
+                    {patients && patients.length === 0 ? (
                         <tr>
                             <td colSpan={4} className="py-2 px-4 text-center text-gray-500">
                                 No records found
@@ -101,23 +103,17 @@ export default function PatientList() {
                             <td className="py-2 px-4">{patient.email}</td>
                             <td className="py-2 px-4">{patient.phone || "Not available"}</td>
                             <td className="py-2 px-4">
-                            <button
-                                    onClick={() => handleView(patient._id)}
-                                    className="text-blue-600 hover:underline mr-2"
-                                >
-                                    view
-                                </button>
                                 <button
                                     onClick={() => handleEdit(patient._id)}
-                                    className="text-blue-600 hover:underline mr-2"
+                                    className="text-blue-600 hover:underline px-4"
                                 >
-                                    Edit
+                                    <EditIcon />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(patient._id)}
-                                    className="text-red-600 hover:underline"
+                                    className="text-red-600 hover:underline px-4"
                                 >
-                                    Delete
+                                    <DeleteIcon />
                                 </button>
                             </td>
                         </tr>

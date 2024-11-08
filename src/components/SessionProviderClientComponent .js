@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { getSession, SessionProvider } from "next-auth/react";
-import { usePathname,useRouter } from "next/navigation"; // Import usePathname to get the current path
+import { usePathname, useRouter } from "next/navigation"; // Import usePathname to get the current path
 
 
 export default function SessionProviderClientComponent({ children }) {
@@ -24,7 +24,9 @@ export default function SessionProviderClientComponent({ children }) {
 
   // Show loading if no session and current path is not in guestRoutes
   if (!session && !guestRoutes.includes(pathname)) {
-    return <div>Loading session...</div>;
+    return (<div className="loader">
+      <img src="https://inventory.webziainfotech.com/images/logo.png" alt="BOVA Logo"/>
+    </div>);
   }
 
   return (

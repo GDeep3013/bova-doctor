@@ -61,43 +61,43 @@ export default function LoginForm() {
   };
   return (
     <div className='login-outer'>
-      <div className="container mx-auto max-w-full p-0">
-        <div className="min-h-screen bg-[url('/images/login-bg.jpg')] relative login-after">
-          <div className="w-full max-w-[720px] bg-[rgba(255,255,255,80%)] p-16 flex flex-col items-center justify-center absolute right-24 z-[1] top-[50%] translate-y-[-50%] rounded-[20px]">
-            <div className="text-center mb-4 w-full max-w-screen-sm">
-              <Link href="/"> <img src='/images/logo.png' alt='logo' className='max-w-[166px] m-auto' /> </Link>
-              <h2 className="text-3xl font-bold mt-7">Sign In to your Account</h2>
-              <p className="textColor mt-8 max-w-[500px] m-auto text-base">Lorem &apos;Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry &apos;s</p>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4 py-5 w-full max-w-screen-sm">
-              <div className="relative">
-                <img src="/images/email.svg" alt="Email icon" className="absolute left-3 top-5 w-4 h-4" />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors({ ...errors, email: '' }); }} className={`w-full pl-10 pr-4 py-2 border bg-white min-h-[56px] ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-
-              </div>
-              <div className="relative">
-                <img src="/images/lock.svg" alt="Password icon" className="absolute left-3 top-5 w-4 h-4" />
-                <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors({ ...errors, password: '' }); }} className={`w-full pl-10 pr-4 py-2 border bg-white min-h-[56px] ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
-                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-                <img src={!showPassword ? '/images/eye.svg' : '/images/eye-open.svg'} alt="Toggle visibility" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-[18px] w-5 h-5 cursor-pointer" />
-                {loginError && <p className="text-red-500 text-sm mt-1">{loginError}</p>}
-
-              </div>
-              <div className="flex items-center justify-between">
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" className="form-checkbox w-5 h-5" />
-                  <span className='text-textColor text-base'>Remember me</span>
-                </label>
-                <Link href="/forget-password" className="text-base text-textColor">Forgot Password?</Link>
-              </div>
-
-              <button type="submit" className="w-full py-2 bg-black text-white font-bold rounded hover:bg-customText focus:outline-none min-h-[50px]">Login</button>
-
-            </form>
+    <div className="container mx-auto max-w-full p-0">
+      <div className="min-h-screen h-full p-[20px] pb-[40px] md:p-0 bg-[url('/images/login-bg.jpg')] bg-no-repeat bg-cover relative login-after">
+        <div className="w-full md:max-w-[720px] max-w-[100%] bg-[rgba(255,255,255,80%)] md:p-16 p-5 flex flex-col items-center justify-center md:absolute relative md:right-6 lg:right-24 z-[1] md:top-[50%] top-4 md:translate-y-[-50%] md:translate-x-[0] rounded-[20px]">
+          <div className="text-center mb-4 w-full max-w-screen-sm">
+            <Link href="/"> <img src='/images/logo.png' alt='logo' className='md:max-w-[166px] max-w-[150px] m-auto'/> </Link>
+            <h2 className="md:text-3xl font-bold md:mt-7 mt-4 text-2xl">Sign In to your Account</h2>
+            <p className="textColor md:mt-8 mt-3 max-w-[500px] m-auto text-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s</p>
           </div>
+          <form onSubmit={handleSubmit} className="space-y-4 py-5 w-full max-w-screen-sm">
+            <div className="relative">
+              <img src="/images/email.svg" alt="Email icon" className="absolute left-3 top-5 w-4 h-4" />
+              <input type="email" placeholder="Email" value={email} onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors({ ...errors, email: '' }); }} className={`w-full pl-10 pr-4 py-2 border bg-white min-h-[56px] ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+
+            </div>
+            <div className="relative">
+              <img src="/images/lock.svg" alt="Password icon" className="absolute left-3 top-5 w-4 h-4" />
+              <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors({ ...errors, password: '' }); }} className={`w-full pl-10 pr-4 py-2 border bg-white min-h-[56px] ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
+              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+              <img src={!showPassword ? '/images/eye.svg' : '/images/eye-open.svg'} alt="Toggle visibility" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-[18px] w-5 h-5 cursor-pointer" />
+              {loginError && <p className="text-red-500 text-sm mt-1">{loginError}</p>}
+
+            </div>
+            <div className="flex items-center justify-between">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input type="checkbox" className="form-checkbox w-5 h-5" />
+                <span className='text-textColor text-base'>Remember me</span>
+              </label>
+              <Link href="/forget-password" className="text-base text-textColor hover:text-black">Forgot Password?</Link>
+            </div>
+
+            <button type="submit" className="w-full py-2 bg-black text-white font-bold rounded hover:bg-customText focus:outline-none min-h-[50px]">Login</button>
+
+          </form>
         </div>
       </div>
     </div>
+  </div>
   )
 }
