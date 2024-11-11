@@ -22,8 +22,8 @@ export default function AdminDashboard() {
 
     return (
         <AppLayout>
-            <div className="bg-[#EBEDEB] flex flex-col">
-                <div className="w-full bg-black relative text-white rounded-lg flex flex-col md:flex-row items-center py-12 px-16 mb-8">
+            <div className="flex flex-col">
+                <div className="w-full bg-black relative text-white rounded-lg flex flex-col md:flex-row items-center mt-9 py-12 px-16 mb-8">
                     <div className="flex-1 mb-4 md:mb-0">
                         <h1 className="text-2xl font-semibold mb-2">Welcome to your BOVA Admin Panel</h1>
                         <p className="text-sm mb-4"> We will be launching the full site access in less than 2 weeks! Stay tuned. </p>
@@ -31,7 +31,7 @@ export default function AdminDashboard() {
                         <button className="bg-white text-black font-medium px-4 py-2 rounded min-w-[196px] min-h-[50px]"> Invite Doctors </button>
                     </div>
                     <div className="md:w-1/3 flex justify-center absolute right-9 bottom-0">
-                        <img src="/images/admin-img.png" alt="Doctor" />
+                        <img src="/images/admin-img.png" alt="Doctor" className='max-w-[90%]'/>
                     </div>
                 </div>
 

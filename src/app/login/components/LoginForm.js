@@ -63,7 +63,7 @@ export default function LoginForm() {
     <div className='login-outer'>
     <div className="container mx-auto max-w-full p-0">
       <div className="min-h-screen h-full p-[20px] pb-[40px] md:p-0 bg-[url('/images/login-bg.jpg')] bg-no-repeat bg-cover relative login-after">
-        <div className="w-full md:max-w-[720px] max-w-[100%] bg-[rgba(255,255,255,80%)] md:p-16 p-5 flex flex-col items-center justify-center md:absolute relative md:right-6 lg:right-24 z-[1] md:top-[50%] top-4 md:translate-y-[-50%] md:translate-x-[0] rounded-[20px]">
+        <div className="w-full md:max-w-[500px] xl:max-w-[600px] 2xl:max-w-[720px] max-w-[100%] bg-[rgba(255,255,255,80%)] 2xl:p-16 p-5 flex flex-col items-center justify-center md:absolute relative md:right-9 lg:right-16 2xl:right-24 z-[1] md:top-[50%] top-4 md:translate-y-[-50%] md:translate-x-[0] rounded-[20px]">
           <div className="text-center mb-4 w-full max-w-screen-sm">
             <Link href="/"> <img src='/images/logo.png' alt='logo' className='md:max-w-[166px] max-w-[150px] m-auto'/> </Link>
             <h2 className="md:text-3xl font-bold md:mt-7 mt-4 text-2xl">Sign In to your Account</h2>

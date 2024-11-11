@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
-import { DeleteIcon, EditIcon } from 'components/svg-icons/icons';
+import { DeleteIcon, EditIcon,ViewIcon } from 'components/svg-icons/icons';
 
 
 export default function PatientList() {
@@ -46,7 +46,7 @@ export default function PatientList() {
     };
     function formatPhoneNumber(phoneNumber) {
         if (!phoneNumber) return phoneNumber; // Return as is if not 10 digits
-      
+
         return `${phoneNumber.slice(0, 5)}-${phoneNumber.slice(5)}`;
       }
 
@@ -103,12 +103,24 @@ export default function PatientList() {
                             <td className="py-2 px-4">{patient.email}</td>
                             <td className="py-2 px-4">{patient.phone || "Not available"}</td>
                             <td className="py-2 px-4">
+
+                            <button
+                                    onClick={() => handleView(patient._id)}
+                                    className="text-blue-600 hover:underline px-4"
+                                >
+                                    <ViewIcon />
+                                </button>
+
+
                                 <button
                                     onClick={() => handleEdit(patient._id)}
                                     className="text-blue-600 hover:underline px-4"
                                 >
                                     <EditIcon />
                                 </button>
+
+
+
                                 <button
                                     onClick={() => handleDelete(patient._id)}
                                     className="text-red-600 hover:underline px-4"

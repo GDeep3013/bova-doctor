@@ -84,32 +84,16 @@ export default function Create() {
         }
     };
     const breadcrumbItems = [
-        { label: 'Plans', href: '/create-plan' },        
+        { label: 'Plans', href: '/create-plan' },
         { label: 'Add Patient ', href: '/add-patient-info', active: true },
     ];
     return (
         <AppLayout>
             <div className="login-outer flex flex-col">
-                <nav aria-label="Breadcrumb" className="text-gray-600 text-sm">
-                    <ol className="flex space-x-2">
-                        {breadcrumbItems.map((item, index) => (
-                            <li key={index} className="flex items-center">
-                                {index > 0 && <span className="mx-2 text-xl"> ›› </span>}
-                                {item.active ? (
-                                    <span className="font-medium text-black text-xl">{item.label}</span>
-                                ) : (
-                                    <Link href={item.href} className="text-[#757575] text-xl hover:underline">
-                                        {item.label}
-                                    </Link>
-                                )}
-                            </li>
-                        ))}
-                    </ol>
-                </nav>
-                {/* <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button> */}
+                <h1 className='page-title pt-2 text-2xl pb-1'>Create Patient</h1>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full mt-6">
-                    <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg shadow-lg">
-                        <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Add Patient Information</span></div>
+                    <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
                         <form onSubmit={handleSubmit} className="space-y-2 p-8 w-full">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="relative">
@@ -118,7 +102,7 @@ export default function Create() {
                                         placeholder="First Name"
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
-                                        className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-42${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                        className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
                                     {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                                 </div>
@@ -129,7 +113,7 @@ export default function Create() {
                                         placeholder="Last Name"
                                         value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
-                                        className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                        className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
                                     {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                                 </div>
@@ -141,7 +125,7 @@ export default function Create() {
                                     placeholder="Email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
@@ -152,23 +136,23 @@ export default function Create() {
                                     placeholder="Phone"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
-                                    className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                             </div>
 
                             <div className="relative">
-                                <textarea className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none outline-none" value={message}  onChange={(e) => setMessage(e.target.value)} rows="4" placeholder="Message"></textarea>
+                                <textarea className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none outline-none" value={message}  onChange={(e) => setMessage(e.target.value)} rows="4" placeholder="Message"></textarea>
                             </div>
 
                             <div className="message-text">
                                 <p className='text-base text-textColor'>A plan sent via text message connects better than just email.</p>
                             </div>
 
-                            <div className="text-right mt-5">
+                            <div className="text-left mt-5">
                                 <button
                                     type="submit"
-                                    className="min-w-[150px] py-2 bg-black text-white rounded-[8px] hover:bg-customText focus:outline-none"
+                                    className="min-w-[150px] py-2 bg-customBg2 text-white rounded-[8px] hover:bg-customText focus:outline-none"
                                 >
                                     Create Patient
                                 </button>

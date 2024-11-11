@@ -7,77 +7,71 @@ import React, { useState,useEffect } from 'react'
 
 export default function Dashboard() {
     const { data: session } = useSession();
- 
+
     return (
         <AppLayout>
-            <div className="bg-[#EBEDEB] flex flex-col">
-                <div className="w-full bg-black relative text-white rounded-lg flex flex-col md:flex-row items-center py-12 px-16 mb-11 min-h-[293px] mt-4">
-                    <div className="flex-1 mb-4 md:mb-0">
-                        <h1 className="text-2xl font-semibold mb-2">Welcome to your BOVA {session?.user?.userName}</h1>
-                        <p className="text-sm mb-4">
-                            We will be launching the full site access in less than 2 weeks! Stay tuned.
-                        </p>
-                        <p className="italic mb-6">- Team BOVA</p>
-                        <button className="bg-white text-black font-medium px-4 py-2 rounded min-w-[196px] min-h-[50px]">
-                            Invite Patients
-                        </button>
-                    </div>
-                    <div className="md:w-1/3 flex justify-center absolute right-0 bottom-0">
-                        <img src="/images/doctor-img.png" alt="Doctor" />
-                    </div>
-                </div>
-                <div className="w-full bg-[#CDD3CC] order-form flex justify-between items-center p-4 mb-4">
-                    <p className="text-black font-medium">BOVA Patient Order Form</p>
-                    <button className="bg-black text-white font-semibold px-4 py-2 rounded">
-                        Review Plan (2)
-                    </button>
-                </div>
+             <div className="flex flex-col">
+                    <h1 className='page-title pt-2 pb-4 text-2xl'>Home</h1>
+                    <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
+                        <h2 className="text-xl font-semibold mb-4 p-5 border-b border-[#AFAAAC]">BOVA Patient Order Form</h2>
+                        <div className="border-b border-[#AFAAAC] flex items-center p-5 pb-4 mb-4">
 
-                <div className='order-outer'>
-                    <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                        {/* Left Card */}
-                        <div className="bg-white p-6 rounded-lg shadow">
-                            <p className="text-gray-500 mb-4">
-                                Add a new patient button takes you to the patient information form.
-                            </p>
-                            <label className="flex items-center mb-6">
-                                <input type="radio" name="patient" className="mr-2" />
-                                <span className="text-black">Add New Patient</span>
-                            </label>
-                            Link
-                            <div className='text-right pt-4'>
-                                <Link  href='/patients/create'className="bg-black text-white px-4 py-2 rounded ml-auto">
-                                    Add Patient
-                                </Link>
+                            <div className='patient-details max-w-[300px] w-full'>
+                            <div className="flex items-center mb-4">
+                                <input type="checkbox" name="patient" className="mr-2" />
+                                <span className="text-gray-600">Add Patient</span>
                             </div>
+                            <Link href='/patients/create' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit">
+                                Add Patient
+                            </Link>
+                            </div>
+
+                            <p className="text-sm text-gray-500 mt-2 w-full">Add patient button takes you to the patient information form.</p>
+
                         </div>
 
-                        {/* Right Card */}
-                        <div className="bg-white p-6 rounded-lg shadow">
-                            <p className="text-gray-500 mb-4">
-                                Select the patients you would like to update/review request.
-                            </p>
-                            <label className="flex items-center mb-2">
-                                <input type="radio" name="patient" className="mr-2" />
-                                <span className="text-black">Alex Smith</span>
-                            </label>
-                            <label className="flex items-center mb-6">
-                                <input type="radio" name="patient" className="mr-2" />
-                                <span className="text-black">Andrea Gold</span>
-                            </label>
-                            <div className='flex justify-between items-center'>
-                                <p className="text-gray-500">Profit Margin: 25%</p>
-                                <button className="bg-black text-white px-4 py-2 rounded">
-                                    Updates Required
-                                </button>
+                        {/* Existing Patients Section */}
+                        <div className="mb-4 p-5 flex items-center">
+                        <div className='patient-details max-w-[300px] w-full'>
+                            <div className="flex items-center mb-4">
+                                <input
+                                    type="checkbox"
+                                    name="patient"
+                                    className="mr-2"
+                                />
+                                <span className="text-gray-600">Alex Smith</span>
                             </div>
+                            <div className="flex items-center mb-2">
+                                <input
+                                    type="checkbox"
+                                    name="patient"
+                                    className="mr-2"
+                                />
+                                <span className="text-gray-600">Andrea Gold</span>
+                            </div>
+                            <button className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit">
+                                Updates Required
+                            </button>
+
+                            </div>
+
+                            <p className="text-sm w-full text-gray-500 mt-2">Select the patients you would like to update/review request.</p>
                         </div>
 
+                        {/* Profit Margin Section */}
+                        <div className="border-t border-[#AFAAAC] p-5 pt-4 text-gray-600">
+                            <p>Profit Margin: 25%</p>
+                        </div>
+                    </div>
+
+                    {/* Footer Message */}
+                    <div className="w-full max-w-3xl bg-[#d6dee5] p-8 mt-6 rounded-lg">
+                        <p>Welcome to your BOVA <span className="font-semibold">[Name of Doctor]</span></p>
+                        <p className="mt-2">We will be launching the full site access in less than 2 weeks!</p>
+                        <p className="mt-2 font-semibold">Stay tuned.<br />Team BOVA</p>
                     </div>
                 </div>
-            </div>
-     
+
         </AppLayout>
     )
 }
