@@ -78,7 +78,7 @@ export default function CreateDoctor() {
                     setUserType(data.userType);
                     setSpecialty(data.specialty);
                     setMessage(data.message);
-                    setProfileImage(data.profileImage);
+                    setProfileImage(data.profileImage?process.env.NEXT_PUBLIC_BASE_URL+data.profileImage:'');
 
                 } else {
                     Swal.fire({
@@ -93,6 +93,7 @@ export default function CreateDoctor() {
             fetchDoctorData();
         }
     }, [id]);
+    console.log(profileImage)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -244,7 +245,7 @@ export default function CreateDoctor() {
                                 <div className="relative text-center">
                                     <div className="m-auto rounded-full overflow-hidden border-[12px]  border-customBg3">
                                         <img
-                                            src={selectedImage ? URL.createObjectURL(selectedImage) : (profileImage ? `${process.env.NEXT_PUBLIC_BASE_URL}${profileImage}` : '/images/doctor-profile.jpg')}
+                                            src={selectedImage ? URL.createObjectURL(selectedImage) : (profileImage ? profileImage : '/images/doctor-profile.jpg')}
                                             alt="Profile Preview"
                                             className="w-full h-full object-cover mx-auto"
                                         />
