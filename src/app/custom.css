@@ -1,3 +1,5 @@
+input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; box-shadow: 0 0 0px 1000px white inset; }
+.dashboard-inner input:-webkit-autofill{ -webkit-box-shadow: 0 0 0px 1000px #f9f9f9 inset; box-shadow: 0 0 0px 1000px #f9f9f9 inset; }
 .login-after::after{ content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0 0 0 / 25%); }
 .form-checkbox{ accent-color: #cad3cc; }
 .user-icon path{ fill: #64748b; }
@@ -13,7 +15,6 @@ button.bg-black svg.m-auto path { fill: #fff; }
 .min-h { height: calc(100vh - 161px); overflow: hidden; overflow-y: auto; }
 .dashboard-right input{ accent-color: #51595B; }
 .bg-gray-200{ background-color: #D6DEE5; }
-input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; /* Change `white` to your preferred background color */ box-shadow: 0 0 0px 1000px white inset; }
 .sidebar nav svg{ display: inline-block; margin-right: 10px; width: 24px; }
 .sidebar nav svg path{ fill: #000; }
 .sidebar nav .submenu{ position: relative; margin-left: 35px;}
@@ -33,7 +34,8 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; /* Chan
 
 .doctor-listing tbody tr:nth-child(odd){ background-color: #F5F9F4; }
 .doctor-listing tbody tr td{ padding: 21px 25px; }
-
+form select{ appearance: none; -webkit-appearance: none; background: url('/images/select-arrow.png') no-repeat; background-position: 98%;}
+.doctor-listing input[type="checkbox"] { vertical-align: middle; }
 
 .loader { display: flex; justify-content: center; align-items: center; width: 150px; height: 150px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 .loader img { width: 100%; height: auto; animation: zoom 5s infinite; }
