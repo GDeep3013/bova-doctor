@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 import { DeleteIcon, EditIcon } from 'components/svg-icons/icons';
-
-
+import Link from 'next/link'
 export default function PatientList() {
     const { data: session } = useSession();
     const [patients, setPatients] = useState([]);
@@ -46,9 +45,9 @@ export default function PatientList() {
     };
     function formatPhoneNumber(phoneNumber) {
         if (!phoneNumber) return phoneNumber; // Return as is if not 10 digits
-      
+
         return `${phoneNumber.slice(0, 5)}-${phoneNumber.slice(5)}`;
-      }
+    }
 
     const handleEdit = (id) => {
         router.push(`/patients/edit/${id}`);
@@ -79,48 +78,66 @@ export default function PatientList() {
 
     return (
         <AppLayout>
-        <div className="container mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Patient List</h1>
-            <table className="min-w-full bg-white doctor-listing rounded-[10px]">
-                <thead>
-                    <tr className="bg-gray-100 border-b">
-                        <th className="py-2 px-4 text-left text-gray-800">Name</th>
-                        <th className="py-2 px-4 text-left text-gray-800">Email</th>
-                        <th className="py-2 px-4 text-left text-gray-800">Phone</th>
-                        <th className="py-2 px-4 text-left text-gray-800">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {patients && patients.length === 0 ? (
-                        <tr>
-                            <td colSpan={4} className="py-2 px-4 text-center text-gray-500">
-                                No records found
-                            </td>
+            <div className="container mx-auto">
+                <div className='flex justify-between mt-2 mb-6'>
+                    <h1 className="text-2xl font-bold">Patient List</h1>
+                    <Link href='/patients/create' className="min-w-[150px] p-[14px] float-right mb-2 py-2 text-center bg-black text-white font-medium rounded hover:bg-customText focus:outline-none" >
+                        Add Patient
+                    </Link>
+                </div>
+                <table className="min-w-full bg-white doctor-listing rounded-[10px]">
+                    <thead>
+                        <tr className="bg-gray-100 border-b">
+                            <th className="py-2 px-4 text-left text-gray-800">Name</th>
+                            <th className="py-2 px-4 text-left text-gray-800">Email</th>
+                            <th className="py-2 px-4 text-left text-gray-800">Phone</th>
+                            <th className="py-2 px-4 text-left text-gray-800">Action</th>
                         </tr>
-                    ) : patients.map((patient) => (
-                        <tr key={patient._id} className="hover:bg-gray-50 border-b">
-                            <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
-                            <td className="py-2 px-4">{patient.email}</td>
-                            <td className="py-2 px-4">{patient.phone || "Not available"}</td>
-                            <td className="py-2 px-4">
-                                <button
-                                    onClick={() => handleEdit(patient._id)}
-                                    className="text-blue-600 hover:underline px-4"
-                                >
-                                    <EditIcon />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(patient._id)}
-                                    className="text-red-600 hover:underline px-4"
-                                >
-                                    <DeleteIcon />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    </AppLayout>
+                    </thead>
+                    <tbody>
+                        {patients && patients.length === 0 ? (
+                            <tr>
+                                <td colSpan={4} className="py-2 px-4 text-center text-gray-500">
+                                    No records found
+                                </td>
+                            </tr>
+                        ) : patients.map((patient) => (
+                            <tr key={patient._id} className="hover:bg-gray-50 border-b">
+                                <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
+                                <td className="py-2 px-4">{patient.email}</td>
+                                <td className="py-2 px-4">{patient.phone || "Not available"}</td>
+                                <td className="py-2 px-4">
+                                    <div className='flex'>
+                                <img
+                                    src='/images/eye-open.svg'
+                                            alt="Toggle visibility"
+                                            title='View Detail'
+                                    onClick={() => handleView(patient._id)}
+                                    className="cursor-pointer w-6 "
+                                />
+                                    <button
+                                            onClick={() => handleEdit(patient._id)}
+                                            title='Edit Patient'
+                                            
+                                        className="text-blue-600 hover:underline px-4"
+                                    >
+                                        <EditIcon />
+                                    </button>
+                                    <button
+                                            onClick={() => handleDelete(patient._id)}
+                                            title='Delete Patient'
+                                            
+                                        className="text-red-600 hover:underline "
+                                    >
+                                        <DeleteIcon />
+                                        </button>
+                                        </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </AppLayout>
     );
 }
