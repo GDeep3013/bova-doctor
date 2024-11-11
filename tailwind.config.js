@@ -1,11 +1,11 @@
-/** @type {import('tailwindcss').Config} */ 
+/** @type {import('tailwindcss').Config} */
 
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}', // Note the addition of the `app` directory.
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
- 
+
     // Or if using `src` directory:
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
@@ -16,7 +16,7 @@ module.exports = {
         foreground: "var(--foreground)",
         customBg: "#d6dee5",
         customBg2: "#3C96B5",
-        customBg3: "#CDD3CC",
+        customBg3: "#d6dee5",
         customText: "var(--text-color)",
         primary: "var(--primary-color)",
         textColor: "#898989",

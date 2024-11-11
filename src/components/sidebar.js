@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
   };
 
   return (
-    <div className={`w-full max-w-[320px] inset-y-0 transition-transform ease-in-out duration-1500 transform sidebar ${isSidebarOpen ? 'translate-x-0 p-4' : '-translate-x-[100%] !max-w-[0] opacity-0 p-0'}`}>
+    <div className={`w-full max-w-[320px] inset-y-0 transition-transform ease-in-out duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 p-4' : '-translate-x-[100%] !max-w-[0] opacity-0 p-0'}`}>
     <nav className="space-y-4 pt-3">
       {session?.user?.userType === 'Admin' ? (
       <>
@@ -100,9 +100,6 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               </ul>
             )}
           </div>
-          <Link href="/dashboard" className="block border-t border-[#D4D4D4] !mt-6 pt-5 text-gray-700 hover:text-gray-900 text-xl">
-            <SettingIcon /> Settings
-          </Link>
         </>
       )}
       <button onClick={handleLogout} className="block text-gray-700 hover:text-gray-900 text-xl">

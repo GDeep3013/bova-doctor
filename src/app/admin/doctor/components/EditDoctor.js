@@ -109,12 +109,12 @@ export default function CreateDoctor() {
                 if (selectedImage) {
                     formData.append('profileImage', selectedImage); // Append the selected image
                 }
-    
+
                 const response = await fetch(`/api/doctors/edit/${id}`, {
                     method: 'PUT',
                     body: formData, // Use FormData as the body
                 });
-    
+
                 if (response.ok) {
                     Swal.fire({
                         title: 'Success!',
@@ -148,14 +148,14 @@ export default function CreateDoctor() {
             }
         }
     };
-    
+
     return (
         <AppLayout>
             <div className="login-outer flex flex-col">
                 <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit  Doctors</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">
-                    <div className="w-full max-w-7xl bg-white rounded-lg shadow-lg">
+                    <div className="w-full max-w-7xl bg-white rounded-lg rounded-lg border border-[#AFAAAC]">
                         <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Doctor Information</span></div>
                         <div className='flex p-8'>
                             <form onSubmit={handleSubmit} className="space-y-4 w-full pr-16">
@@ -167,7 +167,7 @@ export default function CreateDoctor() {
                                             onChange={(e) => {
                                                 setFirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' });
                                             }}
-                                            className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-blue-500 ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                         />
                                         {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                                     </div>
@@ -177,7 +177,7 @@ export default function CreateDoctor() {
                                             placeholder="LastName"
                                             value={lastName}
                                             onChange={(e) => { setLastName(e.target.value); if (errors.lastName) setErrors({ ...errors, lastName: '' }); }}
-                                            className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-blue-500 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`} />
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`} />
                                         {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                                     </div>
                                 </div>
@@ -189,7 +189,7 @@ export default function CreateDoctor() {
                                             placeholder="Email"
                                             value={email}
                                             onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors({ ...errors, email: '' }); }}
-                                            className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                         />
                                         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                                     </div>
@@ -200,7 +200,7 @@ export default function CreateDoctor() {
                                             placeholder="Phone"
                                             value={phone}
                                             onChange={(e) => { setPhone(e.target.value); if (errors.phone) setErrors({ ...errors, phone: '' }); }}
-                                            className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                         />
                                         {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                                     </div>
@@ -209,7 +209,7 @@ export default function CreateDoctor() {
                                     <select
                                         value={userType}
                                         onChange={(e) => { setUserType(e.target.value); if (errors.userType) setErrors({ ...errors, userType: '' }); }}
-                                        className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-blue-500 ${errors.userType ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                        className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.userType ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                     >
                                         <option value="">Select User Type</option>
                                         <option value="Admin">Admin</option>
@@ -223,18 +223,18 @@ export default function CreateDoctor() {
                                         placeholder="Specialty"
                                         value={specialty}
                                         onChange={(e) => { setSpecialty(e.target.value); if (errors.specialty) setErrors({ ...errors, specialty: '' }); }}
-                                        className={`w-full bg-inputBg min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-blue-500 ${errors.specialty ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                        className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.specialty ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                     />
                                     {errors.specialty && <p className="text-red-500 text-sm mt-1">{errors.specialty}</p>}
                                 </div>
 
-                                <div className="relative"><textarea className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-4 mt-1 resize-none outline-none" value={message} onChange={(e) => { setMessage(e.target.value) }} rows="4" placeholder="Message"></textarea></div>
+                                <div className="relative"><textarea className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 resize-none outline-none" value={message} onChange={(e) => { setMessage(e.target.value) }} rows="4" placeholder="Message"></textarea></div>
 
                                 <div className="message-text"><p className="text-base text-textColor">A plan sent via text message connects better than just email.</p></div>
 
                                 <button
                                     type="submit"
-                                    className="min-w-[200px] py-2 bg-black text-white rounded-[8px] hover:bg-customText focus:outline-none"
+                                    className="min-w-[200px] py-2 bg-customBg2 text-white rounded-[8px] hover:bg-customText focus:outline-none"
                                 >
                                     Update Doctor Detail
                                 </button>
@@ -243,7 +243,7 @@ export default function CreateDoctor() {
                             </form>
                             <div className="doctor-profile w-full max-w-[270px] text-center">
                                 <div className="relative text-center">
-                                    <div className="m-auto rounded-full overflow-hidden border-[12px]  border-[#CDD3CC]">
+                                    <div className="m-auto rounded-full overflow-hidden border-[12px]  border-customBg3">
                                         <img
                                             src={selectedImage ? URL.createObjectURL(selectedImage) : (profileImage ? profileImage : '/images/doctor-profile.jpg')}
                                             alt="Profile Preview"
@@ -253,7 +253,7 @@ export default function CreateDoctor() {
                                 </div>
 
                                 <div className="mt-4 flex space-x-2 justify-center">
-                                    <label className="text-blue-500 cursor-pointer hover:underline">
+                                    <label className="text-customBg2 cursor-pointer hover:underline">
                                         <input
                                             type="file"
                                             accept="image/*"

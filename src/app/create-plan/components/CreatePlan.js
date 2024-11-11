@@ -223,26 +223,12 @@ export default function CreatePlan() {
 
     return (
         <AppLayout>
-            <div className="bg-[#EBEDEB] flex flex-col">
-                <nav aria-label="Breadcrumb" className="text-gray-600 text-sm">
-                    <ol className="flex space-x-2">
-                        {breadcrumbItems.map((item, index) => (
-                            <li key={index} className="flex items-center">
-                                {index > 0 && <span className="mx-2 text-xl"> ›› </span>}
-                                {item.active ? (
-                                    <span className="font-medium text-black text-xl">{item.label}</span>
-                                ) : (
-                                    <Link href={item.href} className="text-[#757575] text-xl hover:underline">
-                                        {item.label}
-                                    </Link>
-                                )}
-                            </li>
-                        ))}
-                    </ol>
-                </nav>
+            <div className="flex flex-col">
+            <h1 className="text-2xl mb-1">Create Patient Plan</h1>
+            <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
                 <div className="mt-8 flex gap-8">
-                    <div className="lg:col-span-2 space-y-4 rounded-lg bg-white shadow-lg w-full">
-                        <div className="bg-customBg3 p-4">
+                    <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
+                        <div className="bg-customBg3 p-4 rounded-t-lg">
                             {selectedPatient ? (
                                 <span className="font-medium text-[19px] text-black">
                                     Patient Name: <span className="font-bold">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
@@ -282,7 +268,7 @@ export default function CreatePlan() {
                                 </div>
                             )}
                         </div>
-                        <div className='p-5'>
+                        <div className='p-0'>
                             {/* Product Selection */}
                             <div className="p-4">
                                 <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
@@ -340,7 +326,7 @@ export default function CreatePlan() {
                                             <select
                                                 value={itemData?.quantity}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
-                                                className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             >
                                                 <option value="5">Capsules 5 (recommended)</option>
                                                 <option value="10">10</option>
@@ -352,7 +338,7 @@ export default function CreatePlan() {
                                             <select
                                                 value={itemData?.properties.frequency}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
-                                                className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             >
                                                 <option>Frequency Once Per Day (Anytime)</option>
                                                 <option>Twice Per Day</option>
@@ -364,7 +350,7 @@ export default function CreatePlan() {
                                             <select
                                                 value={itemData?.properties.duration}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
-                                                className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             >
                                                 <option>Duration Once Per Day</option>
                                                 <option>Twice Per Day</option>
@@ -374,7 +360,7 @@ export default function CreatePlan() {
                                             <select
                                                 value={itemData?.properties.takeWith}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
-                                                className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             >
                                                 <option>Take with Water</option>
                                                 <option>Juice</option>
@@ -384,7 +370,7 @@ export default function CreatePlan() {
                                             <textarea
                                                 value={itemData?.properties.notes}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
-                                                className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
+                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
                                                 rows="4"
                                                 placeholder="Add Notes"
                                             ></textarea>
@@ -398,7 +384,7 @@ export default function CreatePlan() {
                                 <textarea
                                     value={formData.message}
                                     onChange={(e) => handleFormDataChange(0, 'message', e.target.value)}
-                                    className="w-full bg-inputBg min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
+                                    className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
                                     rows="4"
                                     placeholder="Message"
                                 ></textarea>
@@ -406,10 +392,9 @@ export default function CreatePlan() {
                             {/* Send to Patient Button */}
                             <div className="p-4 text-right">
                                 <button
-                                    onClick={() => { handleSubmit() }}
-                                    disabled={formData.items.length === 0 || !formData.patient_id}
-                                    className={`min-w-[150px] py-2 bg-black text-white font-medium rounded hover:bg-customText focus:outline-none ${formData.items.length === 0 || !formData.patient_id ? 'cursor-not-allowed' : ''}`}
-                                >
+                                       onClick={() => { handleSubmit() }}
+                                       disabled={formData.items.length === 0 || !formData.patient_id}
+                                className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px] ">
                                     Send to Patient
                                 </button>
                             </div>
@@ -434,23 +419,23 @@ export default function CreatePlan() {
                             <div className='p-5'>
                                 <div className="mt-2 space-y-2">
                                     <div className="flex justify-between">
-                                        <span className='text-textColor text-regular'>Product: L-01</span>
-                                        <span className='text-textColor2'>$68.00</span>
+                                        <span className='text-[#3F4647] text-regular'>Product: L-01</span>
+                                        <span className='text-[#3F4647]'>$68.00</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className='text-textColor text-regular'>Patient Discount (10%)</span>
-                                        <span className='text-textColor2'>-$6.80</span>
+                                        <span className='text-[#3F4647] text-regular'>Patient Discount (10%)</span>
+                                        <span className='text-[#3F4647]'>-$6.80</span>
                                     </div>
                                     <div className="flex justify-between border-b border-[#AFAAAC] pb-4">
-                                        <span className='text-textColor text-regular'>Subtotal</span>
-                                        <span className='text-textColor2'>$58.00</span>
+                                        <span className='text-[#3F4647] text-regular'>Subtotal</span>
+                                        <span className='text-[#3F4647] font-semibold'>$58.00</span>
                                     </div>
                                 </div>
-                                <div className='text-center py-5'>
+                                <div className='text-right py-5'>
                                     <button
-                                        onClick={() => { handleSubmit() }}
-                                        disabled={formData.items.length === 0 || !formData.patient_id}
-                                        className={`min-w-[150px] py-2 bg-black text-white font-medium rounded hover:bg-customText focus:outline-none ${formData.items.length === 0 || !formData.patient_id ? 'cursor-not-allowed' : ''}`} >
+                                    onClick={() => { handleSubmit() }}
+                                    disabled={formData.items.length === 0 || !formData.patient_id}
+                                    className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
                                         Send to Patient
                                     </button>
                                 </div>
@@ -464,7 +449,7 @@ export default function CreatePlan() {
                         <div className="bg-white p-6 rounded-lg max-w-[1020px] w-full">
                             <div className='flex justify-between items-center py-4'>
                             <h2 className="text-xl font-bold">Select Product</h2>
-                                <button onClick={closeModal}> <CloseIcon /> </button> 
+                                <button onClick={closeModal}> <CloseIcon /> </button>
                                 </div>
                             <input
                                 type="text"

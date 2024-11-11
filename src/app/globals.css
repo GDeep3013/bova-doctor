@@ -3,73 +3,59 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Regular.eot');
-  src: url('/fonts/Inter-Regular.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Inter-Regular.woff2') format('woff2'),
-      url('/fonts/Inter-Regular.woff') format('woff'),
-      url('/fonts/Inter-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Medium.eot');
-  src: url('/fonts/Inter-Medium.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Inter-Medium.woff2') format('woff2'),
-      url('/fonts/Inter-Medium.woff') format('woff'),
-      url('/fonts/Inter-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Bold.eot');
-  src: url('/fonts/Inter-Bold.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Inter-Bold.woff2') format('woff2'),
-      url('/fonts/Inter-Bold.woff') format('woff'),
-      url('/fonts/Inter-Bold.ttf') format('truetype');
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto-Bold.eot');
+  src: url('/fonts/Roboto-Bold.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/Roboto-Bold.woff2') format('woff2'),
+      url('/fonts/Roboto-Bold.woff') format('woff'),
+      url('/fonts/Roboto-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-SemiBold.eot');
-  src: url('/fonts/Inter-SemiBold.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Inter-SemiBold.woff2') format('woff2'),
-      url('/fonts/Inter-SemiBold.woff') format('woff'),
-      url('/fonts/Inter-SemiBold.ttf') format('truetype');
-  font-weight: 600;
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto-Medium.eot');
+  src: url('/fonts/Roboto-Medium.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/Roboto-Medium.woff2') format('woff2'),
+      url('/fonts/Roboto-Medium.woff') format('woff'),
+      url('/fonts/Roboto-Medium.ttf') format('truetype');
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Light.eot');
-  src: url('/fonts/Inter-Light.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Inter-Light.woff2') format('woff2'),
-      url('/fonts/Inter-Light.woff') format('woff'),
-      url('/fonts/Inter-Light.ttf') format('truetype');
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto-Light.eot');
+  src: url('/fonts/Roboto-Light.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/Roboto-Light.woff2') format('woff2'),
+      url('/fonts/Roboto-Light.woff') format('woff'),
+      url('/fonts/Roboto-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
-
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto-Regular.eot');
+  src: url('/fonts/Roboto-Regular.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/Roboto-Regular.woff2') format('woff2'),
+      url('/fonts/Roboto-Regular.woff') format('woff'),
+      url('/fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --text-color: #202020;
   --primary-color:#512a3a;
-  --theme-font:'Inter', 'sans-serif';
+  --theme-font:'Roboto', 'sans-serif';
 }
 
 @media (prefers-color-scheme: dark) {

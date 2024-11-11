@@ -44,29 +44,14 @@ export default function PatientList() {
     };
 
     const breadcrumbItems = [
-        { label: 'Dashboard', href: '/admin/dashboard' },     
+        { label: 'Dashboard', href: '/admin/dashboard' },
         { label: 'Patient Listing', href: '/admin/patients', active: true },
-    ]; 
+    ];
     return (
         <AppLayout>
             <div className="container mx-auto ">
-            <nav aria-label="Breadcrumb" className="text-gray-600 text-sm ">
-                    <ol className="flex space-x-2">
-                        {breadcrumbItems.map((item, index) => (
-                            <li key={index} className="flex items-center">
-                                {index > 0 && <span className="mx-2 text-xl"> ›› </span>}
-                                {item.active ? (
-                                    <span className="font-medium text-black text-xl">{item.label}</span>
-                                ) : (
-                                    <Link href={item.href} className="text-[#757575] text-xl hover:underline">
-                                        {item.label}
-                                    </Link>
-                                )}
-                            </li>
-                        ))}
-                    </ol>
-                </nav>
-            <h1 className="text-2xl font-bold mt-2 mb-6">Patient Listing</h1>
+            <h1 className="text-2xl font-bold mt-2 mb-1">Patient Listing</h1>
+            <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
             <table className="min-w-full bg-white doctor-listing rounded-[10px]">
                 <thead>
                     <tr className="bg-gray-100 border-b">
@@ -85,9 +70,9 @@ export default function PatientList() {
                         </tr>
                     ) : patients.map((patient) => (
                         <tr key={patient._id} className="hover:bg-gray-50 ">
-                            <td className="py-2 px-4 border-r border-[#B0BAAE]">{patient.firstName} {patient.lastName}</td>
-                            <td className="py-2 px-4 border-r border-[#B0BAAE]">{patient.email}</td>
-                            <td className="py-2 px-4 border-r border-[#B0BAAE]">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
+                            <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
+                            <td className="py-2 px-4">{patient.email}</td>
+                            <td className="py-2 px-4">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
                             <td className="py-2 px-4 ">
                                 <img
                                     src='/images/eye-open.svg'

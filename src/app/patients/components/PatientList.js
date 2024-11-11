@@ -81,7 +81,7 @@ export default function PatientList() {
             <div className="container mx-auto">
                 <div className='flex justify-between mt-2 mb-6'>
                     <h1 className="text-2xl font-bold">Patient List</h1>
-                    <Link href='/patients/create' className="min-w-[150px] p-[14px] float-right mb-2 py-2 text-center bg-black text-white font-medium rounded hover:bg-customText focus:outline-none" >
+                    <Link href='/patients/create' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[130px] text-center" >
                         Add Patient
                     </Link>
                 </div>
@@ -118,7 +118,7 @@ export default function PatientList() {
                                     <button
                                             onClick={() => handleEdit(patient._id)}
                                             title='Edit Patient'
-                                            
+
                                         className="text-blue-600 hover:underline px-4"
                                     >
                                         <EditIcon />
@@ -126,7 +126,7 @@ export default function PatientList() {
                                     <button
                                             onClick={() => handleDelete(patient._id)}
                                             title='Delete Patient'
-                                            
+
                                         className="text-red-600 hover:underline "
                                     >
                                         <DeleteIcon />
