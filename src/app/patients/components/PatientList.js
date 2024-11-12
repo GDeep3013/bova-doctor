@@ -79,13 +79,14 @@ export default function PatientList() {
     return (
         <AppLayout>
             <div className="container mx-auto">
-                <div className='flex justify-between mt-2 mb-6'>
-                    <h1 className="text-2xl font-bold">Patient List</h1>
+                <div className='flex justify-between mt-4 md:mt-2 mb-6'>
+                    <h1 className="text-2xl">Patient List</h1>
                     <Link href='/patients/create' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[130px] text-center" >
                         Add Patient
                     </Link>
                 </div>
-                <table className="min-w-full bg-white doctor-listing rounded-[10px]">
+                <div className='overflow-hidden overflow-x-auto'>
+                <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
                     <thead>
                         <tr className="bg-gray-100 border-b">
                             <th className="py-2 px-4 text-left text-gray-800">Name</th>
@@ -137,6 +138,7 @@ export default function PatientList() {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </AppLayout>
     );

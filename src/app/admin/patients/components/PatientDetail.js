@@ -3,9 +3,12 @@
 import AppLayout from '../../../../components/Applayout';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import { useParams } from 'next/navigation';
+import {useRouter, useParams } from 'next/navigation';
+
 export default function PatientDetial() {
     const { id } = useParams();
+    const router = useRouter();
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');

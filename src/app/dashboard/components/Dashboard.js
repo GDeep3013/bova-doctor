@@ -11,10 +11,10 @@ export default function Dashboard() {
     return (
         <AppLayout>
              <div className="flex flex-col">
-                    <h1 className='page-title pt-2 pb-4 text-2xl'>Home</h1>
+                    <h1 className='page-title pt-4 md:pt-2 pb-4 text-2xl'>Home</h1>
                     <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
-                        <h2 className="text-xl font-semibold mb-4 p-5 border-b border-[#AFAAAC]">BOVA Patient Order Form</h2>
-                        <div className="border-b border-[#AFAAAC] flex items-center p-5 pb-4 mb-4">
+                        <h2 className="text-lg md:text-xl font-semibold p-[16px] md:p-5 border-b border-[#AFAAAC]">BOVA Patient Order Form</h2>
+                        <div className="border-b border-[#AFAAAC] flex items-center p-5 pb-4 md:pb-6 max-[767px]:flex-wrap">
 
                             <div className='patient-details max-w-[300px] w-full'>
                             <div className="flex items-center mb-4">
@@ -31,7 +31,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Existing Patients Section */}
-                        <div className="mb-4 p-5 flex items-center">
+                        <div className="p-5 max-[767px]:pb-4 flex items-center max-[767px]:flex-wrap">
                         <div className='patient-details max-w-[300px] w-full'>
                             <div className="flex items-center mb-4">
                                 <input
@@ -65,7 +65,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Footer Message */}
-                    <div className="w-full max-w-3xl bg-[#d6dee5] p-8 mt-6 rounded-lg">
+                    <div className="w-full max-w-3xl bg-[#d6dee5] p-[20px] md:p-8 mt-6 rounded-lg">
                         <p>Welcome to your BOVA <span className="font-semibold">[Name of Doctor]</span></p>
                         <p className="mt-2">We will be launching the full site access in less than 2 weeks!</p>
                         <p className="mt-2 font-semibold">Stay tuned.<br />Team BOVA</p>

@@ -50,9 +50,11 @@ export default function PatientList() {
     return (
         <AppLayout>
             <div className="container mx-auto ">
-            <h1 className="text-2xl font-bold mt-2 mb-1">Patient Listing</h1>
+            <h1 className="text-2xl font-bold mt-4 md:mt-2 mb-1">Patient Listing</h1>
             <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
-            <table className="min-w-full bg-white doctor-listing rounded-[10px]">
+
+            <div className='overflow-hidden overflow-x-auto'>
+            <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
                 <thead>
                     <tr className="bg-gray-100 border-b">
                         <th className="py-2 px-4 text-left text-gray-800">Name</th>
@@ -85,6 +87,7 @@ export default function PatientList() {
                     ))}
                 </tbody>
             </table>
+            </div>
 
             {/* Pagination */}
             <div className="flex justify-center items-center space-x-4 mt-6">

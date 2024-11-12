@@ -24,11 +24,11 @@ export default function Sales() {
 
     <AppLayout>
       <div className="flex flex-col">
-        <h1 className='page-title pt-2 text-2xl pb-1'>Sales</h1>
+        <h1 className='page-title pt-4 md:pt-2 text-2xl pb-1'>Sales</h1>
         <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
         <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
           {data.map((item, index) => (
-            <div key={index} className="p-4 border-b border-[#AFAAAC] last:border-b-0">
+            <div key={index} className="p-3 md:p-4 border-b border-[#AFAAAC] last:border-b-0">
               <div
                 className="flex justify-between items-center cursor-pointer"
                 // onClick={() => togglePanel(index)}

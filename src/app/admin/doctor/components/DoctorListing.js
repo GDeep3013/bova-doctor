@@ -68,7 +68,7 @@ export default function DoctorListing() {
     return (
         <AppLayout>
             <div className="container mx-auto">
-                <div className='flex justify-between items-start mt-2 mb-6'>
+                <div className='flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-6'>
                     <div>
                         <h1 className="text-2xl font-bold">Doctors Listing</h1>
                         <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
@@ -78,8 +78,8 @@ export default function DoctorListing() {
                     </Link>
                 </div>
 
-
-                <table className="min-w-full bg-white doctor-listing rounded-[8px]">
+                <div className='overflow-hidden overflow-x-auto'>
+                <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[8px]">
                     <thead>
                         <tr className="bg-gray-100 border-b">
                             <th className='w-[100px]'>
@@ -129,6 +129,7 @@ export default function DoctorListing() {
                         ))}
                     </tbody>
                 </table>
+                </div>
                 <div className="flex justify-center items-center space-x-4 mt-6">
                     <button
                         disabled={page === 1}

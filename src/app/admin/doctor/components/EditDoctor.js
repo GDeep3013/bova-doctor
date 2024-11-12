@@ -155,10 +155,10 @@ export default function CreateDoctor() {
                 <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit  Doctors</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">
-                    <div className="w-full max-w-7xl bg-white rounded-lg rounded-lg border border-[#AFAAAC]">
+                    <div className="w-full max-w-5xl bg-white rounded-lg rounded-lg border border-[#AFAAAC]">
                         <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Doctor Information</span></div>
                         <div className='flex p-8'>
-                            <form onSubmit={handleSubmit} className="space-y-4 w-full pr-16">
+                            <form onSubmit={handleSubmit} className="space-y-4 w-full">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="relative">
                                         <input type="text"
@@ -241,7 +241,8 @@ export default function CreateDoctor() {
 
                                 {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
                             </form>
-                            <div className="doctor-profile w-full max-w-[270px] text-center">
+
+                            {/* <div className="doctor-profile w-full max-w-[270px] text-center">
                                 <div className="relative text-center">
                                     <div className="m-auto rounded-full overflow-hidden border-[12px]  border-customBg3">
                                         <img
@@ -274,7 +275,8 @@ export default function CreateDoctor() {
                                 <p className="text-center text-gray-500 mt-2">
                                     An Image of the person it is best if it has the same length and height
                                 </p>
-                            </div>
+                            </div> */}
+
                         </div>
                     </div>
                 </div>

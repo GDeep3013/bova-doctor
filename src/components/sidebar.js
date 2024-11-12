@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
   };
 
   return (
-    <div className={`w-full max-w-[320px] inset-y-0 transition-transform ease-in-out duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 p-4' : '-translate-x-[100%] !max-w-[0] opacity-0 p-0'}`}>
+    <div className={`w-full max-w-[300px] min-[1025px]:min-w-[300px] inset-y-0 transition-transform ease-in-out p-4 duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
     <nav className="space-y-4 pt-3">
       {session?.user?.userType === 'Admin' ? (
       <>

@@ -11,7 +11,7 @@ export default function Create() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [message, setMessage] = useState('');
+
     const [errors, setErrors] = useState({});
 
     const router = useRouter();
@@ -51,7 +51,7 @@ export default function Create() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ firstName, lastName, email, phone, doctorId ,message}),
+                    body: JSON.stringify({ firstName, lastName, email, phone, doctorId }),
                 });
 
                 if (response.ok) {
@@ -65,7 +65,7 @@ export default function Create() {
                     setLastName('');
                     setEmail('');
                     setPhone('');
-                    setMessage('');
+
                     router.push('/patients/listing');
                 } else {
                     const result = await response.json();
@@ -141,9 +141,7 @@ export default function Create() {
                                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                             </div>
 
-                            <div className="relative">
-                                <textarea className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none outline-none" value={message}  onChange={(e) => setMessage(e.target.value)} rows="4" placeholder="Message"></textarea>
-                            </div>
+
 
                             <div className="message-text">
                                 <p className='text-base text-textColor'>A plan sent via text message connects better than just email.</p>

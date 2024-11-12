@@ -224,14 +224,14 @@ export default function CreatePlan() {
     return (
         <AppLayout>
             <div className="flex flex-col">
-            <h1 className="text-2xl mb-1">Create Patient Plan</h1>
-            <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
-                <div className="mt-8 flex gap-8">
+                <h1 className="text-2xl pt-4 md:pt-1 mb-1">Create Patient Plan</h1>
+                <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+                <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
-                        <div className="bg-customBg3 p-4 rounded-t-lg">
+                        <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
                             {selectedPatient ? (
                                 <span className="font-medium text-[19px] text-black">
-                                    Patient Name: <span className="font-bold">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
+                                    Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
                                 </span>
 
                             ) : id ? (
@@ -272,9 +272,9 @@ export default function CreatePlan() {
                             {/* Product Selection */}
                             <div className="p-4">
                                 <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
-                                <div className="flex space-x-6 mt-2">
+                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2">
                                     {selectedItems.map((product, index) => (
-                                        <div className='thumbnail-box relative max-w-[120px]' key={index}>
+                                        <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
                                                 onClick={() => { handleDeselectProduct(product.id) }}
                                                 className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
@@ -309,7 +309,7 @@ export default function CreatePlan() {
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
-                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex gap-4">
+                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
                                     <div className="pr-9 w-full max-w-[400px]">
                                         <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
                                         <div>
@@ -392,9 +392,9 @@ export default function CreatePlan() {
                             {/* Send to Patient Button */}
                             <div className="p-4 text-right">
                                 <button
-                                       onClick={() => { handleSubmit() }}
-                                       disabled={formData.items.length === 0 || !formData.patient_id}
-                                className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px] ">
+                                    onClick={() => { handleSubmit() }}
+                                    disabled={formData.items.length === 0 || !formData.patient_id}
+                                    className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px] ">
                                     Send to Patient
                                 </button>
                             </div>
@@ -404,19 +404,20 @@ export default function CreatePlan() {
 
                     </div>
                     {/* Right Column - Price Summary */}
-                    <div className="space-y-4 w-full max-w-[310px]">
-                        <div className="bg-white rounded-lg">
-                            <div className="bg-customBg3 p-4 rounded-t-lg flex justify-between items-center">
+                    <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
+                        <div className="bg-customBg3 rounded-lg">
+                            {/* <div className="bg-customBg3 p-4 rounded-t-lg flex justify-between items-center">
                                 {selectedPatient ? (
                                     <span className="font-medium text-[19px] text-black">
                                         Patient Name: <span className="font-bold">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
                                     </span>
                                 ) : (
-                                    <span className="font-medium text-[19px] text-gray-500">No Patient Selected</span>
+                                    <span className="font-medium text-[19px] text-gray-500">Price</span>
                                 )}
-                            </div>
+                            </div> */}
 
                             <div className='p-5'>
+                                <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
                                 <div className="mt-2 space-y-2">
                                     <div className="flex justify-between">
                                         <span className='text-[#3F4647] text-regular'>Product: L-01</span>
@@ -428,14 +429,14 @@ export default function CreatePlan() {
                                     </div>
                                     <div className="flex justify-between border-b border-[#AFAAAC] pb-4">
                                         <span className='text-[#3F4647] text-regular'>Subtotal</span>
-                                        <span className='text-[#3F4647] font-semibold'>$58.00</span>
+                                        <span className='text-[#51595B] font-semibold'>$58.00</span>
                                     </div>
                                 </div>
                                 <div className='text-right py-5'>
                                     <button
-                                    onClick={() => { handleSubmit() }}
-                                    disabled={formData.items.length === 0 || !formData.patient_id}
-                                    className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
+                                        onClick={() => { handleSubmit() }}
+                                        disabled={formData.items.length === 0 || !formData.patient_id}
+                                        className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
                                         Send to Patient
                                     </button>
                                 </div>
@@ -445,12 +446,12 @@ export default function CreatePlan() {
                 </div>
 
                 {isModalOpen && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-lg max-w-[1020px] w-full">
-                            <div className='flex justify-between items-center py-4'>
-                            <h2 className="text-xl font-bold">Select Product</h2>
+                    <div className="fixed p-2 md:p-0 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div className="bg-white p-6 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full">
+                            <div className='flex justify-between items-center p-2 md:py-4'>
+                                <h2 className="text-xl font-bold">Select Product</h2>
                                 <button onClick={closeModal}> <CloseIcon /> </button>
-                                </div>
+                            </div>
                             <input
                                 type="text"
                                 placeholder="Search for a product"
@@ -460,105 +461,66 @@ export default function CreatePlan() {
                             />
 
                             {/* Product List in Single Line */}
-                            <div className="flex space-x-4 h-[600px] overflow-y-auto">
-                            {filteredProducts.length > 0 ? (
-                            <div className="mt-4">
-                                <table className="min-w-full bg-white">
-                                    <thead>
-                                        <tr>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Image</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Title</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">SKU</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Price</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredProducts.map((product, index) => {
-                                            const isProductAdded = selectedItems.some(item => item.id === product.id);
-                                            return (
-                                                <tr
-                                                    key={index}
-                                                    className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
-                                                >
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <img
-                                                            src={product.image?.src || '/images/product-img1.png'}
-                                                            alt={product.title}
-                                                            className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
-                                                        />
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">{product?.variants[0]?.sku || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">${product?.variants[0]?.price || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <button
-                                                            onClick={() => { handleSelectProduct(product) }}
-                                                            className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
-                                                            disabled={isProductAdded}
-                                                        >
-                                                            {isProductAdded ? 'Added' : 'Add'}
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                            ) : (
-                                <p className="ml-36 text-gray-500 mt-14 font-bold">No products found</p>
-                            )}
-
-                            </div>
-
-                            {/* Zoomed Product View */}
-                            {/* {selectedProduct && (
-                                <div className="mt-4">
-                                    <h3 className="font-bold text-lg mb-4">{selectedProduct.title}</h3>
-                                    <div className="overflow-x-auto">
+                            <div className="h-[600px] overflow-y-auto">
+                                {filteredProducts.length > 0 ? (
+                                    <div className="mt-4">
                                         <table className="min-w-full bg-white">
                                             <thead>
                                                 <tr>
                                                     <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Image</th>
+                                                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Title</th>
                                                     <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">SKU</th>
                                                     <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Price</th>
-                                                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Actions</th>
+                                                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className="border-b hover:bg-gray-50">
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <img
-                                                            src={selectedProduct.image?.src || '/images/product-img1.png'}
-                                                            alt={selectedProduct.title}
-                                                            className="w-[100px] h-[100px] bg-[#F9F9F9] rounded-lg"
-                                                        />
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">{selectedProduct?.variants[0]?.sku || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">${selectedProduct?.variants[0]?.price || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="flex space-x-2">
-                                                            <button
-                                                                onClick={() => { handleSelectProduct(selectedProduct); closeModal(); }}
-                                                                className="bg-black text-white rounded px-4 py-2 hover:bg-gray-800"
-                                                            >
-                                                                Add Product
-                                                            </button>
-                                                            <button
-                                                                onClick={closeModal}
-                                                                className="bg-gray-500 text-white rounded px-4 py-2 hover:bg-gray-600"
-                                                            >
-                                                                Close
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                {filteredProducts.map((product, index) => {
+                                                    const isProductAdded = selectedItems.some(item => item.id === product.id);
+                                                    return (
+                                                        <tr
+                                                            key={index}
+                                                            className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
+                                                        >
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                <img
+                                                                    src={product.image?.src || '/images/product-img1.png'}
+                                                                    alt={product.title}
+                                                                    className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
+                                                                />
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">{product?.variants[0]?.sku || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">${product?.variants[0]?.price || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                <button
+                                                                    onClick={() => { handleSelectProduct(product) }}
+                                                                    className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
+                                                                    disabled={isProductAdded}
+                                                                >
+                                                                    {isProductAdded ? 'Added' : 'Add'}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                            )} */}
+                                ) : (
+                                    <div className='text-center w-full'>
+                                        <p className="text-gray-500 mt-7 font-bold">No products found</p>
+                                    </div>
+                                )}
+                                <button
+                                    onClick={() => { closeModal() }}
+                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
+                                    Close
+                                </button>
+                            </div>
+
+
+
 
                             {/* Close Modal Button */}
 
