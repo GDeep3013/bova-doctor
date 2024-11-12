@@ -62,11 +62,12 @@ export default function CreatePlan() {
             const updatedItems = prevData.items
             const newItem = {
                 id: product.variants[0]?.id,
-                quantity: "5",
+                quantity: 5,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Once Per Day',
                     takeWith: 'Water',
+                    _patient_id: selectedPatient?.id || id,
                     notes: '',
                 }
             };
@@ -79,51 +80,57 @@ export default function CreatePlan() {
 
     function handleFormDataChange(itemId, field, value) {
         setFormData((prevData) => {
+            // Map over the existing items to update them if needed
             const updatedItems = prevData.items.map((item) => {
                 if (item.id === itemId) {
-                    if (field != "quantity") {
+                    if (field !== "quantity") {
                         return {
                             ...item,
                             properties: {
                                 ...item.properties,
                                 [field]: value,
+                                _patient_id: selectedPatient?.id || id, // Ensure _patient_id is added here
                             },
                         };
                     } else {
                         return {
                             ...item,
-                            [field]: value,
-
+                            [field]: parseInt(value, 10),
                         };
-
                     }
-
                 }
                 return item;
             });
-
+    
+            // Define a new item with default properties, including _patient_id
             const newItem = {
                 id: itemId,
-                quantity: "5",
+                quantity: 5,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Once Per Day',
                     takeWith: 'Water',
+                    _patient_id: selectedPatient?.id || id, // Add _patient_id here for new items
                     notes: '',
                 }
             };
-            let message = ''
-            if (field == "message") {
+    
+            let message = '';
+            if (field === "message") {
                 return { ...prevData, message: value };
             }
-
-            if (!updatedItems.some(item => item.id === itemId)) {
+    
+            // Check if the itemId already exists; if not, add newItem
+            const itemExists = updatedItems.some(item => item.id === itemId);
+            if (!itemExists) {
                 updatedItems.push(newItem);
             }
-
+    
             return { ...prevData, items: updatedItems, message: message };
         });
     }
+    
+    
 
     const handleDeselectProduct = (productId) => {
         setSelectedItems((prevSelectedItems) => {

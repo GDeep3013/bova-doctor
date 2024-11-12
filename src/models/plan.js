@@ -13,13 +13,14 @@ const PlanSchema = new mongoose.Schema({
     items: [
         {
             id: { type: Number, required: true },
-            quantity: { type: String, default: 1 },
+            quantity: { type: Number, default: 5 },
             properties: {
                 frequency: { type: String, default: '' },
                 duration: { type: String, default: '' },
                 takeWith: { type: String, default: '' },
                 notes: { type: String, default: '' },
                 message: { type: String, default: '' },
+                _patient_id:{ type: String, default: '' },
             },
         },
 
