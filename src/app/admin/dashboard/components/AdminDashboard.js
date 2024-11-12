@@ -1,9 +1,9 @@
-
 'use client'
 import AppLayout from 'components/Applayout';
 import DoctorTable from './doctorTable';
 import { ReactionIcon, StethoscopeIcon } from 'components/svg-icons/icons';
 import AdminGraph from './adminGraph';
+import Link from 'next/link';
 
 export default function AdminDashboard() {
 
@@ -28,7 +28,7 @@ export default function AdminDashboard() {
                         <h1 className="text-xl md:text-2xl font-semibold mb-2 text-black">Welcome to your BOVA Admin Panel</h1>
                         <p className="text-sm mb-4 text-black"> We will be launching the full site access in less than 2 weeks! Stay tuned. </p>
                         <p className="italic mb-6 text-black">- Team BOVA</p>
-                        <button className="bg-customBg2 text-white border border-customBg2 font-medium px-4 py-2 rounded min-w-[196px] min-h-[50px] hover:text-customBg2 hover:bg-white"> Create Doctors </button>
+                        <Link href='/admin/doctor/create' className="bg-customBg2 text-white border border-customBg2 font-medium px-4 py-2 rounded min-w-[196px] min-h-[50px] hover:text-customBg2 hover:bg-white"> Create Doctors </Link>
                     </div>
                 </div>
 

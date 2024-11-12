@@ -150,7 +150,7 @@ export default function Create() {
                             <div className="text-left mt-5">
                                 <button
                                     type="submit"
-                                    className="min-w-[150px] py-2 bg-customBg2 text-white rounded-[8px] hover:bg-customText focus:outline-none"
+                                    className="min-w-[150px] py-2 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"
                                 >
                                     Create Patient
                                 </button>
