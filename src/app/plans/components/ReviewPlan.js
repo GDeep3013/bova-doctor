@@ -90,6 +90,7 @@ export default function ReviewPlan() {
                 <table className="min-w-full bg-white doctor-listing rounded-[10px]">
                     <thead>
                         <tr className="bg-gray-100 border-b">
+                            <th className="py-2 px-4 text-left text-gray-800">Sr no.</th>
                             <th className="py-2 px-4 text-left text-gray-800">Name</th>
                             <th className="py-2 px-4 text-left text-gray-800">Email</th>
                             <th className="py-2 px-4 text-left text-gray-800">Phone</th>
@@ -104,8 +105,9 @@ export default function ReviewPlan() {
                                     No records found
                                 </td>
                             </tr>
-                        ) : plans.map((plan) => (
+                        ) : plans.map((plan,index) => (
                             <tr key={plan._id} className="hover:bg-gray-50 border-b">
+                                <td className="py-2 px-4">{index +1}</td>
                                 <td className="py-2 px-4">{plan?.patient_id?.firstName} {plan?.patient_id?.lastName}</td>
                                 <td className="py-2 px-4">{plan?.patient_id?.email}</td>
                                 <td className="py-2 px-4">{formatPhoneNumber(plan?.patient_id?.phone) || "Not available"}</td>

@@ -3,7 +3,7 @@ import AppLayout from '../../../../components/Applayout';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Link from'next/link'
+import Link from 'next/link'
 export default function PatientList() {
     const { data: session } = useSession();
     const router = useRouter();
@@ -50,66 +50,69 @@ export default function PatientList() {
     return (
         <AppLayout>
             <div className="container mx-auto ">
-            <h1 className="text-2xl font-bold mt-4 md:mt-2 mb-1">Patient Listing</h1>
-            <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
+                <h1 className="text-2xl font-bold mt-4 md:mt-2 mb-1">Patient Listing</h1>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
 
-            <div className='overflow-hidden overflow-x-auto'>
-            <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
-                <thead>
-                    <tr className="bg-gray-100 border-b">
-                        <th className="py-2 px-4 text-left text-gray-800">Name</th>
-                        <th className="py-2 px-4 text-left text-gray-800">Email</th>
-                        <th className="py-2 px-4 text-left text-gray-800">Phone</th>
-                        <th className="py-2 px-4 text-left text-gray-800">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {patients.length === 0 ? (
-                        <tr>
-                            <td colSpan={4} className="py-2 px-4 text-center text-gray-500">
-                                No records found
-                            </td>
-                        </tr>
-                    ) : patients.map((patient) => (
-                        <tr key={patient._id} className="hover:bg-gray-50 ">
-                            <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
-                            <td className="py-2 px-4">{patient.email}</td>
-                            <td className="py-2 px-4">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
-                            <td className="py-2 px-4 ">
-                                <img
-                                    src='/images/eye-open.svg'
-                                    alt="Toggle visibility"
-                                    onClick={() => handleView(patient._id)}
-                                    className="cursor-pointer"
-                                />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            </div>
+                <div className='overflow-hidden overflow-x-auto'>
+                    <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
+                        <thead>
+                            <tr className="bg-gray-100 border-b">
+                                <th className="py-2 px-4 text-left text-gray-800">Sr no.</th>
 
-            {/* Pagination */}
-            <div className="flex justify-center items-center space-x-4 mt-6">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className={`px-4 py-2 text-white bg-gray-500  rounded ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
-                >
-                    Previous
-                </button>
-                <span className="text-gray-700">
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className={`px-4 py-2 text-white bg-gray-500 rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
-                >
-                    Next
-                </button>
+                                <th className="py-2 px-4 text-left text-gray-800">Name</th>
+                                <th className="py-2 px-4 text-left text-gray-800">Email</th>
+                                <th className="py-2 px-4 text-left text-gray-800">Phone</th>
+                                <th className="py-2 px-4 text-left text-gray-800">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {patients.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="py-2 px-4 text-center text-gray-500">
+                                        No records found
+                                    </td>
+                                </tr>
+                            ) : patients.map((patient,index) => (
+                                <tr key={patient._id} className="hover:bg-gray-50 ">
+                                    <td className="py-2 px-4">{index+1}</td>
+                                    <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
+                                    <td className="py-2 px-4">{patient.email}</td>
+                                    <td className="py-2 px-4">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
+                                    <td className="py-2 px-4 ">
+                                        <img
+                                            src='/images/eye-open.svg'
+                                            alt="Toggle visibility"
+                                            onClick={() => handleView(patient._id)}
+                                            className="cursor-pointer"
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Pagination */}
+                <div className="flex justify-center items-center space-x-4 mt-6">
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className={`px-4 py-2 text-white bg-gray-500  rounded ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+                    >
+                        Previous
+                    </button>
+                    <span className="text-gray-700">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className={`px-4 py-2 text-white bg-gray-500 rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
-        </div>
-    </AppLayout>
+        </AppLayout>
     );
 }
