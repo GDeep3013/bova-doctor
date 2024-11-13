@@ -87,14 +87,13 @@ export default function PatientDetial() {
 
                     {/* Footer */}
                     <div className="p-4 flex justify-end">
-                        <Link href={`/create-plan/${id}`}>
+                        <Link href={`/plans/create-plan/${id}`}>
                             <button className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px]">
                                 Create Plan
                             </button>
                         </Link>
                     </div>
                 </div>
-
             </div>
         </AppLayout>
     );

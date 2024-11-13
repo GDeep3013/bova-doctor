@@ -1,8 +1,7 @@
- 'use client'
+'use client'
 import { useState } from 'react';
 import Sidebar from './sidebar';
 import Navbar from './navbar';
-
 
 export default function AppLayout({ children }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -17,8 +16,6 @@ export default function AppLayout({ children }) {
                         {children}
                     </div>
                 </div>
-
-
             </div>
         </>
     )

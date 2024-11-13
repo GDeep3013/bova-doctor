@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema({
   order_date: { type: Date, required: true },
   patient_id: { type: String, default: null },
   doctor: {
-    doctor_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' }, // Referencing the doctor model
+    doctor_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' },
     doctor_payment: { type: Number, required: true }
   }
 }, { timestamps: true });

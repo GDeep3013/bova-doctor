@@ -5,12 +5,13 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link'
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { CloseIcon } from '../../../components/svg-icons/icons';
 
 export default function CreatePlan() {
     const { id } = useParams();
     const { data: session } = useSession();
+    const router = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -51,7 +52,7 @@ export default function CreatePlan() {
         fetchPatients();
     }, []);
 
-    console.log(products);
+
     const handleSelectProduct = (product) => {
         setSelectedItems((prevSelectedItems) => {
             const productExists = prevSelectedItems.some((item) => item.id === product.id);
@@ -62,7 +63,9 @@ export default function CreatePlan() {
             const updatedItems = prevData.items
             const newItem = {
                 id: product.variants[0]?.id,
-                quantity: 5,
+                price: product.variants[0]?.price,
+                title: product?.title,
+                quantity: 1,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Once Per Day',
@@ -80,10 +83,22 @@ export default function CreatePlan() {
 
     function handleFormDataChange(itemId, field, value) {
         setFormData((prevData) => {
-            // Map over the existing items to update them if needed
             const updatedItems = prevData.items.map((item) => {
                 if (item.id === itemId) {
-                    if (field !== "quantity") {
+                    // Check if the field is 'quantity' or needs updating in 'properties'
+                    if (field === "quantity") {
+                        return {
+                            ...item,
+                            quantity: parseInt(value, 10),
+                        };
+                    } else if (field === "price" || field === "title") {
+                        // Update price or title if those are the fields being changed
+                        return {
+                            ...item,
+                            [field]: value,
+                        };
+                    } else {
+                        // Update other properties
                         return {
                             ...item,
                             properties: {
@@ -92,50 +107,21 @@ export default function CreatePlan() {
                                 _patient_id: selectedPatient?.id || id, // Ensure _patient_id is added here
                             },
                         };
-                    } else {
-                        return {
-                            ...item,
-                            [field]: parseInt(value, 10),
-                        };
                     }
                 }
                 return item;
             });
-    
-            // Define a new item with default properties, including _patient_id
-            const newItem = {
-                id: itemId,
-                quantity: 5,
-                properties: {
-                    frequency: 'Once Per Day (Anytime)',
-                    duration: 'Once Per Day',
-                    takeWith: 'Water',
-                    _patient_id: selectedPatient?.id || id, // Add _patient_id here for new items
-                    notes: '',
-                }
-            };
-    
-            let message = '';
-            if (field === "message") {
-                return { ...prevData, message: value };
-            }
-    
-            // Check if the itemId already exists; if not, add newItem
-            const itemExists = updatedItems.some(item => item.id === itemId);
-            if (!itemExists) {
-                updatedItems.push(newItem);
-            }
-    
-            return { ...prevData, items: updatedItems, message: message };
+
+            return { ...prevData, items: updatedItems };
         });
     }
-    
-    
+
+
 
     const handleDeselectProduct = (productId) => {
         setSelectedItems((prevSelectedItems) => {
             const updatedSelectedItems = prevSelectedItems.filter(
-                (item) => item.id !== productId
+                (item) => item?.variants[0]?.id !== productId
             );
             return updatedSelectedItems;
         });
@@ -164,6 +150,14 @@ export default function CreatePlan() {
             return;
         }
         try {
+            Swal.fire({
+                title: 'Sending...',
+                html: 'Please wait while we send the email.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
             const response = await fetch('/api/plans/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -176,6 +170,8 @@ export default function CreatePlan() {
                 icon: 'success',
                 confirmButtonText: 'OK',
             });
+            router.push('/plans/review');
+
         } catch (error) {
             console.error("Error saving data:", error);
         }
@@ -227,6 +223,13 @@ export default function CreatePlan() {
         }));
     }
 
+    const subtotal = formData.items.reduce((acc, item) => {
+        const itemQuantity = item.quantity || 1;
+        return acc + itemQuantity * item.price;
+    }, 0);
+
+    // Calculate 10% discount
+    const discount = subtotal * 0.1;
 
     return (
         <AppLayout>
@@ -283,7 +286,7 @@ export default function CreatePlan() {
                                     {selectedItems.map((product, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
-                                                onClick={() => { handleDeselectProduct(product.id) }}
+                                                onClick={() => { handleDeselectProduct(product?.variants[0]?.id) }}
                                                 className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
                                                 aria-label="Deselect Product"
                                             >
@@ -330,59 +333,52 @@ export default function CreatePlan() {
                                     {/* Product Options */}
                                     <div className="mt-4 w-full">
                                         <div>
-                                            <select
-                                                value={itemData?.quantity}
+                                            <input
+                                                type="number"
+                                                value={itemData?.quantity ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option value="5">Capsules 5 (recommended)</option>
-                                                <option value="10">10</option>
-                                                <option value="15">15</option>
-                                                <option value="20">20</option>
-                                            </select>
+                                                placeholder="Enter Quantity (e.g., 5, 10)"
+                                            />
                                         </div>
                                         <div>
-                                            <select
-                                                value={itemData?.properties.frequency}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.frequency ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option>Frequency Once Per Day (Anytime)</option>
-                                                <option>Twice Per Day</option>
-                                                <option>Three Times Per Day</option>
-                                            </select>
-
+                                                placeholder="Enter Frequency (e.g., Once Per Day)"
+                                            />
                                         </div>
                                         <div>
-                                            <select
-                                                value={itemData?.properties.duration}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.duration ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option>Duration Once Per Day</option>
-                                                <option>Twice Per Day</option>
-                                            </select>
+                                                placeholder="Enter Duration (e.g., Once Per Day)"
+                                            />
                                         </div>
                                         <div>
-                                            <select
-                                                value={itemData?.properties.takeWith}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.takeWith ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option>Take with Water</option>
-                                                <option>Juice</option>
-                                            </select>
+                                                placeholder="Enter Take With (e.g., Water)"
+                                            />
                                         </div>
                                         <div>
-                                            <textarea
-                                                value={itemData?.properties.notes}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.notes ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
-                                                rows="4"
+                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
                                                 placeholder="Add Notes"
-                                            ></textarea>
+                                            />
                                         </div>
                                     </div>
+
                                 </div>)
                             })
                             }
@@ -405,38 +401,35 @@ export default function CreatePlan() {
                                     Send to Patient
                                 </button>
                             </div>
-
-
                         </div>
-
                     </div>
                     {/* Right Column - Price Summary */}
                     <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
                         <div className="bg-customBg3 rounded-lg">
-                            {/* <div className="bg-customBg3 p-4 rounded-t-lg flex justify-between items-center">
-                                {selectedPatient ? (
-                                    <span className="font-medium text-[19px] text-black">
-                                        Patient Name: <span className="font-bold">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
-                                    </span>
-                                ) : (
-                                    <span className="font-medium text-[19px] text-gray-500">Price</span>
-                                )}
-                            </div> */}
 
                             <div className='p-5'>
                                 <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
                                 <div className="mt-2 space-y-2">
-                                    <div className="flex justify-between">
-                                        <span className='text-[#3F4647] text-regular'>Product: L-01</span>
-                                        <span className='text-[#3F4647]'>$68.00</span>
-                                    </div>
-                                    <div className="flex justify-between">
+                                    {formData.items.map((item, index) => (
+                                        <div key={index} className="flex justify-between">
+                                            <span className='text-[#3F4647] text-regular' >
+                                                Product   {item.title}: {item.quantity ? item.quantity : 1} x {item.price}
+                                            </span>
+                                            <span className='text-[#3F4647]'>
+                                                ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                            </span>
+                                        </div>
+                                    ))}
+                                    <div className="flex justify-between mt-2">
                                         <span className='text-[#3F4647] text-regular'>Patient Discount (10%)</span>
-                                        <span className='text-[#3F4647]'>-$6.80</span>
+                                        -${discount.toFixed(2)}
                                     </div>
-                                    <div className="flex justify-between border-b border-[#AFAAAC] pb-4">
+                                    <div className="flex justify-between border-b border-[#AFAAAC] pb-4 mt-2">
                                         <span className='text-[#3F4647] text-regular'>Subtotal</span>
-                                        <span className='text-[#51595B] font-semibold'>$58.00</span>
+                                        <span className='text-[#51595B]font-semibold'>
+                                            ${(subtotal - discount).toFixed(2)}
+                                        </span>
+
                                     </div>
                                 </div>
                                 <div className='text-right py-5'>
@@ -450,6 +443,7 @@ export default function CreatePlan() {
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 {isModalOpen && (
@@ -529,12 +523,12 @@ export default function CreatePlan() {
 
 
 
-                            {/* Close Modal Button */}
 
-                        </div>
-                    </div>
-                )}
-            </div>
-        </AppLayout>
+                        </div >
+                    </div >
+                )
+                }
+            </div >
+        </AppLayout >
     )
 }

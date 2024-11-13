@@ -37,6 +37,7 @@ button.bg-black svg.m-auto path { fill: #fff; }
 
 .loader { display: flex; justify-content: center; align-items: center; width: 150px; height: 150px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 .loader img { width: 100%; height: auto; animation: zoom 5s infinite; }
+input[type=number] { appearance:"textfield"; -moz-appearance:"textfield"; }
 @keyframes zoom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
 
 

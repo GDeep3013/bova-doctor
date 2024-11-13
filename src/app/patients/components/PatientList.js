@@ -88,7 +88,9 @@ export default function PatientList() {
                 <div className='overflow-hidden overflow-x-auto'>
                 <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
                     <thead>
-                        <tr className="bg-gray-100 border-b">
+                            <tr className="bg-gray-100 border-b">
+                                
+                            <th className="py-2 px-4 text-left text-gray-800">Sr no.</th>
                             <th className="py-2 px-4 text-left text-gray-800">Name</th>
                             <th className="py-2 px-4 text-left text-gray-800">Email</th>
                             <th className="py-2 px-4 text-left text-gray-800">Phone</th>
@@ -102,8 +104,9 @@ export default function PatientList() {
                                     No records found
                                 </td>
                             </tr>
-                        ) : patients.map((patient) => (
+                        ) : patients.map((patient,index) => (
                             <tr key={patient._id} className="hover:bg-gray-50 border-b">
+                                <td className="py-2 px-4">{index +1}</td>
                                 <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
                                 <td className="py-2 px-4">{patient.email}</td>
                                 <td className="py-2 px-4">{patient.phone || "Not available"}</td>

@@ -1,4 +1,4 @@
-import CreatePlan from './components/CreatePlan'
+import CreatePlan from '../../components/CreatePlan'
 
 export default function page() {
   return (

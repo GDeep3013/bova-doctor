@@ -56,7 +56,7 @@ export default function DoctorListing() {
             setDoctors(data.data);
             setTotalPages(data.pagination.totalPages);
         } catch (error) {
-            console.log(error.message);
+            // console.log(error.message);
         }
     };
 
@@ -79,56 +79,53 @@ export default function DoctorListing() {
                 </div>
 
                 <div className='overflow-hidden overflow-x-auto'>
-                <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[8px]">
-                    <thead>
-                        <tr className="bg-gray-100 border-b">
-                            <th className='w-[100px]'>
-                                <input
-                                    type="checkbox"
-                                    className="w-6 h-6 border-2 border-black rounded-md checked:bg-black checked:border-black focus:outline-none"
-                                    id="customCheckbox"
-                                />
-                            </th>
-                            <th className="py-2 px-4 text-left text-gray-600">Name</th>
-                            <th className="py-2 px-4 text-left text-gray-600">Email</th>
-                            <th className="py-2 px-4 text-left text-gray-600">Phone</th>
-                            <th className="py-2 px-4 text-left text-gray-600">Speciality</th>
-                            <th className="py-2 px-4 text-left text-gray-600">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {doctors.length === 0 ? (
-                            <tr>
-                                <td colSpan={5} className="py-2 px-4 text-center text-gray-500 border-r border-[#B0BAAE]">
-                                    No records found
-                                </td>
-                            </tr>
-                        ) : doctors.map((doctor) => (
-                            <tr key={doctor._id} className="hover:bg-gray-50">
-                                <td className='w-[100px] text-center'> <input type="checkbox" className="w-6 h-6 border-2 border-black rounded-md checked:bg-black checked:border-black focus:outline-none" id="customCheckbox" /> </td>
+                    <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[8px]">
+                        <thead>
+                            <tr className="bg-gray-100 border-b">
+                                <th className="py-2 px-4 text-left text-gray-600">Sr no.</th>
 
-                                <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
-                                <td className="py-2 px-4">{doctor.email}</td>
-                                <td className="py-2 px-4">{doctor.phone || "Not available"}</td>
-                                <td className="py-2 px-4">{doctor.specialty || "Not available"}</td>
-                                <td className="py-2 px-4">
-                                    <button
-                                        onClick={() => handleEdit(doctor._id)}
-                                        className="text-blue-600 hover:underline mr-2"
-                                    >
-                                        <EditIcon />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(doctor._id)}
-                                        className="text-red-600 hover:underline"
-                                    >
-                                        <DeleteIcon />
-                                    </button>
-                                </td>
+                                <th className="py-2 px-4 text-left text-gray-600">Name</th>
+                                <th className="py-2 px-4 text-left text-gray-600">Email</th>
+                                <th className="py-2 px-4 text-left text-gray-600">Phone</th>
+                                <th className="py-2 px-4 text-left text-gray-600">Speciality</th>
+                                <th className="py-2 px-4 text-left text-gray-600">Commission %</th>
+                                <th className="py-2 px-4 text-left text-gray-600">Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {doctors.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} className="py-2 px-4 text-center text-gray-500 border-r border-[#B0BAAE]">
+                                        No records found
+                                    </td>
+                                </tr>
+                            ) : doctors.map((doctor, index) => (
+                                <tr key={doctor._id} className="hover:bg-gray-50">
+                                    <td className='w-[100px] text-center'> {index + 1}</td>
+
+                                    <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
+                                    <td className="py-2 px-4">{doctor.email}</td>
+                                    <td className="py-2 px-4">{doctor.phone || "Not available"}</td>
+                                    <td className="py-2 px-4">{doctor.specialty || "Not available"}</td>
+                                    <td className="py-2 px-4">{doctor.commissionPercentage || "Not available"}</td>
+                                    <td className="py-2 px-4">
+                                        <button
+                                            onClick={() => handleEdit(doctor._id)}
+                                            className="text-blue-600 hover:underline mr-2"
+                                        >
+                                            <EditIcon />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(doctor._id)}
+                                            className="text-red-600 hover:underline"
+                                        >
+                                            <DeleteIcon />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
                 <div className="flex justify-center items-center space-x-4 mt-6">
                     <button

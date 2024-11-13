@@ -85,17 +85,16 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
                 <li><Link href="/patients/listing" className="block hover:text-gray-900">Search</Link></li>
               </ul>
             )}
-          </div>
-
-          {/* Plans Dropdown */}
+              </div>
+              
           <div>
             <button onClick={togglePlans} className="text-gray-700 hover:text-gray-900 w-full text-left text-xl">
               <PlanIcon /> Plans
             </button>
             {isPlansOpen && (
               <ul className="pl-0 submenu my-4 space-y-1">
-                <li><Link href="/create-plan" className="block hover:text-gray-900">Create</Link></li>
-                <li><Link href="" className="block hover:text-gray-900">Review</Link></li>
+                <li><Link href="/plans/create-plan" className="block hover:text-gray-900">Create</Link></li>
+                <li><Link href="/plans/review" className="block hover:text-gray-900">Review</Link></li>
                 <li><Link href="" className="block hover:text-gray-900">Incomplete</Link></li>
               </ul>
             )}
