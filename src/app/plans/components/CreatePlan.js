@@ -242,7 +242,7 @@ export default function CreatePlan() {
                                             </span>
                                             <select
                                                 id="select-patient"
-                                                className={`w-full bg-inputBg rounded-[8px] max-w-[250px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
+                                                className={`w-full border border-[#AFAAAC] bg-white rounded-[8px] max-w-[250px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
 
                                                 onChange={handleSelectPatient}
                                                 value={selectedPatient?.id || ""}
@@ -374,7 +374,7 @@ export default function CreatePlan() {
                             <div className="p-4 border-t border-b border-[#AFAAAC]">
                                 <textarea
                                     value={formData.message}
-                                    onChange={(e) => handleFormDataChange(0, 'message', e.target.value)}
+                                    onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, })) }
                                     className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
                                     rows="4"
                                     placeholder="Message"
@@ -385,12 +385,12 @@ export default function CreatePlan() {
                                 <button
                                     onClick={() => { handleSubmit() }}
                                     disabled={formData.items.length === 0 || !formData.patient_id}
-                                    className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px] 
+                                    className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
                                         ${formData.items.length === 0 || !formData.patient_id
                                             ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                             : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                     }>
-                                  {loader ? "Please wait ..." : 'Send to Patient'}
+                                    {loader ? "Please wait ..." : 'Send to Patient'}
                                 </button>
                             </div>
                         </div>
@@ -401,34 +401,40 @@ export default function CreatePlan() {
 
                             <div className='p-5'>
                                 <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
-                                <div className="mt-2 space-y-2">
-                                    {formData.items.map((item, index) => (
-                                        <div key={index} className="flex justify-between">
-                                            <span className='text-[#3F4647] text-regular' >
-                                                Product   {item.title}: {item.quantity ? item.quantity : 1} x {item.price}
-                                            </span>
-                                            <span className='text-[#3F4647]'>
-                                                ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
-                                            </span>
-                                        </div>
-                                    ))}
-                                    <div className="flex justify-between mt-2">
-                                        <span className='text-[#3F4647] text-regular'>Patient Discount (10%)</span>
-                                        -${discount.toFixed(2)}
-                                    </div>
-                                    <div className="flex justify-between border-b border-[#AFAAAC] pb-4 mt-2">
-                                        <span className='text-[#3F4647] text-regular'>Subtotal</span>
-                                        <span className='text-[#51595B]font-semibold'>
-                                            ${(subtotal - discount).toFixed(2)}
-                                        </span>
+                                <div className="mt-2 overflow-x-auto">
+                                    <table className="min-w-full table-auto">
 
-                                    </div>
+                                        <tbody>
+                                            {formData.items.map((item, index) => (
+                                                <tr key={index} className="">
+                                                    <td className="py-2 text-[#3F4647] text-sm">
+                                                        {item.title}
+                                                    </td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-right">
+                                                        ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                            </tr>
+                                            <tr className="border-b border-[#AFAAAC] pb-4">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
+                                                <td className="py-2 text-[#51595B] font-semibold text-right">
+                                                    ${(subtotal - discount).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
+
                                 <div className='text-right py-5'>
                                     <button
                                         onClick={() => { handleSubmit() }}
                                         disabled={formData.items.length === 0 || !formData.patient_id}
-                                        className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px] 
+                                        className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
                                             ${formData.items.length === 0 || !formData.patient_id
                                                 ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
