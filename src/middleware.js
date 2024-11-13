@@ -8,9 +8,9 @@ export async function middleware(req) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const res = NextResponse.next(); // Create a NextResponse object
 
-  // Set CORS headers using NextResponse
-  res.headers.set('Access-Control-Allow-Origin', '*'); // Allow all origins
-  res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allowed methods
+  res.headers.append('Access-Control-Allow-Credentials', "true")
+    res.headers.append('Access-Control-Allow-Origin', '*') // replace this your actual origin
+    res.headers.append('Access-Control-Allow-Methods', 'GET,DELETE,PATCH,POST,PUT')// Allowed methods
   // Define accessible routes based on user roles
   const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password'];
   const adminRoutes = ['/admin/dashboard','/admin/patients','/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit'];
