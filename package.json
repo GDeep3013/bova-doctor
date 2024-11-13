@@ -24,6 +24,7 @@
     "next-auth": "^4.24.10",
     "next-connect": "^1.0.0",
     "next-crypto": "^1.0.8",
+    "nextjs-cors": "^2.2.0",
     "nodemailer": "^6.9.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

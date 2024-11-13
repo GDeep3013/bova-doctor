@@ -6,11 +6,11 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  // const app = express();
-  // app.use(cors({
-  //   origin: true, // Enables dynamic origin setting for all origins
-  //   methods: 'GET,POST,PUT,DELETE',
-  // }));
+  const res = NextResponse.next(); // Create a NextResponse object
+
+  res.headers.append('Access-Control-Allow-Credentials', "true")
+    res.headers.append('Access-Control-Allow-Origin', '*') // replace this your actual origin
+    res.headers.append('Access-Control-Allow-Methods', 'GET,DELETE,PATCH,POST,PUT')// Allowed methods
   // Define accessible routes based on user roles
   const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password'];
   const adminRoutes = ['/admin/dashboard','/admin/patients','/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit'];
