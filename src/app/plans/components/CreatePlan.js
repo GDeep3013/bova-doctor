@@ -21,6 +21,8 @@ export default function CreatePlan() {
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
+    const [loader, setLoader] = useState(false);
+
 
     const fetchPatients = async () => {
         try {
@@ -150,14 +152,7 @@ export default function CreatePlan() {
             return;
         }
         try {
-            Swal.fire({
-                title: 'Sending...',
-                html: 'Please wait while we send the email.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            setLoader(true);
             const response = await fetch('/api/plans/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -170,35 +165,29 @@ export default function CreatePlan() {
                 icon: 'success',
                 confirmButtonText: 'OK',
             });
+            setLoader(false);
             router.push('/plans/review');
 
         } catch (error) {
             console.error("Error saving data:", error);
+            setLoader(false);
         }
     };
 
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
-    const breadcrumbItems = [
-        { label: 'Plans', href: '/create-plan' },
-        { label: 'Create Patient Plan', href: '/create-plan', active: true },
-    ];
 
     const openModal = () => {
         setIsModalOpen(true);
     };
-
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedProduct(null);
     };
+    const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
-    const handleZoomProduct = (product) => setSelectedProduct(product);
     const filteredProducts = products.filter(product =>
         product.title.toLowerCase().includes(searchTerm)
     )
-
-    const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
-
 
     useEffect(() => {
         if (id) {
@@ -228,7 +217,6 @@ export default function CreatePlan() {
         return acc + itemQuantity * item.price;
     }, 0);
 
-    // Calculate 10% discount
     const discount = subtotal * 0.1;
 
     return (
@@ -397,8 +385,12 @@ export default function CreatePlan() {
                                 <button
                                     onClick={() => { handleSubmit() }}
                                     disabled={formData.items.length === 0 || !formData.patient_id}
-                                    className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px] ">
-                                    Send to Patient
+                                    className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px] 
+                                        ${formData.items.length === 0 || !formData.patient_id
+                                            ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                    }>
+                                  {loader ? "Please wait ..." : 'Send to Patient'}
                                 </button>
                             </div>
                         </div>
@@ -436,8 +428,12 @@ export default function CreatePlan() {
                                     <button
                                         onClick={() => { handleSubmit() }}
                                         disabled={formData.items.length === 0 || !formData.patient_id}
-                                        className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                        Send to Patient
+                                        className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px] 
+                                            ${formData.items.length === 0 || !formData.patient_id
+                                                ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                                : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                        }>
+                                        {loader ? "Please wait ..." : 'Send to Patient'}
                                     </button>
                                 </div>
                             </div>
