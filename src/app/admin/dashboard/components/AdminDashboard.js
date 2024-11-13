@@ -1,9 +1,9 @@
-
 'use client'
 import AppLayout from 'components/Applayout';
 import DoctorTable from './doctorTable';
 import { ReactionIcon, StethoscopeIcon } from 'components/svg-icons/icons';
 import AdminGraph from './adminGraph';
+import Link from 'next/link';
 
 export default function AdminDashboard() {
 
@@ -23,29 +23,26 @@ export default function AdminDashboard() {
     return (
         <AppLayout>
             <div className="flex flex-col">
-                <div className="w-full bg-black relative text-white rounded-lg flex flex-col md:flex-row items-center mt-9 py-12 px-16 mb-8">
+                <div className="w-full bg-customBg relative text-white rounded-lg flex flex-col md:flex-row items-center py-8 md:py-12 px-8 md:px-16 mb-8 max-[767px]:mt-5">
                     <div className="flex-1 mb-4 md:mb-0">
-                        <h1 className="text-2xl font-semibold mb-2">Welcome to your BOVA Admin Panel</h1>
-                        <p className="text-sm mb-4"> We will be launching the full site access in less than 2 weeks! Stay tuned. </p>
-                        <p className="italic mb-6">- Team BOVA</p>
-                        <button className="bg-white text-black font-medium px-4 py-2 rounded min-w-[196px] min-h-[50px]"> Invite Doctors </button>
-                    </div>
-                    <div className="md:w-1/3 flex justify-center absolute right-9 bottom-0">
-                        <img src="/images/admin-img.png" alt="Doctor" className='max-w-[90%]'/>
+                        <h1 className="text-xl md:text-2xl font-semibold mb-2 text-black">Welcome to your BOVA Admin Panel</h1>
+                        <p className="text-sm mb-4 text-black"> We will be launching the full site access in less than 2 weeks! Stay tuned. </p>
+                        <p className="italic mb-6 text-black">- Team BOVA</p>
+                        <Link href='/admin/doctor/create' className="bg-customBg2 text-white border border-customBg2 font-medium px-4 py-2 rounded min-w-[196px] min-h-[50px] hover:text-customBg2 hover:bg-white"> Create Doctors </Link>
                     </div>
                 </div>
 
-                <div className='flex space-x-5'>
+                <div className='flex min-[1281px]:space-x-5 max-xl:flex-wrap'>
                     <DoctorTable className="w-full" />
-                    <div className='w-full'>
-                        <div className="flex space-x-5">
+                    <div className='w-full max-[1280px]:mt-4'>
+                        <div className="mt-5 min-[1025px]:mt-0 flex max-[575px]:gap-y-4 min-[576px]:space-x-5 max-[575px]:flex-wrap">
                             {cards.map((card, index) => (
                                 <div
                                     key={index}
                                     className="flex justify-between items-center bg-[#F9F9F9] rounded-lg p-6 w-full shadow-sm"
                                 >
                                     <div>
-                                        <h3 className="text-2xl font-semibold">{card.title}</h3>
+                                        <h3 className="text-xl md:text-2xl font-semibold">{card.title}</h3>
                                         <p className="text-base mt-1 text-gray-500">{card.subtitle}</p>
                                     </div>
                                     <div className="flex-shrink-0 bg-[#EBEDEB] w-[41px] h-[41px] rounded-[5px] shadow-sm relative card-icon">

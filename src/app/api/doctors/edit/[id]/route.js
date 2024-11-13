@@ -59,7 +59,7 @@ export async function PUT(req, { params }) {
       const phone = formData.get('phone');
       const userType = formData.get('userType');
       const specialty = formData.get('specialty');
-      const profileImage = formData.get('profileImage');
+      const commissionPercentage = formData.get('commissionPercentage');
   
       // Check for existing doctor with the same email or phone (excluding the current doctor)
       const existingDoctor = await Doctor.findOne({
@@ -77,45 +77,11 @@ export async function PUT(req, { params }) {
       }
   
       // If a new profile image is uploaded, handle the image deletion and upload
-      let imageUrl = '';
-      if (profileImage) {
-        // Fetch the current doctor's data
-        const currentDoctor = await Doctor.findById(id);
-  
-        // If the doctor already has a profile image, remove the old image from the server
-        if (currentDoctor && currentDoctor.profileImage) {
-          const oldImagePath = path.join(process.cwd(), 'public', currentDoctor.profileImage);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath); // Delete the old image
-          }
-        }
-  
-        // Use Web Crypto API to generate a unique filename
-        const array = new Uint8Array(16);
-        crypto.getRandomValues(array); // Generate a random value
-        const uniqueFileName = `${array.join('')}${path.extname(profileImage.name)}`; // Create unique filename
-  
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-        if (!fs.existsSync(uploadDir)) {
-          fs.mkdirSync(uploadDir, { recursive: true });
-        }
-  
-        const uploadPath = path.join(uploadDir, uniqueFileName);
-  
-        // Convert the uploaded image file to buffer
-        const buffer = Buffer.from(await profileImage.arrayBuffer());
-  
-        // Save the new image to the uploads directory
-        fs.writeFileSync(uploadPath, buffer);
-  
-        // Set the relative URL path to the new image
-        imageUrl = `/uploads/${uniqueFileName}`;
-      }
-  
+    
       // Update the doctor in the database, including the new profile image if available
       const updatedDoctor = await Doctor.findByIdAndUpdate(
         id,
-        { firstName, lastName, email, phone, userType, specialty, profileImage: imageUrl },
+        { firstName, lastName, email, phone, userType, specialty, commissionPercentage },
         { new: true, runValidators: true }
       );
   

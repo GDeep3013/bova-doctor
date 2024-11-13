@@ -1,8 +1,7 @@
- 'use client'
+'use client'
 import { useState } from 'react';
 import Sidebar from './sidebar';
 import Navbar from './navbar';
-
 
 export default function AppLayout({ children }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -13,12 +12,10 @@ export default function AppLayout({ children }) {
             <div className="dashboard-outer flex">
                 <Sidebar isSidebarOpen={isSidebarOpen} />
                 <div className='dashboard-right w-full transition ease-in-out delay-150'>
-                    <div className='dashboard-inner min-h pt-[0] p-[40px]'>
+                    <div className='dashboard-inner min-h pt-[0] p-[20px] md:p-[40px]'>
                         {children}
                     </div>
                 </div>
-
-
             </div>
         </>
     )

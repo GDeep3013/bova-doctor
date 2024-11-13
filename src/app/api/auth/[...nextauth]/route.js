@@ -37,7 +37,7 @@ const authOptions = {
         }
 
         // Return user object upon successful authentication
-        return { id: user._id, email: user.email, userType: user.userType , userName:user.firstName +' '+ user.lastName};
+        return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName ,userDetail: user};
       },
     }),
   ],
@@ -55,6 +55,7 @@ const authOptions = {
         token.id = user.id;
         token.userType = user.userType;
         token.userName = user.userName;
+        token.userDetail =user.userDetail
       }
       return token;
     },
@@ -63,6 +64,7 @@ const authOptions = {
         session.user.id = token.id;
         session.user.userType = token.userType;
         session.user.userName = token.userName;
+        session.userDetail =token.userDetail
 
       }
       return session;
