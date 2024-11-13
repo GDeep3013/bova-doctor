@@ -44,7 +44,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
             </button>
             {isProfileOpen && (
               <ul className="pl-0 submenu my-4 space-y-1">
-                <li><Link href="/admin/doctor" className="block hover:text-gray-900">Total Doctors</Link></li>
+                <li><Link href="/admin/doctor" className="block hover:text-gray-900">Doctors Listing</Link></li>
               </ul>
             )}
           </div>
@@ -52,7 +52,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
           <PatientIcon /> Patient Listing
         </Link>
 
-          <Link href="/dashboard" className="block border-t border-[#D4D4D4] !mt-6 pt-5 text-gray-700 hover:text-gray-900 text-xl">
+          <Link href="/dashboard" className="block text-gray-700 hover:text-gray-900 text-xl">
             <SettingIcon /> Settings
           </Link>
 
@@ -86,7 +86,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               </ul>
             )}
               </div>
-              
+
           <div>
             <button onClick={togglePlans} className="text-gray-700 hover:text-gray-900 w-full text-left text-xl">
               <PlanIcon /> Plans

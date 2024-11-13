@@ -127,7 +127,7 @@ export default function DoctorListing() {
                         </tbody>
                     </table>
                 </div>
-                <div className="flex justify-center items-center space-x-4 mt-6">
+                <div className="flex justify-end items-center space-x-4 mt-6">
                     <button
                         disabled={page === 1}
                         onClick={() => setPage(page - 1)}
