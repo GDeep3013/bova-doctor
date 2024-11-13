@@ -94,8 +94,8 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
             </button>
             {isPlansOpen && (
               <ul className="pl-0 submenu my-4 space-y-1">
-                <li><Link href="/create-plan" className="block hover:text-gray-900">Create</Link></li>
-                <li><Link href="" className="block hover:text-gray-900">Review</Link></li>
+                <li><Link href="/plans/create-plan" className="block hover:text-gray-900">Create</Link></li>
+                <li><Link href="/plans/review" className="block hover:text-gray-900">Review</Link></li>
                 <li><Link href="" className="block hover:text-gray-900">Incomplete</Link></li>
               </ul>
             )}

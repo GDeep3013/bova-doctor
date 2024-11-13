@@ -20,7 +20,7 @@ export default function CreatePlan() {
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
-
+    const [loader, setLoader] = useState(false);
     const fetchPatients = async () => {
         try {
             const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
@@ -51,7 +51,7 @@ export default function CreatePlan() {
         fetchPatients();
     }, []);
 
-    console.log(products);
+
     const handleSelectProduct = (product) => {
         setSelectedItems((prevSelectedItems) => {
             const productExists = prevSelectedItems.some((item) => item.id === product.id);
@@ -62,7 +62,9 @@ export default function CreatePlan() {
             const updatedItems = prevData.items
             const newItem = {
                 id: product.variants[0]?.id,
-                quantity: 5,
+                price: product.variants[0]?.price,
+                title : product?.title,
+                quantity: 1,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Once Per Day',
@@ -78,12 +80,77 @@ export default function CreatePlan() {
         });
     };
 
+    // function handleFormDataChange(itemId, field, value) {
+    //     setFormData((prevData) => {
+    //         // Map over the existing items to update them if needed
+    //         const updatedItems = prevData.items.map((item) => {
+    //             if (item.id === itemId) {
+    //                 if (field !== "quantity") {
+    //                     return {
+    //                         ...item,
+    //                         properties: {
+    //                             ...item.properties,
+    //                             [field]: value,
+    //                             _patient_id: selectedPatient?.id || id, // Ensure _patient_id is added here
+    //                         },
+    //                     };
+    //                 } else {
+    //                     return {
+    //                         ...item,
+    //                         [field]: parseInt(value, 10),
+    //                     };
+    //                 }
+    //             }
+    //             return item;
+    //         });
+
+    //         // Define a new item with default properties, including _patient_id
+    //         const newItem = {
+    //             id: itemId,
+    //             quantity: 5,
+    //             properties: {
+    //                 frequency: 'Once Per Day (Anytime)',
+    //                 duration: 'Once Per Day',
+    //                 takeWith: 'Water',
+    //                 _patient_id: selectedPatient?.id || id, // Add _patient_id here for new items
+    //                 notes: '',
+    //             }
+    //         };
+
+    //         let message = '';
+    //         if (field === "message") {
+    //             return { ...prevData, message: value };
+    //         }
+
+    //         // Check if the itemId already exists; if not, add newItem
+    //         const itemExists = updatedItems.some(item => item.id === itemId);
+    //         if (!itemExists) {
+    //             updatedItems.push(newItem);
+    //         }
+
+    //         return { ...prevData, items: updatedItems, message: message };
+    //     });
+    // }
+
+
     function handleFormDataChange(itemId, field, value) {
         setFormData((prevData) => {
-            // Map over the existing items to update them if needed
             const updatedItems = prevData.items.map((item) => {
                 if (item.id === itemId) {
-                    if (field !== "quantity") {
+                    // Check if the field is 'quantity' or needs updating in 'properties'
+                    if (field === "quantity") {
+                        return {
+                            ...item,
+                            quantity: parseInt(value, 10),
+                        };
+                    } else if (field === "price" || field === "title") {
+                        // Update price or title if those are the fields being changed
+                        return {
+                            ...item,
+                            [field]: value,
+                        };
+                    } else {
+                        // Update other properties
                         return {
                             ...item,
                             properties: {
@@ -92,50 +159,19 @@ export default function CreatePlan() {
                                 _patient_id: selectedPatient?.id || id, // Ensure _patient_id is added here
                             },
                         };
-                    } else {
-                        return {
-                            ...item,
-                            [field]: parseInt(value, 10),
-                        };
                     }
                 }
                 return item;
             });
     
-            // Define a new item with default properties, including _patient_id
-            const newItem = {
-                id: itemId,
-                quantity: 5,
-                properties: {
-                    frequency: 'Once Per Day (Anytime)',
-                    duration: 'Once Per Day',
-                    takeWith: 'Water',
-                    _patient_id: selectedPatient?.id || id, // Add _patient_id here for new items
-                    notes: '',
-                }
-            };
-    
-            let message = '';
-            if (field === "message") {
-                return { ...prevData, message: value };
-            }
-    
-            // Check if the itemId already exists; if not, add newItem
-            const itemExists = updatedItems.some(item => item.id === itemId);
-            if (!itemExists) {
-                updatedItems.push(newItem);
-            }
-    
-            return { ...prevData, items: updatedItems, message: message };
+            return { ...prevData, items: updatedItems };
         });
     }
     
-    
-
     const handleDeselectProduct = (productId) => {
         setSelectedItems((prevSelectedItems) => {
             const updatedSelectedItems = prevSelectedItems.filter(
-                (item) => item.id !== productId
+                (item) => item?.variants[0]?.id !== productId
             );
             return updatedSelectedItems;
         });
@@ -150,8 +186,6 @@ export default function CreatePlan() {
         });
     };
 
-
-
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
             !item.quantity ||
@@ -159,13 +193,22 @@ export default function CreatePlan() {
             !item.properties.duration ||
             !item.properties.takeWith
         ));
+        // return  invalidItems
         if (invalidItems.length > 0) {
             alert("Please fill out all required fields for each item.");
             return;
         }
         try {
-            const response = await fetch('/api/plans/create', {
-                method: 'POST',
+            Swal.fire({
+                title: 'Sending...',
+                html: 'Please wait while we are updating the plan.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            const response = await fetch(`/api/plans/edit/${id}`, {
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
@@ -182,10 +225,7 @@ export default function CreatePlan() {
     };
 
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
-    const breadcrumbItems = [
-        { label: 'Plans', href: '/create-plan' },
-        { label: 'Create Patient Plan', href: '/create-plan', active: true },
-    ];
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -196,26 +236,12 @@ export default function CreatePlan() {
         setSelectedProduct(null);
     };
 
-    const handleZoomProduct = (product) => setSelectedProduct(product);
     const filteredProducts = products.filter(product =>
         product.title.toLowerCase().includes(searchTerm)
     )
 
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
-
-    useEffect(() => {
-        if (id) {
-            const matchedPatient = patients.find(patient => patient._id === id);
-            if (matchedPatient) {
-                setSelectedPatient(matchedPatient);
-                setFormData((prevData) => ({
-                    ...prevData,
-                    patient_id: matchedPatient._id,
-                }));
-            }
-        }
-    }, [id, patients]);
 
     const handleSelectPatient = (e) => {
         const selectedId = e.target.value;
@@ -227,14 +253,87 @@ export default function CreatePlan() {
         }));
     }
 
+    const fetchPlanData = async () => {
+        try {
+            setLoader(true);
+            const response = await fetch(`/api/plans/edit/${id}`);
+            const data = await response.json();
+            if (response.ok) {
+                const mappedItems = data.items.map(item => ({
+                    id: item.id,
+                    quantity: item.quantity || 1,
+                    price: item.price,
+                    title : item.title,
+                    properties: {
+                        frequency: item.properties.frequency || 'Once Per Day (Anytime)',
+                        duration: item.properties.duration || 'Once Per Day',
+                        takeWith: item.properties.takeWith || 'Water',
+                        _patient_id: item.properties._patient_id || '',
+                        notes: item.properties.notes || ''
+                    }
+                }));
+                mappedItems.forEach(mappedItem => {
+                    const matchingProduct = filteredProducts.find(item => item?.variants[0]?.id === mappedItem.id);
+                    if (matchingProduct) {
+                        handleSelectProduct(matchingProduct);
+                    }
+                });
 
+
+                const matchedPatient = patients.find(patient => patient._id === data?.patient_id?._id);
+                if (matchedPatient) {
+                    setSelectedPatient(matchedPatient);
+                    setFormData((prevData) => ({
+                        ...prevData,
+                        patient_id: matchedPatient._id,
+                    }));
+                }
+
+
+                setFormData(prevData => ({ ...prevData, items: mappedItems, message: data?.message }))
+                setLoader(false);
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to fetch Plan data.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+                setLoader(false);
+
+            }
+        } catch (error) {
+            console.error("Error fetching plan data:", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while fetching plan data.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+            setLoader(false);
+
+        }
+    };
+
+    useEffect(() => {
+        fetchPlanData();
+    }, [id, products, patients]);
+
+
+    const subtotal = formData.items.reduce((acc, item) => {
+        const itemQuantity = item.quantity || 1;
+        return acc + itemQuantity * item.price;
+    }, 0);
+
+    // Calculate 10% discount
+    const discount = subtotal * 0;
     return (
         <AppLayout>
             <div className="flex flex-col">
-            <h1 className="text-2xl mb-1">Create Patient Plan</h1>
-            <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
-                <div className="mt-8 flex gap-8">
-                    <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
+                <h1 className="text-2xl mb-1">Edit Patient Plan</h1>
+                <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+                <div className="mt-8 flex gap-8 ">
+                    <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full relative">
                         <div className="bg-customBg3 p-4 rounded-t-lg">
                             {selectedPatient ? (
                                 <span className="font-medium text-[19px] text-black">
@@ -283,7 +382,7 @@ export default function CreatePlan() {
                                     {selectedItems.map((product, index) => (
                                         <div className='thumbnail-box relative max-w-[120px]' key={index}>
                                             <button
-                                                onClick={() => { handleDeselectProduct(product.id) }}
+                                                onClick={() => { handleDeselectProduct(product?.variants[0]?.id) }}
                                                 className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
                                                 aria-label="Deselect Product"
                                             >
@@ -314,7 +413,7 @@ export default function CreatePlan() {
 
 
                             {/* Product Info */}
-                            {selectedItems.map((item, index) => {
+                            {selectedItems && selectedItems.map((item, index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
                                 return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex gap-4">
                                     <div className="pr-9 w-full max-w-[400px]">
@@ -330,57 +429,49 @@ export default function CreatePlan() {
                                     {/* Product Options */}
                                     <div className="mt-4 w-full">
                                         <div>
-                                            <select
-                                                value={itemData?.quantity}
+                                            <input
+                                                type="number"
+                                                value={itemData?.quantity ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option value="5">Capsules 5 (recommended)</option>
-                                                <option value="10">10</option>
-                                                <option value="15">15</option>
-                                                <option value="20">20</option>
-                                            </select>
+                                                placeholder="Enter Quantity (e.g., 5, 10)"
+                                            />
                                         </div>
                                         <div>
-                                            <select
-                                                value={itemData?.properties.frequency}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.frequency ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option>Frequency Once Per Day (Anytime)</option>
-                                                <option>Twice Per Day</option>
-                                                <option>Three Times Per Day</option>
-                                            </select>
-
+                                                placeholder="Enter Frequency (e.g., Once Per Day)"
+                                            />
                                         </div>
                                         <div>
-                                            <select
-                                                value={itemData?.properties.duration}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.duration ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option>Duration Once Per Day</option>
-                                                <option>Twice Per Day</option>
-                                            </select>
+                                                placeholder="Enter Duration (e.g., Once Per Day)"
+                                            />
                                         </div>
                                         <div>
-                                            <select
-                                                value={itemData?.properties.takeWith}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.takeWith ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option>Take with Water</option>
-                                                <option>Juice</option>
-                                            </select>
+                                                placeholder="Enter Take With (e.g., Water)"
+                                            />
                                         </div>
                                         <div>
-                                            <textarea
-                                                value={itemData?.properties.notes}
+                                            <input
+                                                type="text"
+                                                value={itemData?.properties.notes ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
-                                                rows="4"
+                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
                                                 placeholder="Add Notes"
-                                            ></textarea>
+                                            />
                                         </div>
                                     </div>
                                 </div>)
@@ -399,9 +490,9 @@ export default function CreatePlan() {
                             {/* Send to Patient Button */}
                             <div className="p-4 text-right">
                                 <button
-                                       onClick={() => { handleSubmit() }}
-                                       disabled={formData.items.length === 0 || !formData.patient_id}
-                                className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px] ">
+                                    onClick={() => { handleSubmit() }}
+                                    disabled={formData?.items?.length === 0 || !formData.patient_id}
+                                    className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px] ">
                                     Send to Patient
                                 </button>
                             </div>
@@ -413,51 +504,55 @@ export default function CreatePlan() {
                     {/* Right Column - Price Summary */}
                     <div className="space-y-4 w-full max-w-[310px]">
                         <div className="bg-white rounded-lg">
-                            <div className="bg-customBg3 p-4 rounded-t-lg flex justify-between items-center">
-                                {selectedPatient ? (
+                            <div className="bg-customBg3 p-4 rounded-t-lg flex justify-between items-center">                            
                                     <span className="font-medium text-[19px] text-black">
-                                        Patient Name: <span className="font-bold">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
-                                    </span>
-                                ) : (
-                                    <span className="font-medium text-[19px] text-gray-500">No Patient Selected</span>
-                                )}
+                                        Price
+                                    </span>                              
                             </div>
-
                             <div className='p-5'>
                                 <div className="mt-2 space-y-2">
-                                    <div className="flex justify-between">
-                                        <span className='text-[#3F4647] text-regular'>Product: L-01</span>
-                                        <span className='text-[#3F4647]'>$68.00</span>
+                                    {formData.items.map((item, index) => (
+                                        <div key={index} className="flex justify-between">
+                                            <span className='text-[#3F4647] text-regular'>
+                                              Product    {item.title}: {item.quantity?item.quantity:1} x {item.price}
+                                            </span>
+                                            <span className='text-[#3F4647]'>
+                                                ${((item.quantity?item.quantity:1 )* item.price).toFixed(2)}
+                                            </span>
+                                        </div>
+                                    ))}
+                                    <div className="flex justify-between mt-2">
+                                        <span className='text-[#3F4647] text-regular'>Patient Discount (0%)</span>
+                                        -${discount.toFixed(2)}
                                     </div>
-                                    <div className="flex justify-between">
-                                        <span className='text-[#3F4647] text-regular'>Patient Discount (10%)</span>
-                                        <span className='text-[#3F4647]'>-$6.80</span>
-                                    </div>
-                                    <div className="flex justify-between border-b border-[#AFAAAC] pb-4">
+                                    <div className="flex justify-between border-b border-[#AFAAAC] pb-4 mt-2">
                                         <span className='text-[#3F4647] text-regular'>Subtotal</span>
-                                        <span className='text-[#3F4647] font-semibold'>$58.00</span>
+                                        <span className='text-[#3F4647] font-semibold'>
+                                        ${(subtotal - discount).toFixed(2)}
+                                        </span>
                                     </div>
                                 </div>
                                 <div className='text-right py-5'>
                                     <button
-                                    onClick={() => { handleSubmit() }}
-                                    disabled={formData.items.length === 0 || !formData.patient_id}
-                                    className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
+                                        onClick={() => { handleSubmit() }}
+                                        disabled={formData.items.length === 0 || !formData.patient_id}
+                                        className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px]">
                                         Send to Patient
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 {isModalOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                         <div className="bg-white p-6 rounded-lg max-w-[1020px] w-full">
                             <div className='flex justify-between items-center py-4'>
-                            <h2 className="text-xl font-bold">Select Product</h2>
+                                <h2 className="text-xl font-bold">Select Product</h2>
                                 <button onClick={closeModal}> <CloseIcon /> </button>
-                                </div>
+                            </div>
                             <input
                                 type="text"
                                 placeholder="Search for a product"
@@ -468,106 +563,57 @@ export default function CreatePlan() {
 
                             {/* Product List in Single Line */}
                             <div className="flex space-x-4 h-[600px] overflow-y-auto">
-                            {filteredProducts.length > 0 ? (
-                            <div className="mt-4">
-                                <table className="min-w-full bg-white">
-                                    <thead>
-                                        <tr>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Image</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Title</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">SKU</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Price</th>
-                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredProducts.map((product, index) => {
-                                            const isProductAdded = selectedItems.some(item => item.id === product.id);
-                                            return (
-                                                <tr
-                                                    key={index}
-                                                    className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
-                                                >
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <img
-                                                            src={product.image?.src || '/images/product-img1.png'}
-                                                            alt={product.title}
-                                                            className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
-                                                        />
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">{product?.variants[0]?.sku || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">${product?.variants[0]?.price || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <button
-                                                            onClick={() => { handleSelectProduct(product) }}
-                                                            className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
-                                                            disabled={isProductAdded}
-                                                        >
-                                                            {isProductAdded ? 'Added' : 'Add'}
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                            ) : (
-                                <p className="ml-36 text-gray-500 mt-14 font-bold">No products found</p>
-                            )}
-
-                            </div>
-
-                            {/* Zoomed Product View */}
-                            {/* {selectedProduct && (
-                                <div className="mt-4">
-                                    <h3 className="font-bold text-lg mb-4">{selectedProduct.title}</h3>
-                                    <div className="overflow-x-auto">
+                                {filteredProducts.length > 0 ? (
+                                    <div className="mt-4">
                                         <table className="min-w-full bg-white">
                                             <thead>
                                                 <tr>
                                                     <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Image</th>
+                                                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Title</th>
                                                     <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">SKU</th>
                                                     <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Price</th>
-                                                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Actions</th>
+                                                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className="border-b hover:bg-gray-50">
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <img
-                                                            src={selectedProduct.image?.src || '/images/product-img1.png'}
-                                                            alt={selectedProduct.title}
-                                                            className="w-[100px] h-[100px] bg-[#F9F9F9] rounded-lg"
-                                                        />
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">{selectedProduct?.variants[0]?.sku || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">${selectedProduct?.variants[0]?.price || 'N/A'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="flex space-x-2">
-                                                            <button
-                                                                onClick={() => { handleSelectProduct(selectedProduct); closeModal(); }}
-                                                                className="bg-black text-white rounded px-4 py-2 hover:bg-gray-800"
-                                                            >
-                                                                Add Product
-                                                            </button>
-                                                            <button
-                                                                onClick={closeModal}
-                                                                className="bg-gray-500 text-white rounded px-4 py-2 hover:bg-gray-600"
-                                                            >
-                                                                Close
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                {filteredProducts.map((product, index) => {
+                                                    const isProductAdded = selectedItems.some(item => item.id === product.id);
+                                                    return (
+                                                        <tr
+                                                            key={index}
+                                                            className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
+                                                        >
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                <img
+                                                                    src={product.image?.src || '/images/product-img1.png'}
+                                                                    alt={product.title}
+                                                                    className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
+                                                                />
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">{product?.variants[0]?.sku || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">${product?.variants[0]?.price || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                <button
+                                                                    onClick={() => { handleSelectProduct(product) }}
+                                                                    className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
+                                                                    disabled={isProductAdded}
+                                                                >
+                                                                    {isProductAdded ? 'Added' : 'Add'}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                            )} */}
+                                ) : (
+                                    <p className="ml-36 text-gray-500 mt-14 font-bold">No products found</p>
+                                )}
 
-                            {/* Close Modal Button */}
+                            </div>
+
 
                         </div>
                     </div>

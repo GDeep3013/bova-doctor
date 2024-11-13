@@ -93,7 +93,6 @@ export default function CreateDoctor() {
             fetchDoctorData();
         }
     }, [id]);
-    console.log(profileImage)
 
     const handleSubmit = async (e) => {
         e.preventDefault();

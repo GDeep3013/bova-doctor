@@ -31,7 +31,7 @@ export default function Navbar({ isSidebarOpen, toggleSidebar }) {
 
       <div className="relative w-full text-right px-6 py-5">
 
-      <button class="bg-[#25464F] text-white font-medium px-4 py-2 rounded-[8px]">Review Plan (2)</button>
+      <button className="bg-[#25464F] text-white font-medium px-4 py-2 rounded-[8px]">Review Plan (2)</button>
 
       </div>
     </nav>

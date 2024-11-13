@@ -38,7 +38,6 @@ export default function ResetPage() {
         setToken(urlParams.get("token"));
       }, []);
 
-    console.log(token);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
