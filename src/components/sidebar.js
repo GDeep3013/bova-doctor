@@ -52,7 +52,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
           <PatientIcon /> Patient Listing
         </Link>
 
-          <Link href="/dashboard" className="block border-t border-[#D4D4D4] !mt-6 pt-5 text-gray-700 hover:text-gray-900 text-xl">
+          <Link href="/admin/settings/" className="block border-t border-[#D4D4D4] !mt-6 pt-5 text-gray-700 hover:text-gray-900 text-xl">
             <SettingIcon /> Settings
           </Link>
 
