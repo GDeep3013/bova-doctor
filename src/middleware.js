@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-const express = require('express');
-const cors = require('cors');
+// const express = require('express');
+// const cors = require('cors');
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const app = express();
-  app.use(cors({
-    origin: true, // Enables dynamic origin setting for all origins
-    methods: 'GET,POST,PUT,DELETE',
-  }));
+  const res = NextResponse.next(); // Create a NextResponse object
+
+  // Set CORS headers using NextResponse
+  res.headers.set('Access-Control-Allow-Origin', '*'); // Allow all origins
+  res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allowed methods
   // Define accessible routes based on user roles
   const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password'];
   const adminRoutes = ['/admin/dashboard','/admin/patients','/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit'];
