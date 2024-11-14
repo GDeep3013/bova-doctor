@@ -320,12 +320,13 @@ const router =useRouter()
                             {/* Product Selection */}
                             <div className="p-4">
                                 <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
-                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2">
+                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
                                     {selectedItems.map((product, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
                                                 onClick={() => { handleDeselectProduct(product?.variants[0]?.id) }}
-                                                className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
+                                                className="top-[-9px] absolute right-[-9px] w-6 h-6 flex items-center justify-center
+                                                bg-[#3c637a] text-white rounded-full text-sm font-bold"
                                                 aria-label="Deselect Product"
                                             >
                                                 &times;
@@ -334,18 +335,18 @@ const router =useRouter()
                                                 <img
                                                     src={product.image.src} // Replace with actual paths
                                                     alt={product.title}
-                                                    className={`w-[117px] h-[106px] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                    className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
                                                     onClick={() => handleSelectProduct(product)}
                                                 />
                                             )}
-                                            <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(product.id) ? 'text-black' : 'text-textColor'}`}>
+                                            {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(product.id) ? 'text-black' : 'text-textColor'}`}>
                                                 {product.title}
-                                            </p>
+                                            </p> */}
                                         </div>
                                     ))}
                                     {/* Plus Button to Add More Products */}
                                     <button
-                                        className=" h-[106px] max-w-[120px] w-full bg-white flex items-center justify-center text-2xl font-bold text-textColor cursor-pointer shadow-2xl rounded-[8px]"
+                                        className="h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
                                         onClick={openModal}
                                     >
                                         +
@@ -369,51 +370,53 @@ const router =useRouter()
                                         </div>
                                     </div>
                                     {/* Product Options */}
-                                    <div className="mt-4 w-full">
-                                        <div>
-                                            <input
-                                                type="number"
-                                                value={itemData?.quantity ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Quantity (e.g., 5, 10)"
-                                            />
+                                    <div className="space-y-4 w-full">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-[max-content]
+                                        min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>5 (recommended)</option>
+                                                    <option>1 (recommended)</option>
+                                                    <option>2 (recommended)</option>
+                                                    <option>3 (recommended)</option>
+                                                    <option>4 (recommended)</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.frequency ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Frequency (e.g., Once Per Day)"
-                                            />
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
+                                                    <option>Once Per Day (Anytime)</option>
+                                                    <option>Twice Per Day</option>
+                                                    <option>Three Times Per Day</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.duration ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Duration (e.g., Once Per Day)"
-                                            />
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>Once Per Day</option>
+                                                    <option>Twice Per Day</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.takeWith ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Take With (e.g., Water)"
-                                            />
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>Water</option>
+                                                    <option>Juice</option>
+                                                    <option>Milk</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.notes ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
-                                                placeholder="Add Notes"
-                                            />
+                                        <div className='w-full max-w-[510px]'>
+                                            <div className="mt-1">
+                                                <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg" rows="3"></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>)
@@ -499,8 +502,8 @@ const router =useRouter()
                 </div>
 
                 {isModalOpen && (
-                    <div className="fixed p-2 md:p-0 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full">
+                    <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
+                        <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
                             <div className='flex justify-between items-center p-2 md:py-4'>
                                 <h2 className="text-xl font-bold">Select Product</h2>
                                 <button onClick={closeModal}> <CloseIcon /> </button>
@@ -567,8 +570,8 @@ const router =useRouter()
                                 )}
                                 <button
                                     onClick={() => { closeModal() }}
-                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                    Close
+                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
+                                    FINISH
                                 </button>
                             </div>
 

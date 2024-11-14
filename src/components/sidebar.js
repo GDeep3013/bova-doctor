@@ -35,7 +35,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
       <Link href="/dashboard">
         <img src="/images/dash-logo.png" alt="Logo" className="max-w-[155px] max-[992px]:max-w-[120px]" />
       </Link>
-      <nav className="space-y-4 pt-5">
+      <nav className="space-y-4 pt-7">
         {session?.user?.userType === 'Admin' ? (
           <>
             <Link href="/admin/dashboard" className="block text-gray-700 hover:text-gray-900 text-xl">
@@ -55,7 +55,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               <PatientIcon /> Patient Listing
             </Link>
 
-          <Link href="/admin/settings/" className="block border-t border-[#D4D4D4] !mt-6 pt-5 text-gray-700 hover:text-gray-900 text-xl">
+          <Link href="/admin/settings/" className="block text-gray-700 hover:text-gray-900 text-xl">
             <SettingIcon /> Settings
           </Link>
 
