@@ -22,7 +22,9 @@ module.exports = {
         textColor: "#898989",
         textColor2: "#373737",
         inputBg: "#F9F9F9",
-
+      },
+      borderColor: {
+        customBorder: "#b9b4b6",
       },
       fontFamily: {
         inter: "var(--theme-font)"

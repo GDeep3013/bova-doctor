@@ -1,8 +1,9 @@
 
+import DoctorDashboard from './components/DoctorDashboard'
 
-import Dashboard from "./components/Dashboard";
 export default function page() {
   return (
-    <Dashboard/>
+  <DoctorDashboard/>
   )
 }
+
