@@ -1,7 +1,5 @@
-'use client';
-import { useState } from 'react';
+'use client'
 export default function doctorTable({doctors }) {
-    const [timePeriod, setTimePeriod] = useState("Last 2 Weeks");
    
   return (
     <div className="bg-white rounded-lg shadow-md p-4 pb-0 w-full mx-auto">

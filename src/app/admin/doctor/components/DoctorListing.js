@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import AppLayout from '../../../../components/Applayout';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
