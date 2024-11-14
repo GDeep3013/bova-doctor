@@ -23,8 +23,9 @@ export async function GET(req) {
 
     // Fetch doctors excluding the one with the given userId, and apply pagination
     const doctors = await Doctor.find({ _id: { $ne: userId } })
-                                .skip(skip)
-                                .limit(limit);
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
     const totalDoctors = await Doctor.countDocuments({ _id: { $ne: userId } });
 
     // Return the list of doctors along with pagination info

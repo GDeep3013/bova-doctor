@@ -106,7 +106,6 @@ export default function CreatePlan() {
                 }
                 return item;
             });
-
             return { ...prevData, items: updatedItems };
         });
     }
@@ -139,8 +138,6 @@ export default function CreatePlan() {
                         handleSelectProduct(matchingProduct);
                     }
                 });
-
-
                 const matchedPatient = patients.find(patient => patient._id === data?.patient_id?._id);
                 if (matchedPatient) {
                     setSelectedPatient(matchedPatient);
@@ -149,10 +146,7 @@ export default function CreatePlan() {
                         patient_id: matchedPatient._id,
                     }));
                 }
-
-
                 setFormData(prevData => ({ ...prevData, items: mappedItems, message: data?.message }))
-
             } else {
                 Swal.fire({
                     title: 'Error!',
@@ -170,7 +164,6 @@ export default function CreatePlan() {
                 icon: 'error',
                 confirmButtonText: 'OK',
             });
-
         }
     };
 
@@ -184,8 +177,9 @@ export default function CreatePlan() {
         return acc + itemQuantity * item.price;
     }, 0);
 
-
     const discount = subtotal * 0;
+    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
+    const doctorCommission = subtotal * (commissionPercentage / 100);    
     return (
         <AppLayout>
         <div className="flex flex-col">
@@ -306,13 +300,18 @@ export default function CreatePlan() {
                                             <tr className="">
                                                 <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
                                                 <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                        </tr>
+                                        <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Doctor commission</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">${doctorCommission.toFixed(2)}</td>
                                             </tr>
                                             <tr className="border-b border-[#AFAAAC] pb-4">
                                                 <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
                                                 <td className="py-2 text-[#51595B] font-semibold text-right">
                                                     ${(subtotal - discount).toFixed(2)}
                                                 </td>
-                                            </tr>
+                                        </tr>
+                                        
                                         </tbody>
                                     </table>
                             <div className='text-right py-5'>

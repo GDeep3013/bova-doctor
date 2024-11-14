@@ -16,7 +16,7 @@ export async function GET(req) {
   }
 
   try {
-    const patients = await Patient.find({ doctorId: userId });
+    const patients = await Patient.find({ doctorId: userId }).sort({ createdAt: -1 });
     return new Response(JSON.stringify(patients), {
       status: 200,
     });

@@ -19,10 +19,12 @@ export async function POST(req) {
     const email = formData.get('email');
     const phone = formData.get('phone');
     const userType = formData.get('userType');
+    const clinicName = formData.get('clinicName');
     const specialty = formData.get('specialty');
     const commissionPercentage = formData.get('commissionPercentage');
 
-
+    
+   
     // Check if the doctor already exists with the same email or phone
     const existingDoctor = await Doctor.findOne({
       $or: [{ email }, { phone }],
@@ -51,6 +53,7 @@ export async function POST(req) {
       lastName,
       email,
       phone,
+      clinicName,
       userType,
       specialty,
       commissionPercentage,

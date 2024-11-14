@@ -2,7 +2,6 @@
 'use client'
 import AppLayout from 'components/Applayout';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link'
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
@@ -12,18 +11,14 @@ export default function CreatePlan() {
     const { id } = useParams();
     const { data: session } = useSession();
     const router = useRouter();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [products, setProducts] = useState([]);
     const [variants ,setVariants]= useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
-    const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
-
 
     const fetchPatients = async () => {
         try {
@@ -39,18 +34,7 @@ export default function CreatePlan() {
     }
 
 
-    // const fetchProducts = async () => {
-    //     try {
-    //         const response = await fetch('/api/shopify/products');
-    //         if (!response.ok) throw new Error('Failed to fetch products');
-    //         const data = await response.json();
-    //         setProducts(data);
-    //     } catch (error) {
-    //         console.error("Error fetching products:", error);
-    //     }
-    // }
-
-    const fetchSavedProduct = async () => {
+      const fetchSavedProduct = async () => {
         try {
           const response = await fetch(`/api/products?status=active`);
           if (!response.ok) throw new Error('Failed to fetch product status');
@@ -187,8 +171,6 @@ export default function CreatePlan() {
         });
     }
 
-
-
     const handleDeselectProduct = (productId) => {
         setSelectedItems((prevSelectedItems) => {
             const updatedSelectedItems = prevSelectedItems.filter(
@@ -206,8 +188,6 @@ export default function CreatePlan() {
             };
         });
     };
-
-
 
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
@@ -242,16 +222,17 @@ export default function CreatePlan() {
             setLoader(false);
         }
     };
-
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
 
     const openModal = () => {
         setIsModalOpen(true);
     };
+
     const closeModal = () => {
         setIsModalOpen(false);
-        setSelectedProduct(null);
+        // setSelectedProduct(null);
     };
+
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
     const handleZoomProduct = (product) => setSelectedProduct(product);
@@ -287,13 +268,16 @@ export default function CreatePlan() {
         return acc + itemQuantity * item.price;
     }, 0);
 
-    const discount = subtotal * 0.1;
+    const discount = subtotal * 0;
 
+    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
+
+    const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
             <div className="flex flex-col">
                 <h1 className="text-2xl pt-4 md:pt-1 mb-1">Create Patient Plan</h1>
-                <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
                         <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
@@ -495,7 +479,7 @@ export default function CreatePlan() {
                                             ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                             : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                     }>
-                                    {loader ? "Please wait ..." : 'Send to Patient'}
+                                    {loader ? "Please wait..." : "Send to Patient"}
                                 </button>
                             </div>
                         </div>
@@ -503,12 +487,10 @@ export default function CreatePlan() {
                     {/* Right Column - Price Summary */}
                     <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
                         <div className="bg-customBg3 rounded-lg">
-
                             <div className='p-5'>
                                 <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
                                 <div className="mt-2 overflow-x-auto">
                                     <table className="min-w-full table-auto">
-
                                         <tbody>
                                             {formData.items.map((item, index) => (
                                                 <tr key={index} className="">
@@ -517,13 +499,17 @@ export default function CreatePlan() {
                                                     </td>
                                                     <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
                                                     <td className="py-2 text-[#3F4647] text-sm text-right">
-                                                        ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                         ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
                                                     </td>
                                                 </tr>
-                                            ))}
+                                            ))} 
                                             <tr className="">
                                                 <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
                                                 <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                            </tr>
+                                            <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Doctor commission</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">${doctorCommission.toFixed(2)}</td>
                                             </tr>
                                             <tr className="border-b border-[#AFAAAC] pb-4">
                                                 <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>

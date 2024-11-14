@@ -4,17 +4,43 @@ import DoctorTable from './doctorTable';
 import { ReactionIcon, StethoscopeIcon } from 'components/svg-icons/icons';
 import AdminGraph from './adminGraph';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function AdminDashboard() {
 
+    const [totalDoctors, setTotalDoctors] = useState('')
+    const [totalPatient, setTotalPatient] = useState('')
+    const [doctors, setDoctors] = useState([])
+    const [monthlyRevenueData, setMonthlyRevenueData] = useState([]);
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`/api/doctors/dashboard`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch doctors");
+            }
+            const data = await response.json();
+
+            console.log(data)
+            setTotalDoctors(data.totalPatient)
+            setTotalPatient(data.totalDoctors)
+            setDoctors(data.doctorsData)
+            setMonthlyRevenueData(data.monthlyRevenueData)
+
+        } catch (error) {
+            console.log(error)
+        }
+    };
+    useEffect(() => { fetchData() }, [])
+
+
     const cards = [
         {
-            title: '56 Doctors',
+            title: totalPatient + ' Doctors',
             subtitle: 'Total Doctors Using BOVA',
             icon: <StethoscopeIcon />,
         },
         {
-            title: '38 Patients',
+            title: totalDoctors + ' Patients',
             subtitle: 'Total Number of Patients',
             icon: <ReactionIcon />,
         },
@@ -33,7 +59,7 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className='flex min-[1281px]:space-x-5 max-xl:flex-wrap'>
-                    <DoctorTable className="w-full" />
+                    <DoctorTable className="w-full" doctors={doctors} />
                     <div className='w-full max-[1280px]:mt-4'>
                         <div className="mt-5 min-[1025px]:mt-0 flex max-[575px]:gap-y-4 min-[576px]:space-x-5 max-[575px]:flex-wrap">
                             {cards.map((card, index) => (
@@ -54,7 +80,7 @@ export default function AdminDashboard() {
                             ))}
                         </div>
                         <div className='mt-4'>
-                            <AdminGraph />
+                            <AdminGraph monthlyRevenueData={monthlyRevenueData } />
                         </div>
                     </div>
                 </div>

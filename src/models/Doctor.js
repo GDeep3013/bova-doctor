@@ -14,6 +14,7 @@ const doctorSchema = new mongoose.Schema({
     },
     phone: { type: String, required: true, unique: true },
     specialty: { type: String, required: true },
+    clinicName: { type: String},
     commissionPercentage: { type: String, required: true },
     message: { type: String,  },
     profileImage: { type: String }, 

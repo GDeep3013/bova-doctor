@@ -5,13 +5,13 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link'
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useRouter,useParams } from 'next/navigation';
 import { CloseIcon } from '../../../components/svg-icons/icons';
 
 export default function CreatePlan() {
     const { id } = useParams();
     const { data: session } = useSession();
-
+const router =useRouter()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [products, setProducts] = useState([]);
@@ -263,11 +263,16 @@ export default function CreatePlan() {
         return acc + itemQuantity * item.price;
     }, 0);
     const discount = subtotal * 0;
+
+
+    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
+
+    const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
             <div className="flex flex-col">
                 <h1 className="text-2xl pt-4 md:pt-1 mb-1">Edit Patient Plan</h1>
-                <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
                         <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
@@ -293,7 +298,8 @@ export default function CreatePlan() {
                                             >
                                                 <option value="">Select a patient</option>
                                                 {patients.map((patient) => (
-                                                    <option key={patient._id} value={patient._id}>
+                                                    <option key={patient._id} va
+                                                        lue={patient._id}>
                                                         {patient.firstName} {patient.lastName}
                                                     </option>
                                                 ))}
@@ -413,7 +419,6 @@ export default function CreatePlan() {
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>)
                             })
                             }
@@ -465,6 +470,10 @@ export default function CreatePlan() {
                                             <tr className="">
                                                 <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
                                                 <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                            </tr>
+                                            <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Doctor commission</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">${doctorCommission.toFixed(2)}</td>
                                             </tr>
                                             <tr className="border-b border-[#AFAAAC] pb-4">
                                                 <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>

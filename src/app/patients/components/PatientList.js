@@ -109,7 +109,7 @@ export default function PatientList() {
                                 <td className="py-2 px-4">{index +1}</td>
                                 <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
                                 <td className="py-2 px-4">{patient.email}</td>
-                                <td className="py-2 px-4">{patient.phone || "Not available"}</td>
+                                <td className="py-2 px-4">{patient?.phone || "Not available"}</td>
                                 <td className="py-2 px-4">
                                     <div className='flex'>
                                 <img
