@@ -386,7 +386,7 @@ export default function CreatePlan() {
                                     <div className="pr-9 w-full max-w-[400px]">
                                         <img
                                             src={
-                                                item.image && variant.image.url 
+                                                item.image && item.image.url 
                                                    ? item.image.url 
                                                    : (item.product.images && item.product.images[0] && item.product.images[0].url) 
                                                    ? item.product.images[0].url 
@@ -395,7 +395,7 @@ export default function CreatePlan() {
                                             alt="Product"
                                             className="w-24 h-24" />
                                         <div>
-                                            <h3 className="font-bold text-[18px]">{item.title}</h3>
+                                            <h3 className="font-bold text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
                                                 <span className='font-bold w-full inline-block'>Ingredients:</span> 100% Grass Fed & Finished New Zealand Beef Liver.
                                                 300mg per Capsule
@@ -408,19 +408,32 @@ export default function CreatePlan() {
                                         min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
-                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                                    <option>5 (recommended)</option>
-                                                    <option>1 (recommended)</option>
-                                                    <option>2 (recommended)</option>
-                                                    <option>3 (recommended)</option>
-                                                    <option>4 (recommended)</option>
+                                                <select
+                                                       value={itemData?.quantity ?? ""}
+                                                       onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    {/* <option value="5">5 (recommended)</option> */}
+                                                    <option value="2">1 (recommended)</option>
+                                                    <option value="3">2 (recommended)</option>
+                                                    <option value="4">3 (recommended)</option>
+                                                    <option value="5">5 (recommended)</option>
+                                                    <option value="6">6 (recommended)</option>
+                                                    <option value="7">7 (recommended)</option>
+                                                    <option value="8">8 (recommended)</option>
+                                                    <option value="9">9 (recommended)</option>
+                                                    <option value="10">10 (recommended)</option>
+
+
                                                 </select>
                                             </div>
                                         </div>
                                         <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
                                             <div className="relative">
-                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
+                                                <select
+                                                     value={itemData?.properties.frequency ?? ""}
+                                                     onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
                                                     <option>Once Per Day (Anytime)</option>
                                                     <option>Twice Per Day</option>
                                                     <option>Three Times Per Day</option>
@@ -430,7 +443,10 @@ export default function CreatePlan() {
                                         <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
                                             <div className="relative">
-                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                <select
+                                                     value={itemData?.properties.duration ?? ""}
+                                                     onChange={(e) => handleFormDataChange(item.id, 'duration', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
                                                     <option>Once Per Day</option>
                                                     <option>Twice Per Day</option>
                                                 </select>
@@ -439,7 +455,10 @@ export default function CreatePlan() {
                                         <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
                                             <div className="relative">
-                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                <select
+                                                      value={itemData?.properties.takeWith ?? ""}
+                                                      onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
                                                     <option>Water</option>
                                                     <option>Juice</option>
                                                     <option>Milk</option>
