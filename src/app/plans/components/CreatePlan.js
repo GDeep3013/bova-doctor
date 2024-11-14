@@ -397,9 +397,9 @@ export default function CreatePlan() {
                                                        onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
                                                     {/* <option value="5">5 (recommended)</option> */}
-                                                    <option value="2">1 (recommended)</option>
-                                                    <option value="3">2 (recommended)</option>
-                                                    <option value="4">3 (recommended)</option>
+                                                    <option value="1">1 (recommended)</option>
+                                                    <option value="2">2 (recommended)</option>
+                                                    <option value="3">3 (recommended)</option>
                                                     <option value="5">5 (recommended)</option>
                                                     <option value="6">6 (recommended)</option>
                                                     <option value="7">7 (recommended)</option>

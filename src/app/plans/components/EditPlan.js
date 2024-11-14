@@ -376,11 +376,16 @@ const router =useRouter()
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                                    <option>5 (recommended)</option>
-                                                    <option>1 (recommended)</option>
-                                                    <option>2 (recommended)</option>
-                                                    <option>3 (recommended)</option>
-                                                    <option>4 (recommended)</option>
+                                                <option value="1">1 (recommended)</option>
+                                                    <option value="2">2 (recommended)</option>
+                                                    <option value="3">3 (recommended)</option>
+                                                    <option value="5">5 (recommended)</option>
+                                                    <option value="6">6 (recommended)</option>
+                                                    <option value="7">7 (recommended)</option>
+                                                    <option value="8">8 (recommended)</option>
+                                                    <option value="9">9 (recommended)</option>
+                                                    <option value="10">10 (recommended)</option>
+
                                                 </select>
                                             </div>
                                         </div>
