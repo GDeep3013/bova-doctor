@@ -16,6 +16,7 @@ export default function CreatePlan() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [products, setProducts] = useState([]);
+    const [variants ,setVariants]= useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
@@ -36,35 +37,103 @@ export default function CreatePlan() {
     }
 
 
-    const fetchProducts = async () => {
-        try {
-            const response = await fetch('/api/shopify/products');
-            if (!response.ok) throw new Error('Failed to fetch products');
-            const data = await response.json();
-            setProducts(data);
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-    }
+    // const fetchProducts = async () => {
+    //     try {
+    //         const response = await fetch('/api/shopify/products');
+    //         if (!response.ok) throw new Error('Failed to fetch products');
+    //         const data = await response.json();
+    //         setProducts(data);
+    //     } catch (error) {
+    //         console.error("Error fetching products:", error);
+    //     }
+    // }
 
+    const fetchSavedProduct = async () => {
+        try {
+          const response = await fetch(`/api/products?status=active`);
+          if (!response.ok) throw new Error('Failed to fetch product status');
+          
+          const data = await response.json();
+      
+          // Check if the data has products and then map and push variant IDs into an array
+          if (Array.isArray(data) && data.length > 0) {
+            const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
+              getVariants(variantIds)
+          } else {
+            console.log('No products found or data is empty');
+          }
+        } catch (error) {
+          console.error('Error fetching product status:', error);
+        }
+      };
+
+      const getVariants = async (variantIds) => {
+        try {
+            const response = await fetch(`/api/shopify/products/variants`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ variantIds: variantIds }),
+            });
+        
+            if (!response.ok) {
+              throw new Error('Failed to update status');
+            }
+            const data = await response.json();
+            const variants = Object.values(data.data).map(variant => ({
+                id: parseInt(variant.id.replace('gid://shopify/ProductVariant/', '')),
+                title: variant.title,
+                price: parseFloat(variant.price),
+                sku: variant.sku,
+                image: variant.image ? {
+                    id: parseInt(variant.image.id.replace('gid://shopify/ProductImage/', '')),
+                    url: variant.image.url,
+                    altText: variant.image.altText
+                } : null,
+                product: {
+                    id: parseInt(variant.product.id.replace('gid://shopify/Product/', '')),
+                    title: variant.product.title,
+                    images: variant.product.images.edges.map(edge => ({
+                        id: parseInt(edge.node.id.replace('gid://shopify/ProductImage/', '')),
+                        url: edge.node.url,
+                        altText: edge.node.altText
+                    }))
+                }
+            }));
+            
+            setVariants(variants);
+            console.log('Transformed Variants with Product Images:', variants);
+            
+    
+            // Set the transformed data to the state
+            setVariants(variants);
+            console.log('data',variants)
+
+
+
+        
+          } catch (error) {
+            console.error("Error updating product status:", error);
+          }
+      };
     useEffect(() => {
-        fetchProducts();
+        // fetchProducts();
         fetchPatients();
+        fetchSavedProduct()
     }, []);
 
 
-    const handleSelectProduct = (product) => {
+    const handleSelectProduct = (variant) => {
         setSelectedItems((prevSelectedItems) => {
-            const productExists = prevSelectedItems.some((item) => item.id === product.id);
+            const productExists = prevSelectedItems.some((item) => item.id === variant.id);
             if (productExists) return prevSelectedItems;
-            return [...prevSelectedItems, product];
+            return [...prevSelectedItems, variant];
         });
         setFormData((prevData) => {
             const updatedItems = prevData.items
             const newItem = {
-                id: product.variants[0]?.id,
-                price: product.variants[0]?.price,
-                title: product?.title,
+                id: variant.id,
+                price: variant.price,
+                title: variant.product?.title,
                 quantity: 1,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
@@ -74,7 +143,7 @@ export default function CreatePlan() {
                     notes: '',
                 }
             };
-            if (!updatedItems.some(item => item.id === product.variants[0]?.id)) {
+            if (!updatedItems.some(item => item.id === variant?.id)) {
                 updatedItems.push(newItem);
             }
             return { ...prevData, items: updatedItems };
@@ -193,8 +262,8 @@ export default function CreatePlan() {
     };
 
     const handleZoomProduct = (product) => setSelectedProduct(product);
-    const filteredProducts = products.filter(product =>
-        product.title.toLowerCase().includes(searchTerm)
+    const filteredProducts = variants.filter(variants =>
+        variants.product.title.toLowerCase().includes(searchTerm)
     )
 
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
@@ -283,25 +352,29 @@ export default function CreatePlan() {
                             <div className="p-4">
                                 <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
                                 <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2">
-                                    {selectedItems.map((product, index) => (
+                                    {selectedItems.map((variant, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
-                                                onClick={() => { handleDeselectProduct(product?.variants[0]?.id) }}
+                                                onClick={() => { handleDeselectProduct(variant.id) }}
                                                 className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
                                                 aria-label="Deselect Product"
                                             >
                                                 &times;
                                             </button>
-                                            {product.image && (
                                                 <img
-                                                    src={product.image.src} // Replace with actual paths
-                                                    alt={product.title}
-                                                    className={`w-[117px] h-[106px] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
-                                                    onClick={() => handleSelectProduct(product)}
+                                                src={
+                                                    variant.image && variant.image.url 
+                                                   ? variant.image.url 
+                                                   : (variant.product.images && variant.product.images[0] && variant.product.images[0].url) 
+                                                   ? variant.product.images[0].url 
+                                                   : '/images/product-img1.png'
+                                               }
+                                                    alt={variant.product.title}
+                                                    className={`w-[117px] h-[106px] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                    onClick={() => handleSelectProduct(variant)}
                                                 />
-                                            )}
-                                            <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(product.id) ? 'text-black' : 'text-textColor'}`}>
-                                                {product.title}
+                                            <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>
+                                                {variant.product.title}
                                             </p>
                                         </div>
                                     ))}
@@ -318,7 +391,7 @@ export default function CreatePlan() {
 
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
-                                const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
+                                const itemData = formData.items.find(fItem => fItem.id === item.id);
                                 return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
                                     <div className="pr-9 w-full max-w-[400px]">
                                         <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
@@ -336,7 +409,7 @@ export default function CreatePlan() {
                                             <input
                                                 type="number"
                                                 value={itemData?.quantity ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
+                                                onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                                 placeholder="Enter Quantity (e.g., 5, 10)"
                                             />
@@ -345,7 +418,7 @@ export default function CreatePlan() {
                                             <input
                                                 type="text"
                                                 value={itemData?.properties.frequency ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
+                                                onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                                 placeholder="Enter Frequency (e.g., Once Per Day)"
                                             />
@@ -354,7 +427,7 @@ export default function CreatePlan() {
                                             <input
                                                 type="text"
                                                 value={itemData?.properties.duration ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
+                                                onChange={(e) => handleFormDataChange(item.id, 'duration', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                                 placeholder="Enter Duration (e.g., Once Per Day)"
                                             />
@@ -363,7 +436,7 @@ export default function CreatePlan() {
                                             <input
                                                 type="text"
                                                 value={itemData?.properties.takeWith ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
+                                                onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                                 placeholder="Enter Take With (e.g., Water)"
                                             />
@@ -372,7 +445,7 @@ export default function CreatePlan() {
                                             <input
                                                 type="text"
                                                 value={itemData?.properties.notes ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
+                                                onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
                                                 placeholder="Add Notes"
                                             />
@@ -476,8 +549,8 @@ export default function CreatePlan() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {filteredProducts.map((product, index) => {
-                                                    const isProductAdded = selectedItems.some(item => item.id === product.id);
+                                                {filteredProducts.map((variant, index) => {
+                                                    const isProductAdded = selectedItems.some(item => item.id === variant.id);
                                                     return (
                                                         <tr
                                                             key={index}
@@ -485,17 +558,23 @@ export default function CreatePlan() {
                                                         >
                                                             <td className="px-6 py-4 whitespace-nowrap">
                                                                 <img
-                                                                    src={product.image?.src || '/images/product-img1.png'}
-                                                                    alt={product.title}
+                                                                    src={
+                                                                         variant.image && variant.image.url 
+                                                                        ? variant.image.url 
+                                                                        : (variant.product.images && variant.product.images[0] && variant.product.images[0].url) 
+                                                                        ? variant.product.images[0].url 
+                                                                        : '/images/product-img1.png'
+                                                                    }
+                                                                    alt={variant.product.title}
                                                                     className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
                                                                 />
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">{product?.variants[0]?.sku || 'N/A'}</td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">${product?.variants[0]?.price || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{variant.product.title}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">{variant.sku || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">${variant.price || 'N/A'}</td>
                                                             <td className="px-6 py-4 whitespace-nowrap">
                                                                 <button
-                                                                    onClick={() => { handleSelectProduct(product) }}
+                                                                    onClick={() => { handleSelectProduct(variant) }}
                                                                     className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
                                                                     disabled={isProductAdded}
                                                                 >

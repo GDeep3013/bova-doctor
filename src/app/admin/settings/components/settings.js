@@ -25,7 +25,7 @@ export default function CreatePlan() {
         }
     }
 
-        const fetchProductStatus = async () => {
+        const fetchSavedProduct = async () => {
             try {
             const response = await fetch(`/api/products`);
             if (!response.ok) throw new Error('Failed to fetch product status');
@@ -40,7 +40,7 @@ export default function CreatePlan() {
 
     useEffect(() => {
         fetchProducts();
-        fetchProductStatus();
+        fetchSavedProduct();
     }, []);
 
     useEffect(() => {
@@ -109,7 +109,8 @@ export default function CreatePlan() {
                   status: status,
                   product_id: product.id,
                   sku: product?.variants[0]?.sku || 'N/A',
-                  title:product.title
+                  title: product.title,
+                  variant_id:product?.variants[0]?.id
                   
               }),
           });
@@ -122,7 +123,30 @@ export default function CreatePlan() {
           console.error("Error updating product status:", error);
           setIsChecked(!isChecked);
         }
-      };
+    };
+    
+    useEffect(() => {
+    
+        const searchProducts = async () => {
+          try {
+            const url = `/api/shopify/products/search?q=${searchTerm}`;
+            const response = await fetch(url);
+            if (!response.ok) {
+              throw new Error('Failed to fetch products');
+            }
+            const data = await response.json();
+            
+            setProducts(data);
+          } catch (error) {
+              console.log('error',error)
+          }
+        };
+        if (searchTerm) {
+            searchProducts();
+        } else {
+            fetchProducts()
+            }
+      }, [searchTerm])
       
 
 

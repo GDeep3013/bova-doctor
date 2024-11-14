@@ -4,12 +4,14 @@ import Product from '../../../models/product';
 export async function GET(req) {
   // Ensure database connection
   await connectDB();
+  const status = req.nextUrl.searchParams.get('status');
+
+ 
+  const filter = status ? { status } : {}; 
 
   try {
-    // Find the product by product_id in the database
-    const product = await Product.find();
+    const product = await Product.find(filter);
   
-    // Return the product data
     return new Response(JSON.stringify(product), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
