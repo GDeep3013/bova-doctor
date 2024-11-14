@@ -4,39 +4,40 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const LineChart = ({monthlyRevenueData }) => {
-    // const monthlyRevenueData = [
-    //     {
-    //         year: 2024,
-    //         month: 1, // January
-    //         totalRevenue: 12000.50,
-    //     },
-    //     {
-    //         year: 2024,
-    //         month: 2, // February
-    //         totalRevenue: 15000.75,
-    //     },
-    //     {
-    //         year: 2024,
-    //         month: 3, // March
-    //         totalRevenue: 13500.30,
-    //     },
-    //     {
-    //         year: 2024,
-    //         month: 4, // April
-    //         totalRevenue: 14500.90,
-    //     },
-    //     {
-    //         year: 2024,
-    //         month: 5, // May
-    //         totalRevenue: 16000.20,
-    //     },
-    //     {
-    //         year: 2024,
-    //         month: 6, // June
-    //         totalRevenue: 15500.60,
-    //     },
-    // ];
+const LineChart = ({  }) => {
+    // console.log('monthlyRevenueData',monthlyRevenueData)
+    const monthlyRevenueData = [
+        {
+            year: 2024,
+            month: 1, // January
+            totalRevenue: 12000.50,
+        },
+        {
+            year: 2024,
+            month: 2, // February
+            totalRevenue: 15000.75,
+        },
+        {
+            year: 2024,
+            month: 3, // March
+            totalRevenue: 13500.30,
+        },
+        {
+            year: 2024,
+            month: 4, // April
+            totalRevenue: 14500.90,
+        },
+        {
+            year: 2024,
+            month: 5, // May
+            totalRevenue: 16000.20,
+        },
+        {
+            year: 2024,
+            month: 6, // June
+            totalRevenue: 15500.60,
+        },
+    ];
 
     // Prepare the data for the chart
     const labels = monthlyRevenueData.map((item) => `${item.month}/${item.year}`);
