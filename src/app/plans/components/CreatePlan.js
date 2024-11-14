@@ -118,8 +118,6 @@ export default function CreatePlan() {
         });
     }
 
-
-
     const handleDeselectProduct = (productId) => {
         setSelectedItems((prevSelectedItems) => {
             const updatedSelectedItems = prevSelectedItems.filter(
@@ -137,8 +135,6 @@ export default function CreatePlan() {
             };
         });
     };
-
-
 
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
@@ -173,16 +169,17 @@ export default function CreatePlan() {
             setLoader(false);
         }
     };
-
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
 
     const openModal = () => {
         setIsModalOpen(true);
     };
+
     const closeModal = () => {
         setIsModalOpen(false);
-        setSelectedProduct(null);
+        // setSelectedProduct(null);
     };
+
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
     const filteredProducts = products.filter(product =>
@@ -374,7 +371,12 @@ export default function CreatePlan() {
                             <div className="p-4 border-t border-b border-[#AFAAAC]">
                                 <textarea
                                     value={formData.message}
-                                    onChange={(e) => handleFormDataChange(0, 'message', e.target.value)}
+                                    onChange={(e) =>
+                                        setFormData((prevFormData) => ({
+                                            ...prevFormData,
+                                            message: e.target.value,
+                                        }))
+                                    }
                                     className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
                                     rows="4"
                                     placeholder="Message"
