@@ -296,7 +296,7 @@ export default function CreatePlan() {
                                     ))}
                                     {/* Plus Button to Add More Products */}
                                     <button
-                                        className=" h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
+                                        className="h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
                                         onClick={openModal}
                                     >
                                         +
