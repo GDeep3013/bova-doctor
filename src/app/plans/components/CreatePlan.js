@@ -12,17 +12,14 @@ export default function CreatePlan() {
     const { id } = useParams();
     const { data: session } = useSession();
     const router = useRouter();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [products, setProducts] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
-    const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
-
 
     const fetchPatients = async () => {
         try {
@@ -214,8 +211,11 @@ export default function CreatePlan() {
         return acc + itemQuantity * item.price;
     }, 0);
 
-    const discount = subtotal * 0.1;
+    const discount = subtotal * 0;
 
+    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
+
+    const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
             <div className="flex flex-col">
@@ -239,7 +239,7 @@ export default function CreatePlan() {
                                             </span>
                                             <select
                                                 id="select-patient"
-                                                className={`w-full bg-inputBg rounded-[8px] max-w-[250px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
+                                                className={`w-full border border-[#AFAAAC] bg-white rounded-[8px] max-w-[250px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
 
                                                 onChange={handleSelectPatient}
                                                 value={selectedPatient?.id || ""}
@@ -268,7 +268,9 @@ export default function CreatePlan() {
                             <div className="p-4">
                                 <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
                                 <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2">
-                                    {selectedItems.map((product, index) => (
+                                    {selectedItems.map((product, index) =>
+
+                                    (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
                                                 onClick={() => { handleDeselectProduct(product?.variants[0]?.id) }}
@@ -306,7 +308,7 @@ export default function CreatePlan() {
                                 const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
                                 return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
                                     <div className="pr-9 w-full max-w-[400px]">
-                                        <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
+                                        <img src={item.image.src} alt="Product" className="w-24 h-24" />
                                         <div>
                                             <h3 className="font-bold text-[18px]">{item.title}</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
@@ -318,49 +320,66 @@ export default function CreatePlan() {
                                     {/* Product Options */}
                                     <div className="mt-4 w-full">
                                         <div>
-                                            <input
-                                                type="number"
+                                            <select
                                                 value={itemData?.quantity ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Quantity (e.g., 5, 10)"
-                                            />
+                                            >
+                                                <option value="">Select Quantity</option>
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                            </select>
                                         </div>
                                         <div>
-                                            <input
-                                                type="text"
+                                            <select
                                                 value={itemData?.properties.frequency ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Frequency (e.g., Once Per Day)"
-                                            />
+                                            >
+                                                <option value="">Select Frequency</option>
+                                                <option value="Once Per Day">Once Per Day</option>
+                                                <option value="Twice Per Day">Twice Per Day</option>
+                                                <option value="Once Per Week">Once Per Week</option>
+                                                <option value="Twice Per Week">Twice Per Week</option>
+                                            </select>
                                         </div>
                                         <div>
-                                            <input
-                                                type="text"
+                                            <select
                                                 value={itemData?.properties.duration ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Duration (e.g., Once Per Day)"
-                                            />
+                                            >
+                                                <option value="">Select Duration</option>
+                                                <option value="1 Week">1 Week</option>
+                                                <option value="2 Weeks">2 Weeks</option>
+                                                <option value="1 Month">1 Month</option>
+                                                <option value="3 Months">3 Months</option>
+                                            </select>
                                         </div>
                                         <div>
-                                            <input
-                                                type="text"
+                                            <select
                                                 value={itemData?.properties.takeWith ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Take With (e.g., Water)"
-                                            />
+                                            >
+                                                <option value="">Select Take With</option>
+                                                <option value="Water">Water</option>
+                                                <option value="Food">Food</option>
+                                                <option value="Juice">Juice</option>
+                                            </select>
                                         </div>
                                         <div>
-                                            <input
-                                                type="text"
+                                            <select
                                                 value={itemData?.properties.notes ?? ""}
                                                 onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
                                                 className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
-                                                placeholder="Add Notes"
-                                            />
+                                            >
+                                                <option value="">Select Notes</option>
+                                                <option value="Important">Important</option>
+                                                <option value="Optional">Optional</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -371,12 +390,7 @@ export default function CreatePlan() {
                             <div className="p-4 border-t border-b border-[#AFAAAC]">
                                 <textarea
                                     value={formData.message}
-                                    onChange={(e) =>
-                                        setFormData((prevFormData) => ({
-                                            ...prevFormData,
-                                            message: e.target.value,
-                                        }))
-                                    }
+                                    onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}
                                     className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
                                     rows="4"
                                     placeholder="Message"
@@ -387,12 +401,12 @@ export default function CreatePlan() {
                                 <button
                                     onClick={() => { handleSubmit() }}
                                     disabled={formData.items.length === 0 || !formData.patient_id}
-                                    className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px] 
+                                    className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
                                         ${formData.items.length === 0 || !formData.patient_id
                                             ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                             : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                     }>
-                                  {loader ? "Please wait ..." : 'Send to Patient'}
+                                    {loader ? "Please wait..." : "Send to Patient"}
                                 </button>
                             </div>
                         </div>
@@ -400,37 +414,45 @@ export default function CreatePlan() {
                     {/* Right Column - Price Summary */}
                     <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
                         <div className="bg-customBg3 rounded-lg">
-
                             <div className='p-5'>
                                 <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
-                                <div className="mt-2 space-y-2">
-                                    {formData.items.map((item, index) => (
-                                        <div key={index} className="flex justify-between">
-                                            <span className='text-[#3F4647] text-regular' >
-                                                Product   {item.title}: {item.quantity ? item.quantity : 1} x {item.price}
-                                            </span>
-                                            <span className='text-[#3F4647]'>
-                                                ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
-                                            </span>
-                                        </div>
-                                    ))}
-                                    <div className="flex justify-between mt-2">
-                                        <span className='text-[#3F4647] text-regular'>Patient Discount (10%)</span>
-                                        -${discount.toFixed(2)}
-                                    </div>
-                                    <div className="flex justify-between border-b border-[#AFAAAC] pb-4 mt-2">
-                                        <span className='text-[#3F4647] text-regular'>Subtotal</span>
-                                        <span className='text-[#51595B]font-semibold'>
-                                            ${(subtotal - discount).toFixed(2)}
-                                        </span>
-
-                                    </div>
+                                <div className="mt-2 overflow-x-auto">
+                                    <table className="min-w-full table-auto">
+                                        <tbody>
+                                            {formData.items.map((item, index) => (
+                                                <tr key={index} className="">
+                                                    <td className="py-2 text-[#3F4647] text-sm">
+                                                        {item.title}
+                                                    </td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-right">
+                                                         ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                    </td>
+                                                </tr>
+                                            ))} 
+                                            <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                            </tr>
+                                            <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Doctor commission</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">${doctorCommission.toFixed(2)}</td>
+                                            </tr>
+                                            <tr className="border-b border-[#AFAAAC] pb-4">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
+                                                <td className="py-2 text-[#51595B] font-semibold text-right">
+                                                    ${(subtotal - discount).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
+
                                 <div className='text-right py-5'>
                                     <button
                                         onClick={() => { handleSubmit() }}
                                         disabled={formData.items.length === 0 || !formData.patient_id}
-                                        className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px] 
+                                        className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
                                             ${formData.items.length === 0 || !formData.patient_id
                                                 ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`

@@ -34,10 +34,7 @@ export default function Create() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
-        if (!phone) {
-            newErrors.phone = 'Phone number is required';
-            valid = false;
-        }
+       
         setErrors(newErrors);
         return valid;
     };
@@ -138,9 +135,9 @@ export default function Create() {
                                     placeholder="Phone"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
-                                    className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                    className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2  rounded focus:outline-none focus:border-blue-500`}
                                 />
-                                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                                {/* {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>} */}
                             </div>
 
 

@@ -22,7 +22,7 @@ export async function GET(req) {
     const patientIds = patients.map(patient => patient._id);
 
     // Step 2: Find all plans where patient_id is in the list of patientIds
-    const plans = await Plan.find({ patient_id: { $in: patientIds } }).populate('patient_id');
+    const plans = await Plan.find({ patient_id: { $in: patientIds } }).sort({ createdAt: -1 }).populate('patient_id');
 
     // Respond with the plans data
     return new Response(JSON.stringify(plans), {

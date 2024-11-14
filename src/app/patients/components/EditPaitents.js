@@ -59,10 +59,7 @@ export default function EditPatient() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
-        if (!phone) {
-            newErrors.phone = 'Phone number is required';
-            valid = false;
-        }
+     
         setErrors(newErrors);
         return valid;
     };

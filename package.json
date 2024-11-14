@@ -12,6 +12,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "bova-doctor": "file:",
+    "chart.js": "^4.4.6",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
@@ -27,9 +28,10 @@
     "nextjs-cors": "^2.2.0",
     "nodemailer": "^6.9.16",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "server-only": "^0.0.1",
-    "sweetalert2": "^11.14.4"
+    "sweetalert2": "^11.6.13"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
