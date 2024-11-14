@@ -2,7 +2,6 @@
 'use client'
 import AppLayout from 'components/Applayout';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link'
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
@@ -14,7 +13,7 @@ export default function CreatePlan() {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [products, setProducts] = useState([]);
+    const [variants ,setVariants]= useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
@@ -35,35 +34,92 @@ export default function CreatePlan() {
     }
 
 
-    const fetchProducts = async () => {
+      const fetchSavedProduct = async () => {
         try {
-            const response = await fetch('/api/shopify/products');
-            if (!response.ok) throw new Error('Failed to fetch products');
-            const data = await response.json();
-            setProducts(data);
+          const response = await fetch(`/api/products?status=active`);
+          if (!response.ok) throw new Error('Failed to fetch product status');
+          
+          const data = await response.json();
+      
+          // Check if the data has products and then map and push variant IDs into an array
+          if (Array.isArray(data) && data.length > 0) {
+            const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
+              getVariants(variantIds)
+          } else {
+            console.log('No products found or data is empty');
+          }
         } catch (error) {
-            console.error("Error fetching products:", error);
+          console.error('Error fetching product status:', error);
         }
-    }
+      };
 
+      const getVariants = async (variantIds) => {
+        try {
+            const response = await fetch(`/api/shopify/products/variants`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ variantIds: variantIds }),
+            });
+        
+            if (!response.ok) {
+              throw new Error('Failed to update status');
+            }
+            const data = await response.json();
+            const variants = Object.values(data.data).map(variant => ({
+                id: parseInt(variant.id.replace('gid://shopify/ProductVariant/', '')),
+                title: variant.title,
+                price: parseFloat(variant.price),
+                sku: variant.sku,
+                image: variant.image ? {
+                    id: parseInt(variant.image.id.replace('gid://shopify/ProductImage/', '')),
+                    url: variant.image.url,
+                    altText: variant.image.altText
+                } : null,
+                product: {
+                    id: parseInt(variant.product.id.replace('gid://shopify/Product/', '')),
+                    title: variant.product.title,
+                    images: variant.product.images.edges.map(edge => ({
+                        id: parseInt(edge.node.id.replace('gid://shopify/ProductImage/', '')),
+                        url: edge.node.url,
+                        altText: edge.node.altText
+                    }))
+                }
+            }));
+            
+            setVariants(variants);
+            console.log('Transformed Variants with Product Images:', variants);
+            
+    
+            // Set the transformed data to the state
+            setVariants(variants);
+            console.log('data',variants)
+
+
+
+        
+          } catch (error) {
+            console.error("Error updating product status:", error);
+          }
+      };
     useEffect(() => {
-        fetchProducts();
+        // fetchProducts();
         fetchPatients();
+        fetchSavedProduct()
     }, []);
 
 
-    const handleSelectProduct = (product) => {
+    const handleSelectProduct = (variant) => {
         setSelectedItems((prevSelectedItems) => {
-            const productExists = prevSelectedItems.some((item) => item.id === product.id);
+            const productExists = prevSelectedItems.some((item) => item.id === variant.id);
             if (productExists) return prevSelectedItems;
-            return [...prevSelectedItems, product];
+            return [...prevSelectedItems, variant];
         });
         setFormData((prevData) => {
             const updatedItems = prevData.items
             const newItem = {
-                id: product.variants[0]?.id,
-                price: product.variants[0]?.price,
-                title: product?.title,
+                id: variant.id,
+                price: variant.price,
+                title: variant.product?.title,
                 quantity: 1,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
@@ -73,7 +129,7 @@ export default function CreatePlan() {
                     notes: '',
                 }
             };
-            if (!updatedItems.some(item => item.id === product.variants[0]?.id)) {
+            if (!updatedItems.some(item => item.id === variant?.id)) {
                 updatedItems.push(newItem);
             }
             return { ...prevData, items: updatedItems };
@@ -179,8 +235,9 @@ export default function CreatePlan() {
 
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
-    const filteredProducts = products.filter(product =>
-        product.title.toLowerCase().includes(searchTerm)
+    const handleZoomProduct = (product) => setSelectedProduct(product);
+    const filteredProducts = variants.filter(variants =>
+        variants.product.title.toLowerCase().includes(searchTerm)
     )
 
     useEffect(() => {
@@ -220,7 +277,7 @@ export default function CreatePlan() {
         <AppLayout>
             <div className="flex flex-col">
                 <h1 className="text-2xl pt-4 md:pt-1 mb-1">Create Patient Plan</h1>
-                <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
                         <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
@@ -267,34 +324,37 @@ export default function CreatePlan() {
                             {/* Product Selection */}
                             <div className="p-4">
                                 <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
-                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2">
-                                    {selectedItems.map((product, index) =>
-
-                                    (
+                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
+                                    {selectedItems.map((variant, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
-                                                onClick={() => { handleDeselectProduct(product?.variants[0]?.id) }}
-                                                className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
+                                                onClick={() => { handleDeselectProduct(variant.id) }}
+                                                className="top-[-9px] absolute right-[-9px] w-6 h-6 flex items-center justify-center
+                                                bg-[#3c637a] text-white rounded-full text-sm font-bold"
                                                 aria-label="Deselect Product"
                                             >
                                                 &times;
                                             </button>
-                                            {product.image && (
                                                 <img
-                                                    src={product.image.src} // Replace with actual paths
-                                                    alt={product.title}
-                                                    className={`w-[117px] h-[106px] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
-                                                    onClick={() => handleSelectProduct(product)}
+                                                src={
+                                                    variant.image && variant.image.url 
+                                                   ? variant.image.url 
+                                                   : (variant.product.images && variant.product.images[0] && variant.product.images[0].url) 
+                                                   ? variant.product.images[0].url 
+                                                   : '/images/product-img1.png'
+                                               }
+                                                    alt={variant.product.title}
+                                                    className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                    onClick={() => handleSelectProduct(variant)}
                                                 />
-                                            )}
-                                            <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(product.id) ? 'text-black' : 'text-textColor'}`}>
-                                                {product.title}
-                                            </p>
+                                            {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>
+                                                {variant.product.title}
+                                            </p> */}
                                         </div>
                                     ))}
                                     {/* Plus Button to Add More Products */}
                                     <button
-                                        className=" h-[106px] max-w-[120px] w-full bg-white flex items-center justify-center text-2xl font-bold text-textColor cursor-pointer shadow-2xl rounded-[8px]"
+                                        className=" h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
                                         onClick={openModal}
                                     >
                                         +
@@ -305,12 +365,21 @@ export default function CreatePlan() {
 
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
-                                const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
+                                const itemData = formData.items.find(fItem => fItem.id === item.id);
                                 return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
                                     <div className="pr-9 w-full max-w-[400px]">
-                                        <img src={item.image.src} alt="Product" className="w-24 h-24" />
+                                        <img
+                                            src={
+                                                item.image && item.image.url 
+                                                   ? item.image.url 
+                                                   : (item.product.images && item.product.images[0] && item.product.images[0].url) 
+                                                   ? item.product.images[0].url 
+                                                   : '/images/product-img1.png'
+                                               }
+                                            alt="Product"
+                                            className="w-24 h-24" />
                                         <div>
-                                            <h3 className="font-bold text-[18px]">{item.title}</h3>
+                                            <h3 className="font-bold text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
                                                 <span className='font-bold w-full inline-block'>Ingredients:</span> 100% Grass Fed & Finished New Zealand Beef Liver.
                                                 300mg per Capsule
@@ -318,68 +387,72 @@ export default function CreatePlan() {
                                         </div>
                                     </div>
                                     {/* Product Options */}
-                                    <div className="mt-4 w-full">
-                                        <div>
-                                            <select
-                                                value={itemData?.quantity ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option value="">Select Quantity</option>
-                                                <option value="5">5</option>
-                                                <option value="10">10</option>
-                                                <option value="15">15</option>
-                                                <option value="20">20</option>
-                                            </select>
+                                    <div className="space-y-4 w-full">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-[max-content]
+                                        min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
+                                            <div className="relative">
+                                                <select
+                                                       value={itemData?.quantity ?? ""}
+                                                       onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    {/* <option value="5">5 (recommended)</option> */}
+                                                    <option value="2">1 (recommended)</option>
+                                                    <option value="3">2 (recommended)</option>
+                                                    <option value="4">3 (recommended)</option>
+                                                    <option value="5">5 (recommended)</option>
+                                                    <option value="6">6 (recommended)</option>
+                                                    <option value="7">7 (recommended)</option>
+                                                    <option value="8">8 (recommended)</option>
+                                                    <option value="9">9 (recommended)</option>
+                                                    <option value="10">10 (recommended)</option>
+
+
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <select
-                                                value={itemData?.properties.frequency ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option value="">Select Frequency</option>
-                                                <option value="Once Per Day">Once Per Day</option>
-                                                <option value="Twice Per Day">Twice Per Day</option>
-                                                <option value="Once Per Week">Once Per Week</option>
-                                                <option value="Twice Per Week">Twice Per Week</option>
-                                            </select>
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
+                                            <div className="relative">
+                                                <select
+                                                     value={itemData?.properties.frequency ?? ""}
+                                                     onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
+                                                    <option>Once Per Day (Anytime)</option>
+                                                    <option>Twice Per Day</option>
+                                                    <option>Three Times Per Day</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <select
-                                                value={itemData?.properties.duration ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option value="">Select Duration</option>
-                                                <option value="1 Week">1 Week</option>
-                                                <option value="2 Weeks">2 Weeks</option>
-                                                <option value="1 Month">1 Month</option>
-                                                <option value="3 Months">3 Months</option>
-                                            </select>
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
+                                            <div className="relative">
+                                                <select
+                                                     value={itemData?.properties.duration ?? ""}
+                                                     onChange={(e) => handleFormDataChange(item.id, 'duration', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>Once Per Day</option>
+                                                    <option>Twice Per Day</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <select
-                                                value={itemData?.properties.takeWith ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                            >
-                                                <option value="">Select Take With</option>
-                                                <option value="Water">Water</option>
-                                                <option value="Food">Food</option>
-                                                <option value="Juice">Juice</option>
-                                            </select>
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
+                                            <div className="relative">
+                                                <select
+                                                      value={itemData?.properties.takeWith ?? ""}
+                                                      onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>Water</option>
+                                                    <option>Juice</option>
+                                                    <option>Milk</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <select
-                                                value={itemData?.properties.notes ?? ""}
-                                                onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
-                                            >
-                                                <option value="">Select Notes</option>
-                                                <option value="Important">Important</option>
-                                                <option value="Optional">Optional</option>
-                                            </select>
+                                        <div className='w-full max-w-[510px]'>
+                                            <div className="mt-1">
+                                                <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg" rows="3"></textarea>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -467,9 +540,9 @@ export default function CreatePlan() {
                 </div>
 
                 {isModalOpen && (
-                    <div className="fixed p-2 md:p-0 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full">
-                            <div className='flex justify-between items-center p-2 md:py-4'>
+                    <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
+                        <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
+                            <div className='flex justify-between items-center md:pb-4'>
                                 <h2 className="text-xl font-bold">Select Product</h2>
                                 <button onClick={closeModal}> <CloseIcon /> </button>
                             </div>
@@ -496,8 +569,8 @@ export default function CreatePlan() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {filteredProducts.map((product, index) => {
-                                                    const isProductAdded = selectedItems.some(item => item.id === product.id);
+                                                {filteredProducts.map((variant, index) => {
+                                                    const isProductAdded = selectedItems.some(item => item.id === variant.id);
                                                     return (
                                                         <tr
                                                             key={index}
@@ -505,17 +578,23 @@ export default function CreatePlan() {
                                                         >
                                                             <td className="px-6 py-4 whitespace-nowrap">
                                                                 <img
-                                                                    src={product.image?.src || '/images/product-img1.png'}
-                                                                    alt={product.title}
+                                                                    src={
+                                                                         variant.image && variant.image.url 
+                                                                        ? variant.image.url 
+                                                                        : (variant.product.images && variant.product.images[0] && variant.product.images[0].url) 
+                                                                        ? variant.product.images[0].url 
+                                                                        : '/images/product-img1.png'
+                                                                    }
+                                                                    alt={variant.product.title}
                                                                     className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
                                                                 />
                                                             </td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">{product?.variants[0]?.sku || 'N/A'}</td>
-                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">${product?.variants[0]?.price || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{variant.product.title}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">{variant.sku || 'N/A'}</td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-gray-700">${variant.price || 'N/A'}</td>
                                                             <td className="px-6 py-4 whitespace-nowrap">
                                                                 <button
-                                                                    onClick={() => { handleSelectProduct(product) }}
+                                                                    onClick={() => { handleSelectProduct(variant) }}
                                                                     className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
                                                                     disabled={isProductAdded}
                                                                 >
@@ -536,7 +615,7 @@ export default function CreatePlan() {
                                 <button
                                     onClick={() => { closeModal() }}
                                     className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                    Close
+                                    FINISH
                                 </button>
                             </div>
 

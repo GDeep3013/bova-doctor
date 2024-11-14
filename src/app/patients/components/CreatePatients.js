@@ -151,7 +151,7 @@ export default function Create() {
                                     type="submit"
                                     className="min-w-[150px] py-2 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"
                                 >
-                                   { loader?"Please wait...":"Create Patient"} 
+                                   { loader?"Please wait...":"Create Patient"}
                                 </button>
                             </div>
                             {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
