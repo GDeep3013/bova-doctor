@@ -12,7 +12,7 @@ export default function AppLayout({ children }) {
             <div className="dashboard-outer flex">
                 <Sidebar isSidebarOpen={isSidebarOpen} />
                 <div className='dashboard-right w-full transition ease-in-out delay-150'>
-                    <div className='dashboard-inner min-h pt-[0] p-[20px] md:p-[40px]'>
+                    <div className='dashboard-inner min-h pt-[0] p-[20px] md:p-[40px] md:pt-[30px]'>
                         {children}
                     </div>
                 </div>

@@ -75,7 +75,7 @@ export default function CreatePlan() {
         });
     };
 
-  
+
     function handleFormDataChange(itemId, field, value) {
         setFormData((prevData) => {
             const updatedItems = prevData.items.map((item) => {
@@ -106,7 +106,7 @@ export default function CreatePlan() {
                 }
                 return item;
             });
-    
+
             return { ...prevData, items: updatedItems };
         });
     }
@@ -152,7 +152,7 @@ export default function CreatePlan() {
 
 
                 setFormData(prevData => ({ ...prevData, items: mappedItems, message: data?.message }))
-              
+
             } else {
                 Swal.fire({
                     title: 'Error!',
@@ -160,7 +160,7 @@ export default function CreatePlan() {
                     icon: 'error',
                     confirmButtonText: 'OK',
                 });
-          
+
             }
         } catch (error) {
             console.error("Error fetching plan data:", error);
@@ -184,7 +184,7 @@ export default function CreatePlan() {
         return acc + itemQuantity * item.price;
     }, 0);
 
- 
+
     const discount = subtotal * 0;
     return (
         <AppLayout>
@@ -193,12 +193,12 @@ export default function CreatePlan() {
             <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
             <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                 <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
-                    <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">                       
+                    <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
                             <span className="font-medium text-[19px] text-black">
                                 Patient Name: <span className="font-medium">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
                             </span>
                         </div>
-                    <div className='p-0'>                                          
+                    <div className='p-0'>
 
 
                         {/* Product Info */}
@@ -223,7 +223,7 @@ export default function CreatePlan() {
                                             readOnly
                                             value={itemData?.quantity ?? ""}
                                             onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
-                                            className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                            className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Quantity (e.g., 5, 10)"
                                         />
                                     </div>
@@ -233,7 +233,7 @@ export default function CreatePlan() {
                                             readOnly
                                             value={itemData?.properties.frequency ?? ""}
                                             onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
-                                            className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                            className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Frequency (e.g., Once Per Day)"
                                         />
                                     </div>
@@ -243,7 +243,7 @@ export default function CreatePlan() {
                                             readOnly
                                             value={itemData?.properties.duration ?? ""}
                                             onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
-                                            className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                            className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Duration (e.g., Once Per Day)"
                                         />
                                     </div>
@@ -253,7 +253,7 @@ export default function CreatePlan() {
                                             readOnly
                                             value={itemData?.properties.takeWith ?? ""}
                                             onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
-                                            className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
+                                            className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Take With (e.g., Water)"
                                         />
                                     </div>
@@ -263,14 +263,24 @@ export default function CreatePlan() {
                                             readOnly
                                             value={itemData?.properties.notes ?? ""}
                                             onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
-                                            className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
+                                            className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
                                             placeholder="Add Notes"
                                         />
                                     </div>
-                                </div>   
+                                </div>
                             </div>)
                         })
-                        }                                                        
+                        }
+                         <div className="p-4 border-t border-b border-[#AFAAAC]">
+                                <textarea
+                                    value={formData.message}
+                                    onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, })) }
+                                    className="w-full border outline-none border-[#AFAAAC] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
+                                    rows="4"
+                                    readOnly
+                                    placeholder="Message"
+                                ></textarea>
+                            </div>
                     </div>
                 </div>
                 {/* Right Column - Price Summary */}
@@ -279,29 +289,32 @@ export default function CreatePlan() {
 
                         <div className='p-5'>
                             <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
-                            <div className="mt-2 space-y-2">
-                                {formData.items.map((item, index) => (
-                                    <div key={index} className="flex justify-between">
-                                        <span className='text-[#3F4647] text-regular' >
-                                            Product   {item.title}: {item.quantity ? item.quantity : 1} x {item.price}
-                                        </span>
-                                        <span className='text-[#3F4647]'>
-                                            ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
-                                        </span>
-                                    </div>
-                                ))}
-                                <div className="flex justify-between mt-2">
-                                    <span className='text-[#3F4647] text-regular'>Patient Discount (10%)</span>
-                                    -${discount.toFixed(2)}
-                                </div>
-                                <div className="flex justify-between border-b border-[#AFAAAC] pb-4 mt-2">
-                                    <span className='text-[#3F4647] text-regular'>Subtotal</span>
-                                    <span className='text-[#51595B]font-semibold'>
-                                        ${(subtotal - discount).toFixed(2)}
-                                    </span>
+                            <table className="min-w-full table-auto">
 
-                                </div>
-                            </div>
+                                        <tbody>
+                                            {formData.items.map((item, index) => (
+                                                <tr key={index} className="">
+                                                    <td className="py-2 text-[#3F4647] text-sm">
+                                                        {item.title}
+                                                    </td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-right">
+                                                        ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                            </tr>
+                                            <tr className="border-b border-[#AFAAAC] pb-4">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
+                                                <td className="py-2 text-[#51595B] font-semibold text-right">
+                                                    ${(subtotal - discount).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                             <div className='text-right py-5'>
                                 <button
                                     onClick={() => { router.push(`/plans/edit-plan/${id}`);}}

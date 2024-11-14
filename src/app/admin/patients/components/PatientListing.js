@@ -93,7 +93,7 @@ export default function PatientList() {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex justify-center items-center space-x-4 mt-6">
+                <div className="flex justify-end items-center space-x-4 mt-6">
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}

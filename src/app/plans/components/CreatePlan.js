@@ -22,6 +22,8 @@ export default function CreatePlan() {
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
+    const [loader, setLoader] = useState(false);
+
 
     const fetchPatients = async () => {
         try {
@@ -219,14 +221,7 @@ export default function CreatePlan() {
             return;
         }
         try {
-            Swal.fire({
-                title: 'Sending...',
-                html: 'Please wait while we send the email.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            setLoader(true);
             const response = await fetch('/api/plans/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -239,35 +234,30 @@ export default function CreatePlan() {
                 icon: 'success',
                 confirmButtonText: 'OK',
             });
+            setLoader(false);
             router.push('/plans/review');
 
         } catch (error) {
             console.error("Error saving data:", error);
+            setLoader(false);
         }
     };
 
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
-    const breadcrumbItems = [
-        { label: 'Plans', href: '/create-plan' },
-        { label: 'Create Patient Plan', href: '/create-plan', active: true },
-    ];
 
     const openModal = () => {
         setIsModalOpen(true);
     };
-
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedProduct(null);
     };
+    const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
     const handleZoomProduct = (product) => setSelectedProduct(product);
     const filteredProducts = variants.filter(variants =>
         variants.product.title.toLowerCase().includes(searchTerm)
     )
-
-    const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
-
 
     useEffect(() => {
         if (id) {
@@ -297,7 +287,6 @@ export default function CreatePlan() {
         return acc + itemQuantity * item.price;
     }, 0);
 
-    // Calculate 10% discount
     const discount = subtotal * 0.1;
 
     return (
@@ -323,7 +312,7 @@ export default function CreatePlan() {
                                             </span>
                                             <select
                                                 id="select-patient"
-                                                className={`w-full bg-inputBg rounded-[8px] max-w-[250px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
+                                                className={`w-full border border-[#AFAAAC] bg-white rounded-[8px] max-w-[250px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
 
                                                 onChange={handleSelectPatient}
                                                 value={selectedPatient?.id || ""}
@@ -351,12 +340,13 @@ export default function CreatePlan() {
                             {/* Product Selection */}
                             <div className="p-4">
                                 <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
-                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2">
+                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
                                     {selectedItems.map((variant, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
                                                 onClick={() => { handleDeselectProduct(variant.id) }}
-                                                className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
+                                                className="top-[-9px] absolute right-[-9px] w-6 h-6 flex items-center justify-center
+                                                bg-[#3c637a] text-white rounded-full text-sm font-bold"
                                                 aria-label="Deselect Product"
                                             >
                                                 &times;
@@ -370,17 +360,17 @@ export default function CreatePlan() {
                                                    : '/images/product-img1.png'
                                                }
                                                     alt={variant.product.title}
-                                                    className={`w-[117px] h-[106px] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                    className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
                                                     onClick={() => handleSelectProduct(variant)}
                                                 />
-                                            <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>
+                                            {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>
                                                 {variant.product.title}
-                                            </p>
+                                            </p> */}
                                         </div>
                                     ))}
                                     {/* Plus Button to Add More Products */}
                                     <button
-                                        className=" h-[106px] max-w-[120px] w-full bg-white flex items-center justify-center text-2xl font-bold text-textColor cursor-pointer shadow-2xl rounded-[8px]"
+                                        className=" h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
                                         onClick={openModal}
                                     >
                                         +
@@ -394,7 +384,16 @@ export default function CreatePlan() {
                                 const itemData = formData.items.find(fItem => fItem.id === item.id);
                                 return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
                                     <div className="pr-9 w-full max-w-[400px]">
-                                        <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
+                                        <img
+                                            src={
+                                                item.image && variant.image.url 
+                                                   ? item.image.url 
+                                                   : (item.product.images && item.product.images[0] && item.product.images[0].url) 
+                                                   ? item.product.images[0].url 
+                                                   : '/images/product-img1.png'
+                                               }
+                                            alt="Product"
+                                            className="w-24 h-24" />
                                         <div>
                                             <h3 className="font-bold text-[18px]">{item.title}</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
@@ -404,51 +403,53 @@ export default function CreatePlan() {
                                         </div>
                                     </div>
                                     {/* Product Options */}
-                                    <div className="mt-4 w-full">
-                                        <div>
-                                            <input
-                                                type="number"
-                                                value={itemData?.quantity ?? ""}
-                                                onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Quantity (e.g., 5, 10)"
-                                            />
+                                    <div className="space-y-4 w-full">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-[max-content]
+                                        min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>5 (recommended)</option>
+                                                    <option>1 (recommended)</option>
+                                                    <option>2 (recommended)</option>
+                                                    <option>3 (recommended)</option>
+                                                    <option>4 (recommended)</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.frequency ?? ""}
-                                                onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Frequency (e.g., Once Per Day)"
-                                            />
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
+                                                    <option>Once Per Day (Anytime)</option>
+                                                    <option>Twice Per Day</option>
+                                                    <option>Three Times Per Day</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.duration ?? ""}
-                                                onChange={(e) => handleFormDataChange(item.id, 'duration', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Duration (e.g., Once Per Day)"
-                                            />
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>Once Per Day</option>
+                                                    <option>Twice Per Day</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.takeWith ?? ""}
-                                                onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
-                                                placeholder="Enter Take With (e.g., Water)"
-                                            />
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                            <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
+                                            <div className="relative">
+                                                <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option>Water</option>
+                                                    <option>Juice</option>
+                                                    <option>Milk</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                value={itemData?.properties.notes ?? ""}
-                                                onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)}
-                                                className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
-                                                placeholder="Add Notes"
-                                            />
+                                        <div className='w-full max-w-[510px]'>
+                                            <div className="mt-1">
+                                                <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg" rows="3"></textarea>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -459,7 +460,7 @@ export default function CreatePlan() {
                             <div className="p-4 border-t border-b border-[#AFAAAC]">
                                 <textarea
                                     value={formData.message}
-                                    onChange={(e) => handleFormDataChange(0, 'message', e.target.value)}
+                                    onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}
                                     className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
                                     rows="4"
                                     placeholder="Message"
@@ -470,8 +471,12 @@ export default function CreatePlan() {
                                 <button
                                     onClick={() => { handleSubmit() }}
                                     disabled={formData.items.length === 0 || !formData.patient_id}
-                                    className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[150px] min-h-[46px] ">
-                                    Send to Patient
+                                    className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
+                                        ${formData.items.length === 0 || !formData.patient_id
+                                            ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                    }>
+                                    {loader ? "Please wait ..." : 'Send to Patient'}
                                 </button>
                             </div>
                         </div>
@@ -482,35 +487,45 @@ export default function CreatePlan() {
 
                             <div className='p-5'>
                                 <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
-                                <div className="mt-2 space-y-2">
-                                    {formData.items.map((item, index) => (
-                                        <div key={index} className="flex justify-between">
-                                            <span className='text-[#3F4647] text-regular' >
-                                                Product   {item.title}: {item.quantity ? item.quantity : 1} x {item.price}
-                                            </span>
-                                            <span className='text-[#3F4647]'>
-                                                ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
-                                            </span>
-                                        </div>
-                                    ))}
-                                    <div className="flex justify-between mt-2">
-                                        <span className='text-[#3F4647] text-regular'>Patient Discount (10%)</span>
-                                        -${discount.toFixed(2)}
-                                    </div>
-                                    <div className="flex justify-between border-b border-[#AFAAAC] pb-4 mt-2">
-                                        <span className='text-[#3F4647] text-regular'>Subtotal</span>
-                                        <span className='text-[#51595B]font-semibold'>
-                                            ${(subtotal - discount).toFixed(2)}
-                                        </span>
+                                <div className="mt-2 overflow-x-auto">
+                                    <table className="min-w-full table-auto">
 
-                                    </div>
+                                        <tbody>
+                                            {formData.items.map((item, index) => (
+                                                <tr key={index} className="">
+                                                    <td className="py-2 text-[#3F4647] text-sm">
+                                                        {item.title}
+                                                    </td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-right">
+                                                        ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            <tr className="">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
+                                                <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                            </tr>
+                                            <tr className="border-b border-[#AFAAAC] pb-4">
+                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
+                                                <td className="py-2 text-[#51595B] font-semibold text-right">
+                                                    ${(subtotal - discount).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
+
                                 <div className='text-right py-5'>
                                     <button
                                         onClick={() => { handleSubmit() }}
                                         disabled={formData.items.length === 0 || !formData.patient_id}
-                                        className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                        Send to Patient
+                                        className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
+                                            ${formData.items.length === 0 || !formData.patient_id
+                                                ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                                : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                        }>
+                                        {loader ? "Please wait ..." : 'Send to Patient'}
                                     </button>
                                 </div>
                             </div>
@@ -520,9 +535,9 @@ export default function CreatePlan() {
                 </div>
 
                 {isModalOpen && (
-                    <div className="fixed p-2 md:p-0 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full">
-                            <div className='flex justify-between items-center p-2 md:py-4'>
+                    <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
+                        <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
+                            <div className='flex justify-between items-center md:pb-4'>
                                 <h2 className="text-xl font-bold">Select Product</h2>
                                 <button onClick={closeModal}> <CloseIcon /> </button>
                             </div>
@@ -595,7 +610,7 @@ export default function CreatePlan() {
                                 <button
                                     onClick={() => { closeModal() }}
                                     className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                    Close
+                                    FINISH
                                 </button>
                             </div>
 

@@ -11,6 +11,7 @@ export default function Create() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [loader, setLoader] = useState(false);
 
     const [errors, setErrors] = useState({});
 
@@ -46,6 +47,7 @@ export default function Create() {
         if (validateForm()) {
             let doctorId = session?.user?.id
             try {
+                setLoader(true)
                 const response = await fetch('/api/patients/create', {
                     method: 'POST',
                     headers: {
@@ -65,7 +67,7 @@ export default function Create() {
                     setLastName('');
                     setEmail('');
                     setPhone('');
-
+                    setLoader(false)
                     router.push('/patients/listing');
                 } else {
                     const result = await response.json();
@@ -76,17 +78,17 @@ export default function Create() {
                     if (errors.includes('Phone number already exists')) {
                         setErrors({ ...errors, phone: 'Phone number already exists' });
                     }
+                    setLoader(false)
+
                 }
             } catch (error) {
                 console.error('Error during patient creation:', error);
                 setErrors({ apiError: 'Internal server error' });
+                setLoader(false)
+
             }
         }
     };
-    const breadcrumbItems = [
-        { label: 'Plans', href: '/create-plan' },
-        { label: 'Add Patient ', href: '/add-patient-info', active: true },
-    ];
     return (
         <AppLayout>
             <div className="login-outer flex flex-col">
@@ -152,7 +154,7 @@ export default function Create() {
                                     type="submit"
                                     className="min-w-[150px] py-2 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"
                                 >
-                                    Create Patient
+                                   { loader?"Please wait...":"Create Patient"}
                                 </button>
                             </div>
                             {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
