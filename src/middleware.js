@@ -13,7 +13,7 @@ export async function middleware(req) {
     res.headers.append('Access-Control-Allow-Methods', 'GET,DELETE,PATCH,POST,PUT')// Allowed methods
   // Define accessible routes based on user roles
   const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password'];
-  const adminRoutes = ['/admin/dashboard','/admin/patients','/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit'];
+  const adminRoutes = ['/admin/dashboard','/admin/settings','/admin/patients','/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit'];
   const doctorRoutes = ['/dashboard', '/patients/create', '/patients/edit', '/patients/listing', '/patients/detail', '/sale', '/create-plan', '/profile'];
 
   // Redirect if no session (user not logged in) and accessing a protected route
