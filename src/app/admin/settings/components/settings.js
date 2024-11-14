@@ -13,7 +13,7 @@ export default function CreatePlan() {
     const [searchTerm, setSearchTerm] = useState('');
     const [products, setProducts] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
- 
+
     const fetchProducts = async () => {
         try {
             const response = await fetch('/api/shopify/products');
@@ -36,7 +36,7 @@ export default function CreatePlan() {
             }
         };
 
-        
+
 
     useEffect(() => {
         fetchProducts();
@@ -64,10 +64,10 @@ export default function CreatePlan() {
             return [...prevSelectedItems, product];
         });
         updateStatus(product ,'active')
-       
+
     };
 
-  
+
 
     const handleDeselectProduct = (productId,product) => {
         setSelectedItems((prevSelectedItems) => {
@@ -78,12 +78,12 @@ export default function CreatePlan() {
         });
         console.log('product',product)
         updateStatus(product, 'inactive')
-        
+
     };
 
 
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
- 
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -111,22 +111,22 @@ export default function CreatePlan() {
                   sku: product?.variants[0]?.sku || 'N/A',
                   title: product.title,
                   variant_id:product?.variants[0]?.id
-                  
+
               }),
           });
-      
+
           if (!response.ok) {
             throw new Error('Failed to update status');
           }
-      
+
         } catch (error) {
           console.error("Error updating product status:", error);
           setIsChecked(!isChecked);
         }
     };
-    
+
     useEffect(() => {
-    
+
         const searchProducts = async () => {
           try {
             const url = `/api/shopify/products/search?q=${searchTerm}`;
@@ -135,7 +135,7 @@ export default function CreatePlan() {
               throw new Error('Failed to fetch products');
             }
             const data = await response.json();
-            
+
             setProducts(data);
           } catch (error) {
               console.log('error',error)
@@ -147,11 +147,11 @@ export default function CreatePlan() {
             fetchProducts()
             }
       }, [searchTerm])
-      
 
 
 
- 
+
+
 
     return (
         <AppLayout>
@@ -159,17 +159,20 @@ export default function CreatePlan() {
                 <h1 className="text-2xl pt-4 md:pt-1 mb-1">Products</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
-                    <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
+                    <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-customBorder w-full max-w-[1334px]">
                         <div className='p-0'>
                             {/* Product Selection */}
-                            <div className="p-4">
-                                <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
-                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2">
+                            <div>
+                            <div className="bg-customBg p-4 px-3 md:px-5 rounded-t-[8px]"><span className="font-medium text-[14px] md:text-base text-gray-700">Select Products:</span></div>
+                            <div className='p-4'>
+                                <span className="text-textColor font-medium cursor-pointer">Select Products:</span>
+                                <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-5 items-center">
                                     {selectedItems.map((product, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
                                                 onClick={() => { handleDeselectProduct(product?.variants[0]?.id,product) }}
-                                                className="top-0 absolute right-0 w-6 h-6 flex items-center justify-center bg-black text-white rounded-full text-sm font-bold"
+                                                className="top-[-9px] absolute right-[-9px] w-6 h-6 flex items-center justify-center
+                                                bg-[#3c637a] text-white rounded-full text-sm font-bold"
                                                 aria-label="Deselect Product"
                                             >
                                                 &times;
@@ -178,37 +181,38 @@ export default function CreatePlan() {
                                                 <img
                                                     src={product.image.src} // Replace with actual paths
                                                     alt={product.title}
-                                                    className={`w-[117px] h-[106px] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                    className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
                                                     onClick={() => handleSelectProduct(product)}
                                                 />
                                             )}
-                                            <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(product.id) ? 'text-black' : 'text-textColor'}`}>
+                                            {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(product.id) ? 'text-black' : 'text-textColor'}`}>
                                                 {product.title}
-                                            </p>
+                                            </p> */}
                                         </div>
                                     ))}
                                     {/* Plus Button to Add More Products */}
                                     <button
-                                        className=" h-[106px] max-w-[120px] w-full bg-white flex items-center justify-center text-2xl font-bold text-textColor cursor-pointer shadow-2xl rounded-[8px]"
+                                        className="h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
                                         onClick={openModal}
                                     >
                                         +
                                     </button>
                                 </div>
+                                </div>
                             </div>
 
 
-                      
-                    
+
+
                         </div>
                     </div>
-              
+
 
                 </div>
 
                 {isModalOpen && (
-                    <div className="fixed p-2 md:p-0 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full">
+                    <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
+                        <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
                             <div className='flex justify-between items-center p-2 md:py-4'>
                                 <h2 className="text-xl font-bold">Select Product</h2>
                                 <button onClick={closeModal}> <CloseIcon /> </button>
@@ -275,8 +279,8 @@ export default function CreatePlan() {
                                 )}
                                 <button
                                     onClick={() => { closeModal() }}
-                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                    Close
+                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
+                                    FINISH
                                 </button>
                             </div>
 

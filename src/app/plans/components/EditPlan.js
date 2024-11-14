@@ -493,8 +493,8 @@ export default function CreatePlan() {
                 </div>
 
                 {isModalOpen && (
-                    <div className="fixed p-2 md:p-0 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full">
+                    <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
+                        <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
                             <div className='flex justify-between items-center p-2 md:py-4'>
                                 <h2 className="text-xl font-bold">Select Product</h2>
                                 <button onClick={closeModal}> <CloseIcon /> </button>
@@ -561,8 +561,8 @@ export default function CreatePlan() {
                                 )}
                                 <button
                                     onClick={() => { closeModal() }}
-                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                    Close
+                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
+                                    FINISH
                                 </button>
                             </div>
 
