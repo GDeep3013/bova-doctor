@@ -7,11 +7,14 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function AdminDashboard() {
-
     const [totalDoctors, setTotalDoctors] = useState('')
     const [totalPatient, setTotalPatient] = useState('')
     const [doctors, setDoctors] = useState([])
-    const [monthlyRevenueData, setMonthlyRevenueData] = useState([]);
+    const [currentMonthEarning, setCurrentMonthEarning] = useState([]);
+    const [graphMonth, SetGraphMonths] = useState([]);
+    const [graphValue, SetGraphValue] = useState([]);
+
+
     const fetchData = async () => {
         try {
             const response = await fetch(`/api/admin/dashboard`);
@@ -19,17 +22,21 @@ export default function AdminDashboard() {
                 throw new Error("Failed to fetch doctors");
             }
             const data = await response.json();
+            if (data) {
 
-            console.log(data)
-            setTotalDoctors(data.totalPatient)
-            setTotalPatient(data.totalDoctors-1)
-            setDoctors(data.doctorsData)
-            setMonthlyRevenueData(data.monthlyRevenueData)
+                setCurrentMonthEarning(data.currentMonthEarnings)
+                setTotalDoctors(data.totalPatient)
+                setTotalPatient(data.totalDoctors - 1)
+                setDoctors(data.doctorsData)
+                SetGraphMonths(data.graphMonth)
+                SetGraphValue(data.graphValue)
+            }
 
         } catch (error) {
             console.log(error)
         }
     };
+
     useEffect(() => { fetchData() }, [])
 
 
@@ -80,7 +87,7 @@ export default function AdminDashboard() {
                             ))}
                         </div>
                         <div className='mt-4'>
-                            <AdminGraph monthlyRevenueData={monthlyRevenueData } />
+                            <AdminGraph currentMonthEarning={currentMonthEarning} graphMonth={graphMonth} graphValue={graphValue} />
                         </div>
                     </div>
                 </div>

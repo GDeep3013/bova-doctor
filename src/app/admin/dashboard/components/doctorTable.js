@@ -38,7 +38,7 @@ export default function doctorTable({doctors }) {
                     <td className="p-2 text-gray-700">{doctor.patients}</td>
                     <td className="p-2 text-gray-700">{doctor.plans}</td>
                     <td className="p-2 flex items-center space-x-2">
-                        <span className="text-gray-700 font-medium">{doctor.revenue}</span>
+                        <span className="text-gray-700 font-medium"> $ {doctor.revenue}</span>
                     </td>
                 </tr>
             ))}

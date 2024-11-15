@@ -21,8 +21,6 @@ const LineChart = ({ currentMonthEarning, graphData, graphMonths }) => {
         ],
     };
 
-
-
     const options = {
         responsive: true,
         plugins: {
