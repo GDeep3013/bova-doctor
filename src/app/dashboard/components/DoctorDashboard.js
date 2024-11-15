@@ -60,7 +60,7 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className='flex min-[1281px]:space-x-5 max-xl:flex-wrap mt-6'>
-                    <DoctorTable className="w-full" />
+                    <DoctorTable />
                     <div className='w-full'>
                         <div className=''>
                             <DoctorGraph />
