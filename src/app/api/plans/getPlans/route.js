@@ -18,7 +18,7 @@ export async function GET(req) {
 
   try {
     // Step 1: Find all patients with the given doctorId
-    const patients = await Patient.find({ doctorId: userId }).select('_id');
+    const patients = await Patient.find({ doctorId: userId }).select('_id').sort({ createdAt: -1 });
     const patientIds = patients.map(patient => patient._id);
 
     // Step 2: Find all plans where patient_id is in the list of patientIds

@@ -174,7 +174,7 @@ export default function CreatePlan() {
     const handleDeselectProduct = (productId) => {
         setSelectedItems((prevSelectedItems) => {
             const updatedSelectedItems = prevSelectedItems.filter(
-                (item) => item?.variants[0]?.id !== productId
+                (item) => item?.id !== productId
             );
             return updatedSelectedItems;
         });

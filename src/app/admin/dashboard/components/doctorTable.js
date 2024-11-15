@@ -30,7 +30,7 @@ export default function doctorTable({doctors }) {
         </thead>
         <tbody>
             {doctors.map((doctor,index) => (
-                <tr key={doctor.id} className="">
+                <tr key={index} className="">
                     <td className="p-2 text-gray-700 font-semibold">{index + 1}</td>
                     <td className="p-2 flex items-center space-x-4">
                         <div>

@@ -14,7 +14,7 @@ export default function AdminDashboard() {
     const [monthlyRevenueData, setMonthlyRevenueData] = useState([]);
     const fetchData = async () => {
         try {
-            const response = await fetch(`/api/doctors/dashboard`);
+            const response = await fetch(`/api/admin/dashboard`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
             }
@@ -22,7 +22,7 @@ export default function AdminDashboard() {
 
             console.log(data)
             setTotalDoctors(data.totalPatient)
-            setTotalPatient(data.totalDoctors)
+            setTotalPatient(data.totalDoctors-1)
             setDoctors(data.doctorsData)
             setMonthlyRevenueData(data.monthlyRevenueData)
 
