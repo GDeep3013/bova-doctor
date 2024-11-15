@@ -2,15 +2,20 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { signOut, getSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation';
 import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon } from './svg-icons/icons';
 
 export default function Sidebar({ isOpen, isSidebarOpen }) {
   const router = useRouter();
+  const currentPath = usePathname();
 
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isPatientsOpen, setIsPatientsOpen] = useState(false);
-  const [isPlansOpen, setIsPlansOpen] = useState(false);
+  // Helper function to check if the link is active
+  const isActive = (path) => currentPath === path;
+
+  const [isProfileOpen, setIsProfileOpen] = useState(isActive('/profile') || isActive('/admin/doctor') ||isActive('/sales')); // Start profile section open if on relevant page
+  const [isPatientsOpen, setIsPatientsOpen] = useState(isActive('/patients/listing')); // Patients section based on active route
+  const [isPlansOpen, setIsPlansOpen] = useState(isActive('/plans/create-plan') || isActive('/plans/review') || isActive('/plans/incomplete')); // Plans section if any plan route is active
+
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
   const togglePatients = () => setIsPatientsOpen(!isPatientsOpen);
   const togglePlans = () => setIsPlansOpen(!isPlansOpen);
@@ -38,68 +43,92 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
       <nav className="space-y-4 pt-7">
         {session?.user?.userType === 'Admin' ? (
           <>
-            <Link href="/admin/dashboard" className="block text-gray-700 hover:text-gray-900 text-xl">
+            <Link href="/admin/dashboard" className={`block text-xl ${isActive('/admin/dashboard') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
               <HomeIcon /> Home
             </Link>
             <div>
-              <button onClick={toggleProfile} className="text-gray-700 hover:text-gray-900 w-full text-left text-xl">
+              <button onClick={toggleProfile} className={`text-xl `}>
                 <ProfileIcon /> Add Doctor
               </button>
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
-                  <li><Link href="/admin/doctor" className="block hover:text-gray-900">Doctors Listing</Link></li>
+                  <li>
+                    <Link href="/admin/doctor" className={`block ${isActive('/admin/doctor') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                      Doctors Listing
+                    </Link>
+                  </li>
                 </ul>
               )}
             </div>
-            <Link href="/admin/patients/" className="block text-gray-700 hover:text-gray-900 text-xl">
+            <Link href="/admin/patients/" className={`block text-xl ${isActive('/admin/patients') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
               <PatientIcon /> Patient Listing
             </Link>
 
-          <Link href="/admin/settings/" className="block text-gray-700 hover:text-gray-900 text-xl">
-            <SettingIcon /> Settings
-          </Link>
-
+            <Link href="/admin/settings/" className={`block text-xl ${isActive('/admin/settings') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
+              <SettingIcon /> Settings
+            </Link>
           </>
-
         ) : (
           <>
-            <Link href="/dashboard" className="block text-gray-700 hover:text-gray-900 text-xl">
+            <Link href="/dashboard" className={`block text-xl ${isActive('/dashboard') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
               <HomeIcon /> Home
             </Link>
-            {/* Profile Dropdown */}
             <div>
-              <button onClick={toggleProfile} className="text-gray-700 hover:text-gray-900 w-full text-left text-xl">
+              <button onClick={toggleProfile} className={`text-xl`}>
                 <ProfileIcon /> Profile
               </button>
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
-                  <li><Link href="/profile" className="block hover:text-gray-900">Edit</Link></li>
-                  <li><Link href="/sales" className="block hover:text-gray-900">Sales</Link></li>
+                  <li>
+                    <Link href="/profile" className={`block ${isActive('/profile') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                      Edit
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/sales" className={`block ${isActive('/sales') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                      Sales
+                    </Link>
+                  </li>
                 </ul>
               )}
             </div>
 
             <div>
-              <button onClick={togglePatients} className="text-gray-700 hover:text-gray-900 w-full text-left text-xl">
+              <button onClick={togglePatients} className={`text-xl`}>
                 <PatientIcon /> Patients
               </button>
               {isPatientsOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
-                  <li><Link href="/patients/home" className="block hover:text-gray-900">Add Patient</Link></li>
-                  <li><Link href="/patients/listing" className="block hover:text-gray-900">Search</Link></li>
+                  <li>
+                    <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block ${isActive('/patients/listing') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                      Search
+                    </Link>
+                  </li>
                 </ul>
               )}
             </div>
 
             <div>
-              <button onClick={togglePlans} className="text-gray-700 hover:text-gray-900 w-full text-left text-xl">
+              <button onClick={togglePlans} className={`text-xl `}>
                 <PlanIcon /> Plans
               </button>
               {isPlansOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
-                  <li><Link href="/plans/create-plan" className="block hover:text-gray-900">Create</Link></li>
-                  <li><Link href="/plans/review" className="block hover:text-gray-900">Review</Link></li>
-                  <li><Link href="" className="block hover:text-gray-900">Incomplete</Link></li>
+                  <li>
+                    <Link href="/plans/create-plan" className={`block ${isActive('/plans/create-plan') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                      Create
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/plans/review" className={`block ${isActive('/plans/review') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                      Review
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/plans/incomplete" className={`block ${isActive('/plans/incomplete') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                      Incomplete
+                    </Link>
+                  </li>
                 </ul>
               )}
             </div>
