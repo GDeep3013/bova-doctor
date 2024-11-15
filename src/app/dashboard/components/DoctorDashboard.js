@@ -9,29 +9,44 @@ import { useSession } from 'next-auth/react';
 
 export default function AdminDashboard() {
     const { data: session } = useSession();
-    const [totalEarning,setTotalEarning]= useState(0)
-    const [currentMonthEarning,setCurrentMonthEarning]= useState(0)
-    const [totalPatients,setTotalPatients]= useState(0)
-    const [totalPlans,setTotalPlans]= useState(0)
-    const [patientData,setPatientData]= useState([])
-    const [graphMonths,setGraphMonths]= useState([])
-    const [graphData,setGraphData]= useState([])
+    const [timePeriod, setTimePeriod] = useState("Month");
+    const [totalEarning, setTotalEarning] = useState(0);
+    const [currentMonthEarning, setCurrentMonthEarning] = useState(0);
+    const [totalPatients, setTotalPatients] = useState(0);
+    const [totalPlans, setTotalPlans] = useState(0);
+    const [patientData, setPatientData] = useState([]);
+    const [graphMonths, setGraphMonths] = useState([]);
+    const [graphData, setGraphData] = useState([]);
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`/api/doctors/dashboard/?userId=${session?.user?.id}`);
+            const response = await fetch(`/api/doctors/dashboard/?userId=${session?.user?.id}&&timePeriod=${timePeriod}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
             }
             const data = await response.json();
             if (data) {
-                setCurrentMonthEarning(data.currentmonthlyEarnings)
-                setTotalEarning(data.totalEarnings)
-                setTotalPatients(data.totalPatients)
-                setTotalPlans(data.totalPlans)
-                setPatientData(data.patientData)
-                setGraphMonths(data.months)
-                setGraphData(data.monthlyEarnings)
+                setCurrentMonthEarning(data.currentWeekEarnings);
+                setTotalEarning(data.totalEarnings);
+                setTotalPatients(data.totalPatients);
+                setTotalPlans(data.totalPlans);
+                setPatientData(data.patientData);
+                let formattedLabels = [];
+                let graphValues = []; // Initialize the graph data values
+
+                if (timePeriod === "Weeks") {
+                    formattedLabels = data.weeks.map((week, index) => `Week ${index + 1}`);
+                    graphValues = data.weeklyEarnings; // Use weekly earnings data
+                } else if (timePeriod === "Month") {
+                    formattedLabels = data.months.map((month) => month); // Assuming backend sends Jan, Feb, etc.
+                    graphValues = data.monthlyEarnings; // Use monthly earnings data
+                } else if (timePeriod === "Year") {
+                    formattedLabels = data.years.map((year) => `${year}`);
+                    graphValues = data.yearlyEarnings; // Use yearly earnings data
+                }
+
+                setGraphMonths(formattedLabels);
+                setGraphData(graphValues); // 
             }
         } catch (error) {
             console.log(error)
@@ -39,21 +54,21 @@ export default function AdminDashboard() {
     };
 
 
-    useEffect(() => { fetchData() }, [])
+    useEffect(() => { fetchData() }, [timePeriod])
 
     const cards = [
         {
-            title: `$ `+ totalEarning,
+            title: `$ ` + totalEarning,
             subtitle: 'Total earnings',
             icon: <WalletIcon />,
         },
         {
-            title: totalPatients+ ' Patients',
+            title: totalPatients + ' Patients',
             subtitle: 'Total Number of Patients',
             icon: <ReactionIcon />,
         },
         {
-            title: totalPlans +' Plans',
+            title: totalPlans + ' Plans',
             subtitle: 'Total Number of Plans',
             icon: <PlanIcon />,
         },
@@ -73,31 +88,37 @@ export default function AdminDashboard() {
 
                 <div className='doctor-graph'>
 
-                <div className="min-[1025px]:mt-0 flex max-[575px]:gap-y-4 min-[576px]:space-x-5 max-[575px]:flex-wrap">
-                            {cards.map((card, index) => (
-                                <div
-                                    key={index}
-                                    className="flex justify-between items-center bg-[#F9F9F9] rounded-lg p-6 w-full shadow-sm"
-                                >
-                                    <div>
-                                        <h3 className="text-xl md:text-2xl font-semibold">{card.title}</h3>
-                                        <p className="text-base mt-1 text-gray-500">{card.subtitle}</p>
-                                    </div>
-                                    <div className="flex-shrink-0 bg-[#EBEDEB] w-[41px] h-[41px] rounded-[5px] shadow-sm relative card-icon">
-                                        <div className="text-3xl text-black absolute card-svg">
-                                            {card.icon}
-                                        </div>
+                    <div className="min-[1025px]:mt-0 flex max-[575px]:gap-y-4 min-[576px]:space-x-5 max-[575px]:flex-wrap">
+                        {cards.map((card, index) => (
+                            <div
+                                key={index}
+                                className="flex justify-between items-center bg-[#F9F9F9] rounded-lg p-6 w-full shadow-sm"
+                            >
+                                <div>
+                                    <h3 className="text-xl md:text-2xl font-semibold">{card.title}</h3>
+                                    <p className="text-base mt-1 text-gray-500">{card.subtitle}</p>
+                                </div>
+                                <div className="flex-shrink-0 bg-[#EBEDEB] w-[41px] h-[41px] rounded-[5px] shadow-sm relative card-icon">
+                                    <div className="text-3xl text-black absolute card-svg">
+                                        {card.icon}
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className='flex min-[1281px]:space-x-5 max-xl:flex-wrap mt-6'>
-                    <DoctorTable  patientData={patientData }  />
+                    <DoctorTable patientData={patientData} timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
                     <div className='w-full'>
                         <div className=''>
-                            <DoctorGraph currentMonthEarning={currentMonthEarning} graphData={graphData} graphMonths={graphMonths} />
+                            <DoctorGraph
+                                currentMonthEarning={currentMonthEarning}
+                                graphData={graphData}
+                                graphMonths={graphMonths}
+                                timePeriod={timePeriod}
+                                setTimePeriod={setTimePeriod}
+                            />
                         </div>
                     </div>
                 </div>
