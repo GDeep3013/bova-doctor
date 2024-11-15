@@ -87,7 +87,8 @@ export default function ReviewPlan() {
                         Add Plan
                     </Link>
                 </div>
-                <table className="min-w-full bg-white doctor-listing rounded-[10px]">
+                <div className='overflow-hidden overflow-x-auto'>
+                <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
                     <thead>
                         <tr className="bg-gray-100 border-b">
                             <th className="py-2 px-4 text-left text-gray-800">Sr no.</th>
@@ -101,7 +102,7 @@ export default function ReviewPlan() {
                     <tbody>
                         {plans && plans.length === 0 ? (
                             <tr>
-                                <td colSpan={4} className="py-2 px-4 text-center text-gray-500">
+                                <td colSpan={6} className="py-2 px-4 text-center text-gray-500">
                                     No records found
                                 </td>
                             </tr>
@@ -143,6 +144,7 @@ export default function ReviewPlan() {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </AppLayout>
     );
