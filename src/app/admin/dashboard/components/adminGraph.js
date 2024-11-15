@@ -4,7 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const LineChart = ({  }) => {
+const LineChart = ({ currentMonthEarning,graphMonth, graphValue }) => {
     // console.log('monthlyRevenueData',monthlyRevenueData)
     const monthlyRevenueData = [
         {
@@ -40,14 +40,14 @@ const LineChart = ({  }) => {
     ];
 
     // Prepare the data for the chart
-    const labels = monthlyRevenueData.map((item) => `${item.month}/${item.year}`);
+    const labels = graphMonth.map((month) => month);
     const data = {
         labels,
         datasets: [
             {
                 fill: true,
                 label: 'Monthly Earnings',
-                data: monthlyRevenueData.map((item) => item.totalRevenue),
+                data: graphValue.map((value) => value),
                 borderColor: '#151515', // Light gray for the line color
                 backgroundColor: '#e5e5e5', // Light gray fill color
                 tension: 0.4,
@@ -72,9 +72,13 @@ const LineChart = ({  }) => {
 
     return (
         <div className="p-4 bg-[#F9F9F9] rounded-lg ">
-            <h2 className="text-xl font-bold">Total Earnings: ${monthlyRevenueData.reduce((acc, curr) => acc + curr.totalRevenue, 0).toFixed(2)}</h2>
+
+            <div>
+                <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">$ {currentMonthEarning}</h3>
+                <p className="text-gray-500 ml-[29px]">Total Amount Earned this Month</p>
+            </div>
             <div className="relative">
-                <Line data={data} options={options} height={70}/>
+                <Line data={data} options={options} height={70} />
             </div>
         </div>
     );
