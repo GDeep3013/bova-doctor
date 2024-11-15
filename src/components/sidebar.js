@@ -125,7 +125,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/plans/incomplete" className={`block ${isActive('/plans/incomplete') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
+                    <Link href="/" className={`block ${isActive('/plans/incomplete') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Incomplete
                     </Link>
                   </li>

@@ -74,7 +74,7 @@ const LineChart = ({ currentMonthEarning,graphMonth, graphValue }) => {
         <div className="p-4 bg-[#F9F9F9] rounded-lg w-full max-w-full">
 
             <div>
-                <h3 className="text-base md:text-xl xl:text-2xl font-semibold">$ {currentMonthEarning}</h3>
+                <h3 className="text-base md:text-xl xl:text-2xl font-semibold">$ {Number(currentMonthEarning).toFixed(2)}</h3>
                 <p className="text-gray-500">Total Amount Earned this Month</p>
             </div>
             <div className="relative w-full admin-graph">

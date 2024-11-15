@@ -38,7 +38,7 @@ const LineChart = ({ currentMonthEarning, graphData, graphMonths, timePeriod, se
         <div className="p-4 bg-[#F9F9F9] rounded-lg max-[1279px]:mt-5 ">
             <div className='flex'>
                 <div className='w-full'>
-                    <h3 className="text-xl md:text-2xl font-semibold mt-[0]">${currentMonthEarning}</h3>
+                    <h3 className="text-xl md:text-2xl font-semibold mt-[0]">$ {Number(currentMonthEarning).toFixed(2)}</h3>
                     <p className="text-gray-500">Total Amount Earned this {timePeriod}</p> {/* Dynamically update for each period */}
                 </div>
                 <div className='ml-[306px]'>
