@@ -28,7 +28,7 @@ export default function doctorTable({doctors }) {
         </thead>
         <tbody>
             {doctors.map((doctor,index) => (
-                <tr key={doctor.id} className="">
+                <tr key={index} className="">
                     <td className="p-2 text-gray-700 font-semibold">{index + 1}</td>
                     <td className="p-2 flex items-center space-x-4">
                         <div>
@@ -38,7 +38,7 @@ export default function doctorTable({doctors }) {
                     <td className="p-2 text-gray-700">{doctor.patients}</td>
                     <td className="p-2 text-gray-700">{doctor.plans}</td>
                     <td className="p-2 flex items-center space-x-2">
-                        <span className="text-gray-700 font-medium">{doctor.revenue}</span>
+                        <span className="text-gray-700 font-medium"> $ {doctor.revenue}</span>
                     </td>
                 </tr>
             ))}

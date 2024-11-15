@@ -4,22 +4,56 @@ import DoctorTable from './doctorTable';
 import { PlanIcon, ReactionIcon, WalletIcon } from 'components/svg-icons/icons';
 import DoctorGraph from './doctarGraph';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 export default function AdminDashboard() {
+    const { data: session } = useSession();
+    const [totalEarning,setTotalEarning]= useState(0)
+    const [currentMonthEarning,setCurrentMonthEarning]= useState(0)
+    const [totalPatients,setTotalPatients]= useState(0)
+    const [totalPlans,setTotalPlans]= useState(0)
+    const [patientData,setPatientData]= useState([])
+    const [graphMonths,setGraphMonths]= useState([])
+    const [graphData,setGraphData]= useState([])
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`/api/doctors/dashboard/?userId=${session?.user?.id}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch doctors");
+            }
+            const data = await response.json();
+            if (data) {
+                setCurrentMonthEarning(data.currentmonthlyEarnings)
+                setTotalEarning(data.totalEarnings)
+                setTotalPatients(data.totalPatients)
+                setTotalPlans(data.totalPlans)
+                setPatientData(data.patientData)
+                setGraphMonths(data.months)
+                setGraphData(data.monthlyEarnings)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+
+    useEffect(() => { fetchData() }, [])
 
     const cards = [
         {
-            title: 'Total Earnings',
+            title: `$ `+ totalEarning,
             subtitle: 'Total earnings',
             icon: <WalletIcon />,
         },
         {
-            title: '38 Patients',
+            title: totalPatients+ ' Patients',
             subtitle: 'Total Number of Patients',
             icon: <ReactionIcon />,
         },
         {
-            title: 'Total Plans',
+            title: totalPlans +' Plans',
             subtitle: 'Total Number of Plans',
             icon: <PlanIcon />,
         },
@@ -60,10 +94,10 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className='flex min-[1281px]:space-x-5 max-xl:flex-wrap mt-6'>
-                    <DoctorTable />
+                    <DoctorTable  patientData={patientData }  />
                     <div className='w-full'>
                         <div className=''>
-                            <DoctorGraph />
+                            <DoctorGraph currentMonthEarning={currentMonthEarning} graphData={graphData} graphMonths={graphMonths} />
                         </div>
                     </div>
                 </div>

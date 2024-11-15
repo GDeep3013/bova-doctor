@@ -1,66 +1,103 @@
 
 
 import connectDB from '../../../../db/db';
-import Doctor from '../../../../models/Doctor';
 import Order from '../../../../models/order';
 import Patient from '../../../../models/patient';
 import Plan from '../../../../models/plan';
-export async function GET() {
+
+export async function GET(req, { params }) {
     await connectDB();
+
+    const { searchParams } = req.nextUrl;
+    const doctorId = searchParams.get('userId');
+
     try {
-        // Fetch the latest 5 doctors
-        const doctors = await Doctor.find().limit(5);
-        const totalDoctors = await Doctor.countDocuments();
-        const totalPatient = await Patient.countDocuments();
+        // Find all patients associated with the doctor
+        const patients = await Patient.find({ doctorId: doctorId });
+        const totalPatients = patients.length;
 
-        // Calculate the details for each doctor
-        const doctorsData = await Promise.all(doctors.map(async (doctor) => {
-            const orders = await Order.find({ 'doctor.doctor_id': doctor._id });
-            const earnings = orders.reduce((total, order) => total + order.doctor.doctor_payment, 0);
-            const totalPatients = await Patient.countDocuments({ doctorId: doctor._id });
-            const totalPlans = await Plan.countDocuments({ patient_id: { $in: await Patient.find({ doctorId: doctor._id }) } });
+        // Get all plan documents associated with these patients to calculate total plans
+        const patientIds = patients.map(patient => patient._id);
+        const totalPlans = await Plan.countDocuments({ patient_id: { $in: patientIds } });
 
-            return {
-                id: doctor._id,
-                name: `${doctor.firstName} ${doctor.lastName}`,
-                patients: totalPatients,
-                plans: totalPlans,
-                revenue: earnings,
-            };
-        }));
+        // For each patient, get the plan count and calculate earnings from orders
+        const patientData = await Promise.all(
+            patients.map(async (patient) => {
+                const patientPlans = await Plan.find({ patient_id: patient._id });
 
-        // Calculate monthly revenue across all doctors
-        const monthlyRevenueData = await Order.aggregate([
-            {
-                $group: {
-                    _id: {
-                        year: { $year: "$order_date" },
-                        month: { $month: "$order_date" }
-                    },
-                    totalRevenue: { $sum: "$doctor.doctor_payment" }
-                }
-            },
-            {
-                $sort: { "_id.year": 1, "_id.month": 1 }
-            },
-            {
-                $project: {
-                    year: "$_id.year",
-                    month: "$_id.month",
-                    totalRevenue: 1,
-                    _id: 0
-                }
-            }
-        ]);
+                // Fetch orders for the patient associated with the doctor
+                const orders = await Order.find({
+                    'doctor.doctor_id': doctorId,
+                    'patient_id': patient._id,
+                });
 
+                // Calculate total earnings from the `total` field in these orders
+                const earnings = orders.reduce((total, order) => {
+                    const orderTotal = parseFloat(order.total) || 0; // Safely parse total
+                    return total + orderTotal;
+                }, 0);
+
+                return {
+                    patient,
+                    planCount: patientPlans.length,
+                    earnings,
+                };
+            })
+        );
+
+        // Sort the patientData by earnings in descending order and take the top 5
+        const top5PatientData = patientData
+            .sort((a, b) => b.earnings - a.earnings)
+            .slice(0, 5);
+
+        // Sum total earnings across all patients
+        const totalEarnings = patientData.reduce((total, data) => total + data.earnings, 0);
+
+        // Get earnings by month (for the last 6 months or 12 months, as per your requirement)
+        const monthsAgo = 6; // For example, last 6 months (change this to 12 for the last 12 months)
+        const currentDate = new Date();
+        const months = [];
+        const monthlyEarnings = [];
+
+        for (let i = 0; i <= monthsAgo; i++) {
+            const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+            const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() - i + 1, 0, 23, 59, 59, 999);
+
+            // Format month for display (e.g., "January 2024")
+            const monthLabel = monthStart.toLocaleString('default', { month: 'long', year: 'numeric' });
+            months.push(monthLabel);
+
+            // Find orders in this month
+            const ordersThisMonth = await Order.find({
+                'doctor.doctor_id': doctorId,
+                order_date: { $gte: monthStart, $lte: monthEnd }
+            });
+
+            // Sum earnings for this month
+            const earningsForMonth = ordersThisMonth.reduce((total, order) => {
+                const orderTotal = parseFloat(order.total) || 0; // Safely parse total
+                return total + orderTotal;
+            }, 0);
+
+            monthlyEarnings.push(earningsForMonth);
+        }
+
+        // Reverse the arrays to display from January to December
+        months.reverse();
+        monthlyEarnings.reverse();
+        const currentmonthlyEarnings = monthlyEarnings[monthlyEarnings.length - 1]
+        // Return the response with all data
         return Response.json({
-            doctorsData: doctorsData,
-            totalDoctors: totalDoctors,
-            totalPatient: totalPatient,
-            monthlyRevenueData: monthlyRevenueData
+            patientData: top5PatientData,
+            totalEarnings,
+            totalPatients,
+            totalPlans,
+            monthlyEarnings,
+            months,
+            currentmonthlyEarnings,  // Current month's earnings
         });
     } catch (error) {
-        console.error(error);
-        return Response.json({ error: 'Error fetching doctor and revenue data' });
+        console.error("Error:", error); // Debugging info for errors
+        return Response.json({ message: error.message }, { status: 500 });
     }
 }
