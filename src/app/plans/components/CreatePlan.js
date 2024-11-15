@@ -38,9 +38,9 @@ export default function CreatePlan() {
         try {
           const response = await fetch(`/api/products?status=active`);
           if (!response.ok) throw new Error('Failed to fetch product status');
-          
+
           const data = await response.json();
-      
+
           // Check if the data has products and then map and push variant IDs into an array
           if (Array.isArray(data) && data.length > 0) {
             const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
@@ -60,7 +60,7 @@ export default function CreatePlan() {
               headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ variantIds: variantIds }),
             });
-        
+
             if (!response.ok) {
               throw new Error('Failed to update status');
             }
@@ -85,18 +85,18 @@ export default function CreatePlan() {
                     }))
                 }
             }));
-            
+
             setVariants(variants);
             console.log('Transformed Variants with Product Images:', variants);
-            
-    
+
+
             // Set the transformed data to the state
             setVariants(variants);
             console.log('data',variants)
 
 
 
-        
+
           } catch (error) {
             console.error("Error updating product status:", error);
           }
@@ -337,10 +337,10 @@ export default function CreatePlan() {
                                             </button>
                                                 <img
                                                 src={
-                                                    variant.image && variant.image.url 
-                                                   ? variant.image.url 
-                                                   : (variant.product.images && variant.product.images[0] && variant.product.images[0].url) 
-                                                   ? variant.product.images[0].url 
+                                                    variant.image && variant.image.url
+                                                   ? variant.image.url
+                                                   : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
+                                                   ? variant.product.images[0].url
                                                    : '/images/product-img1.png'
                                                }
                                                     alt={variant.product.title}
@@ -354,7 +354,7 @@ export default function CreatePlan() {
                                     ))}
                                     {/* Plus Button to Add More Products */}
                                     <button
-                                        className=" h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
+                                        className="h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
                                         onClick={openModal}
                                     >
                                         +
@@ -370,10 +370,10 @@ export default function CreatePlan() {
                                     <div className="pr-9 w-full max-w-[400px]">
                                         <img
                                             src={
-                                                item.image && item.image.url 
-                                                   ? item.image.url 
-                                                   : (item.product.images && item.product.images[0] && item.product.images[0].url) 
-                                                   ? item.product.images[0].url 
+                                                item.image && item.image.url
+                                                   ? item.image.url
+                                                   : (item.product.images && item.product.images[0] && item.product.images[0].url)
+                                                   ? item.product.images[0].url
                                                    : '/images/product-img1.png'
                                                }
                                             alt="Product"
@@ -397,9 +397,9 @@ export default function CreatePlan() {
                                                        onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
                                                     {/* <option value="5">5 (recommended)</option> */}
-                                                    <option value="2">1 (recommended)</option>
-                                                    <option value="3">2 (recommended)</option>
-                                                    <option value="4">3 (recommended)</option>
+                                                    <option value="1">1 (recommended)</option>
+                                                    <option value="2">2 (recommended)</option>
+                                                    <option value="3">3 (recommended)</option>
                                                     <option value="5">5 (recommended)</option>
                                                     <option value="6">6 (recommended)</option>
                                                     <option value="7">7 (recommended)</option>
@@ -579,10 +579,10 @@ export default function CreatePlan() {
                                                             <td className="px-6 py-4 whitespace-nowrap">
                                                                 <img
                                                                     src={
-                                                                         variant.image && variant.image.url 
-                                                                        ? variant.image.url 
-                                                                        : (variant.product.images && variant.product.images[0] && variant.product.images[0].url) 
-                                                                        ? variant.product.images[0].url 
+                                                                         variant.image && variant.image.url
+                                                                        ? variant.image.url
+                                                                        : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
+                                                                        ? variant.product.images[0].url
                                                                         : '/images/product-img1.png'
                                                                     }
                                                                     alt={variant.product.title}
@@ -614,7 +614,7 @@ export default function CreatePlan() {
                                 )}
                                 <button
                                     onClick={() => { closeModal() }}
-                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
+                                    className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
                                     FINISH
                                 </button>
                             </div>
