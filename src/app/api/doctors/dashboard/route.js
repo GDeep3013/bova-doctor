@@ -1,5 +1,3 @@
-
-
 import connectDB from '../../../../db/db';
 import Order from '../../../../models/order';
 import Patient from '../../../../models/patient';
@@ -12,29 +10,25 @@ export async function GET(req, { params }) {
     const doctorId = searchParams.get('userId');
 
     try {
-        // Find all patients associated with the doctor
-        const patients = await Patient.find({ doctorId: doctorId });
+        // Fetch all patients associated with the doctor
+        const patients = await Patient.find({ doctorId });
         const totalPatients = patients.length;
 
-        // Get all plan documents associated with these patients to calculate total plans
-        const patientIds = patients.map(patient => patient._id);
+        // Fetch plans for these patients
+        const patientIds = patients.map((patient) => patient._id);
         const totalPlans = await Plan.countDocuments({ patient_id: { $in: patientIds } });
 
-        // For each patient, get the plan count and calculate earnings from orders
+        // Fetch data for patients with plan and earnings details
         const patientData = await Promise.all(
             patients.map(async (patient) => {
                 const patientPlans = await Plan.find({ patient_id: patient._id });
-
-                // Fetch orders for the patient associated with the doctor
                 const orders = await Order.find({
                     'doctor.doctor_id': doctorId,
                     'patient_id': patient._id,
                 });
 
-                // Calculate total earnings from the `total` field in these orders
                 const earnings = orders.reduce((total, order) => {
-                    const orderTotal = parseFloat(order.total) || 0; // Safely parse total
-                    return total + orderTotal;
+                    return total + (parseFloat(order.total) || 0);
                 }, 0);
 
                 return {
@@ -45,59 +39,128 @@ export async function GET(req, { params }) {
             })
         );
 
-        // Sort the patientData by earnings in descending order and take the top 5
+
         const top5PatientData = patientData
             .sort((a, b) => b.earnings - a.earnings)
             .slice(0, 5);
 
-        // Sum total earnings across all patients
+
         const totalEarnings = patientData.reduce((total, data) => total + data.earnings, 0);
 
-        // Get earnings by month (for the last 6 months or 12 months, as per your requirement)
-        const monthsAgo = 6; // For example, last 6 months (change this to 12 for the last 12 months)
-        const currentDate = new Date();
-        const months = [];
-        const monthlyEarnings = [];
 
-        for (let i = 0; i <= monthsAgo; i++) {
-            const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-            const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() - i + 1, 0, 23, 59, 59, 999);
+        const weeks = [];
+        const weeklyEarnings = [];
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
 
-            // Format month for display (e.g., "January 2024")
-            const monthLabel = monthStart.toLocaleString('default', { month: 'long', year: 'numeric' });
-            months.push(monthLabel);
+        let weekStart = new Date(currentYear, currentMonth, 1);
+        while (weekStart.getMonth() === currentMonth) {
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            if (weekEnd.getMonth() !== currentMonth) {
+                weekEnd.setDate(0);
+            }
 
-            // Find orders in this month
-            const ordersThisMonth = await Order.find({
+            const ordersThisWeek = await Order.find({
                 'doctor.doctor_id': doctorId,
-                order_date: { $gte: monthStart, $lte: monthEnd }
+                order_date: { $gte: weekStart, $lte: weekEnd },
             });
 
-            // Sum earnings for this month
-            const earningsForMonth = ordersThisMonth.reduce((total, order) => {
-                const orderTotal = parseFloat(order.total) || 0; // Safely parse total
-                return total + orderTotal;
-            }, 0);
+            weeks.push(
+                `${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()}`
+            );
+            weeklyEarnings.push(
+                ordersThisWeek.reduce((total, order) => total + (parseFloat(order.total) || 0), 0)
+            );
 
-            monthlyEarnings.push(earningsForMonth);
+            weekStart.setDate(weekStart.getDate() + 7);
         }
 
-        // Reverse the arrays to display from January to December
-        months.reverse();
-        monthlyEarnings.reverse();
-        const currentmonthlyEarnings = monthlyEarnings[monthlyEarnings.length - 1]
-        // Return the response with all data
+        const months = [];
+        const monthlyEarnings = [];
+        for (let i = 0; i < 12; i++) {
+            const monthStart = new Date(currentYear, currentMonth - i, 1);
+            const monthEnd = new Date(
+                monthStart.getFullYear(),
+                monthStart.getMonth() + 1,
+                0,
+                23,
+                59,
+                59,
+                999
+            );
+
+            const ordersThisMonth = await Order.find({
+                'doctor.doctor_id': doctorId,
+                order_date: { $gte: monthStart, $lte: monthEnd },
+            });
+
+            months.push(
+                monthStart.toLocaleString('default', { month: 'short', year: 'numeric' })
+            );
+            monthlyEarnings.push(
+                ordersThisMonth.reduce((total, order) => total + (parseFloat(order.total) || 0), 0)
+            );
+        }
+
+        const years = [];
+        const yearlyEarnings = [];
+        for (let i = 0; i < 5; i++) {
+            const yearStart = new Date(currentYear - i, 0, 1);
+            const yearEnd = new Date(
+                yearStart.getFullYear() + 1,
+                0,
+                0,
+                23,
+                59,
+                59,
+                999
+            );
+
+            const ordersThisYear = await Order.find({
+                'doctor.doctor_id': doctorId,
+                order_date: { $gte: yearStart, $lte: yearEnd },
+            });
+
+            years.push(`${yearStart.getFullYear()}`);
+            yearlyEarnings.push(
+                ordersThisYear.reduce((total, order) => total + (parseFloat(order.total) || 0), 0)
+            );
+        }
+
+        const currentDate = new Date();
+        const startOfCurrentWeek = new Date(currentDate);
+        startOfCurrentWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Start of the week (Sunday)
+
+        const endOfCurrentWeek = new Date(startOfCurrentWeek);
+        endOfCurrentWeek.setDate(startOfCurrentWeek.getDate() + 6); // End of the week (Saturday)
+
+        const currentWeekOrders = await Order.find({
+            'doctor.doctor_id': doctorId,
+            order_date: { $gte: startOfCurrentWeek, $lte: endOfCurrentWeek },
+        });
+
+        const currentWeekEarnings = currentWeekOrders.reduce(
+            (total, order) => total + (parseFloat(order.total) || 0),
+            0
+        );
+
+        // Return response
         return Response.json({
             patientData: top5PatientData,
             totalEarnings,
             totalPatients,
             totalPlans,
-            monthlyEarnings,
-            months,
-            currentmonthlyEarnings,  // Current month's earnings
+            weeklyEarnings,
+            monthlyEarnings: monthlyEarnings.reverse(), // From oldest to most recent
+            yearlyEarnings: yearlyEarnings.reverse(),
+            weeks,
+            months: months.reverse(),
+            years: years.reverse(),
+            currentWeekEarnings:currentWeekEarnings
         });
     } catch (error) {
-        console.error("Error:", error); // Debugging info for errors
+        console.error('Error:', error);
         return Response.json({ message: error.message }, { status: 500 });
     }
 }

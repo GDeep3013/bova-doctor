@@ -4,18 +4,19 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const LineChart = ({ currentMonthEarning, graphData, graphMonths }) => {
+const LineChart = ({ currentMonthEarning, graphData, graphMonths, timePeriod, setTimePeriod }) => {
 
-    const labels = graphMonths.map((item) => `${item}`);
+    // Handle case where graphMonths or graphData might be empty or undefined
+    const labels = graphMonths ? graphMonths.map((item) => `${item}`) : [];
     const data = {
         labels,
         datasets: [
             {
                 fill: true,
-                label: 'Monthly Earnings',
-                data: graphData.map((data) => data),
-                borderColor: '#151515', 
-                backgroundColor: '#e5e5e5', 
+                label: `${timePeriod} Earnings`,  // Display timePeriod correctly
+                data: graphData ? graphData : [],  // Safe check for graphData
+                borderColor: '#151515',
+                backgroundColor: '#e5e5e5',
                 tension: 0.4,
             },
         ],
@@ -34,10 +35,23 @@ const LineChart = ({ currentMonthEarning, graphData, graphMonths }) => {
     };
 
     return (
-        <div className="p-4 bg-[#F9F9F9] rounded-lg ">
-            <div>
-                <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">$ {currentMonthEarning}</h3>
-                <p className="text-gray-500 ml-[29px]">Total Amount Earned this Month</p>
+        <div className="p-4 bg-[#F9F9F9] rounded-lg">
+            <div className='flex'>
+                <div>
+                    <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">${currentMonthEarning}</h3>
+                    <p className="text-gray-500 ml-[29px]">Total Amount Earned this {timePeriod}</p> {/* Dynamically update for each period */}
+                </div>
+                <div className='ml-[306px]'>
+                    <select
+                        value={timePeriod}
+                        onChange={(e) => setTimePeriod(e.target.value)} // Set timePeriod based on user input
+                        className="text-gray-500 min-w-[150px] p-2 text-sm focus:outline-none"
+                    >
+                        <option value="Weeks">Weeks</option>
+                        <option value="Month">Month</option>
+                        <option value="Year">Year</option>
+                    </select>
+                </div>
             </div>
             <div className="relative">
                 <Line data={data} options={options} height={80} />
