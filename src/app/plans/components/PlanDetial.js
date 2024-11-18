@@ -183,8 +183,8 @@ export default function CreatePlan() {
     return (
         <AppLayout>
         <div className="flex flex-col">
-            <h1 className="text-2xl pt-4 md:pt-1 mb-1">Edit Patient Plan</h1>
-            <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+            <h1 className="text-2xl pt-4 md:pt-1 mb-1">View Patient Plan</h1>
+            <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
             <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                 <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
                     <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">

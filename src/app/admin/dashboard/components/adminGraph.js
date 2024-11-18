@@ -1,84 +1,161 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
+import { useSession } from 'next-auth/react';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+import {
+    Chart as ChartJS,
+    LineElement,
+    PointElement,
+    LinearScale,
+    CategoryScale,
+    Tooltip,
+    Legend,
+} from 'chart.js';
 
-const LineChart = ({ currentMonthEarning,graphMonth, graphValue }) => {
-   
-    const monthlyRevenueData = [
-        {
-            year: 2024,
-            month: 1, // January
-            totalRevenue: 12000.50,
-        },
-        {
-            year: 2024,
-            month: 2, // February
-            totalRevenue: 15000.75,
-        },
-        {
-            year: 2024,
-            month: 3, // March
-            totalRevenue: 13500.30,
-        },
-        {
-            year: 2024,
-            month: 4, // April
-            totalRevenue: 14500.90,
-        },
-        {
-            year: 2024,
-            month: 5, // May
-            totalRevenue: 16000.20,
-        },
-        {
-            year: 2024,
-            month: 6, // June
-            totalRevenue: 15500.60,
-        },
-    ];
+// Register Chart.js components
+ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
 
-    // Prepare the data for the chart
-    const labels = graphMonth.map((month) => month);
+const LineChart = () => {
+    const { data: session } = useSession();
+
+    const currentYear = new Date().getFullYear();
+
+    const [timePeriod, setTimePeriod] = useState('Year');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [graphData, setGraphData] = useState([]);
+    const [graphLabels, setGraphLabels] = useState([]);
+
+    const [graphMonths, setGraphMonths] = useState([]);
+    const [error, setError] = useState('');
+
+    const fetchData = async () => {
+        try {
+            let query = `?timePeriod=${timePeriod}`;
+            if (timePeriod == 'Custom') {
+                if (!startDate && !endDate) {
+                    setError('Start Date and End Date are required');
+                    return;  
+                } else {
+                    query += `&startDate=${startDate}&endDate=${endDate}`;
+
+                }
+                
+            }
+    
+            const response = await fetch(`/api/admin/dashboard/graph${query}`);
+            // if (!response.ok) throw new Error('Failed to fetch data');
+                const data = await response.json();
+            
+            if (data) {
+                if (timePeriod === 'Month') {
+                    const labels = data.map((entry) => `${entry.date}`);
+                    const values = data.map((entry) => entry.totalRevenue); 
+                    setGraphLabels(labels);
+                    setGraphData(values);
+                } else if (timePeriod === 'Year') {
+                    const labels = data.map((entry) => `${entry.month}`); 
+                    const values = data.map((entry) => entry.totalRevenue); 
+                    setGraphLabels(labels);
+                    setGraphData(values);
+                } else if (timePeriod === 'Custom') {
+                    const labels = data.map((entry) => entry.date);
+                    const values = data.map((entry) => entry.totalRevenue);
+                    setGraphLabels(labels);
+                    setGraphData(values);
+                }
+                setError('');
+            } else {
+                setError('Data is not available or malformed');
+            }
+        } catch (error) {
+            // console.error('Error fetching data:', error.message);
+        }
+    };
+
+    useEffect(() => {
+        if (timePeriod === 'Custom' && startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            if (end <= start) {
+                setError('End date must be greater than start date');
+                return;
+            }
+            setError('');
+        }
+        fetchData();
+    }, [timePeriod, startDate, endDate]);
+
+    const labels = graphMonths.length > 0 ? graphMonths : [];
+
     const data = {
-        labels,
+        labels:graphLabels,
         datasets: [
             {
                 fill: true,
-                label: 'Monthly Earnings',
-                data: graphValue.map((value) => value),
-                borderColor: '#151515', // Light gray for the line color
-                backgroundColor: '#e5e5e5', // Light gray fill color
+                label: `${timePeriod} Earnings`,
+                data: graphData,
+                borderColor: '#151515',
+                backgroundColor: '#e5e5e5',
                 tension: 0.4,
             },
         ],
     };
 
-    // Static value for previous month's earnings (e.g., $12,000.50 for preview)
-    const staticEarnings = 12000.50;
-
     const options = {
         responsive: true,
         plugins: {
             legend: { display: false },
-            title: { display: false },
+            tooltip: { enabled: true },
         },
         scales: {
-            x: { display: false },
-            y: { display: false },
+            x: { type: 'category', display: true }, 
+            y: { type: 'linear', display: true },
         },
     };
 
     return (
-        <div className="p-4 bg-[#F9F9F9] rounded-lg w-full max-w-full">
-
-            <div>
-                <h3 className="text-base md:text-xl xl:text-2xl font-semibold">$ {Number(currentMonthEarning).toFixed(2)}</h3>
-                <p className="text-gray-500">Total Amount Earned this Month</p>
+        <div className="p-4 bg-[#F9F9F9] rounded-lg">
+            <div className="flex">
+                <div>
+                    <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">
+                        $ {graphData.reduce((sum, val) => sum + val, 0).toFixed(2)}
+                    </h3>
+                    <p className="text-gray-500 ml-[29px]">
+                        Total Amount Earned this {timePeriod}
+                    </p>
+                </div>
+                <div className="ml-auto">
+                    <select
+                        value={timePeriod}
+                        onChange={(e) => setTimePeriod(e.target.value)}
+                        className="text-gray-500 min-w-[150px] p-2 text-sm focus:outline-none"
+                    >
+                        <option value="Month">Month</option>
+                        <option value="Year">Year</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                </div>
             </div>
-            <div className="relative w-full admin-graph">
-                <Line data={data} options={options} height={70}  />
+            {timePeriod === 'Custom' && (
+                <div className="flex mt-4">
+                    <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="p-2 mr-2 text-sm focus:outline-none"
+                    />
+                    <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="p-2 text-sm focus:outline-none"
+                    />
+                </div>
+            )}
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            <div className="relative mt-4">
+                <Line data={data} options={options} height={80} />
             </div>
         </div>
     );

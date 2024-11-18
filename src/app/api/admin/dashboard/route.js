@@ -9,16 +9,16 @@ export async function GET() {
     await connectDB();
     try {
         // Fetch the latest 5 doctors
-        const doctors = await Doctor.find().limit(5);
-        const totalDoctors = await Doctor.countDocuments();
-        const totalPatient = await Patient.countDocuments();
+             const doctors = await Doctor.find().limit(8);
+             const totalDoctors = await Doctor.countDocuments();
+             const totalPatient = await Patient.countDocuments();
 
-        // Calculate the details for each doctor
-        const doctorsData = await Promise.all(doctors.map(async (doctor) => {
-            const orders = await Order.find({ 'doctor.doctor_id': doctor._id });
-            const earnings = orders.reduce((total, order) => total + parseFloat(order.total), 0); // Using 'total' field for income calculation
-            const totalPatients = await Patient.countDocuments({ doctorId: doctor._id });
-            const totalPlans = await Plan.countDocuments({ patient_id: { $in: await Patient.find({ doctorId: doctor._id }) } });
+
+             const doctorsData = await Promise.all(doctors.map(async (doctor) => {
+             const orders = await Order.find({ 'doctor.doctor_id': doctor._id });
+             const earnings = orders.reduce((total, order) => total + parseFloat(order.total), 0); // Using 'total' field for income calculation
+             const totalPatients = await Patient.countDocuments({ doctorId: doctor._id });
+             const totalPlans = await Plan.countDocuments({ patient_id: { $in: await Patient.find({ doctorId: doctor._id }) } });
 
             return {
                 id: doctor._id,
@@ -33,26 +33,23 @@ export async function GET() {
         const currentDate = new Date();
         const lastSixMonths = Array.from({ length: 6 }).map((_, index) => {
             const month = new Date(currentDate.getFullYear(), currentDate.getMonth() - index);
-            return { 
+            return {
                 monthName: month.toLocaleString('default', { month: 'short' }), // Jan, Feb, Mar...
                 year: month.getFullYear(),
                 month: month.getMonth() + 1 // 1-12 for months
             };
-        }).reverse(); // Ensure months are in correct order (latest to oldest)
-
-        // Initialize the values array for graph
+        }).reverse();
         const months = lastSixMonths.map(item => item.monthName);
-        const values = new Array(6).fill(0); // Default all months to 0
+        const values = new Array(6).fill(0);
 
-        // Calculate monthly revenue across all doctors for the last 6 months including current month
         const currentMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         const currentMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
         const monthlyRevenueData = await Order.aggregate([
             {
                 $match: {
-                    order_date: { 
-                        $gte: new Date(new Date().setMonth(currentDate.getMonth() - 6)), // Match orders in the last 6 months including current
+                    order_date: {
+                        $gte: new Date(new Date().setMonth(currentDate.getMonth() - 6)),
                         $lte: currentMonthEnd
                     }
                 }
@@ -63,7 +60,7 @@ export async function GET() {
                         year: { $year: "$order_date" },
                         month: { $month: "$order_date" }
                     },
-                    totalRevenue: { $sum: { $toDouble: "$total" } } // Sum of the 'total' income field
+                    totalRevenue: { $sum: { $toDouble: "$total" } }
                 }
             },
             {
@@ -96,7 +93,7 @@ export async function GET() {
             totalPatient: totalPatient,
             graphMonth: months,
             graphValue: values,
-            currentMonthEarnings: currentMonthEarnings, 
+            currentMonthEarnings: currentMonthEarnings,
         });
     } catch (error) {
         console.error(error);
