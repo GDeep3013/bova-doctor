@@ -13,7 +13,7 @@ export default function CreatePlan() {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [variants ,setVariants]= useState([]);
+    const [variants, setVariants] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
@@ -34,35 +34,35 @@ export default function CreatePlan() {
     }
 
 
-      const fetchSavedProduct = async () => {
+    const fetchSavedProduct = async () => {
         try {
-          const response = await fetch(`/api/products?status=active`);
-          if (!response.ok) throw new Error('Failed to fetch product status');
+            const response = await fetch(`/api/products?status=active`);
+            if (!response.ok) throw new Error('Failed to fetch product status');
 
-          const data = await response.json();
+            const data = await response.json();
 
-          // Check if the data has products and then map and push variant IDs into an array
-          if (Array.isArray(data) && data.length > 0) {
-            const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
-              getVariants(variantIds)
-          } else {
-            console.log('No products found or data is empty');
-          }
+            // Check if the data has products and then map and push variant IDs into an array
+            if (Array.isArray(data) && data.length > 0) {
+                const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
+                getVariants(variantIds)
+            } else {
+                console.log('No products found or data is empty');
+            }
         } catch (error) {
-          console.error('Error fetching product status:', error);
+            console.error('Error fetching product status:', error);
         }
-      };
+    };
 
-      const getVariants = async (variantIds) => {
+    const getVariants = async (variantIds) => {
         try {
             const response = await fetch(`/api/shopify/products/variants`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ variantIds: variantIds }),
             });
 
             if (!response.ok) {
-              throw new Error('Failed to update status');
+                throw new Error('Failed to update status');
             }
             const data = await response.json();
             const variants = Object.values(data.data).map(variant => ({
@@ -78,6 +78,7 @@ export default function CreatePlan() {
                 product: {
                     id: parseInt(variant.product.id.replace('gid://shopify/Product/', '')),
                     title: variant.product.title,
+                    descriptionHtml: variant.product.descriptionHtml,
                     images: variant.product.images.edges.map(edge => ({
                         id: parseInt(edge.node.id.replace('gid://shopify/ProductImage/', '')),
                         url: edge.node.url,
@@ -85,22 +86,11 @@ export default function CreatePlan() {
                     }))
                 }
             }));
-
             setVariants(variants);
-            console.log('Transformed Variants with Product Images:', variants);
-
-
-            // Set the transformed data to the state
-            setVariants(variants);
-            console.log('data',variants)
-
-
-
-
-          } catch (error) {
+        } catch (error) {
             console.error("Error updating product status:", error);
-          }
-      };
+        }
+    };
     useEffect(() => {
         // fetchProducts();
         fetchPatients();
@@ -120,10 +110,10 @@ export default function CreatePlan() {
                 id: variant.id,
                 price: variant.price,
                 title: variant.product?.title,
-                quantity: 1,
+                quantity: 5,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
-                    duration: 'Once Per Day',
+                    duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
                     _patient_id: selectedPatient?.id || id,
                     notes: '',
@@ -235,7 +225,7 @@ export default function CreatePlan() {
 
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
-    const handleZoomProduct = (product) => setSelectedProduct(product);
+
     const filteredProducts = variants.filter(variants =>
         variants.product.title.toLowerCase().includes(searchTerm)
     )
@@ -277,7 +267,7 @@ export default function CreatePlan() {
         <AppLayout>
             <div className="flex flex-col">
                 <h1 className="text-2xl pt-4 md:pt-1 mb-1">Create Patient Plan</h1>
-                <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-5 xl:gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
                         <div className="bg-customBg3 p-2 xl:p-4 rounded-t-lg">
@@ -335,18 +325,18 @@ export default function CreatePlan() {
                                             >
                                                 &times;
                                             </button>
-                                                <img
+                                            <img
                                                 src={
                                                     variant.image && variant.image.url
-                                                   ? variant.image.url
-                                                   : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
-                                                   ? variant.product.images[0].url
-                                                   : '/images/product-img1.png'
-                                               }
-                                                    alt={variant.product.title}
-                                                    className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
-                                                    onClick={() => handleSelectProduct(variant)}
-                                                />
+                                                        ? variant.image.url
+                                                        : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
+                                                            ? variant.product.images[0].url
+                                                            : '/images/product-img1.png'
+                                                }
+                                                alt={variant.product.title}
+                                                className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                onClick={() => handleSelectProduct(variant)}
+                                            />
                                             {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>
                                                 {variant.product.title}
                                             </p> */}
@@ -366,23 +356,25 @@ export default function CreatePlan() {
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item.id);
-                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                                  return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
                                     <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                         <img
                                             src={
                                                 item.image && item.image.url
-                                                   ? item.image.url
-                                                   : (item.product.images && item.product.images[0] && item.product.images[0].url)
-                                                   ? item.product.images[0].url
-                                                   : '/images/product-img1.png'
-                                               }
+                                                    ? item.image.url
+                                                    : (item.product.images && item.product.images[0] && item.product.images[0].url)
+                                                        ? item.product.images[0].url
+                                                        : '/images/product-img1.png'
+                                            }
                                             alt="Product"
                                             className="w-24 h-24" />
                                         <div>
-                                            <h3 className="font-bold text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
+                                            <h3 className="font-bold text-base xl:text-[18px]">{(item.title != "Default Title") ? item.title : item.product.title}</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
-                                                <span className='font-bold w-full inline-block'>Ingredients:</span> 100% Grass Fed & Finished New Zealand Beef Liver.
-                                                300mg per Capsule
+                                                {item?.product?.descriptionHtml
+                                                    ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
+                                                    : ''}
+
                                             </p>
                                         </div>
                                     </div>
@@ -394,19 +386,17 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
                                                 <select
-                                                       value={itemData?.quantity ?? ""}
-                                                       onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
-                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] xl:text-lg rounded-md">
-                                                    {/* <option value="5">5 (recommended)</option> */}
-                                                    <option value="1">1 (recommended)</option>
-                                                    <option value="2">2 (recommended)</option>
-                                                    <option value="3">3 (recommended)</option>
+                                                    value={itemData?.quantity ?? ""}
+                                                    onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+
+                                                    <option value="1">1 </option>
+                                                    <option value="2">2 </option>
+                                                    <option value="3">3 </option>
                                                     <option value="5">5 (recommended)</option>
-                                                    <option value="6">6 (recommended)</option>
-                                                    <option value="7">7 (recommended)</option>
-                                                    <option value="8">8 (recommended)</option>
-                                                    <option value="9">9 (recommended)</option>
-                                                    <option value="10">10 (recommended)</option>
+                                                    <option value="6">6 </option>
+                                                    <option value="7">7 </option>
+                                                    <option value="8">8 </option>
 
 
                                                 </select>
@@ -416,12 +406,23 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
                                             <div className="relative">
                                                 <select
-                                                     value={itemData?.properties.frequency ?? ""}
-                                                     onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
-                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] xl:text-lg rounded-md">
-                                                    <option>Once Per Day (Anytime)</option>
-                                                    <option>Twice Per Day</option>
-                                                    <option>Three Times Per Day</option>
+                                                    value={itemData?.properties.frequency ?? ""}
+                                                    onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
+                                                    <option>Daily Anytime</option>
+                                                    <option>Once Per Day(anytime)</option>
+                                                    <option>Once Per Day(morning)</option>
+                                                    <option>Once Per Day(evening)</option>
+                                                    <option>Once Per Day(on an empty stomach)</option>
+                                                    <option>Once Per Day(after a meal)</option>
+                                                    <option>Twice Per Day(anytime)</option>
+                                                    <option>Twice Per Day(evening)</option>
+                                                    <option>Twice Per Day(on an empty stomach)</option>
+                                                    <option>Twice Per Day(after a meal)</option>
+                                                    <option>3 Times Per Day(anytime)</option>
+                                                    <option>Three Times Per Day(evening)</option>
+                                                    <option>Three Times Per Day(on an empty stomach)</option>
+                                                    <option>Three Times Per Day(after a meal)</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -429,11 +430,18 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
                                             <div className="relative">
                                                 <select
-                                                     value={itemData?.properties.duration ?? ""}
-                                                     onChange={(e) => handleFormDataChange(item.id, 'duration', e.target.value)}
-                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] xl:text-lg rounded-md">
-                                                    <option>Once Per Day</option>
-                                                    <option>Twice Per Day</option>
+                                                    value={itemData?.properties.duration ?? ""}
+                                                    onChange={(e) => handleFormDataChange(item.id, 'duration', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                    <option> Monthly (Recommended)</option>
+                                                    <option>1 Day</option>
+                                                    <option>5 Days</option>
+                                                    <option>7 Days (1 Week)</option>
+                                                    <option>2 Weeks</option>
+                                                    <option>3 Weeks</option>
+                                                    <option>1 Month</option>
+                                                    <option>3 Months</option>
+                                                    <option>6 Months</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -441,12 +449,12 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
                                             <div className="relative">
                                                 <select
-                                                      value={itemData?.properties.takeWith ?? ""}
-                                                      onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
+                                                    value={itemData?.properties.takeWith ?? ""}
+                                                    onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] xl:text-lg rounded-md">
                                                     <option>Water</option>
-                                                    <option>Juice</option>
-                                                    <option>Milk</option>
+                                                    <option>Food</option>
+                                                    <option>Water and Empty Stomach</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -500,7 +508,7 @@ export default function CreatePlan() {
                                                     </td>
                                                     <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
                                                     <td className="py-2 text-[#3F4647] text-sm text-right">
-                                                         ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                        ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -580,11 +588,11 @@ export default function CreatePlan() {
                                                             <td className="px-6 py-4 whitespace-nowrap">
                                                                 <img
                                                                     src={
-                                                                         variant.image && variant.image.url
-                                                                        ? variant.image.url
-                                                                        : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
-                                                                        ? variant.product.images[0].url
-                                                                        : '/images/product-img1.png'
+                                                                        variant.image && variant.image.url
+                                                                            ? variant.image.url
+                                                                            : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
+                                                                                ? variant.product.images[0].url
+                                                                                : '/images/product-img1.png'
                                                                     }
                                                                     alt={variant.product.title}
                                                                     className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
@@ -619,10 +627,6 @@ export default function CreatePlan() {
                                     FINISH
                                 </button>
                             </div>
-
-
-
-
 
                         </div >
                     </div >

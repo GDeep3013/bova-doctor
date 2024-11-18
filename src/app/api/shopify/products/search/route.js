@@ -17,7 +17,6 @@ export async function GET(req) {
     const response = await fetch(url);
     const data = await response.json();
   
-    console.log('Suggestion Response', { response: data, type: typeof data, url });
   
     // Extract the products from the response
     const results = data.resources?.results?.products ?? []; // Directly access the products results

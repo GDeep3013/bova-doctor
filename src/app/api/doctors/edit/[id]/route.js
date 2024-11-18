@@ -61,7 +61,7 @@ export async function PUT(req, { params }) {
       const specialty = formData.get('specialty');
       const clinicName = formData.get('clinicName');
       const commissionPercentage = formData.get('commissionPercentage');
-      console.log(clinicName)
+
       // Check for existing doctor with the same email or phone (excluding the current doctor)
       const existingDoctor = await Doctor.findOne({
         $or: [

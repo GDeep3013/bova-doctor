@@ -96,7 +96,7 @@ export async function GET() {
             totalPatient: totalPatient,
             graphMonth: months,
             graphValue: values,
-            currentMonthEarnings: currentMonthEarnings, // Return current month's earnings separately
+            currentMonthEarnings: currentMonthEarnings, 
         });
     } catch (error) {
         console.error(error);

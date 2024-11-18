@@ -64,10 +64,10 @@ export default function CreatePlan() {
                 id: product.variants[0]?.id,
                 price: product.variants[0]?.price,
                 title: product?.title,
-                quantity: 1,
+                quantity: '5',
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
-                    duration: 'Once Per Day',
+                    duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
                     _patient_id: selectedPatient?.id || id,
                     notes: '',
@@ -237,7 +237,7 @@ export default function CreatePlan() {
                     icon: 'error',
                     confirmButtonText: 'OK',
                 });
-           }
+            }
         } catch (error) {
             console.error("Error fetching plan data:", error);
             Swal.fire({
@@ -273,7 +273,7 @@ export default function CreatePlan() {
                         <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
                             {selectedPatient ? (
                                 <span className="font-medium text-[19px] text-black">
-                                    Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
+                                    Patient Name: <span className="font-medium">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
                                 </span>
 
                             ) : id ? (
@@ -366,54 +366,69 @@ export default function CreatePlan() {
                                     </div>
                                     {/* Product Options */}
                                     <div className="space-y-4 w-full">
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] max-[767px]:w-full w-[max-content]
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-[max-content]
                                         min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                                <option value="1">1 (recommended)</option>
-                                                    <option value="2">2 (recommended)</option>
-                                                    <option value="3">3 (recommended)</option>
+                                                    <option value="1">1 </option>
+                                                    <option value="2">2 </option>
+                                                    <option value="3">3 </option>
                                                     <option value="5">5 (recommended)</option>
-                                                    <option value="6">6 (recommended)</option>
-                                                    <option value="7">7 (recommended)</option>
-                                                    <option value="8">8 (recommended)</option>
-                                                    <option value="9">9 (recommended)</option>
-                                                    <option value="10">10 (recommended)</option>
-
+                                                    <option value="6">6 </option>
+                                                    <option value="7">7 </option>
+                                                    <option value="8">8 </option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
-                                                    <option>Once Per Day (Anytime)</option>
-                                                    <option>Twice Per Day</option>
-                                                    <option>Three Times Per Day</option>
+                                                    <option>Daily Anytime</option>
+                                                    <option>Once Per Day (anytime)</option>
+                                                    <option>Once Per Day (morning)</option>
+                                                    <option>Once Per Day (evening)</option>
+                                                    <option>Once Per Day (on an empty stomach)</option>
+                                                    <option>Once Per Day (after a meal)</option>
+                                                    <option>Twice Per Day (anytime)</option>
+                                                    <option>Twice Per Day (evening)</option>
+                                                    <option>Twice Per Day (on an empty stomach)</option>
+                                                    <option>Twice Per Day (after a meal)</option>
+                                                    <option>3 Times Per Day (anytime)</option>
+                                                    <option>Three Times Per Day (evening)</option>
+                                                    <option>Three Times Per Day (on an empty stomach)</option>
+                                                    <option>Three Times Per Day (after a meal)</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                                    <option>Once Per Day</option>
-                                                    <option>Twice Per Day</option>
+                                                    <option> Monthly (Recommended)</option>
+                                                    <option>1 Day</option>
+                                                    <option>5 Days</option>
+                                                    <option>7 Days (1 Week)</option>
+                                                    <option>2 Weeks</option>
+                                                    <option>3 Weeks</option>
+                                                    <option>1 Month</option>
+                                                    <option>3 Months</option>
+                                                    <option>6 Months</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
                                                     <option>Water</option>
-                                                    <option>Juice</option>
-                                                    <option>Milk</option>
+                                                    <option>Food</option>
+                                                    <option>Water and Empty Stomach</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className='w-full min-[768px]:max-w-[510px]'>
+                                        <div className='w-full max-w-[510px]'>
                                             <div className="mt-1">
                                                 <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg" rows="3"></textarea>
                                             </div>
@@ -442,7 +457,7 @@ export default function CreatePlan() {
                                             ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                             : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                     }>
-                                    {loader ? "Please wait ..." : " Update to Patient Plan"}
+                                    {loader ? "Please wait ..." : "Update Patient Plan"}
                                 </button>
                             </div>
                         </div>
@@ -493,7 +508,7 @@ export default function CreatePlan() {
                                                 ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                         }>
-                                        {loader ? "Please wait ..." : " Update to Patient Plan"}
+                                        {loader ? "Please wait ..." : "Update Patient Plan"}
                                     </button>
                                 </div>
                             </div>

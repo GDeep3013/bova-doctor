@@ -6,6 +6,7 @@ import DoctorGraph from './doctarGraph';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import AddPatient from '../../patients/components/AddPatient'
 
 export default function AdminDashboard() {
     const { data: session } = useSession();
@@ -26,31 +27,41 @@ export default function AdminDashboard() {
             }
             const data = await response.json();
             if (data) {
+
                 setCurrentMonthEarning(data.currentWeekEarnings);
                 setTotalEarning(data.totalEarnings);
                 setTotalPatients(data.totalPatients);
                 setTotalPlans(data.totalPlans);
                 setPatientData(data.patientData);
+                
                 let formattedLabels = [];
                 let graphValues = []; // Initialize the graph data values
 
-                if (timePeriod === "Weeks") {
-                    formattedLabels = data.weeks.map((week, index) => `Week ${index + 1}`);
-                    graphValues = data.weeklyEarnings; // Use weekly earnings data
-                } else if (timePeriod === "Month") {
-                    formattedLabels = data.months.map((month) => month); // Assuming backend sends Jan, Feb, etc.
-                    graphValues = data.monthlyEarnings; // Use monthly earnings data
-                } else if (timePeriod === "Year") {
-                    formattedLabels = data.years.map((year) => `${year}`);
-                    graphValues = data.yearlyEarnings; // Use yearly earnings data
+                switch (timePeriod) {
+                    case "Weeks":
+                        formattedLabels = data.weeks.map((week, index) => `Week ${index + 1}`);
+                        graphValues = data.weeklyEarnings; // Use weekly earnings data
+                        break;
+
+                    case "Month":
+                        formattedLabels = data.months.map((month) => month); // Assuming backend sends Jan, Feb, etc.
+                        graphValues = data.monthlyEarnings; // Use monthly earnings data
+                        break;
+
+                    case "Year":
+                        formattedLabels = data.years.map((year) => `${year}`);
+                        graphValues = data.yearlyEarnings; // Use yearly earnings data
+                        break;
+
+                    default:
+                        break;
                 }
 
                 setGraphMonths(formattedLabels);
-                setGraphData(graphValues); //
+                setGraphData(graphValues);
+            } } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error)
-        }
     };
 
 
@@ -77,14 +88,14 @@ export default function AdminDashboard() {
     return (
         <AppLayout>
             <div className="flex flex-col">
-                <div className="w-full bg-customBg relative text-white rounded-lg flex flex-col md:flex-row items-center py-8 md:py-12 px-8 md:px-16 mb-8 max-[767px]:mt-5">
+                {/* <div className="w-full bg-customBg relative text-white rounded-lg flex flex-col md:flex-row items-center py-8 md:py-12 px-8 md:px-16 mb-8 max-[767px]:mt-5">
                     <div className="flex-1 mb-4 md:mb-0 w-full">
                         <h1 className="text-xl md:text-2xl font-semibold mb-2 text-black">Welcome to your BOVA</h1>
                         <p className="text-sm mb-4 text-black"> We will be launching the full site access in less than 2 weeks! Stay tuned. </p>
                         <p className="italic mb-6 text-black">- Team BOVA</p>
                         <Link href='/patients/create' className="bg-customBg2 text-white border border-customBg2 font-medium px-4 py-2 rounded min-w-[196px] min-h-[50px] hover:text-customBg2 hover:bg-white"> Create Patient </Link>
                     </div>
-                </div>
+                </div> */}
 
                 <div className='doctor-graph'>
 
@@ -109,7 +120,7 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className='flex min-[1281px]:space-x-5 max-xl:flex-wrap mt-6'>
-                    <DoctorTable patientData={patientData} timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
+                    {/* <DoctorTable patientData={patientData} timePeriod={timePeriod} setTimePeriod={setTimePeriod} /> */}
                     <div className='w-full'>
                         <div className=''>
                             <DoctorGraph
@@ -122,6 +133,7 @@ export default function AdminDashboard() {
                         </div>
                     </div>
                 </div>
+                <AddPatient/>
             </div>
 
         </AppLayout>

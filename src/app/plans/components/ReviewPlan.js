@@ -64,8 +64,7 @@ export default function ReviewPlan() {
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
             }
-            const data = await response.json();
-            console.log(data);
+            const data = await response.json();         
             setPlans(data);
         } catch (error) {
             setError(error.message);

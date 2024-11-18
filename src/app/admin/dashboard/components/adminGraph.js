@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const LineChart = ({ currentMonthEarning,graphMonth, graphValue }) => {
-    // console.log('monthlyRevenueData',monthlyRevenueData)
+   
     const monthlyRevenueData = [
         {
             year: 2024,

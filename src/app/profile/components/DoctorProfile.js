@@ -7,7 +7,6 @@ import { useSession } from 'next-auth/react';
 export default function Profile() {
 
     const { data: session } = useSession();
-    console.log(session);
     function formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
