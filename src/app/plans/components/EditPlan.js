@@ -64,10 +64,10 @@ export default function CreatePlan() {
                 id: product.variants[0]?.id,
                 price: product.variants[0]?.price,
                 title: product?.title,
-                quantity: 1,
+                quantity: '5',
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
-                    duration: 'Once Per Day',
+                    duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
                     _patient_id: selectedPatient?.id || id,
                     notes: '',
@@ -237,7 +237,7 @@ export default function CreatePlan() {
                     icon: 'error',
                     confirmButtonText: 'OK',
                 });
-           }
+            }
         } catch (error) {
             console.error("Error fetching plan data:", error);
             Swal.fire({
@@ -371,16 +371,13 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                                <option value="1">1 (recommended)</option>
-                                                    <option value="2">2 (recommended)</option>
-                                                    <option value="3">3 (recommended)</option>
+                                                    <option value="1">1 </option>
+                                                    <option value="2">2 </option>
+                                                    <option value="3">3 </option>
                                                     <option value="5">5 (recommended)</option>
-                                                    <option value="6">6 (recommended)</option>
-                                                    <option value="7">7 (recommended)</option>
-                                                    <option value="8">8 (recommended)</option>
-                                                    <option value="9">9 (recommended)</option>
-                                                    <option value="10">10 (recommended)</option>
-
+                                                    <option value="6">6 </option>
+                                                    <option value="7">7 </option>
+                                                    <option value="8">8 </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -388,9 +385,20 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
-                                                    <option>Once Per Day (Anytime)</option>
-                                                    <option>Twice Per Day</option>
-                                                    <option>Three Times Per Day</option>
+                                                    <option>Daily Anytime</option>
+                                                    <option>Once Per Day (anytime)</option>
+                                                    <option>Once Per Day (morning)</option>
+                                                    <option>Once Per Day (evening)</option>
+                                                    <option>Once Per Day (on an empty stomach)</option>
+                                                    <option>Once Per Day (after a meal)</option>
+                                                    <option>Twice Per Day (anytime)</option>
+                                                    <option>Twice Per Day (evening)</option>
+                                                    <option>Twice Per Day (on an empty stomach)</option>
+                                                    <option>Twice Per Day (after a meal)</option>
+                                                    <option>3 Times Per Day (anytime)</option>
+                                                    <option>Three Times Per Day (evening)</option>
+                                                    <option>Three Times Per Day (on an empty stomach)</option>
+                                                    <option>Three Times Per Day (after a meal)</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -398,8 +406,15 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                                    <option>Once Per Day</option>
-                                                    <option>Twice Per Day</option>
+                                                    <option> Monthly (Recommended)</option>
+                                                    <option>1 Day</option>
+                                                    <option>5 Days</option>
+                                                    <option>7 Days (1 Week)</option>
+                                                    <option>2 Weeks</option>
+                                                    <option>3 Weeks</option>
+                                                    <option>1 Month</option>
+                                                    <option>3 Months</option>
+                                                    <option>6 Months</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -408,8 +423,8 @@ export default function CreatePlan() {
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
                                                     <option>Water</option>
-                                                    <option>Juice</option>
-                                                    <option>Milk</option>
+                                                    <option>Food</option>
+                                                    <option>Water and Empty Stomach</option>
                                                 </select>
                                             </div>
                                         </div>

@@ -7,9 +7,10 @@ import React, { useState,useEffect } from 'react'
 
 export default function Home() {
     const { data: session } = useSession();
-
+ 
+    console.log(session);
     return (
-        <AppLayout>
+        // <AppLayout>
              <div className="flex flex-col">
                     <h1 className='page-title pt-4 md:pt-2 pb-4 text-2xl'>Home</h1>
                     <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
@@ -65,12 +66,12 @@ export default function Home() {
 
                     {/* Footer Message */}
                     <div className="w-full max-w-3xl bg-[#d6dee5] p-[20px] md:p-8 mt-6 rounded-lg">
-                        <p>Welcome to your BOVA <span className="font-semibold">[Name of Doctor]</span></p>
+                        <p>Welcome to your BOVA <span className="font-semibold"> Dr. {session?.user?.userName}</span></p>
                         <p className="mt-2">We will be launching the full site access in less than 2 weeks!</p>
                         <p className="mt-2 font-semibold">Stay tuned.<br />Team BOVA</p>
                     </div>
                 </div>
 
-        </AppLayout>
+        // </AppLayout>
     )
 }
