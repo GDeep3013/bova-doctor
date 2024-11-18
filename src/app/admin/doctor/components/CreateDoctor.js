@@ -4,16 +4,15 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 export default function CreateDoctor() {
+    const router = useRouter();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [clinicName, setClinicName] = useState('');
-    const [message, setMessage] = useState('');
     const [errors, setErrors] = useState({});
     const [specialty, setSpecialty] = useState('');
     const [userType, setUserType] = useState('');
-    const router = useRouter();
     const [commissionPercentage, setCommissionPercentage] = useState('');
 
     const validateForm = () => {
@@ -27,7 +26,6 @@ export default function CreateDoctor() {
             newErrors.lastName = 'Last name is required';
             valid = false;
         }
-        // Basic email validation
         if (!email) {
             newErrors.email = 'Email is required';
             valid = false;
@@ -84,7 +82,7 @@ export default function CreateDoctor() {
             try {
                 const response = await fetch('/api/doctors/create', {
                     method: 'POST',
-                    body: formData, // send FormData object
+                    body: formData,
                 });
 
                 if (response.ok) {

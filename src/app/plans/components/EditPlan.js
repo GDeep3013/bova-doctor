@@ -273,7 +273,7 @@ export default function CreatePlan() {
                         <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
                             {selectedPatient ? (
                                 <span className="font-medium text-[19px] text-black">
-                                    Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
+                                    Patient Name: <span className="font-medium">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
                                 </span>
 
                             ) : id ? (
@@ -457,7 +457,7 @@ export default function CreatePlan() {
                                             ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                             : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                     }>
-                                    {loader ? "Please wait ..." : " Update to Patient Plan"}
+                                    {loader ? "Please wait ..." : "Update Patient Plan"}
                                 </button>
                             </div>
                         </div>
@@ -508,7 +508,7 @@ export default function CreatePlan() {
                                                 ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                         }>
-                                        {loader ? "Please wait ..." : " Update to Patient Plan"}
+                                        {loader ? "Please wait ..." : "Update Patient Plan"}
                                     </button>
                                 </div>
                             </div>

@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link'
+
 export default function Create() {
     const { data: session } = useSession();
     const [firstName, setFirstName] = useState('');
@@ -74,6 +74,7 @@ export default function Create() {
                     setEmail('');
                     setPhone('');
                     setLoader(false)
+
                     router.push(`/patients/detail/${newPatient?._id}`);
                 } else {
                     const result = await response.json();
