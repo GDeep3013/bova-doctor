@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import { CloseIcon } from '../../../components/svg-icons/icons';
+import { SP } from 'next/dist/shared/lib/utils';
 
 export default function CreatePlan() {
     const { id } = useParams();
@@ -343,12 +344,20 @@ export default function CreatePlan() {
                                         </div>
                                     ))}
                                     {/* Plus Button to Add More Products */}
-                                    <button
-                                        className="h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
-                                        onClick={openModal}
-                                    >
-                                        +
-                                    </button>
+                                    {selectedItems.length > 0 ?
+                                        <button
+                                            className="h-[63px] max-w-[63px] w-full bg-[#3c637a] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px]"
+                                            onClick={openModal}
+                                        >
+                                            +
+                                        </button> :
+                                         <button
+                                         className="min-w-[160px] flex items-center justify-center text-2xl font-bold text-white cursor-pointer rounded-[8px] overflow-hidden"
+                                         onClick={openModal}
+                                     >
+                                       <span className='bg-[#3c637a] py-[4px] px-[15px]'>+</span> <span className='bg-[#5480A0] text-base font-medium p-2'>Add Bova Supplements</span>
+                                     </button>
+                                    }
                                 </div>
                             </div>
 
@@ -468,7 +477,7 @@ export default function CreatePlan() {
                             })
                             }
                             {/* Message Section */}
-                            <div className="p-4 border-t border-b border-[#AFAAAC]">
+                            {selectedItems.length > 0 && <div className="p-4 border-t border-[#AFAAAC]">
                                 <textarea
                                     value={formData.message}
                                     onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}
@@ -476,9 +485,9 @@ export default function CreatePlan() {
                                     rows="4"
                                     placeholder="Message"
                                 ></textarea>
-                            </div>
+                            </div>}
                             {/* Send to Patient Button */}
-                            <div className="p-4 text-right">
+                            <div className="p-4 text-right border-t border-[#AFAAAC]">
                                 <button
                                     onClick={() => { handleSubmit() }}
                                     disabled={formData.items.length === 0 || !formData.patient_id}
