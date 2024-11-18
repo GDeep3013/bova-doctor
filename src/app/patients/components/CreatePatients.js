@@ -61,6 +61,7 @@ export default function Create() {
 
                 if (response.ok) {
                     const data = await response.json(); // Parse the JSON response
+                    const newPatient = data.patient;
                   
                     Swal.fire({
                         title: 'Success!',
