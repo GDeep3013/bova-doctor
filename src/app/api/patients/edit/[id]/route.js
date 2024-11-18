@@ -35,18 +35,21 @@ export async function PUT(req, { params }) {
   await connectDB();
 
   try {
-    const existingPatient = await Patient.findOne({
+    const query = {
       doctorId: doctorId, // Scope check to the same doctor
       $and: [
         { _id: { $ne: id } }, // Exclude the current patient by ID
         {
           $or: [
             { email: email }, // Check if the email is already used by another patient of the same doctor
-            { phone: phone }, // Check if the phone is already used by another patient of the same doctor
+            ...(phone ? [{ phone: phone }] : []), // Add phone check only if it is provided
           ],
         },
       ],
-    });
+    };
+  
+    // Check for existing patient
+    const existingPatient = await Patient.findOne(query);
 
     if (existingPatient) {
       const errors = [];

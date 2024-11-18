@@ -70,7 +70,6 @@ export default function CreateDoctor() {
                 const response = await fetch(`/api/doctors/edit/${id}`);
                 const data = await response.json();
                 if (response.ok) {
-                    console.log(data)
                     setFirstName(data.firstName);
                     setLastName(data.lastName);
                     setEmail(data.email);

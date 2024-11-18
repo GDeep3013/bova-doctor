@@ -34,7 +34,13 @@ export default function Create() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
-       
+        if (phone) {
+            if (!/^\d{10}$/.test(phone)) {
+                newErrors.phone = 'Phone number must be 10 digits';
+                valid = false;
+            }
+        }
+
         setErrors(newErrors);
         return valid;
     };
@@ -54,6 +60,8 @@ export default function Create() {
                 });
 
                 if (response.ok) {
+                    const data = await response.json(); // Parse the JSON response
+                  
                     Swal.fire({
                         title: 'Success!',
                         text: 'Patient added successfully!',
@@ -65,7 +73,7 @@ export default function Create() {
                     setEmail('');
                     setPhone('');
                     setLoader(false)
-                    router.push('/patients/listing');
+                    router.push(`/patients/detail/${newPatient?._id}`);
                 } else {
                     const result = await response.json();
                     const errors = result.error;
@@ -100,8 +108,12 @@ export default function Create() {
                                         type="text"
                                         placeholder="First Name"
                                         value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
-                                        className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+
+                                        onChange={(e) => {
+                                            setFirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' });
+                                        }}
+
+                                        className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
                                     {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                                 </div>
@@ -111,7 +123,9 @@ export default function Create() {
                                         type="text"
                                         placeholder="Last Name"
                                         value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
+                                        onChange={(e) => {
+                                            setLastName(e.target.value); if (errors.lastName) setErrors({ ...errors, lastName: '' });
+                                        }}
                                         className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
                                     {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
@@ -123,7 +137,9 @@ export default function Create() {
                                     type="email"
                                     placeholder="Email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value); if (errors.email) setErrors({ ...errors, email: '' });
+                                    }}
                                     className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -134,10 +150,11 @@ export default function Create() {
                                     type="number"
                                     placeholder="Phone"
                                     value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2  rounded focus:outline-none focus:border-blue-500`}
+                                    onChange={(e) => {setPhone(e.target.value); if (errors.phone) { setErrors((prevErrors) => ({ ...prevErrors, phone: '' })); }
+                                    }}
+                                    className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 rounded focus:outline-none focus:border-blue-500`}
                                 />
-                                {/* {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>} */}
+                                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                             </div>
 
 
@@ -151,7 +168,7 @@ export default function Create() {
                                     type="submit"
                                     className="min-w-[150px] py-2 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"
                                 >
-                                   { loader?"Please wait...":"Create Patient"}
+                                    {loader ? "Please wait..." : "Create Patient"}
                                 </button>
                             </div>
                             {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}

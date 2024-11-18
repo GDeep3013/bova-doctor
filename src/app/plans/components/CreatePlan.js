@@ -78,6 +78,7 @@ export default function CreatePlan() {
                 product: {
                     id: parseInt(variant.product.id.replace('gid://shopify/Product/', '')),
                     title: variant.product.title,
+                    descriptionHtml: variant.product.descriptionHtml,
                     images: variant.product.images.edges.map(edge => ({
                         id: parseInt(edge.node.id.replace('gid://shopify/ProductImage/', '')),
                         url: edge.node.url,
@@ -85,18 +86,7 @@ export default function CreatePlan() {
                     }))
                 }
             }));
-
             setVariants(variants);
-            console.log('Transformed Variants with Product Images:', variants);
-
-
-            // Set the transformed data to the state
-            setVariants(variants);
-            console.log('data', variants)
-
-
-
-
         } catch (error) {
             console.error("Error updating product status:", error);
         }
@@ -235,7 +225,7 @@ export default function CreatePlan() {
 
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
-    const handleZoomProduct = (product) => setSelectedProduct(product);
+
     const filteredProducts = variants.filter(variants =>
         variants.product.title.toLowerCase().includes(searchTerm)
     )
@@ -277,7 +267,7 @@ export default function CreatePlan() {
         <AppLayout>
             <div className="flex flex-col">
                 <h1 className="text-2xl pt-4 md:pt-1 mb-1">Create Patient Plan</h1>
-                <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-5 xl:gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
                         <div className="bg-customBg3 p-2 xl:p-4 rounded-t-lg">
@@ -366,7 +356,7 @@ export default function CreatePlan() {
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item.id);
-                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                                  return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
                                     <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                         <img
                                             src={
@@ -379,10 +369,12 @@ export default function CreatePlan() {
                                             alt="Product"
                                             className="w-24 h-24" />
                                         <div>
-                                            <h3 className="font-bold text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
+                                            <h3 className="font-bold text-base xl:text-[18px]">{(item.title != "Default Title") ? item.title : item.product.title}</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
-                                                <span className='font-bold w-full inline-block'>Ingredients:</span> 100% Grass Fed & Finished New Zealand Beef Liver.
-                                                300mg per Capsule
+                                                {item?.product?.descriptionHtml
+                                                    ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
+                                                    : ''}
+
                                             </p>
                                         </div>
                                     </div>
@@ -397,7 +389,7 @@ export default function CreatePlan() {
                                                     value={itemData?.quantity ?? ""}
                                                     onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                                   
+
                                                     <option value="1">1 </option>
                                                     <option value="2">2 </option>
                                                     <option value="3">3 </option>
@@ -457,8 +449,8 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
                                             <div className="relative">
                                                 <select
-                                                      value={itemData?.properties.takeWith ?? ""}
-                                                      onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
+                                                    value={itemData?.properties.takeWith ?? ""}
+                                                    onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] xl:text-lg rounded-md">
                                                     <option>Water</option>
                                                     <option>Food</option>
