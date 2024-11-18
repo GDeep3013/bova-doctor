@@ -354,22 +354,20 @@ export default function CreatePlan() {
                             <div>
                                 {patients.length > 0 ? (
                                     <div className='flex justify-between w-full items-center'>
-                                        <span htmlFor="select-patient" className='font-medium w-full text-[17px] xl:text-[19px] text-black'>Select Patient:
-                                        </span>
-                                        <select
-                                            id="select-patient"
-                                            className={`w-full border border-[#AFAAAC] bg-white text-sm rounded-[8px] max-w-[250px] p-2 xl:p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
+                                         <select
+                                                id="select-patient"
+                                                className={`select-patient border border-customBg2 bg-customBg2 text-sm rounded-[8px] text-white min-w-[170px] p-2 xl:p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
 
-                                            onChange={handleSelectPatient}
-                                            value={selectedPatient?.id || ""}
-                                        >
-                                            <option value="">Select a patient</option>
-                                            {patients.map((patient) => (
-                                                <option key={patient._id} value={patient._id}>
-                                                    {patient.firstName} {patient.lastName}
-                                                </option>
-                                            ))}
-                                        </select>
+                                                onChange={handleSelectPatient}
+                                                value={selectedPatient?.id || ""}
+                                            >
+                                                <option value="">Select a patient</option>
+                                                {patients.map((patient) => (
+                                                    <option key={patient._id} value={patient._id}>
+                                                        {patient.firstName} {patient.lastName}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         {selectedPatient && (
                                             <span className="font-medium text-base xl:text-[19px] text-black">
                                                 Patient Name: <span className="font-bold">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
@@ -385,7 +383,6 @@ export default function CreatePlan() {
                     <div className='p-0'>
                         {/* Product Selection */}
                         <div className="p-4">
-                            <span className="text-textColor font-medium cursor-pointer">Select Items:</span>
                             <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
                                 { selectedItems.length > 0 && selectedItems.map((variant, index) => (
                                     <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>

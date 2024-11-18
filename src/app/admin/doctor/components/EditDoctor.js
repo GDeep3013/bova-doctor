@@ -70,13 +70,13 @@ export default function CreateDoctor() {
                 const response = await fetch(`/api/doctors/edit/${id}`);
                 const data = await response.json();
                 if (response.ok) {
-                    setFirstName(data.firstName);
-                    setLastName(data.lastName);
-                    setEmail(data.email);
-                    setPhone(data.phone);
-                    setUserType(data.userType);
-                    setSpecialty(data.specialty);
-                    setClinicName(data.clinicName);
+                    setFirstName(data?.firstName);
+                    setLastName(data?.lastName);
+                    setEmail(data?.email);
+                    setPhone(data?.phone);
+                    setUserType(data?.userType);
+                    setSpecialty(data?.specialty);
+                    setClinicName(data?.clinicName);
                     setCommissionPercentage(data.commissionPercentage);
 
                 } else {
