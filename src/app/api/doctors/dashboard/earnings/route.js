@@ -1,9 +1,11 @@
+// On Behalf of Total Earning
+
 import connectDB from '../../../../../db/db';
 import Order from '../../../../../models/order';
 
 export async function GET(req) {
   await connectDB();
-  
+
   const { searchParams } = req.nextUrl;
   const doctorId = searchParams.get('userId');
   const timePeriod = searchParams.get('timePeriod');
@@ -11,7 +13,7 @@ export async function GET(req) {
   const endDate = searchParams.get('endDate');
 
   if (!doctorId || !timePeriod) {
-    return new Response(JSON.stringify({ error: 'Doctor ID and time period are required' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'Time period is required' }), { status: 400 });
   }
 
   if (timePeriod === 'Custom' && (!startDate || !endDate)) {
@@ -19,7 +21,7 @@ export async function GET(req) {
   }
 
   try {
-    let matchCondition = { 'doctor.doctor_id': doctorId };
+      let matchCondition = { 'doctor.doctor_id': doctorId };
 
     // Define date ranges based on the time period
     switch (timePeriod) {
@@ -31,124 +33,208 @@ export async function GET(req) {
         };
         break;
       }
-
       case 'Month': {
         const currentDate = new Date();
         const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-        matchCondition.order_date = { $gte: monthStart, $lte: monthEnd };
+        const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) - 1;
+        matchCondition.createdAt = { $gte: monthStart, $lte: new Date(monthEnd) };
         break;
       }
-
-      case 'Weeks': {
-        const today = new Date();
-        const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
-        const weekEnd = new Date(today.setDate(today.getDate() - today.getDay() + 6));
-        matchCondition.order_date = { $gte: weekStart, $lte: weekEnd };
-        break;
-      }
-
       case 'Custom': {
-        matchCondition.order_date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+        matchCondition.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
         break;
       }
-
       default:
         return new Response(JSON.stringify({ error: 'Invalid time period.' }), { status: 400 });
     }
 
-    // Use find() to get all the orders for the doctor
-    const orders = await Order.find(matchCondition).select('order_date total');
+    const orders = await Order.find(matchCondition).select('createdAt total');
 
-    // Check if orders are found
-    if (!orders.length) {
-      return new Response(
-        JSON.stringify({ error: 'No data found for the given parameters.' }),
-        { status: 404 }
-      );
+    if (orders.length === 0) {
+      return new Response(JSON.stringify({ error: 'No data found.' }), { status: 404 });
     }
 
     let resultData = [];
 
-    // Process based on time period
     if (timePeriod === 'Year') {
-      // Initialize the yearRevenueData with zero revenue for each month
       const currentYear = new Date().getFullYear();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      
-      const yearRevenueData = Array.from({ length: 12 }, (_, index) => ({
-        year: currentYear,
-        month: monthNames[index], // Convert index to month name
+      const months = Array.from({ length: 12 }, (_, i) => ({
+        month: new Date(0, i).toLocaleString('en-US', { month: 'short' }),
         totalRevenue: 0,
       }));
-      
-      // Aggregate data by month
       orders.forEach(order => {
-        const date = new Date(order.order_date);
-        const orderYear = date.getFullYear();
-        const orderMonth = date.getMonth(); // 0-indexed (0 = January, 11 = December)
-
-        if (orderYear === 2024) {
-          yearRevenueData[orderMonth].totalRevenue += parseFloat(order.total);
+        const date = new Date(order.createdAt);
+        if (date.getFullYear() === currentYear) {
+          months[date.getMonth()].totalRevenue += parseFloat(order.total);
         }
       });
-
-      resultData = yearRevenueData;
-
+      resultData = months;
     } else if (timePeriod === 'Month') {
-      // Aggregate data for the current month
       const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth(); // 0-indexed (0 = January)
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // Get total days in the current month
-      
-      const monthRevenueData = Array.from({ length: daysInMonth }, (_, index) => {
-        const date = new Date(currentYear, currentMonth, index + 1); // Create a date for each day of the month
-        return {
-          day: index + 1,
-          date: date.toISOString().split("T")[0], // Format the date as 'YYYY-MM-DD'
-          totalRevenue: 0,
-        };
-      });
-
+      const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+      const days = Array.from({ length: daysInMonth }, (_, i) => ({
+        date: new Date(currentDate.getFullYear(), currentDate.getMonth(), i + 1).toISOString().split('T')[0],
+        totalRevenue: 0,
+      }));
       orders.forEach(order => {
-        const date = new Date(order.order_date);
-        if (date.getMonth() + 1 === currentDate.getMonth() + 1) {
-          const dayOfMonth = date.getDate();
-          const revenue = parseFloat(order.total);
-          monthRevenueData[dayOfMonth - 1].totalRevenue += revenue;
+        const date = new Date(order.createdAt).toISOString().split('T')[0];
+        const day = days.find(d => d.date === date);
+        if (day) {
+          day.totalRevenue += parseFloat(order.total);
+        }
+      });
+      resultData = days;
+    } else if (timePeriod === 'Custom') {
+      const dateMap = {};
+      let current = new Date(startDate);
+      const end = new Date(endDate);
+
+      // Initialize resultData with all dates in the range
+      while (current <= end) {
+        const formattedDate = current.toISOString().split('T')[0];
+        dateMap[formattedDate] = { date: formattedDate, totalRevenue: 0 };
+        current.setDate(current.getDate() + 1);
+      }
+
+      // Sum revenues into initialized dates
+      orders.forEach(order => {
+        const date = new Date(order.createdAt).toISOString().split('T')[0];
+        if (dateMap[date]) {
+          dateMap[date].totalRevenue += parseFloat(order.total);
         }
       });
 
-      resultData = monthRevenueData;
-
-    }else if (timePeriod === 'Custom') {
-      // Aggregate data for the custom date range
-      const customRevenueData = [];
-
-      orders.forEach(order => {
-        const date = new Date(order.order_date);
-        const dayString = date.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
-        if (date >= new Date(startDate) && date <= new Date(endDate)) {
-          const existingData = customRevenueData.find(item => item.day === dayString);
-          if (existingData) {
-            existingData.totalRevenue += parseFloat(order.total);
-          } else {
-            customRevenueData.push({
-              day: dayString,
-              totalRevenue: parseFloat(order.total),
-            });
-          }
-        }
-      });
-
-      resultData = customRevenueData;
+      resultData = Object.values(dateMap);
     }
 
     return new Response(JSON.stringify(resultData), { status: 200 });
-
   } catch (error) {
-    console.error('Error fetching revenue data:', error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch revenue data' }), { status: 500 });
+    console.error('Error fetching data:', error);
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 }
+
+
+// On Behalf of Doctor Payment
+
+// import connectDB from '../../../../../db/db';
+// import Order from '../../../../../models/order';
+
+// export async function GET(req) {
+//   await connectDB();
+
+//   const { searchParams } = req.nextUrl;
+//   const doctorId = searchParams.get('userId');
+//   const timePeriod = searchParams.get('timePeriod');
+//   const startDate = searchParams.get('startDate');
+//   const endDate = searchParams.get('endDate');
+
+//   if (!doctorId || !timePeriod) {
+//     return new Response(JSON.stringify({ error: 'Time period is required' }), { status: 400 });
+//   }
+
+//   if (timePeriod === 'Custom' && (!startDate || !endDate)) {
+//     return new Response(JSON.stringify({ error: 'Start date and end date are required for custom time period' }), { status: 400 });
+//   }
+
+//   try {
+//     let matchCondition = { 'doctor.doctor_id': doctorId };
+
+//     // Define date ranges based on the time period
+//     switch (timePeriod) {
+//       case 'Year': {
+//         const currentYear = new Date().getFullYear();
+//         matchCondition.createdAt = {
+//           $gte: new Date(`${currentYear}-01-01T00:00:00.000Z`),
+//           $lt: new Date(`${currentYear + 1}-01-01T00:00:00.000Z`),
+//         };
+//         break;
+//       }
+//       case 'Month': {
+//         const currentDate = new Date();
+//         const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+//         const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) - 1;
+//         matchCondition.createdAt = { $gte: monthStart, $lte: new Date(monthEnd) };
+//         break;
+//       }
+//       case 'Custom': {
+//         matchCondition.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+//         break;
+//       }
+//       default:
+//         return new Response(JSON.stringify({ error: 'Invalid time period.' }), { status: 400 });
+//     }
+
+//     // Fetch the orders with the doctor payment details
+//     const orders = await Order.find(matchCondition).select('createdAt doctor.doctor_payment');
+
+//     if (orders.length === 0) {
+//       return new Response(JSON.stringify({ error: 'No data found.' }), { status: 404 });
+//     }
+
+//     let resultData = [];
+
+//     if (timePeriod === 'Year') {
+//       const currentYear = new Date().getFullYear();
+//       const months = Array.from({ length: 12 }, (_, i) => ({
+//         month: new Date(0, i).toLocaleString('en-US', { month: 'short' }),
+//         totalRevenue: 0,
+//       }));
+
+//       orders.forEach(order => {
+//         const date = new Date(order.createdAt);
+//         if (date.getFullYear() === currentYear) {
+//           // Add doctor payment to the totalRevenue for the respective month
+//           months[date.getMonth()].totalRevenue += parseFloat(order.doctor?.doctor_payment || 0);
+//         }
+//       });
+
+//       resultData = months;
+//     } else if (timePeriod === 'Month') {
+//       const currentDate = new Date();
+//       const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+//       const days = Array.from({ length: daysInMonth }, (_, i) => ({
+//         date: new Date(currentDate.getFullYear(), currentDate.getMonth(), i + 1).toISOString().split('T')[0],
+//         totalRevenue: 0,
+//       }));
+
+//       orders.forEach(order => {
+//         const date = new Date(order.createdAt).toISOString().split('T')[0];
+//         const day = days.find(d => d.date === date);
+//         if (day) {
+//           // Add doctor payment to the totalRevenue for the respective day
+//           day.totalRevenue += parseFloat(order.doctor?.doctor_payment || 0);
+//         }
+//       });
+
+//       resultData = days;
+//     } else if (timePeriod === 'Custom') {
+//       const dateMap = {};
+//       let current = new Date(startDate);
+//       const end = new Date(endDate);
+
+//       // Initialize resultData with all dates in the range
+//       while (current <= end) {
+//         const formattedDate = current.toISOString().split('T')[0];
+//         dateMap[formattedDate] = { date: formattedDate, totalRevenue: 0 };
+//         current.setDate(current.getDate() + 1);
+//       }
+
+//       // Sum revenues into initialized dates
+//       orders.forEach(order => {
+//         const date = new Date(order.createdAt).toISOString().split('T')[0];
+//         if (dateMap[date]) {
+//           // Add doctor payment to the totalRevenue for the respective date
+//           dateMap[date].totalRevenue += parseFloat(order.doctor?.doctor_payment || 0);
+//         }
+//       });
+
+//       resultData = Object.values(dateMap);
+//     }
+
+//     return new Response(JSON.stringify(resultData), { status: 200 });
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//     return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
+//   }
+// }

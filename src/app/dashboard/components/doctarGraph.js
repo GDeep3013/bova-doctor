@@ -20,7 +20,7 @@ const LineChart = () => {
 
     const currentYear = new Date().getFullYear();
 
-    const [timePeriod, setTimePeriod] = useState('Month');
+    const [timePeriod, setTimePeriod] = useState('Year');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [graphData, setGraphData] = useState([]);
@@ -44,35 +44,32 @@ const LineChart = () => {
             }
     
             const response = await fetch(`/api/doctors/dashboard/earnings${query}`);
-            if (!response.ok) throw new Error('Failed to fetch data');
+            // if (!response.ok) throw new Error('Failed to fetch data');
+                const data = await response.json();
             
-            const data = await response.json();
             if (data) {
                 if (timePeriod === 'Month') {
-                    // Extract monthly data
-                    const labels = data.map((entry) => `${entry.date}`); // Example: ["Jan 2024", "Feb 2024", ...]
-                    const values = data.map((entry) => entry.totalRevenue); // Example: [0, 0, ...]
+                    const labels = data.map((entry) => `${entry.date}`);
+                    const values = data.map((entry) => entry.totalRevenue); 
                     setGraphLabels(labels);
                     setGraphData(values);
                 } else if (timePeriod === 'Year') {
-                    // Extract yearly data
-                    const labels = data.map((entry) => `${entry.month}`); // Example: ["2024", "2025", ...]
-                    const values = data.map((entry) => entry.totalRevenue); // Example: [1000, 2000, ...]
+                    const labels = data.map((entry) => `${entry.month}`); 
+                    const values = data.map((entry) => entry.totalRevenue); 
                     setGraphLabels(labels);
                     setGraphData(values);
                 } else if (timePeriod === 'Custom') {
-                    // Extract custom data
-                    const labels = data.map((entry) => entry.date); // Example: ["2024-11-01", "2024-11-02", ...]
-                    const values = data.map((entry) => entry.totalRevenue); // Example: [0, 50, ...]
+                    const labels = data.map((entry) => entry.date);
+                    const values = data.map((entry) => entry.totalRevenue);
                     setGraphLabels(labels);
                     setGraphData(values);
                 }
                 setError('');
             } else {
-                setError('Data is not available or malformed');
+                setError('Data is not available o');
             }
         } catch (error) {
-            console.error('Error fetching data:', error.message);
+            console.log('Error fetching data:', error.message);
         }
     };
 
@@ -104,25 +101,40 @@ const LineChart = () => {
             },
         ],
     };
-
     const options = {
         responsive: true,
         plugins: {
             legend: { display: false },
-            tooltip: { enabled: true },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (context) {
+                        let value = context.raw;
+                        return `$ ${value.toFixed(2)}`; // Prepend `$` and format the number
+                    },
+                },
+            },
         },
-        scales: {
-            x: { type: 'category', display: true }, // Explicitly set the scale type
-            y: { type: 'linear', display: true },
-        },
-    };
+    }
+
+    // const options = {
+    //     responsive: true,
+    //     plugins: {
+    //         legend: { display: false },
+    //         tooltip: { enabled: true },
+    //     },
+    //     scales: {
+    //         x: { type: 'category', display: true }, 
+    //         y: { type: 'linear', display: true },
+    //     },
+    // };
 
     return (
         <div className="p-4 bg-[#F9F9F9] rounded-lg">
             <div className="flex">
                 <div>
                     <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">
-                        ${graphData.reduce((sum, val) => sum + val, 0).toFixed(2)}
+                        $ {graphData.reduce((sum, val) => sum + val, 0).toFixed(2)}
                     </h3>
                     <p className="text-gray-500 ml-[29px]">
                         Total Amount Earned this {timePeriod}

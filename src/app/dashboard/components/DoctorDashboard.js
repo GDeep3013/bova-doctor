@@ -10,62 +10,31 @@ import AddPatient from '../../patients/components/AddPatient'
 
 export default function AdminDashboard() {
     const { data: session } = useSession();
-    const [timePeriod, setTimePeriod] = useState("Month");
     const [totalEarning, setTotalEarning] = useState(0);
-    const [currentMonthEarning, setCurrentMonthEarning] = useState(0);
     const [totalPatients, setTotalPatients] = useState(0);
     const [totalPlans, setTotalPlans] = useState(0);
-    const [patientData, setPatientData] = useState([]);
-    const [graphMonths, setGraphMonths] = useState([]);
-    const [graphData, setGraphData] = useState([]);
+    
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`/api/doctors/dashboard/?userId=${session?.user?.id}&&timePeriod=${timePeriod}`);
+            const response = await fetch(`/api/doctors/dashboard/?userId=${session?.user?.id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
             }
             const data = await response.json();
             if (data) {
-
-                setCurrentMonthEarning(data.currentWeekEarnings);
                 setTotalEarning(data.totalEarnings);
                 setTotalPatients(data.totalPatients);
-                setTotalPlans(data.totalPlans);
-                setPatientData(data.patientData);
-                
-                let formattedLabels = [];
-                let graphValues = []; // Initialize the graph data values
+                setTotalPlans(data.totalPlans);          
 
-                switch (timePeriod) {
-                    case "Weeks":
-                        formattedLabels = data.weeks.map((week, index) => `Week ${index + 1}`);
-                        graphValues = data.weeklyEarnings; // Use weekly earnings data
-                        break;
-
-                    case "Month":
-                        formattedLabels = data.months.map((month) => month); // Assuming backend sends Jan, Feb, etc.
-                        graphValues = data.monthlyEarnings; // Use monthly earnings data
-                        break;
-
-                    case "Year":
-                        formattedLabels = data.years.map((year) => `${year}`);
-                        graphValues = data.yearlyEarnings; // Use yearly earnings data
-                        break;
-
-                    default:
-                        break;
-                }
-
-                setGraphMonths(formattedLabels);
-                setGraphData(graphValues);
-            } } catch (error) {
+            }
+        } catch (error) {
                 console.log(error);
             }
     };
 
 
-    useEffect(() => { fetchData() }, [timePeriod])
+    useEffect(() => { fetchData() }, [])
 
     const cards = [
         {
@@ -123,13 +92,7 @@ export default function AdminDashboard() {
                     {/* <DoctorTable patientData={patientData} timePeriod={timePeriod} setTimePeriod={setTimePeriod} /> */}
                     <div className='w-full'>
                         <div className=''>
-                            <DoctorGraph
-                                currentMonthEarning={currentMonthEarning}
-                                graphData={graphData}
-                                graphMonths={graphMonths}
-                                timePeriod={timePeriod}
-                                setTimePeriod={setTimePeriod}
-                            />
+                            <DoctorGraph />
                         </div>
                     </div>
                 </div>

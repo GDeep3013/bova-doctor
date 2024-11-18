@@ -66,7 +66,7 @@ const LineChart = () => {
                 }
                 setError('');
             } else {
-                setError('Data is not available or malformed');
+                setError('Data is not available');
             }
         } catch (error) {
             // console.error('Error fetching data:', error.message);
@@ -106,13 +106,17 @@ const LineChart = () => {
         responsive: true,
         plugins: {
             legend: { display: false },
-            tooltip: { enabled: true },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function (context) {
+                        let value = context.raw;
+                        return `$ ${value.toFixed(2)}`;
+                    },
+                },
+            },
         },
-        scales: {
-            x: { type: 'category', display: true }, 
-            y: { type: 'linear', display: true },
-        },
-    };
+    }
 
     return (
         <div className="p-4 bg-[#F9F9F9] rounded-lg">
