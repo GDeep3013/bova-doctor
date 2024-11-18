@@ -10,15 +10,11 @@ export async function GET(req, { params }) {
     const doctorId = searchParams.get('userId');
 
     try {
-        // Fetch all patients associated with the doctor
         const patients = await Patient.find({ doctorId });
         const totalPatients = patients.length;
-
-        // Fetch plans for these patients
         const patientIds = patients.map((patient) => patient._id);
         const totalPlans = await Plan.countDocuments({ patient_id: { $in: patientIds } });
-
-        // Fetch data for patients with plan and earnings details
+        
         const patientData = await Promise.all(
             patients.map(async (patient) => {
                 const patientPlans = await Plan.find({ patient_id: patient._id });

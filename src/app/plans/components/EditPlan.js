@@ -301,7 +301,7 @@ export default function CreatePlan() {
                                             </select>
                                             {selectedPatient && (
                                                 <span className="font-medium text-[19px] text-black">
-                                                    Patient Name: <span className="font-bold">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
+                                                    Patient Name: <span className="font-bold">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
                                                 </span>
                                             )}
                                         </div>

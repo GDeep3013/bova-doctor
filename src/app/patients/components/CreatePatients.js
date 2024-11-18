@@ -159,8 +159,6 @@ export default function Create() {
                                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                             </div>
 
-
-
                             <div className="message-text">
                                 <p className='text-base text-textColor'>A plan sent via text message connects better than just email.</p>
                             </div>
