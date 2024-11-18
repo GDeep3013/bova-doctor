@@ -353,8 +353,8 @@ export default function CreatePlan() {
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
-                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
-                                    <div className="pr-9 w-full max-w-[400px]">
+                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                                    <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                         <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
                                         <div>
                                             <h3 className="font-bold text-[18px]">{item.title}</h3>
@@ -366,7 +366,7 @@ export default function CreatePlan() {
                                     </div>
                                     {/* Product Options */}
                                     <div className="space-y-4 w-full">
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-[max-content]
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] max-[767px]:w-full w-[max-content]
                                         min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
@@ -381,7 +381,7 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
@@ -402,7 +402,7 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
@@ -418,7 +418,7 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
                                             <div className="relative">
                                                 <select className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
@@ -428,7 +428,7 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className='w-full max-w-[510px]'>
+                                        <div className='w-full min-[768px]:max-w-[510px]'>
                                             <div className="mt-1">
                                                 <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg" rows="3"></textarea>
                                             </div>

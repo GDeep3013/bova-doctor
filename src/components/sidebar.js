@@ -36,14 +36,14 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
   };
 
   return (
-    <div className={`w-full max-w-[300px] min-[1025px]:min-w-[300px] inset-y-0 transition-transform ease-in-out p-4 pt-[40px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
+    <div className={`w-full max-[1100px]:max-w-[250px] max-w-[300px] min-[1101px]:min-w-[300px] inset-y-0 transition-transform ease-in-out p-4 pt-[40px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
       <Link href="/dashboard">
         <img src="/images/dash-logo.png" alt="Logo" className="max-w-[155px] max-[992px]:max-w-[120px]" />
       </Link>
       <nav className="space-y-4 pt-7">
         {session?.user?.userType === 'Admin' ? (
           <>
-            <Link href="/admin/dashboard" className={`block text-xl ${isActive('/admin/dashboard') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
+            <Link href="/admin/dashboard" className={`block text-xl ${isActive('/admin/dashboard') ? 'text-black font-semibold' : 'text-gray-700 hover:text-gray-900'}`}>
               <HomeIcon /> Home
             </Link>
             <div>
@@ -53,24 +53,24 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/admin/doctor" className={`block ${isActive('/admin/doctor') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/admin/doctor" className={`block ${isActive('/admin/doctor') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Doctors Listing
                     </Link>
                   </li>
                 </ul>
               )}
             </div>
-            <Link href="/admin/patients/" className={`block text-xl ${isActive('/admin/patients') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
+            <Link href="/admin/patients/" className={`block text-xl ${isActive('/admin/patients') ? 'text-black font-semibold' : 'text-gray-700 hover:text-gray-900'}`}>
               <PatientIcon /> Patient Listing
             </Link>
 
-            <Link href="/admin/settings/" className={`block text-xl ${isActive('/admin/settings') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
+            <Link href="/admin/settings/" className={`block text-xl ${isActive('/admin/settings') ? 'text-black font-semibold' : 'text-gray-700 hover:text-gray-900'}`}>
               <SettingIcon /> Settings
             </Link>
           </>
         ) : (
           <>
-            <Link href="/dashboard" className={`block text-xl ${isActive('/dashboard') ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-gray-900'}`}>
+            <Link href="/dashboard" className={`block text-xl ${isActive('/dashboard') ? 'text-black font-semibold' : 'text-gray-700 hover:text-gray-900'}`}>
               <HomeIcon /> Home
             </Link>
             <div>
@@ -80,12 +80,12 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/profile" className={`block ${isActive('/profile') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/profile" className={`block ${isActive('/profile') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Edit
                     </Link>
                   </li>
                   <li>
-                    <Link href="/sales" className={`block ${isActive('/sales') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/sales" className={`block ${isActive('/sales') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Sales
                     </Link>
                   </li>
@@ -100,7 +100,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               {isPatientsOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block ${isActive('/patients/listing') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block ${isActive('/patients/listing') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Search
                     </Link>
                   </li>
@@ -115,17 +115,17 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               {isPlansOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/plans/create-plan" className={`block ${isActive('/plans/create-plan') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/plans/create-plan" className={`block ${isActive('/plans/create-plan') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Create
                     </Link>
                   </li>
                   <li>
-                    <Link href="/plans/review" className={`block ${isActive('/plans/review') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/plans/review" className={`block ${isActive('/plans/review') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Review
                     </Link>
                   </li>
                   <li>
-                    <Link href="/plans/incomplete" className={`block ${isActive('/plans/incomplete') ? 'text-blue-600 font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/" className={`block ${isActive('/plans/incomplete') ? 'text-black font-semibold' : 'hover:text-gray-900'}`}>
                       Incomplete
                     </Link>
                   </li>

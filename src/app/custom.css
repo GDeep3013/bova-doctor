@@ -38,6 +38,9 @@ button.bg-black svg.m-auto path { fill: #fff; }
 .loader img { width: 100%; height: auto; animation: zoom 5s infinite; }
 input[type=number] { appearance:"textfield"; -moz-appearance:"textfield"; }
 @keyframes zoom { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+.admin-graph canvas{ width: 100% !important; height: 100% !important; }
+
 @media screen and (min-width:768px) and (max-width:1024px) {
     .login-form { left: 20px; max-width: 400px !important; }
 }

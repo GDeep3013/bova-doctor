@@ -277,12 +277,12 @@ export default function CreatePlan() {
         <AppLayout>
             <div className="flex flex-col">
                 <h1 className="text-2xl pt-4 md:pt-1 mb-1">Create Patient Plan</h1>
-                <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
-                <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
+                <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
+                <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-5 xl:gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
-                        <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
+                        <div className="bg-customBg3 p-2 xl:p-4 rounded-t-lg">
                             {selectedPatient ? (
-                                <span className="font-medium text-[19px] text-black">
+                                <span className="font-medium text-base xl:text-[19px] text-black">
                                     Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
                                 </span>
 
@@ -292,11 +292,11 @@ export default function CreatePlan() {
                                 <div>
                                     {patients.length > 0 ? (
                                         <div className='flex justify-between w-full items-center'>
-                                            <span htmlFor="select-patient" className='font-medium w-full text-[19px] text-black'>Select Patient:
+                                            <span htmlFor="select-patient" className='font-medium w-full text-[17px] xl:text-[19px] text-black'>Select Patient:
                                             </span>
                                             <select
                                                 id="select-patient"
-                                                className={`w-full border border-[#AFAAAC] bg-white rounded-[8px] max-w-[250px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
+                                                className={`w-full border border-[#AFAAAC] bg-white text-sm rounded-[8px] max-w-[250px] p-2 xl:p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
 
                                                 onChange={handleSelectPatient}
                                                 value={selectedPatient?.id || ""}
@@ -309,7 +309,7 @@ export default function CreatePlan() {
                                                 ))}
                                             </select>
                                             {selectedPatient && (
-                                                <span className="font-medium text-[19px] text-black">
+                                                <span className="font-medium text-base xl:text-[19px] text-black">
                                                     Patient Name: <span className="font-bold">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
                                                 </span>
                                             )}
@@ -366,8 +366,8 @@ export default function CreatePlan() {
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item.id);
-                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
-                                    <div className="pr-9 w-full max-w-[400px]">
+                                return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                                    <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                         <img
                                             src={
                                                 item.image && item.image.url
@@ -379,7 +379,7 @@ export default function CreatePlan() {
                                             alt="Product"
                                             className="w-24 h-24" />
                                         <div>
-                                            <h3 className="font-bold text-[18px]">{(item.title != "Default Title") ? item.title : item.product.title}</h3>
+                                            <h3 className="font-bold text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
                                                 <span className='font-bold w-full inline-block'>Ingredients:</span> 100% Grass Fed & Finished New Zealand Beef Liver.
                                                 300mg per Capsule
@@ -388,7 +388,8 @@ export default function CreatePlan() {
                                     </div>
                                     {/* Product Options */}
                                     <div className="space-y-4 w-full">
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-[max-content]
+                                        <div className="border border-customBorder px-[11px] xl:px-[15px] pt-[10px] pb-[15px] rounded-[10px]
+                                        max-[767px]:w-full w-[max-content]
                                         min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
@@ -409,7 +410,7 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[11px] xl:px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Frequency</label>
                                             <div className="relative">
                                                 <select
@@ -433,7 +434,7 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[11px] xl:px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Duration</label>
                                             <div className="relative">
                                                 <select
@@ -452,22 +453,22 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="border border-customBorder px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full max-w-[510px] min-w-[270px]">
+                                        <div className="border border-customBorder px-[11px] xl:px-[15px] pt-[10px] pb-[15px] rounded-[10px] w-full min-[768px]:max-w-[510px] min-w-[270px]">
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Take with</label>
                                             <div className="relative">
                                                 <select
-                                                    value={itemData?.properties.takeWith ?? ""}
-                                                    onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
-                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
+                                                      value={itemData?.properties.takeWith ?? ""}
+                                                      onChange={(e) => handleFormDataChange(item.id, 'takeWith', e.target.value)}
+                                                    className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] xl:text-lg rounded-md">
                                                     <option>Water</option>
                                                     <option>Food</option>
                                                     <option>Water and Empty Stomach</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className='w-full max-w-[510px]'>
+                                        <div className='w-full min-[768px]:max-w-[510px]'>
                                             <div className="mt-1">
-                                                <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg" rows="3"></textarea>
+                                                <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -634,10 +635,6 @@ export default function CreatePlan() {
                                     FINISH
                                 </button>
                             </div>
-
-
-
-
 
                         </div >
                     </div >

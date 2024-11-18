@@ -179,7 +179,7 @@ export default function CreatePlan() {
 
     const discount = subtotal * 0;
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
-    const doctorCommission = subtotal * (commissionPercentage / 100);    
+    const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
         <div className="flex flex-col">
@@ -198,8 +198,8 @@ export default function CreatePlan() {
                         {/* Product Info */}
                         {selectedItems.map((item, index) => {
                             const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
-                            return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[767px]:flex-wrap gap-4">
-                                <div className="pr-9 w-full max-w-[400px]">
+                            return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                                <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                     <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
                                     <div>
                                         <h3 className="font-bold text-[18px]">{item.title}</h3>
@@ -311,7 +311,7 @@ export default function CreatePlan() {
                                                     ${(subtotal - discount).toFixed(2)}
                                                 </td>
                                         </tr>
-                                        
+
                                         </tbody>
                                     </table>
                             <div className='text-right py-5'>

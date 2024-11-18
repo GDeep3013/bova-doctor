@@ -71,14 +71,14 @@ const LineChart = ({ currentMonthEarning,graphMonth, graphValue }) => {
     };
 
     return (
-        <div className="p-4 bg-[#F9F9F9] rounded-lg ">
+        <div className="p-4 bg-[#F9F9F9] rounded-lg w-full max-w-full">
 
             <div>
-                <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">$ {currentMonthEarning}</h3>
-                <p className="text-gray-500 ml-[29px]">Total Amount Earned this Month</p>
+                <h3 className="text-base md:text-xl xl:text-2xl font-semibold">$ {Number(currentMonthEarning).toFixed(2)}</h3>
+                <p className="text-gray-500">Total Amount Earned this Month</p>
             </div>
-            <div className="relative">
-                <Line data={data} options={options} height={70} />
+            <div className="relative w-full admin-graph">
+                <Line data={data} options={options} height={70}  />
             </div>
         </div>
     );
