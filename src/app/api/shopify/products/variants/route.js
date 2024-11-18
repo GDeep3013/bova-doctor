@@ -28,6 +28,7 @@ const getVariants = async (variantIds) => {
           product {
             id
             title
+            descriptionHtml
             images(first:1) {
               edges{
                 node {

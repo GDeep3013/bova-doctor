@@ -78,6 +78,7 @@ export default function CreatePlan() {
                 product: {
                     id: parseInt(variant.product.id.replace('gid://shopify/Product/', '')),
                     title: variant.product.title,
+                    descriptionHtml: variant.product.descriptionHtml,
                     images: variant.product.images.edges.map(edge => ({
                         id: parseInt(edge.node.id.replace('gid://shopify/ProductImage/', '')),
                         url: edge.node.url,
@@ -381,8 +382,9 @@ export default function CreatePlan() {
                                         <div>
                                             <h3 className="font-bold text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
                                             <p className="text-textColor mt-2 text-base max-w-[200px]">
-                                                <span className='font-bold w-full inline-block'>Ingredients:</span> 100% Grass Fed & Finished New Zealand Beef Liver.
-                                                300mg per Capsule
+                                            {item?.product?.descriptionHtml
+                                                    ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
+                                                    : ''}
                                             </p>
                                         </div>
                                     </div>
