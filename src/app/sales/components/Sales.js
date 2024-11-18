@@ -1,18 +1,50 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import AppLayout from 'components/Applayout';
-
-const data = [
-  { title: 'Total Patients Using BOVA', value: '24' },
-  { title: 'Total of Plans', value: '100' },
-  { title: 'Total Number of Subscriptions', value: '45' },
-  { title: 'Total Amount Earned this Month', value: '$12,000.50' },
-  { title: 'Total Amount Earned this Week', value: '$4,300.50' },
-  { title: 'Total Amount Earned to Date', value: '$22,300.50' },
-];
-
-
+import { useSession } from 'next-auth/react';
 export default function Sales() {
+  const { data: session } = useSession();
+
+  const [totalPatients,setTotalPatients]=useState('')
+  const [totalPlans,setTotalPlans]=useState('')
+  const [totalSubscriptions,setTotalSubscriptions]=useState('')
+  const [thisMonthEarning,setThisMonthEarning]=useState('')
+  const [thisweekEarning,setThisWeekEarning]=useState('')
+  const [dateEarning,setdateEarning]=useState('')
+  const fetchData = async () => {
+    try {
+        const response = await fetch(`/api/sales/?userId=${session?.user?.id}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch doctors");
+        }
+      const data = await response.json();
+    if (data) {
+        setTotalPatients(data?.totalPatients)
+        setTotalPlans(data?.totalPlans)
+        setTotalSubscriptions(data?.currentSubcriptions)
+        setThisMonthEarning(data?.currentMonthEarnings)
+        setThisWeekEarning(data?.currentWeekEarnings)
+        setdateEarning(data?.currentDayEarnings)
+      }
+    } catch (error) {
+            console.log(error);
+    }
+    
+  };
+  const data = [
+    { title: 'Total Patients Using BOVA', value: `${totalPatients}`},
+    { title: 'Total of Plans', value: totalPlans },
+    { title: 'Total Number of Subscriptions', value: totalSubscriptions },
+    { title: 'Total Amount Earned this Month', value: '$ ' +thisMonthEarning },
+    { title: 'Total Amount Earned this Week', value:  '$ ' + thisweekEarning  },
+    { title: 'Total Amount Earned to Date', value:  '$ ' + dateEarning  },
+  ];
+  
+
+useEffect(() => { 
+    fetchData()
+}, []);
+
 
   const [openIndex, setOpenIndex] = useState(null);
 

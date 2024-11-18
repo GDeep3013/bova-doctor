@@ -59,6 +59,12 @@ export default function EditPatient() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
+        if (phone) {
+            if (!/^\d{10}$/.test(phone)) {
+                newErrors.phone = 'Phone number must be 10 digits';
+                valid = false;
+            }
+        }
      
         setErrors(newErrors);
         return valid;
@@ -80,6 +86,8 @@ export default function EditPatient() {
                     body: JSON.stringify({ id, firstName, lastName, email, phone, doctorId }),
                 });
                 if (response.ok) {
+                    const result = await response.json();
+                 
                     Swal.fire({
                         title: 'Success!',
                         text: 'Patient updated successfully!',
@@ -87,7 +95,7 @@ export default function EditPatient() {
                         confirmButtonText: 'OK',
                     });
                     setLoader(false);
-                    router.push('/patients/listing');
+                    router.push(`/patients/detail/${result?._id}`);
                 } else {
                     const result = await response.json();
                     const apiErrors = result.error;
@@ -122,7 +130,9 @@ export default function EditPatient() {
                                         type="text"
                                         placeholder="First Name"
                                         value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
+                                        onChange={(e) => {
+                                            setFirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' });
+                                        }}
                                         className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
                                     {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
@@ -133,7 +143,9 @@ export default function EditPatient() {
                                         type="text"
                                         placeholder="Last Name"
                                         value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
+                                        onChange={(e) => {
+                                            setLastName(e.target.value); if (errors.lastName) setErrors({ ...errors, lastName: '' });
+                                        }}
                                         className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
                                     {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
@@ -145,7 +157,9 @@ export default function EditPatient() {
                                     type="email"
                                     placeholder="Email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value); if (errors.email) setErrors({ ...errors, email: '' });
+                                    }}
                                     className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -156,7 +170,8 @@ export default function EditPatient() {
                                     type="number"
                                     placeholder="Phone"
                                     value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
+                                    onChange={(e) => {setPhone(e.target.value); if (errors.phone) { setErrors((prevErrors) => ({ ...prevErrors, phone: '' })); }
+                                }}
                                     className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}

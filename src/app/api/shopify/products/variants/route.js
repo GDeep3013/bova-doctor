@@ -1,19 +1,19 @@
 
 const getVariants = async (variantIds) => {
-    const shopName = process.env.SHOPIFY_DOMAIN;
-    const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
-  
-    // Shopify GraphQL endpoint
-    const shopifyApiUrl = `https://${shopName}/admin/api/2024-07/graphql.json`;
-  
-    // Build the GraphQL query dynamically based on the variantIds array
-    let query = "query {\n";
-  
-    // Ensure variantIds is an array and filter out null or undefined values
-    // Filters out null and undefined
-  
-    variantIds.forEach((variantId, index) => {
-      query += `
+  const shopName = process.env.SHOPIFY_DOMAIN;
+  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
+
+  // Shopify GraphQL endpoint
+  const shopifyApiUrl = `https://${shopName}/admin/api/2024-07/graphql.json`;
+
+  // Build the GraphQL query dynamically based on the variantIds array
+  let query = "query {\n";
+
+  // Ensure variantIds is an array and filter out null or undefined values
+  // Filters out null and undefined
+
+  variantIds.forEach((variantId, index) => {
+    query += `
         productVariant${index + 1}: productVariant(id: "gid://shopify/ProductVariant/${variantId}") {
             id
             title
@@ -28,7 +28,7 @@ const getVariants = async (variantIds) => {
           product {
             id
             title
-            descriptionHtml
+             descriptionHtml
             images(first:1) {
               edges{
                 node {
@@ -40,42 +40,42 @@ const getVariants = async (variantIds) => {
             }
           }
         }\n`;
+  });
+
+  query += "}\n"; // Closing the query
+
+  try {
+    // Using fetch to send the request
+    const response = await fetch(shopifyApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Access-Token': accessToken,
+      },
+      body: JSON.stringify({ query }), // Send the GraphQL query as the body
     });
-  
-    query += "}\n"; // Closing the query
-  
-    try {
-      // Using fetch to send the request
-      const response = await fetch(shopifyApiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Access-Token': accessToken,
-        },
-        body: JSON.stringify({ query }), // Send the GraphQL query as the body
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Error fetching variants: ${response.statusText}`);
-      }
-  
-      // Parse the response data
-      const data = await response.json();
-      return data; // Return the data from Shopify
-    } catch (error) {
-      console.error('Error fetching Shopify variants:', error);
-      throw error;
+
+    if (!response.ok) {
+      throw new Error(`Error fetching variants: ${response.statusText}`);
     }
-  };
-  
+
+    // Parse the response data
+    const data = await response.json();
+    return data; // Return the data from Shopify
+  } catch (error) {
+    console.error('Error fetching Shopify variants:', error);
+    throw error;
+  }
+};
+
 
 // Controller function to handle the POST request
 export async function POST(req) {
   try {
     // Extract variantIds from the request body (assuming it's an array)
-    const { variantIds} = await req.json();
+    const { variantIds } = await req.json();
 
-    const validVariantIds = variantIds?.filter(variantId => variantId != null); 
+    const validVariantIds = variantIds?.filter(variantId => variantId != null);
 
     // Ensure that variantIds is provided and is an array
     if (!Array.isArray(variantIds) || variantIds.length === 0) {

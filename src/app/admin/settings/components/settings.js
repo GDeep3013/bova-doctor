@@ -76,7 +76,7 @@ export default function CreatePlan() {
             );
             return updatedSelectedItems;
         });
-        console.log('product',product)
+      
         updateStatus(product, 'inactive')
 
     };
