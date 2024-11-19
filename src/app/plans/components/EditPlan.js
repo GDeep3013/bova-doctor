@@ -342,7 +342,7 @@ export default function CreatePlan() {
             <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
             <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-5 xl:gap-8">
                 <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
-                    <div className="bg-customBg3 p-2 xl:p-4 rounded-t-lg">
+                    <div className="bg-customBg3 p-2 xl:px-8 xl:py-5 rounded-t-lg">
                         {selectedPatient ? (
                             <span className="font-medium text-base xl:text-[19px] text-black">
                                 Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
@@ -382,7 +382,7 @@ export default function CreatePlan() {
                     </div>
                     <div className='p-0'>
                         {/* Product Selection */}
-                        <div className="p-4">
+                        <div className="px-8 pt-3 pb-8">
                             <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
                                 { selectedItems.length > 0 && selectedItems.map((variant, index) => (
                                     <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
@@ -447,7 +447,7 @@ export default function CreatePlan() {
                                         className="w-24 h-24" />
                                     <div>
                                         <h3 className="font-bold text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
-                                        <p className="text-textColor mt-2 text-base max-w-[200px]">
+                                        <p className="text-textColor mt-2 text-base max-w-full">
                                         {item?.product?.descriptionHtml
                                                     ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
                                                     : ''}
@@ -465,7 +465,7 @@ export default function CreatePlan() {
                                                 value={itemData?.quantity ?? ""}
                                                 onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
                                                 className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
-                                               
+
                                                 <option value="1">1 </option>
                                                 <option value="2">2 </option>
                                                 <option value="3">3 </option>

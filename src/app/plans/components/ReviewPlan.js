@@ -64,7 +64,7 @@ export default function ReviewPlan() {
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
             }
-            const data = await response.json();         
+            const data = await response.json();
             setPlans(data);
         } catch (error) {
             setError(error.message);
@@ -81,7 +81,7 @@ export default function ReviewPlan() {
         <AppLayout>
             <div className="container mx-auto">
                 <div className='flex justify-between mt-2 mb-6'>
-                    <h1 className="text-2xl font-bold">Plan List</h1>
+                    <h1 className="text-2xl">Plan List</h1>
                     <Link href='/plans/create-plan' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[130px] text-center" >
                         Add Plan
                     </Link>

@@ -271,7 +271,7 @@ export default function CreatePlan() {
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-5 xl:gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
-                        <div className="bg-customBg3 p-2 xl:p-4 rounded-t-lg">
+                        <div className="bg-customBg3 p-2 xl:px-8 xl:py-5 rounded-t-lg">
                             {selectedPatient ? (
                                 <span className="font-medium text-base xl:text-[19px] text-black">
                                     Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
@@ -285,7 +285,7 @@ export default function CreatePlan() {
                                         <div className='justify-between w-full items-center'>
                                             <select
                                                 id="select-patient"
-                                                className={`select-patient border border-customBg2 bg-customBg2 text-sm rounded-[8px] text-white min-w-[170px] p-2 xl:p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
+                                                className={`select-patient border border-customBg2 bg-customBg2 text-sm rounded-[8px] text-white min-w-[170px] p-2 xl:p-3 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
 
                                                 onChange={handleSelectPatient}
                                                 value={selectedPatient?.id || ""}
@@ -311,7 +311,7 @@ export default function CreatePlan() {
                         </div>
                         <div className='p-0'>
                             {/* Product Selection */}
-                            <div className="p-4">
+                            <div className="px-8 pt-3 pb-8">
                                 <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
                                     {selectedItems.map((variant, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
@@ -376,7 +376,7 @@ export default function CreatePlan() {
                                             className="w-24 h-24" />
                                         <div>
                                             <h3 className="font-bold text-base xl:text-[18px]">{(item.title != "Default Title") ? item.title : item.product.title}</h3>
-                                            <p className="text-textColor mt-2 text-base max-w-[200px]">
+                                            <p className="text-textColor mt-2 text-base max-w-full">
                                             {item?.product?.descriptionHtml
                                                     ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
                                                     : ''}
@@ -502,32 +502,32 @@ export default function CreatePlan() {
                     <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
                         <div className="bg-customBg3 rounded-lg">
                             <div className='p-5'>
-                                <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
+                                <span className="font-semibold text-base text-textColor3 uppercase">Price</span>
                                 <div className="mt-2 overflow-x-auto">
                                     <table className="min-w-full table-auto">
                                         <tbody>
                                             {formData.items.map((item, index) => (
                                                 <tr key={index} className="">
-                                                    <td className="py-2 text-[#3F4647] text-sm">
+                                                    <td className="py-2 text-textColor3 text-sm">
                                                         {item.title}
                                                     </td>
-                                                    <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
-                                                    <td className="py-2 text-[#3F4647] text-sm text-right">
+                                                    <td className="py-2 text-textColor3 text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                    <td className="py-2 text-textColor3 text-sm text-right">
                                                         ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
                                                     </td>
                                                 </tr>
                                             ))}
                                             <tr className="">
-                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
-                                                <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
+                                                <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount (0%)</td>
+                                                <td className="py-2 text-textColor3 text-sm text-right">-${discount.toFixed(2)}</td>
                                             </tr>
                                             <tr className="">
-                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Doctor commission</td>
-                                                <td className="py-2 text-[#3F4647] text-sm text-right">${doctorCommission.toFixed(2)}</td>
+                                                <td className="py-2 text-textColor3 text-sm" colSpan="2">Doctor commission</td>
+                                                <td className="py-2 text-textColor3 text-sm text-right">${doctorCommission.toFixed(2)}</td>
                                             </tr>
                                             <tr className="border-b border-[#AFAAAC] pb-4">
-                                                <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
-                                                <td className="py-2 text-[#51595B] font-semibold text-right">
+                                                <td className="py-2 text-textColor3 text-sm" colSpan="2">Subtotal</td>
+                                                <td className="py-2 text-textColor3 font-semibold text-right">
                                                     ${(subtotal - discount).toFixed(2)}
                                                 </td>
                                             </tr>

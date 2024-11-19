@@ -133,7 +133,7 @@ const LineChart = () => {
         <div className="p-4 bg-[#F9F9F9] rounded-lg">
             <div className="flex">
                 <div>
-                    <h3 className="text-xl md:text-2xl font-medium mt-[29px] ml-[29px]">
+                    <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">
                         $ {graphData.reduce((sum, val) => sum + val, 0).toFixed(2)}
                     </h3>
                     <p className="text-gray-500 ml-[29px]">
@@ -153,7 +153,8 @@ const LineChart = () => {
                 </div>
             </div>
             {timePeriod === 'Custom' && (
-                <div className="flex mt-4">
+                <div className="flex justify-end mt-4">
+                    <div>
                     <input
                         type="date"
                         value={startDate}
@@ -166,11 +167,13 @@ const LineChart = () => {
                         onChange={(e) => setEndDate(e.target.value)}
                         className="p-2 text-sm focus:outline-none"
                     />
+                    {error && <p className="text-red-500 text-sm mt-2 w-full text-right">{error}</p>}
+                    </div>
                 </div>
             )}
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
             <div className="relative mt-4">
-                <Line data={data} options={options} height={80} />
+                <Line data={data} options={options} height={80} className='!w-full'/>
             </div>
         </div>
     );

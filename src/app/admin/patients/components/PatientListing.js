@@ -50,7 +50,7 @@ export default function PatientList() {
     return (
         <AppLayout>
             <div className="container mx-auto ">
-                <h1 className="text-2xl font-bold mt-4 md:mt-2 mb-1">Patient Listing</h1>
+                <h1 className="text-2xl mt-4 md:mt-2 mb-1">Patient Listing</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
 
                 <div className='overflow-hidden overflow-x-auto'>

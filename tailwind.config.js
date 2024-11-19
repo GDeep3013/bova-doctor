@@ -21,6 +21,7 @@ module.exports = {
         primary: "var(--primary-color)",
         textColor: "#898989",
         textColor2: "#373737",
+        textColor3: "#52595b",
         inputBg: "#F9F9F9",
       },
       borderColor: {

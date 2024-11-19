@@ -3,59 +3,72 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Bold.eot');
-  src: url('/fonts/Roboto-Bold.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Roboto-Bold.woff2') format('woff2'),
-      url('/fonts/Roboto-Bold.woff') format('woff'),
-      url('/fonts/Roboto-Bold.ttf') format('truetype');
+  font-family: 'Greycliff CF';
+  src: url('/fonts/GreycliffCF-Bold.eot');
+  src: url('/fonts/GreycliffCF-Bold.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/GreycliffCF-Bold.woff2') format('woff2'),
+      url('/fonts/GreycliffCF-Bold.woff') format('woff'),
+      url('/fonts/GreycliffCF-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Medium.eot');
-  src: url('/fonts/Roboto-Medium.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Roboto-Medium.woff2') format('woff2'),
-      url('/fonts/Roboto-Medium.woff') format('woff'),
-      url('/fonts/Roboto-Medium.ttf') format('truetype');
+  font-family: 'Greycliff CF';
+  src: url('/fonts/GreycliffCF-DemiBold.eot');
+  src: url('/fonts/GreycliffCF-DemiBold.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/GreycliffCF-DemiBold.woff2') format('woff2'),
+      url('/fonts/GreycliffCF-DemiBold.woff') format('woff'),
+      url('/fonts/GreycliffCF-DemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Greycliff CF';
+  src: url('/fonts/GreycliffCF-Medium.eot');
+  src: url('/fonts/GreycliffCF-Medium.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/GreycliffCF-Medium.woff2') format('woff2'),
+      url('/fonts/GreycliffCF-Medium.woff') format('woff'),
+      url('/fonts/GreycliffCF-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Light.eot');
-  src: url('/fonts/Roboto-Light.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Roboto-Light.woff2') format('woff2'),
-      url('/fonts/Roboto-Light.woff') format('woff'),
-      url('/fonts/Roboto-Light.ttf') format('truetype');
+  font-family: 'Greycliff CF';
+  src: url('/fonts/GreycliffCF-Light.eot');
+  src: url('/fonts/GreycliffCF-Light.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/GreycliffCF-Light.woff2') format('woff2'),
+      url('/fonts/GreycliffCF-Light.woff') format('woff'),
+      url('/fonts/GreycliffCF-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Regular.eot');
-  src: url('/fonts/Roboto-Regular.eot?#iefix') format('embedded-opentype'),
-      url('/fonts/Roboto-Regular.woff2') format('woff2'),
-      url('/fonts/Roboto-Regular.woff') format('woff'),
-      url('/fonts/Roboto-Regular.ttf') format('truetype');
+  font-family: 'Greycliff CF';
+  src: url('/fonts/GreycliffCF-RegularOblique.eot');
+  src: url('/fonts/GreycliffCF-RegularOblique.eot?#iefix') format('embedded-opentype'),
+      url('/fonts/GreycliffCF-RegularOblique.woff2') format('woff2'),
+      url('/fonts/GreycliffCF-RegularOblique.woff') format('woff'),
+      url('/fonts/GreycliffCF-RegularOblique.ttf') format('truetype');
   font-weight: normal;
-  font-style: normal;
+  font-style: italic;
   font-display: swap;
 }
+
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --text-color: #202020;
   --primary-color:#512a3a;
-  --theme-font:'Roboto', 'sans-serif';
+  --theme-font:'Greycliff CF';
 }
 
 @media (prefers-color-scheme: dark) {

@@ -70,7 +70,7 @@ export default function DoctorListing() {
             <div className="container mx-auto">
                 <div className='flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-6'>
                     <div>
-                        <h1 className="text-2xl font-bold">Doctors Listing</h1>
+                        <h1 className="text-2xl">Doctors Listing</h1>
                         <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                     </div>
                     <Link href='/admin/doctor/create' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 text-center hover:bg-inherit min-w-[130px]">
