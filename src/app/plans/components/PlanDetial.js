@@ -15,6 +15,7 @@ export default function CreatePlan() {
     const [patients, setPatients] = useState([]);
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
     const [selectedPatient, setSelectedPatient] = useState(null);
+    const [variants, setVariants] = useState([]);
 
     const fetchPatients = async () => {
         try {
@@ -30,88 +31,98 @@ export default function CreatePlan() {
     }
 
 
-    const fetchProducts = async () => {
+    const fetchSavedProduct = async () => {
         try {
-            const response = await fetch('/api/shopify/products');
-            if (!response.ok) throw new Error('Failed to fetch products');
-            const data = await response.json();
-            setProducts(data);
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-    }
+            const response = await fetch(`/api/products?status=active`);
+            if (!response.ok) throw new Error('Failed to fetch product status');
 
+            const data = await response.json();
+
+            // Check if the data has products and then map and push variant IDs into an array
+            if (Array.isArray(data) && data.length > 0) {
+                const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
+                getVariants(variantIds)
+            } else {
+                console.log('No products found or data is empty');
+            }
+        } catch (error) {
+            console.error('Error fetching product status:', error);
+        }
+    };
+
+    const getVariants = async (variantIds) => {
+        try {
+            const response = await fetch(`/api/shopify/products/variants`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ variantIds: variantIds }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update status');
+            }
+            const data = await response.json();
+            const variants = Object.values(data.data).map(variant => ({
+                id: parseInt(variant.id.replace('gid://shopify/ProductVariant/', '')),
+                title: variant.title,
+                price: parseFloat(variant.price),
+                sku: variant.sku,
+                image: variant.image ? {
+                    id: parseInt(variant.image.id.replace('gid://shopify/ProductImage/', '')),
+                    url: variant.image.url,
+                    altText: variant.image.altText
+                } : null,
+                product: {
+                    id: parseInt(variant.product.id.replace('gid://shopify/Product/', '')),
+                    title: variant.product.title,
+                    descriptionHtml: variant.product.descriptionHtml,
+                    images: variant.product.images.edges.map(edge => ({
+                        id: parseInt(edge.node.id.replace('gid://shopify/ProductImage/', '')),
+                        url: edge.node.url,
+                        altText: edge.node.altText
+                    }))
+                }
+            }));
+            setVariants(variants);
+        } catch (error) {
+            console.error("Error updating product status:", error);
+        }
+    };
     useEffect(() => {
-        fetchProducts();
+        // fetchProducts();
         fetchPatients();
+        fetchSavedProduct()
     }, []);
 
 
-    const handleSelectProduct = (product) => {
+    const handleSelectProduct = (variant) => {
         setSelectedItems((prevSelectedItems) => {
-            const productExists = prevSelectedItems.some((item) => item.id === product.id);
+            const productExists = prevSelectedItems.some((item) => item.id === variant.id);
             if (productExists) return prevSelectedItems;
-            return [...prevSelectedItems, product];
+            return [...prevSelectedItems, variant];
         });
         setFormData((prevData) => {
             const updatedItems = prevData.items
             const newItem = {
-                id: product.variants[0]?.id,
-                price: product.variants[0]?.price,
-                title : product?.title,
-                quantity: 1,
+                id: variant.id,
+                price: variant.price,
+                title: variant.product?.title,
+                quantity: 5,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
-                    duration: 'Once Per Day',
+                    duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
                     _patient_id: selectedPatient?.id || id,
                     notes: '',
                 }
             };
-            if (!updatedItems.some(item => item.id === product.variants[0]?.id)) {
+            if (!updatedItems.some(item => item.id === variant?.id)) {
                 updatedItems.push(newItem);
             }
             return { ...prevData, items: updatedItems };
         });
     };
 
-
-    function handleFormDataChange(itemId, field, value) {
-        setFormData((prevData) => {
-            const updatedItems = prevData.items.map((item) => {
-                if (item.id === itemId) {
-                    // Check if the field is 'quantity' or needs updating in 'properties'
-                    if (field === "quantity") {
-                        return {
-                            ...item,
-                            quantity: parseInt(value, 10),
-                        };
-                    } else if (field === "price" || field === "title") {
-                        // Update price or title if those are the fields being changed
-                        return {
-                            ...item,
-                            [field]: value,
-                        };
-                    } else {
-                        // Update other properties
-                        return {
-                            ...item,
-                            properties: {
-                                ...item.properties,
-                                [field]: value,
-                                _patient_id: selectedPatient?.id || id, // Ensure _patient_id is added here
-                            },
-                        };
-                    }
-                }
-                return item;
-            });
-            return { ...prevData, items: updatedItems };
-        });
-    }
-        const filteredProducts = products.filter(product =>
-        product.title.toLowerCase().includes(searchTerm)
-    )
 
 
     const fetchPlanData = async () => {
@@ -133,7 +144,7 @@ export default function CreatePlan() {
                     }
                 }));
                 mappedItems.forEach(mappedItem => {
-                    const matchingProduct = filteredProducts.find(item => item?.variants[0]?.id === mappedItem.id);
+                    const matchingProduct = variants.find(item => item.id === mappedItem.id);
                     if (matchingProduct) {
                         handleSelectProduct(matchingProduct);
                     }
@@ -169,7 +180,7 @@ export default function CreatePlan() {
 
     useEffect(() => {
         fetchPlanData();
-    }, [id, products, patients]);
+    }, [id, variants, patients]);
 
 
     const subtotal = formData.items.reduce((acc, item) => {
@@ -197,15 +208,25 @@ export default function CreatePlan() {
 
                         {/* Product Info */}
                         {selectedItems.map((item, index) => {
-                            const itemData = formData.items.find(fItem => fItem.id === item?.variants[0]?.id);
+                            const itemData = formData.items.find(fItem => fItem.id === item.id);
                             return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
-                                <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
-                                    <img src="/images/product-img1.png" alt="Product" className="w-24 h-24" />
+                               <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
+                                    <img
+                                        src={
+                                            item.image && item.image.url
+                                                ? item.image.url
+                                                : (item.product.images && item.product.images[0] && item.product.images[0].url)
+                                                    ? item.product.images[0].url
+                                                    : '/images/product-img1.png'
+                                        }
+                                        alt="Product"
+                                        className="w-24 h-24" />
                                     <div>
-                                        <h3 className="font-bold text-[18px]">{item.title}</h3>
+                                        <h3 className="font-bold text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
                                         <p className="text-textColor mt-2 text-base max-w-[200px]">
-                                            <span className='font-bold w-full inline-block'>Ingredients:</span> 100% Grass Fed & Finished New Zealand Beef Liver.
-                                            300mg per Capsule
+                                        {item?.product?.descriptionHtml
+                                                    ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
+                                                    : ''}
                                         </p>
                                     </div>
                                 </div>
@@ -216,7 +237,6 @@ export default function CreatePlan() {
                                             type="number"
                                             readOnly
                                             value={itemData?.quantity ?? ""}
-                                            onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'quantity', e.target.value)}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Quantity (e.g., 5, 10)"
                                         />
@@ -226,7 +246,6 @@ export default function CreatePlan() {
                                             type="text"
                                             readOnly
                                             value={itemData?.properties.frequency ?? ""}
-                                            onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'frequency', e.target.value)}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Frequency (e.g., Once Per Day)"
                                         />
@@ -236,7 +255,6 @@ export default function CreatePlan() {
                                             type="text"
                                             readOnly
                                             value={itemData?.properties.duration ?? ""}
-                                            onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'duration', e.target.value)}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Duration (e.g., Once Per Day)"
                                         />
@@ -246,7 +264,6 @@ export default function CreatePlan() {
                                             type="text"
                                             readOnly
                                             value={itemData?.properties.takeWith ?? ""}
-                                            onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'takeWith', e.target.value)}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Take With (e.g., Water)"
                                         />
@@ -256,7 +273,6 @@ export default function CreatePlan() {
                                             type="text"
                                             readOnly
                                             value={itemData?.properties.notes ?? ""}
-                                            onChange={(e) => handleFormDataChange(item?.variants[0]?.id, 'notes', e.target.value)}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4"
                                             placeholder="Add Notes"
                                         />
@@ -268,7 +284,6 @@ export default function CreatePlan() {
                          <div className="p-4 border-t border-b border-[#AFAAAC]">
                                 <textarea
                                     value={formData.message}
-                                    onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, })) }
                                     className="w-full border outline-none border-[#AFAAAC] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
                                     rows="4"
                                     readOnly

@@ -65,7 +65,7 @@ export default function EditPatient() {
                 valid = false;
             }
         }
-     
+
         setErrors(newErrors);
         return valid;
     };
@@ -87,7 +87,7 @@ export default function EditPatient() {
                 });
                 if (response.ok) {
                     const result = await response.json();
-                 
+
                     Swal.fire({
                         title: 'Success!',
                         text: 'Patient updated successfully!',
@@ -121,7 +121,7 @@ export default function EditPatient() {
                 <h1 className='page-title pt-2 text-2xl pb-1'>Edit Patient</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full mt-6">
-                    <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg shadow-lg">
+                    <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
                         <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Patient Information</span></div>
                         <form onSubmit={handleSubmit} className="space-y-2 p-8 w-full">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

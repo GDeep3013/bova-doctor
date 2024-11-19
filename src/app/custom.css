@@ -51,6 +51,7 @@ input[type=number] { appearance:"textfield"; -moz-appearance:"textfield"; }
 @media screen and (min-width: 1025px) and (max-width:1199px) {
 .login-after{ background-position: bottom; }
 .login-form{ max-width: 420px !important; right: 40px !important; }
+.doctor-listing tbody tr td, .doctor-listing th { padding: 10px 8px; font-size: 14px; }
 }
 @media screen and (max-width: 1024px)  {
     .dashboard-outer .sidebar{ position: fixed; left: 0; max-width: 280px !important; box-shadow: 0 0 3px #5b5b5b; z-index: 1;}

@@ -74,7 +74,7 @@ export default function AdminDashboard() {
                                     className="flex justify-between items-center bg-[#F9F9F9] rounded-lg p-4 xl:p-5 w-full shadow-sm"
                                 >
                                     <div>
-                                        <h3 className="text-base md:text-xl xl:text-xl font-semibold">{card.title}</h3>
+                                        <h3 className="text-base md:text-xl xl:text-xl font-bold">{card.title}</h3>
                                         <p className="text-sm mt-1 text-gray-500">{card.subtitle}</p>
                                     </div>
                                     <div className="flex-shrink-0 bg-[#EBEDEB] w-[41px] h-[41px] rounded-[5px] shadow-sm relative card-icon">
