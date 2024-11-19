@@ -4,25 +4,26 @@ import Patient from '../../../../models/patient';
 
 import NextCrypto from 'next-crypto';
 import nodemailer from 'nodemailer';
-
-export  async function POST(req) {
+import fs from 'fs';
+import path from 'path';
+export async function POST(req) {
   await connectDB();
   const crypto = new NextCrypto();
 
-  const { items, status='pending' ,patient_id , message } = await req.json();
+  const { items, status = 'pending', patient_id, message } = await req.json();
   const planData = {
-      patient_id: patient_id,
-      message,
+    patient_id: patient_id,
+    message,
     status,
     items,
     createdAt: new Date()
   };
 
   // Save the new plan to the database
-  
+
   try {
     const plan = await Plan.create(planData);
-    
+
     const encryptedId = await crypto.encrypt(plan._id.toString());
 
     // Make the encrypted ID URL-safe by replacing `/` and `=` characters
@@ -33,10 +34,15 @@ export  async function POST(req) {
     const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
 
 
-      const patient = await Patient.findOne({ _id: patient_id })
-  
-  
-    // Configure the email transport
+    const patient = await Patient.findOne({ _id: patient_id })
+
+
+    const filePath = path.join(process.cwd(), 'src/app/templates/medicationPlan.html');
+    let templateContent = fs.readFileSync(filePath, 'utf8');
+    let planType = "Medication Plan"
+    templateContent = templateContent.replace('{{planType}}', planType);
+    templateContent = templateContent.replace('{{viewPlanLink}}', link);
+
     const transporter = nodemailer.createTransport({
       service: 'gmail', // or any email service you prefer
       auth: {
@@ -47,28 +53,24 @@ export  async function POST(req) {
 
     // Set up the email content
     const mailOptions = {
-      from:  process.env.EMAIL_USER,
+      from: process.env.EMAIL_USER,
       to: patient.email,
       subject: 'Your Medication Plan',
-      html: `
-        <h2>Medication Plan</h2>
-        <p>Thank you for purchasing your medication. Here is a link to view your medication plan:</p>
-        <a href="${link}">View Your Plan</a>
-      `,
+      html: templateContent, // 
     };
 
     // // Send the email
     await transporter.sendMail(mailOptions);
-        return new Response(JSON.stringify({ success: true, data: plan }), {
-          status: 201,
-        });
-      } catch (error) {
-        return new Response(JSON.stringify({ success: false, message: error.message }), {
-          status: 500,
-        });
-      }
-    
-  
+    return new Response(JSON.stringify({ success: true, data: plan }), {
+      status: 201,
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ success: false, message: error.message }), {
+      status: 500,
+    });
+  }
+
+
 }
 
 
@@ -86,7 +88,7 @@ export async function GET(req) {
     // Decrypt the plan ID
     const crypto = new NextCrypto();
     const planId = await crypto.decrypt(encryptedId);
-    
+
     // Retrieve the plan by its decrypted ID
     const plan = await Plan.findById(planId);
 

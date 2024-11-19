@@ -14,6 +14,7 @@ export default function CreateDoctor() {
     const [specialty, setSpecialty] = useState('');
     const [userType, setUserType] = useState('');
     const [commissionPercentage, setCommissionPercentage] = useState('');
+    const [laoding, setLaoding] = useState(false);
 
     const validateForm = () => {
         let valid = true;
@@ -61,14 +62,15 @@ export default function CreateDoctor() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            Swal.fire({
-                title: 'Sending...',
-                html: 'Please wait while we send the email.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            // Swal.fire({
+            //     title: 'Sending...',
+            //     html: 'Please wait while we send the email.',
+            //     allowOutsideClick: false,
+            //     didOpen: () => {
+            //         Swal.showLoading();
+            //     }
+            // });
+            setLaoding(true)
             const formData = new FormData();
             formData.append('firstName', firstName);
             formData.append('lastName', lastName);
@@ -77,7 +79,7 @@ export default function CreateDoctor() {
             formData.append('specialty', specialty);
             formData.append('userType', userType);
             formData.append('commissionPercentage', commissionPercentage);
-            formData.append('clinicName', clinicName);
+            formData.append('clinicName', clinicName?clinicName:'');
 
             try {
                 const response = await fetch('/api/doctors/create', {
@@ -100,7 +102,7 @@ export default function CreateDoctor() {
                     setClinicName('');
                     setCommissionPercentage('');
                     setSpecialty('');
-
+                    setLaoding(false)
                     router.push('/admin/doctor');
                 } else {
                     const result = await response.json();
@@ -114,10 +116,14 @@ export default function CreateDoctor() {
                             setErrors({ ...errors, phone: 'Phone number already exists' });
                         }
                     }
+                    setLaoding(false)
+
                 }
             } catch (error) {
                 // console.error('Error during doctor creation:', error);
                 setErrors({ apiError: 'Internal server error' });
+                setLaoding(false)
+
             }
         }
     };
@@ -235,7 +241,7 @@ export default function CreateDoctor() {
                                     type="submit"
                                     className="min-w-[150px] py-2 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"
                                 >
-                                    Add Doctor
+                                 {laoding?"Please Wait..":"Add Doctor"}   
                                 </button>
 
                                 {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}

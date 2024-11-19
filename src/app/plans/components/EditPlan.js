@@ -98,18 +98,7 @@ export default function CreatePlan() {
                     }))
                 }
             }));
-
-            setVariants(variants);
-            console.log('Transformed Variants with Product Images:', variants);
-
-
-            // Set the transformed data to the state
-            setVariants(variants);
-            console.log('data', variants)
-
-
-
-
+                setVariants(variants);
         } catch (error) {
             console.error("Error updating product status:", error);
         }

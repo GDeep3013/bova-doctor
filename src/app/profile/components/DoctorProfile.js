@@ -3,9 +3,10 @@ import React from 'react'
 import Link from 'next/link';
 import AppLayout from 'components/Applayout';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Profile() {
-
+const router=useRouter()
     const { data: session } = useSession();
     function formatDate(dateString) {
         const date = new Date(dateString);

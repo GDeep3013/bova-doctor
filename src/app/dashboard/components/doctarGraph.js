@@ -101,21 +101,44 @@ const LineChart = () => {
             },
         ],
     };
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                enabled: true,
-                callbacks: {
-                    label: function (context) {
-                        let value = context.raw;
-                        return `$ ${value.toFixed(2)}`; // Prepend `$` and format the number
-                    },
+   const options = {
+    responsive: true,
+    plugins: {
+        legend: { display: false },
+        tooltip: {
+            enabled: true,
+            callbacks: {
+                label: function (context) {
+                    let value = context.raw;
+                    return `$ ${value.toFixed(2)}`;
                 },
             },
         },
-    }
+    },
+    layout: {
+        padding: {
+            bottom: 10, // Add padding to ensure the bottom isn't cut off
+        },
+    },
+    scales: {
+        x: { 
+            type: 'category', 
+            display: true 
+        },
+        y: { 
+            type: 'linear', 
+            min: 0, // Prevent negative values on the y-axis
+            ticks: {
+                callback: function (value) {
+                    return `$${value.toFixed(2)}`;
+                },
+            },
+            grid: {
+                drawBorder: true, // Ensure gridlines don't get clipped
+            },
+        },
+    },
+};
 
     // const options = {
     //     responsive: true,
