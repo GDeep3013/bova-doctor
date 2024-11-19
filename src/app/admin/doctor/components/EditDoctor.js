@@ -14,6 +14,7 @@ export default function CreateDoctor() {
     const [specialty, setSpecialty] = useState('');
     const [userType, setUserType] = useState('');
     const [commissionPercentage, setCommissionPercentage] = useState('');
+    const [laoding, setLaoding] = useState('');
 
 
     const router = useRouter();
@@ -95,7 +96,9 @@ export default function CreateDoctor() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
+
             try {
+                setLaoding(true)
                 const formData = new FormData();
                 formData.append('firstName', firstName);
                 formData.append('lastName', lastName);
@@ -103,7 +106,7 @@ export default function CreateDoctor() {
                 formData.append('phone', phone);
                 formData.append('userType', userType);
                 formData.append('specialty', specialty);
-                formData.append('clinicName', clinicName);
+                formData.append('clinicName', clinicName?clinicName:'');
                 formData.append('commissionPercentage', commissionPercentage);
 
                 const response = await fetch(`/api/doctors/edit/${id}`, {
@@ -125,6 +128,8 @@ export default function CreateDoctor() {
                     setUserType('');
                     setSpecialty('');
                     setClinicName('');
+                setLaoding(false)
+
                     router.push('/admin/doctor');
                 } else {
                     Swal.fire({
@@ -133,6 +138,8 @@ export default function CreateDoctor() {
                         icon: 'error',
                         confirmButtonText: 'OK',
                     });
+                setLaoding(false)
+
                 }
             } catch (error) {
                 Swal.fire({
@@ -141,6 +148,8 @@ export default function CreateDoctor() {
                     icon: 'error',
                     confirmButtonText: 'OK',
                 });
+                setLaoding(false)
+
             }
         }
     };
@@ -257,7 +266,8 @@ export default function CreateDoctor() {
                                     type="submit"
                                     className="min-w-[200px] py-2 bg-customBg2 text-white rounded-[8px] hover:bg-customText focus:outline-none"
                                 >
-                                    Update Doctor Detail
+                              {laoding?"Please Wait...":"  Update Doctor Detail"}   
+                                  
                                 </button>
 
                                 {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}

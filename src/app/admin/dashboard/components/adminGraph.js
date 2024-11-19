@@ -25,7 +25,6 @@ const LineChart = () => {
     const [endDate, setEndDate] = useState('');
     const [graphData, setGraphData] = useState([]);
     const [graphLabels, setGraphLabels] = useState([]);
-
     const [graphMonths, setGraphMonths] = useState([]);
     const [error, setError] = useState('');
 
@@ -116,7 +115,30 @@ const LineChart = () => {
                 },
             },
         },
-    }
+        layout: {
+            padding: {
+                bottom: 10, 
+            },
+        },
+        scales: {
+            x: { 
+                type: 'category', 
+                display: true 
+            },
+            y: { 
+                type: 'linear', 
+                min: 0, 
+                ticks: {
+                    callback: function (value) {
+                        return `$${value.toFixed(2)}`;
+                    },
+                },
+                grid: {
+                    drawBorder: true, 
+                },
+            },
+        },
+    };
 
     return (
         <div className="p-4 bg-[#F9F9F9] rounded-lg">

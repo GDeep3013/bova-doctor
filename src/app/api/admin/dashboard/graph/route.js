@@ -47,10 +47,6 @@ export async function GET(req) {
 
     const orders = await Order.find(matchCondition).select('createdAt total');
 
-    if (orders.length === 0) {
-      return new Response(JSON.stringify({ error: 'No data found.' }), { status: 404 });
-    }
-
     let resultData = [];
 
     if (timePeriod === 'Year') {
