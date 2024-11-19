@@ -78,7 +78,7 @@ export default function DoctorListing() {
                     </Link>
                 </div>
 
-                <div className='overflow-hidden overflow-x-auto'>
+                <div className='overflow-hidden overflow-x-auto max-w-full w-full'>
                     <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[8px]">
                         <thead>
                             <tr className="bg-gray-100 border-b">

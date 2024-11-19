@@ -9,18 +9,20 @@ export default function Earnings() {
     return (
         <AppLayout>
             <h1 className="text-2xl pt-4 md:pt-1 mb-1">Earnings</h1>
-            <div className='flex min-[1281px]:space-x-5 max-xl:flex-wrap mt-6 overflow-hidden'>
 
-                {/* <DoctorTable patientData={patientData} timePeriod={timePeriod} setTimePeriod={setTimePeriod} /> */}
-                <div className='w-full'>
-                    <div className=''>
-                        <DoctorGraph />
+            <div className='grid grid-cols-12 gap-5 mt-6'>
+                <div className='col-span-12 xl:col-span-4'>
+                    <Sales />
+                </div>
+                <div className='col-span-12 xl:col-span-8'>
+                    <div className='w-full'>
+                        <div className=''>
+                            <DoctorGraph />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className='mt-6'>
-                <Sales />
-            </div>
+
         </AppLayout>
     )
 }

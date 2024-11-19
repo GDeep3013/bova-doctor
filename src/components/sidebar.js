@@ -36,7 +36,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
   };
 
   return (
-    <div className={`w-full max-[1100px]:max-w-[250px] max-w-[300px] min-[1101px]:min-w-[300px] inset-y-0 transition-transform ease-in-out p-[50px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
+    <div className={`w-full max-[1199px]:max-w-[290px] max-w-[300px] min-[1200px]:min-w-[300px] inset-y-0 transition-transform ease-in-out p-[30px] min-[1100px]:p-[50px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
       <Link href="/dashboard">
         <img src="/images/dash-logo.png" alt="Logo" className="max-w-[155px] max-[992px]:max-w-[120px]" />
       </Link>
@@ -84,6 +84,13 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
                     'text-[#52595b] hover:text-gray-900'}`}>
                       Edit
                     </Link>
+                  </li>
+                  <li>
+                  <Link href="/privacy-policies" className={`block text-lg ${isActive('/privacy-policies') ? 'text-[#232424] font-bold' :
+                    'text-[#52595b] hover:text-gray-900'}`}>
+                      Privacy & Policies
+                    </Link>
+
                   </li>
                 </ul>
               )}

@@ -53,7 +53,7 @@ export default function PatientList() {
                 <h1 className="text-2xl mt-4 md:mt-2 mb-1">Patient Listing</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
 
-                <div className='overflow-hidden overflow-x-auto'>
+                <div className='overflow-hidden overflow-x-auto max-w-full w-full'>
                     <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
                         <thead>
                             <tr className="bg-gray-100 border-b">

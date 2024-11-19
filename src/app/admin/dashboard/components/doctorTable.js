@@ -1,6 +1,6 @@
 'use client'
 export default function doctorTable({doctors }) {
-   
+
   return (
     <div className="bg-white rounded-lg shadow-md p-4 pb-0 w-full mx-auto">
     <div className="flex justify-between items-center mb-4">
@@ -15,7 +15,7 @@ export default function doctorTable({doctors }) {
             <option>Last Year</option>
         </select> */}
     </div>
-    <div className='overflow-hidden overflow-x-auto'>
+    <div className='overflow-hidden overflow-x-auto max-w-full w-full'>
     <table className="min-w-[max-content] w-full text-left custom-table">
         <thead>
             <tr className="border-b">

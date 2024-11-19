@@ -85,11 +85,11 @@ export default function PatientList() {
                         Add Patient
                     </Link>
                 </div>
-                <div className='overflow-hidden overflow-x-auto'>
+                <div className='overflow-hidden overflow-x-auto max-w-full w-full'>
                 <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
                     <thead>
                             <tr className="bg-gray-100 border-b">
-                                
+
                             <th className="py-2 px-4 text-left text-gray-800">Sr no.</th>
                             <th className="py-2 px-4 text-left text-gray-800">Name</th>
                             <th className="py-2 px-4 text-left text-gray-800">Email</th>
