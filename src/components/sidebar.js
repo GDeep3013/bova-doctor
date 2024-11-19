@@ -47,13 +47,13 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               <HomeIcon /> Home
             </Link>
             <div>
-              <button onClick={toggleProfile} className={`text-xl font-medium`}>
+              <button onClick={toggleProfile} className={`text-xl font-medium text-[#52595b]`}>
                 <ProfileIcon /> Add Doctor
               </button>
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/admin/doctor" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#232424] font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/admin/doctor" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#232424] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
                       Doctors Listing
                     </Link>
                   </li>
@@ -80,15 +80,11 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/profile" className={`block text-lg ${isActive('/profile') ? 'text-[#232424] font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/profile" className={`block text-lg ${isActive('/profile') ? 'text-[#232424] font-bold' :
+                    'text-[#52595b] hover:text-gray-900'}`}>
                       Edit
                     </Link>
                   </li>
-                  {/* <li>
-                    <Link href="/sales" className={`block ${isActive('/sales') ? 'text-[#52595b] font-semibold' : 'hover:text-gray-900'}`}>
-                      Sales
-                    </Link>
-                  </li> */}
                 </ul>
               )}
             </div>
@@ -100,7 +96,7 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               {isPatientsOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/listing') ? 'text-[#232424] font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/listing') ? 'text-[#232424] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
                       Search
                     </Link>
                   </li>
@@ -115,17 +111,17 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
               {isPlansOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/plans/create-plan" className={`block text-lg ${isActive('/plans/create-plan') ? 'text-[#232424] font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/plans/create-plan" className={`block text-lg ${isActive('/plans/create-plan') ? 'text-[#232424] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
                       Create
                     </Link>
                   </li>
                   <li>
-                    <Link href="/plans/review" className={`block text-lg ${isActive('/plans/review') ? 'text-[#232424] font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/plans/review" className={`block text-lg ${isActive('/plans/review') ? 'text-[#232424] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
                       Review
                     </Link>
                   </li>
                   <li>
-                    <Link href="/" className={`block text-lg ${isActive('/plans/incomplete') ? 'text-[#232424] font-bold' : 'hover:text-gray-900'}`}>
+                    <Link href="/" className={`block text-lg ${isActive('/plans/incomplete') ? 'text-[#232424] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
                       Incomplete
                     </Link>
                   </li>
