@@ -4,10 +4,11 @@ import Plan from '../../../../../models/plan'
 
 import NextCrypto from 'next-crypto';
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 
 export async function GET(req, { params }) {
   const { id } = params; 
-   // Connect to the database
   await connectDB();
 
   try {
@@ -52,6 +53,13 @@ export async function PUT(req, { params }) {
     const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
 
     // Configure email details for the updated plan
+
+    const filePath = path.join(process.cwd(), 'src/app/templates/medicationPlan.html');
+    let templateContent = fs.readFileSync(filePath, 'utf8');
+
+    let planType = "Updated Medication Plan"
+    templateContent = templateContent.replace('{{planType}}', planType);
+    templateContent = templateContent.replace('{{viewPlanLink}}', link);
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -70,11 +78,7 @@ export async function PUT(req, { params }) {
       from: process.env.EMAIL_USER,
       to: patient.email,
       subject: 'Your Updated Medication Plan',
-      html: `
-        <h2>Updated Medication Plan</h2>
-        <p>Your medication plan has been updated. Here is a link to view the updated plan:</p>
-        <a href="${link}">View Your Updated Plan</a>
-      `,
+      html: templateContent, 
     };
 
     // Send the update notification email
