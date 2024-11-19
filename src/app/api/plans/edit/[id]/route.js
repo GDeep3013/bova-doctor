@@ -6,6 +6,7 @@ import NextCrypto from 'next-crypto';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+import {medicationPlan} from '../../../../templates/medicationPlan'
 
 export async function GET(req, { params }) {
   const { id } = params; 
@@ -35,32 +36,29 @@ export async function PUT(req, { params }) {
   await connectDB();
   const crypto = new NextCrypto();
   const { id } = params; 
-  const { items, status='pending', patient_id, message } = await req.json();
+  const { formData: { items, patient_id, message } ,status = 'pending',selectedItems ,doctor} = await req.json();
   try {
      const updatedPlan = await Plan.findByIdAndUpdate(
       id,
       { items, status, patient_id, message, updatedAt: new Date() },
       { new: true }
-    );
+    ).populate('patient_id');
 
     if (!updatedPlan) {
       return new Response(JSON.stringify({ success: false, message: 'Plan not found' }), { status: 404 });
     }
 
-    // Encrypt the ID for the updated plan
+   
     const encryptedId = await crypto.encrypt(updatedPlan._id.toString());
-    const urlSafeEncryptedId = encryptedId.replace(/\//g, '-').replace(/=/g, '_');
-    const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
 
-    // Configure email details for the updated plan
+    // Make the encrypted ID URL-safe by replacing `/` and `=` characters
+    const urlSafeEncryptedId = encryptedId
+      .replace(/\//g, '-')  // Replace `/` with `-`
+      .replace(/\=/g, '_'); // Replace `=` with `_`
 
-    const filePath = path.join(process.cwd(), 'src/app/templates/medicationPlan.html');
-    let templateContent = fs.readFileSync(filePath, 'utf8');
-
-    let planType = "Updated Medication Plan"
-    templateContent = templateContent.replace('{{planType}}', planType);
-    templateContent = templateContent.replace('{{viewPlanLink}}', link);
-    const transporter = nodemailer.createTransport({
+    const link = ` https://bovalabs.com//pages/view-plans?id=${urlSafeEncryptedId}`;
+  
+     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
@@ -78,7 +76,7 @@ export async function PUT(req, { params }) {
       from: process.env.EMAIL_USER,
       to: patient.email,
       subject: 'Your Updated Medication Plan',
-      html: templateContent, 
+      html: medicationPlan(updatedPlan?.patient_id,link), 
     };
 
     // Send the update notification email

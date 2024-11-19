@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import { CloseIcon } from '../../../components/svg-icons/icons';
-import { SP } from 'next/dist/shared/lib/utils';
+
 
 export default function CreatePlan() {
     const { id } = useParams();
@@ -105,6 +105,7 @@ export default function CreatePlan() {
             if (productExists) return prevSelectedItems;
             return [...prevSelectedItems, variant];
         });
+        console.log(variant);
         setFormData((prevData) => {
             const updatedItems = prevData.items
             const newItem = {
@@ -112,6 +113,8 @@ export default function CreatePlan() {
                 price: variant.price,
                 title: variant.product?.title,
                 quantity: 5,
+                image: variant?.product?.images[0]?.url,
+                description:variant?.product?.descriptionHtml,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended),',
@@ -123,7 +126,7 @@ export default function CreatePlan() {
             if (!updatedItems.some(item => item.id === variant?.id)) {
                 updatedItems.push(newItem);
             }
-            return { ...prevData, items: updatedItems };
+            return { ...prevData, items: updatedItems  };
         });
     };
 
@@ -179,6 +182,7 @@ export default function CreatePlan() {
             };
         });
     };
+ 
 
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
@@ -193,10 +197,20 @@ export default function CreatePlan() {
         }
         try {
             setLoader(true);
+            let newdata = {
+                selectedItems: selectedItems,
+                formData: formData,
+                doctor: {
+                    name: session?.userDetail?.firstName +' '+session?.userDetail?.lastName,
+                    email: session?.userDetail?.email,
+                    ClinicName: session?.userDetail?.ClinicName
+                }
+                
+            }
             const response = await fetch('/api/plans/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(newdata),
             });
             if (!response.ok) throw new Error('Failed to submit data');
             Swal.fire({

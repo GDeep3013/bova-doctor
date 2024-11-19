@@ -17,7 +17,7 @@ export default function CreatePlan() {
     const [products, setProducts] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
-    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
+    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null ,mail_data:[]});
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
@@ -116,8 +116,13 @@ export default function CreatePlan() {
             if (productExists) return prevSelectedItems;
             return [...prevSelectedItems, variant];
         });
+    
         setFormData((prevData) => {
-            const updatedItems = prevData.items
+            // Extract items and mailData from the previous state
+            const updatedItems = [...prevData.items];
+            const updatedMailData = [...prevData.mail_data];
+    
+            // New item to be added to 'items'
             const newItem = {
                 id: variant.id,
                 price: variant.price,
@@ -125,19 +130,32 @@ export default function CreatePlan() {
                 quantity: 5,
                 properties: {
                     frequency: 'Once Per Day (Anytime)',
-                    duration: 'Monthly (Recommended),',
+                    duration: 'Monthly (Recommended)',
                     takeWith: 'Water',
                     _patient_id: selectedPatient?.id || id,
                     notes: '',
                 }
             };
-            if (!updatedItems.some(item => item.id === variant?.id)) {
+    
+            // New mailData item
+            const newMailData = {
+                image: variant.product?.images?.[0]?.url || null, 
+                description: variant.product?.descriptionHtml || '' 
+            };
+    
+            if (!updatedItems.some(item => item.id === variant.id)) {
                 updatedItems.push(newItem);
             }
-            return { ...prevData, items: updatedItems };
+    
+            // Add new mailData if not already present
+            if (!updatedMailData.some(data => data.image === newMailData.image)) {
+                updatedMailData.push(newMailData);
+            }
+    
+            // Return updated state
+            return { ...prevData, items: updatedItems, mail_data: updatedMailData };
         });
     };
-
     function handleFormDataChange(itemId, field, value) {
         setFormData((prevData) => {
             const updatedItems = prevData.items.map((item) => {
@@ -205,10 +223,20 @@ export default function CreatePlan() {
         }
         try {
             setLoader(true)
+            let newdata = {
+                selectedItems: selectedItems,
+                formData: formData,
+                doctor: {
+                    name: session?.userDetail?.firstName +' '+session?.userDetail?.lastName,
+                    email: session?.userDetail?.email,
+                    ClinicName: session?.userDetail?.ClinicName
+                }
+                
+            }
             const response = await fetch(`/api/plans/edit/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(newdata),
             });
             if (!response.ok) throw new Error('Failed to submit data');
             Swal.fire({
@@ -263,7 +291,7 @@ export default function CreatePlan() {
                     id: item.id,
                     quantity: item.quantity || 1,
                     price: item.price,
-                    title: item.title,
+                    title: item.title, 
                     properties: {
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',
                         duration: item.properties.duration || 'Once Per Day',
@@ -272,7 +300,19 @@ export default function CreatePlan() {
                         notes: item.properties.notes || ''
                     }
                 }));
-                console.log('mappedItems',mappedItems)
+                const mappedMailData = data.items.map(item => ({
+                    image: item.properties?.image || null, // Ensure the image is present in properties or set as null
+                    description: item.properties?.description || '' // Ensure description is present in properties or set as empty string
+                }));
+    
+                // Update formData items and mailData
+                setFormData(prevData => ({
+                    ...prevData,
+                    items: mappedItems,
+                    mailData: mappedMailData,
+                    message: data?.message
+                }));
+
                 mappedItems.forEach(mappedItem => {
                     const matchingProduct = variants.find(item => item.id == mappedItem.id);
                     console.log('matchingProduct',matchingProduct)
@@ -289,7 +329,7 @@ export default function CreatePlan() {
                         patient_id: matchedPatient._id,
                     }));
                 }
-                setFormData(prevData => ({ ...prevData, items: mappedItems, message: data?.message }))
+                // setFormData(prevData => ({ ...prevData, items: mappedItems, message: data?.message }))
 
             } else {
                 Swal.fire({

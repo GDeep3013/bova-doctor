@@ -6,14 +6,14 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function Profile() {
-const router=useRouter()
+    const router = useRouter()
     const { data: session } = useSession();
     function formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
-          month: '2-digit',
-          day: '2-digit',
-          year: '2-digit',
+            month: '2-digit',
+            day: '2-digit',
+            year: '2-digit',
         });
     }
     return (
@@ -28,22 +28,22 @@ const router=useRouter()
                     <div className="space-y-2 text-gray-700">
                         <div className="bg-customBg p-4 px-3 md:px-5 rounded-t-[8px] flex justify-between items-center">
                             <span className="font-medium text-[14px] md:text-base text-gray-700">
-                                 Name: <span>{session?.userDetail?.firstName}  {session?.userDetail?.lastName}</span>
+                                Name: <span>{session?.userDetail?.firstName}  {session?.userDetail?.lastName}</span>
                             </span>
                             <span className="text-gray-600 text-[14px] md:text-base">Date Created: {formatDate(session?.userDetail?.createdAt)}  </span>
 
                         </div>
                         <div className='px-5'>
                             <p className='flex justify-between py-2'>
-                                <span className="text-textColor text-[14px] md:text-base"> Email:</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.email} </span>
+                                <span className="text-textColor text-[14px] md:text-base"> Email</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.email} </span>
                             </p>
                             <p className='flex justify-between py-2'>
-                                <span className="text-textColor text-[14px] md:text-base"> Phone Number:</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.phone} </span>
+                                <span className="text-textColor text-[14px] md:text-base"> Phone Number</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.phone} </span>
                             </p>
                             <p className='flex justify-between py-2'>
-                                <span className="text-textColor text-[14px] md:text-base">Discount Rate:</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'> {session?.userDetail?.commissionPercentage}% </span>
+                                <span className="text-textColor text-[14px] md:text-base">Commission %</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'> {session?.userDetail?.commissionPercentage}% </span>
                             </p>
-                          
+
                         </div>
                     </div>
 

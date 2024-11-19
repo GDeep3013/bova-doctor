@@ -6,11 +6,12 @@ import NextCrypto from 'next-crypto';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+import  {medicationPlan} from '../../../templates/medicationPlan'
 export async function POST(req) {
   await connectDB();
   const crypto = new NextCrypto();
 
-  const { items, status = 'pending', patient_id, message } = await req.json();
+  const { formData: { items, patient_id, message } ,status = 'pending',selectedItems ,doctor} = await req.json();
   const planData = {
     patient_id: patient_id,
     message,
@@ -23,6 +24,7 @@ export async function POST(req) {
 
   try {
     const plan = await Plan.create(planData);
+    console.log(selectedItems);
 
     const encryptedId = await crypto.encrypt(plan._id.toString());
 
@@ -37,14 +39,8 @@ export async function POST(req) {
     const patient = await Patient.findOne({ _id: patient_id })
 
 
-    const filePath = path.join(process.cwd(), 'src/app/templates/medicationPlan.html');
-    let templateContent = fs.readFileSync(filePath, 'utf8');
-    let planType = "Medication Plan"
-    templateContent = templateContent.replace('{{planType}}', planType);
-    templateContent = templateContent.replace('{{viewPlanLink}}', link);
-
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // or any email service you prefer
+      service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -56,7 +52,7 @@ export async function POST(req) {
       from: process.env.EMAIL_USER,
       to: patient.email,
       subject: 'Your Medication Plan',
-      html: templateContent, // 
+      html:medicationPlan(patient,link)  // 
     };
 
     // // Send the email
