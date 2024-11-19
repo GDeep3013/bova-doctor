@@ -4,8 +4,6 @@ import Patient from '../../../../models/patient';
 
 import NextCrypto from 'next-crypto';
 import nodemailer from 'nodemailer';
-import fs from 'fs';
-import path from 'path';
 import  {medicationPlan} from '../../../templates/medicationPlan'
 export async function POST(req) {
   await connectDB();
@@ -52,7 +50,7 @@ export async function POST(req) {
       from: process.env.EMAIL_USER,
       to: patient.email,
       subject: 'Your Medication Plan',
-      html:medicationPlan(patient,link)  // 
+      html:medicationPlan(patient,doctor,link,items,selectedItems)  // 
     };
 
     // // Send the email
