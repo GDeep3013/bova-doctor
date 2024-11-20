@@ -91,7 +91,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
     }
     a.payment-btn {
     display: inline-block;
-    padding: 16px 40px;
+    padding: 12px 34px;
     text-align: center;
     background-color: #000;
     border-radius: 8px;
@@ -123,7 +123,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
   <table width="100%" border="0" cellpadding="0" cellspacing="0"
     style="width: 100%; margin: 0 auto; max-width: 620px;">
     <tr>
-      <td style="padding:12px 20px; text-align: center; border-top: 5px solid #000; background-color: #CDD3CC;">
+      <td style="padding:12px 20px; text-align: center; background-color: #CDD3CC;">
         <img style="max-width: 143px;"
           src="https://inventory.webziainfotech.com/images/dash-logo.png"
           alt="logo" />
@@ -163,12 +163,12 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
     </tr>
     <tr>
       <td style="background-color: #CDD3CC; padding:24px 44px;">
-        <p style="display: block; text-align: center; padding-bottom: 30px;"><a class="payment-btn"  href="${link}">
+        <p style="display: block; text-align: center; padding-bottom: 15px;"><a class="payment-btn"  href="${link}">
           Make Payment
         </a>
       </p>
         <p style="color:#454545; font-size: 14px; line-height: 22px;">If you experience any unusual symptoms or side effects, do not hesitate to contact me immediately.</p>
-        <p style="color:#454545; font-size: 14px; line-height: 22px; margin-top: 30px;">
+        <p style="color:#454545; font-size: 14px; line-height: 22px; margin-top: 20px;">
           Stay well,
         </p>
         <p style="color:#454545; font-size: 14px; line-height: 22px;">
