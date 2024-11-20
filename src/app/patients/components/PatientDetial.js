@@ -69,10 +69,10 @@ export default function PatientDetial() {
 
                     <div className="space-y-2 text-gray-700">
                         <div className="bg-customBg p-4 px-5 rounded-t-[8px] flex justify-between items-center">
-                            <span className="font-medium text-base text-gray-700">
+                            <span className="font-medium text-sm md:text-base text-gray-700">
                                 Patient Name: <span>{firstName +' ' + lastName}</span>
                             </span>
-                            <span className="text-gray-600 text-base">Date Created: {createdDate}</span>
+                            <span className="text-gray-600 text-sm md:text-base">Date Created: {createdDate}</span>
                         </div>
                         <div className='px-5'>
                         <p className='flex justify-between py-2'>
