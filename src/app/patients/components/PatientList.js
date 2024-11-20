@@ -6,10 +6,13 @@ import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 import { DeleteIcon, EditIcon } from 'components/svg-icons/icons';
 import Link from 'next/link'
+import Loader from 'components/loader';
+
 export default function PatientList() {
     const { data: session } = useSession();
     const [patients, setPatients] = useState([]);
     const [error, setError] = useState("");
+    const [fetchLoader, setFetchLoader] = useState(false);
     const router = useRouter();
 
     const handleDelete = async (id) => {
@@ -58,6 +61,7 @@ export default function PatientList() {
     };
     const fetchPatients = async () => {
         try {
+            setFetchLoader(true)
             const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
@@ -65,8 +69,10 @@ export default function PatientList() {
             const data = await response.json();
 
             setPatients(data);
+            setFetchLoader(false)
         } catch (error) {
             setError(error.message);
+            setFetchLoader(false)
         }
     }
 
@@ -79,6 +85,7 @@ export default function PatientList() {
     return (
         <AppLayout>
             <div className="container mx-auto">
+                {fetchLoader?<Loader/>:<>
                 <div className='flex justify-between mt-4 md:mt-2 mb-6'>
                     <h1 className="text-2xl">Patient List</h1>
                     <Link href='/patients/create' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[130px] text-center" >
@@ -141,7 +148,8 @@ export default function PatientList() {
                         ))}
                     </tbody>
                 </table>
-                </div>
+                    </div>
+                    </>}
             </div>
         </AppLayout>
     );

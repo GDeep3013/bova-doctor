@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import {useRouter, useParams } from 'next/navigation';
-
+import Loader from 'components/loader';
 export default function CreatePlan() {
     const { id } = useParams();
     const router = useRouter();
@@ -16,6 +16,7 @@ export default function CreatePlan() {
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [variants, setVariants] = useState([]);
+    const [fetchLoader, setfetchLoader] = useState(false);
 
     const fetchPatients = async () => {
         try {
@@ -90,6 +91,7 @@ export default function CreatePlan() {
     };
     useEffect(() => {
         // fetchProducts();
+        setfetchLoader(true)
         fetchPatients();
         fetchSavedProduct()
     }, []);
@@ -158,6 +160,7 @@ export default function CreatePlan() {
                     }));
                 }
                 setFormData(prevData => ({ ...prevData, items: mappedItems, message: data?.message }))
+                setfetchLoader(false)
             } else {
                 Swal.fire({
                     title: 'Error!',
@@ -165,6 +168,7 @@ export default function CreatePlan() {
                     icon: 'error',
                     confirmButtonText: 'OK',
                 });
+                setfetchLoader(false)
 
             }
         } catch (error) {
@@ -175,6 +179,7 @@ export default function CreatePlan() {
                 icon: 'error',
                 confirmButtonText: 'OK',
             });
+            setfetchLoader(false)
         }
     };
 
@@ -193,6 +198,7 @@ export default function CreatePlan() {
     const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
+             {!fetchLoader ? 
         <div className="flex flex-col">
             <h1 className="text-2xl pt-4 md:pt-1 mb-1">View Patient Plan</h1>
             <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
@@ -342,7 +348,9 @@ export default function CreatePlan() {
                 </div>
             </div>
 
-        </div >
+                </div >
+                :<Loader/>
+            }
     </AppLayout >
     )
 }

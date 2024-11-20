@@ -22,7 +22,7 @@ export async function POST(req) {
 
   try {
     const plan = await Plan.create(planData);
-    console.log(selectedItems);
+    // console.log(selectedItems);
 
     const encryptedId = await crypto.encrypt(plan._id.toString());
 

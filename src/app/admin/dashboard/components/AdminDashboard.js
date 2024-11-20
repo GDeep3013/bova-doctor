@@ -13,7 +13,6 @@ export default function AdminDashboard() {
     const [currentMonthEarning, setCurrentMonthEarning] = useState([]);
     const [graphMonth, SetGraphMonths] = useState([]);
     const [graphValue, SetGraphValue] = useState([]);
-    const [timePeriod, setTimePeriod] = useState("Month");
 
     const fetchData = async () => {
         try {

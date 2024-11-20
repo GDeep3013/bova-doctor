@@ -17,18 +17,12 @@ ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip,
 
 const LineChart = () => {
     const { data: session } = useSession();
-
-    const currentYear = new Date().getFullYear();
-
     const [timePeriod, setTimePeriod] = useState('Year');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [graphData, setGraphData] = useState([]);
     const [graphLabels, setGraphLabels] = useState([]);
-
-    const [graphMonths, setGraphMonths] = useState([]);
     const [error, setError] = useState('');
-
     const fetchData = async () => {
         try {
             let query = `?userId=${session?.user?.id}&timePeriod=${timePeriod}`;
@@ -44,8 +38,7 @@ const LineChart = () => {
             }
 
             const response = await fetch(`/api/doctors/dashboard/earnings${query}`);
-            // if (!response.ok) throw new Error('Failed to fetch data');
-                const data = await response.json();
+            const data = await response.json();
 
             if (data) {
                 if (timePeriod === 'Month') {
@@ -86,7 +79,6 @@ const LineChart = () => {
         fetchData();
     }, [timePeriod, startDate, endDate]);
 
-    const labels = graphMonths.length > 0 ? graphMonths : [];
 
     const data = {
         labels:graphLabels,
@@ -140,19 +132,7 @@ const LineChart = () => {
     },
 };
 
-    // const options = {
-    //     responsive: true,
-    //     plugins: {
-    //         legend: { display: false },
-    //         tooltip: { enabled: true },
-    //     },
-    //     scales: {
-    //         x: { type: 'category', display: true },
-    //         y: { type: 'linear', display: true },
-    //     },
-    // };
-
-    return (
+ return (
         <div className="p-4 bg-[#F9F9F9] rounded-lg">
             <div className="flex">
                 <div>

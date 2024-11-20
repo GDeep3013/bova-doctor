@@ -7,16 +7,19 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import AddPatient from '../../patients/components/AddPatient'
+import Loader from 'components/loader';
 
 export default function AdminDashboard() {
     const { data: session } = useSession();
     const [totalEarning, setTotalEarning] = useState(0);
     const [totalPatients, setTotalPatients] = useState(0);
     const [totalPlans, setTotalPlans] = useState(0);
+    const [fetchLoader, setFetchLoader] = useState(false);
 
 
     const fetchData = async () => {
         try {
+            setFetchLoader(true)
             const response = await fetch(`/api/doctors/dashboard/?userId=${session?.user?.id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
@@ -26,11 +29,13 @@ export default function AdminDashboard() {
                 setTotalEarning(data.totalEarnings);
                 setTotalPatients(data.totalPatients);
                 setTotalPlans(data.totalPlans);
+                setFetchLoader(false)
 
             }
         } catch (error) {
-                console.log(error);
-            }
+            console.log(error);
+            setFetchLoader(false)
+        }
     };
 
 
@@ -66,6 +71,8 @@ export default function AdminDashboard() {
                     </div>
                 </div> */}
 
+                {fetchLoader ?<Loader/>:
+                <>                
                 <div className='doctor-graph'>
 
                     <div className="min-[1025px]:mt-0 flex max-[575px]:gap-y-4 min-[576px]:space-x-5 max-[575px]:flex-wrap">
@@ -89,6 +96,7 @@ export default function AdminDashboard() {
                 </div>
 
                 <AddPatient/>
+                </>}
             </div>
 
         </AppLayout>

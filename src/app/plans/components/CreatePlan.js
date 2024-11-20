@@ -277,7 +277,7 @@ export default function CreatePlan() {
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
 
     const doctorCommission = subtotal * (commissionPercentage / 100);
-    console.log('formData', formData);
+
     return (
         <AppLayout>
             <div className="flex flex-col">
@@ -515,58 +515,59 @@ export default function CreatePlan() {
                         </div>
                     </div>
                     {/* Right Column - Price Summary */}
-                    <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
-                        <div className="bg-customBg3 rounded-lg">
-                            <div className='p-5'>
-                                <span className="font-semibold text-base text-textColor3 uppercase">Price</span>
-                                <div className="mt-2 overflow-x-auto">
-                                    <table className="min-w-full table-auto">
-                                        <tbody>
-                                            {formData.items.map((item, index) => (
-                                                <tr key={index} className="">
-                                                    <td className="py-2 text-textColor3 text-sm">
-                                                        {item.title}
-                                                    </td>
-                                                    <td className="py-2 text-textColor3 text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
-                                                    <td className="py-2 text-textColor3 text-sm text-right">
-                                                        ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                    {selectedItems.length > 0 &&
+                        <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
+                            <div className="bg-customBg3 rounded-lg">
+                                <div className='p-5'>
+                                    <span className="font-semibold text-base text-textColor3 uppercase">Price</span>
+                                    <div className="mt-2 overflow-x-auto">
+                                        <table className="min-w-full table-auto">
+                                            <tbody>
+                                                {formData.items.map((item, index) => (
+                                                    <tr key={index} className="">
+                                                        <td className="py-2 text-textColor3 text-sm">
+                                                            {item.title}
+                                                        </td>
+                                                        <td className="py-2 text-textColor3 text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                        <td className="py-2 text-textColor3 text-sm text-right">
+                                                            ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                <tr className="">
+                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount (0%)</td>
+                                                    <td className="py-2 text-textColor3 text-sm text-right">-${discount.toFixed(2)}</td>
+                                                </tr>
+                                                <tr className="">
+                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Doctor commission</td>
+                                                    <td className="py-2 text-textColor3 text-sm text-right">${doctorCommission.toFixed(2)}</td>
+                                                </tr>
+                                                <tr className="border-b border-[#AFAAAC] pb-4">
+                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Subtotal</td>
+                                                    <td className="py-2 text-textColor3 font-semibold text-right">
+                                                        ${(subtotal - discount).toFixed(2)}
                                                     </td>
                                                 </tr>
-                                            ))}
-                                            <tr className="">
-                                                <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount (0%)</td>
-                                                <td className="py-2 text-textColor3 text-sm text-right">-${discount.toFixed(2)}</td>
-                                            </tr>
-                                            <tr className="">
-                                                <td className="py-2 text-textColor3 text-sm" colSpan="2">Doctor commission</td>
-                                                <td className="py-2 text-textColor3 text-sm text-right">${doctorCommission.toFixed(2)}</td>
-                                            </tr>
-                                            <tr className="border-b border-[#AFAAAC] pb-4">
-                                                <td className="py-2 text-textColor3 text-sm" colSpan="2">Subtotal</td>
-                                                <td className="py-2 text-textColor3 font-semibold text-right">
-                                                    ${(subtotal - discount).toFixed(2)}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                <div className='text-right py-5'>
-                                    <button
-                                        onClick={() => { handleSubmit() }}
-                                        disabled={formData.items.length === 0 || !formData.patient_id}
-                                        className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
+                                    <div className='text-right py-5'>
+                                        <button
+                                            onClick={() => { handleSubmit() }}
+                                            disabled={formData.items.length === 0 || !formData.patient_id}
+                                            className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
                                             ${formData.items.length === 0 || !formData.patient_id
-                                                ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
-                                                : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
-                                        }>
-                                        {loader ? "Please wait ..." : 'Send to Patient'}
-                                    </button>
+                                                    ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                                    : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                            }>
+                                            {loader ? "Please wait ..." : 'Send to Patient'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                    }
                 </div>
 
                 {isModalOpen && (

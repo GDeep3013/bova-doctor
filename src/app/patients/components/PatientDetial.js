@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter,useParams } from 'next/navigation';
 import Link from 'next/link'
+import Loader from 'components/loader'
 export default function PatientDetial() {
 
     const router = useRouter();
@@ -13,7 +14,8 @@ export default function PatientDetial() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-       const [createdDate, setCreatedDate] = useState('');
+    const [createdDate, setCreatedDate] = useState('');
+    const [fetchLoader, setFetchLoader] = useState(false);
     function formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -29,6 +31,7 @@ export default function PatientDetial() {
 
     useEffect(() => {
         if (id) {
+            setFetchLoader(true)
             const fetchPatientData = async () => {
                 const response = await fetch(`/api/patients/edit/${id}`);
                 const data = await response.json();
@@ -38,6 +41,7 @@ export default function PatientDetial() {
                     setEmail(data.email);
                     setPhone(formatPhoneNumber(data.phone));
                     setCreatedDate(formatDate(data.createdAt));
+                    setFetchLoader(false)
                 } else {
                     Swal.fire({
                         title: 'Error!',
@@ -45,6 +49,7 @@ export default function PatientDetial() {
                         icon: 'error',
                         confirmButtonText: 'OK',
                     });
+                    setFetchLoader(false)
                 }
             };
 
@@ -56,7 +61,7 @@ export default function PatientDetial() {
     return (
         <AppLayout>
             <div className="flex flex-col">
-
+            {fetchLoader ? <Loader /> : <>
             <h1 className='page-title pt-2 text-2xl pb-1'>Patient Profile</h1>
             <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
 
@@ -94,6 +99,7 @@ export default function PatientDetial() {
                         </Link>
                     </div>
                 </div>
+        </>}
             </div>
         </AppLayout>
     );
