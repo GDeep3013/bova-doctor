@@ -13,6 +13,8 @@ export default function CreatePlan() {
     const [searchTerm, setSearchTerm] = useState('');
     const [products, setProducts] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
+    const [updateSelectedItems, setUpdateSelectedItems] = useState(false);
+
 
     const fetchProducts = async () => {
         try {
@@ -21,19 +23,20 @@ export default function CreatePlan() {
             if (!response.ok) throw new Error('Failed to fetch products');
             const data = await response.json();
             setProducts(data);
-            setFetchLoader(false)
+            if (updateSelectedItems) {
+                setFetchLoader(false)
+            }
         } catch (error) {
             console.error("Error fetching products:", error);
-            setFetchLoader(false)
-
+            if (updateSelectedItems) {
+                setFetchLoader(false)
+            }
       
         }
     }
 
         const fetchSavedProduct = async () => {
-            try {
-            setFetchLoader(true)
-             
+            try {             
             const response = await fetch(`/api/products`);
             if (!response.ok) throw new Error('Failed to fetch product status');
                 const data = await response.json();
@@ -48,14 +51,14 @@ export default function CreatePlan() {
 
 
     useEffect(() => {
-        fetchProducts();
+        fetchProducts('yes');
         fetchSavedProduct();
     }, []);
 
     useEffect(() => {
 
 
-        if (products.length && savedProduct.length) {
+        if (products.length && savedProduct.length && updateSelectedItems ==false) {
             const updatedSelectedItems = savedProduct.filter((sProduct) => {
                 const matchedProduct = products.find((product) => product.id === sProduct.product_id);
                 return matchedProduct && sProduct.status === 'active';
@@ -67,7 +70,7 @@ export default function CreatePlan() {
         }
   
 
-    }, [products, savedProduct]);
+    }, [products, savedProduct ,updateSelectedItems]);
 
 
     const handleSelectProduct = (product) => {
@@ -143,9 +146,7 @@ export default function CreatePlan() {
     useEffect(() => {
 
         const searchProducts = async () => {
-            setFetchLoader(true)
             try {
-                setFetchLoader(true)
             const url = `/api/shopify/products/search?q=${searchTerm}`;
             const response = await fetch(url);
             if (!response.ok) {
@@ -154,16 +155,17 @@ export default function CreatePlan() {
             const data = await response.json();
 
                 setProducts(data);
-                setFetchLoader(false)
           } catch (error) {
                 console.log('error', error)
-                setFetchLoader(false)
                 
           }
         };
         if (searchTerm) {
+            setUpdateSelectedItems(true)
+
             searchProducts();
         } else {
+            // setUpdateSelectedItems(true)
             fetchProducts()
             }
       }, [searchTerm])
@@ -176,7 +178,7 @@ export default function CreatePlan() {
     return (
         <AppLayout>
             <div className="flex flex-col">
-                {fetchLoader ? <Loader /> : <>
+                {fetchLoader && !updateSelectedItems ? <Loader /> : <>
                     <h1 className="text-2xl pt-4 md:pt-1 mb-1">Products</h1>
                     <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
                     <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
@@ -261,7 +263,7 @@ export default function CreatePlan() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {filteredProducts.map((product, index) => {
+                                                    { (fetchLoader && updateSelectedItems) ? <Loader /> : filteredProducts.map((product, index) => {
                                                         const isProductAdded = selectedItems.some(item => item.id === product.id);
                                                         return (
                                                             <tr

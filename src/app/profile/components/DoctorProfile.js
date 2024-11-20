@@ -16,7 +16,7 @@ export default function Profile() {
             year: '2-digit',
         });
     }
-    
+  
     return (
         <AppLayout>
             <div className="flex flex-col">
@@ -40,6 +40,12 @@ export default function Profile() {
                                 </p>
                                 <p className='flex justify-between py-2'>
                                     <span className="text-textColor text-[14px] md:text-base"> Phone Number</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.phone} </span>
+                                </p>
+                                <p className='flex justify-between py-2'>
+                                    <span className="text-textColor text-[14px] md:text-base"> Specialty</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.specialty} </span>
+                                </p>
+                                <p className='flex justify-between py-2'>
+                                    <span className="text-textColor text-[14px] md:text-base"> Clinic Name</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.clinicName} </span>
                                 </p>
                                 <p className='flex justify-between py-2'>
                                     <span className="text-textColor text-[14px] md:text-base">Commission %</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'> {session?.userDetail?.commissionPercentage}% </span>
