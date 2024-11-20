@@ -105,7 +105,6 @@ export default function CreatePlan() {
             if (productExists) return prevSelectedItems;
             return [...prevSelectedItems, variant];
         });
-        console.log(variant);
         setFormData((prevData) => {
             const updatedItems = prevData.items
             const newItem = {
@@ -278,6 +277,7 @@ export default function CreatePlan() {
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
 
     const doctorCommission = subtotal * (commissionPercentage / 100);
+    console.log('formData', formData);
     return (
         <AppLayout>
             <div className="flex flex-col">
@@ -479,7 +479,9 @@ export default function CreatePlan() {
                                         </div>
                                         <div className='w-full min-[768px]:max-w-[510px]'>
                                             <div className="mt-1">
-                                                <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
+                                                  <textarea placeholder='Add Notes'
+                                                        value={itemData?.properties.notes ?? ""}
+                                                       onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)}className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
                                             </div>
                                         </div>
                                     </div>

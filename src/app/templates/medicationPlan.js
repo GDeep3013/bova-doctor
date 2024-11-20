@@ -1,5 +1,4 @@
-export function medicationPlan(patient, doctor, link, items, selectedItems) {
-    
+export function medicationPlan(patient, doctor, link, items, selectedItems) {   
 
     const renderSelectedItems = (selectedItems) =>
         selectedItems
@@ -44,7 +43,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
                                                 <span style="color: #898989;">Take with</span> ${itemData?.properties.takeWith ?? ''}
                                             </li>
                                             <li style="display: block; margin-top: 10px; padding: 16px 20px; font-size: 14px; border-radius: 5px; background-color: #fff;">
-                                                <span style="color: #898989;">Note :</span> ${itemData?.properties.note ?? ''}
+                                                <span style="color: #898989;">Note :</span> ${itemData?.properties.notes ?? ''}
                                             </li>
                                         </ul>
                                     </td>
