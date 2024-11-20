@@ -246,6 +246,7 @@ export default function CreatePlan() {
                 confirmButtonText: 'OK',
             });
             setLoader(false)
+            router.push('/plans/review');
         } catch (error) {
             setLoader(false)
 
