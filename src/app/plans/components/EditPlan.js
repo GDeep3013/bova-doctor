@@ -246,6 +246,7 @@ export default function CreatePlan() {
                 confirmButtonText: 'OK',
             });
             setLoader(false)
+            router.push('/plans/review');
         } catch (error) {
             setLoader(false)
 
@@ -565,7 +566,9 @@ export default function CreatePlan() {
                                     </div>
                                     <div className='w-full min-[768px]:max-w-[510px]'>
                                         <div className="mt-1">
-                                            <textarea placeholder='Add Notes' className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
+                                            <textarea placeholder='Add Notes'   
+                                              value={itemData?.properties.notes ?? ""}
+                                                       onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)} className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
                                         </div>
                                     </div>
                                 </div>
