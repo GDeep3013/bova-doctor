@@ -15,7 +15,7 @@ import {
 // Register Chart.js components
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
 
-const LineChart = ({fetchLoader,setFetchLoader}) => {
+const LineChart = () => {
     const { data: session } = useSession();
 
     const currentYear = new Date().getFullYear();
@@ -28,7 +28,6 @@ const LineChart = ({fetchLoader,setFetchLoader}) => {
 
     const [graphMonths, setGraphMonths] = useState([]);
     const [error, setError] = useState('');
-
     const fetchData = async () => {
         try {
             
@@ -46,7 +45,7 @@ const LineChart = ({fetchLoader,setFetchLoader}) => {
 
             const response = await fetch(`/api/doctors/dashboard/earnings${query}`);
             // if (!response.ok) throw new Error('Failed to fetch data');
-                const data = await response.json();
+            const data = await response.json();
 
             if (data) {
                 if (timePeriod === 'Month') {
@@ -66,20 +65,18 @@ const LineChart = ({fetchLoader,setFetchLoader}) => {
                     setGraphData(values);
                 }
                 setError('');
-                setFetchLoader(false)
             } else {
                 setError('Data is not available ');
-                setFetchLoader(false)
 
             }
         } catch (error) {
             console.log('Error fetching data:', error.message);
-            setFetchLoader(false)
 
         }
     };
 
     useEffect(() => {
+
         if (timePeriod === 'Custom' && startDate && endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
@@ -89,7 +86,6 @@ const LineChart = ({fetchLoader,setFetchLoader}) => {
             }
             setError('');
         }
-        setFetchLoader(true)
         fetchData();
         
     }, [timePeriod, startDate, endDate]);
@@ -97,7 +93,7 @@ const LineChart = ({fetchLoader,setFetchLoader}) => {
     const labels = graphMonths.length > 0 ? graphMonths : [];
 
     const data = {
-        labels:graphLabels,
+        labels: graphLabels,
         datasets: [
             {
                 fill: true,
@@ -129,12 +125,12 @@ const LineChart = ({fetchLoader,setFetchLoader}) => {
             },
         },
         scales: {
-            x: { 
-                type: 'category', 
-                display: true 
+            x: {
+                type: 'category',
+                display: true
             },
-            y: { 
-                type: 'linear', 
+            y: {
+                type: 'linear',
                 min: 0,
                 ticks: {
                     callback: function (value) {
@@ -175,27 +171,28 @@ const LineChart = ({fetchLoader,setFetchLoader}) => {
             {timePeriod === 'Custom' && (
                 <div className="flex justify-end mt-4">
                     <div>
-                    <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="p-2 mr-2 text-sm focus:outline-none"
-                    />
-                    <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="p-2 text-sm focus:outline-none"
-                    />
-                    {error && <p className="text-red-500 text-sm mt-2 w-full text-right">{error}</p>}
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="p-2 mr-2 text-sm focus:outline-none"
+                        />
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="p-2 text-sm focus:outline-none"
+                        />
+                        {error && <p className="text-red-500 text-sm mt-2 w-full text-right">{error}</p>}
                     </div>
                 </div>
             )}
 
             <div className="relative mt-4">
-                {!fetchLoader && <Line data={data} options={options} height={80} className='!w-full' />}
+                <Line data={data} options={options} height={80} className='!w-full' />
             </div>
         </div>
+
     );
 };
 
