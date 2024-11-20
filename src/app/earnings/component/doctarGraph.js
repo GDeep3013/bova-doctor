@@ -15,7 +15,7 @@ import {
 // Register Chart.js components
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
 
-const LineChart = () => {
+const LineChart = ({fetchLoader,setFetchLoader}) => {
     const { data: session } = useSession();
 
     const currentYear = new Date().getFullYear();
@@ -31,6 +31,7 @@ const LineChart = () => {
 
     const fetchData = async () => {
         try {
+            
             let query = `?userId=${session?.user?.id}&timePeriod=${timePeriod}`;
             if (timePeriod == 'Custom') {
                 if (!startDate && !endDate) {
@@ -65,11 +66,16 @@ const LineChart = () => {
                     setGraphData(values);
                 }
                 setError('');
+                setFetchLoader(false)
             } else {
-                setError('Data is not available o');
+                setError('Data is not available ');
+                setFetchLoader(false)
+
             }
         } catch (error) {
             console.log('Error fetching data:', error.message);
+            setFetchLoader(false)
+
         }
     };
 
@@ -83,7 +89,9 @@ const LineChart = () => {
             }
             setError('');
         }
+        setFetchLoader(true)
         fetchData();
+        
     }, [timePeriod, startDate, endDate]);
 
     const labels = graphMonths.length > 0 ? graphMonths : [];
@@ -110,24 +118,36 @@ const LineChart = () => {
                 callbacks: {
                     label: function (context) {
                         let value = context.raw;
-                        return `$ ${value.toFixed(2)}`; // Prepend `$` and format the number
+                        return `$ ${value.toFixed(2)}`;
                     },
                 },
             },
         },
-    }
+        layout: {
+            padding: {
+                bottom: 10,
+            },
+        },
+        scales: {
+            x: { 
+                type: 'category', 
+                display: true 
+            },
+            y: { 
+                type: 'linear', 
+                min: 0,
+                ticks: {
+                    callback: function (value) {
+                        return `$${value.toFixed(2)}`;
+                    },
+                },
+                grid: {
+                    drawBorder: true, // Ensure gridlines don't get clipped
+                },
+            },
+        },
+    };
 
-    // const options = {
-    //     responsive: true,
-    //     plugins: {
-    //         legend: { display: false },
-    //         tooltip: { enabled: true },
-    //     },
-    //     scales: {
-    //         x: { type: 'category', display: true },
-    //         y: { type: 'linear', display: true },
-    //     },
-    // };
 
     return (
         <div className="p-4 bg-[#F9F9F9] rounded-lg">
@@ -173,7 +193,7 @@ const LineChart = () => {
             )}
 
             <div className="relative mt-4">
-                <Line data={data} options={options} height={80} className='!w-full'/>
+                {!fetchLoader && <Line data={data} options={options} height={80} className='!w-full' />}
             </div>
         </div>
     );

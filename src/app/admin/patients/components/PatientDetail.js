@@ -4,10 +4,11 @@ import AppLayout from '../../../../components/Applayout';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import {useRouter, useParams } from 'next/navigation';
-
+import Loader from 'components/loader';
 export default function PatientDetial() {
     const { id } = useParams();
     const router = useRouter();
+    const [fetchLoader, setFetchLoader] = useState(false);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -28,6 +29,7 @@ export default function PatientDetial() {
       }
     useEffect(() => {
         if (id) {
+            setFetchLoader(true)
             const fetchPatientData = async () => {
                 const response = await fetch(`/api/patients/edit/${id}`);
                 const data = await response.json();
@@ -37,6 +39,7 @@ export default function PatientDetial() {
                     setEmail(data.email);
                     setPhone(formatPhoneNumber(data.phone));
                     setCreatedDate(formatDate(data.createdAt));
+                    setFetchLoader(false)
                 } else {
                     Swal.fire({
                         title: 'Error!',
@@ -44,6 +47,7 @@ export default function PatientDetial() {
                         icon: 'error',
                         confirmButtonText: 'OK',
                     });
+                    setFetchLoader(false)
                 }
             };
 
@@ -55,7 +59,7 @@ export default function PatientDetial() {
     return (
         <AppLayout>
             <div className="flex flex-col p-6">
-
+            {fetchLoader?<Loader/>:<>
 
             <h1 className="page-title pt-2 pb-3 text-2xl">Patient Profile</h1>
             <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
@@ -94,7 +98,7 @@ export default function PatientDetial() {
                         </Link>
                     </div> */}
                 </div>
-
+                </>}
             </div>
         </AppLayout>
     );

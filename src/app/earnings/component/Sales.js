@@ -1,6 +1,7 @@
 'use client'
 import React, { useState ,useEffect} from 'react';
 import { useSession } from 'next-auth/react';
+import Loader from 'components/loader';
 export default function Sales() {
   const { data: session } = useSession();
 
@@ -12,6 +13,7 @@ export default function Sales() {
   const [dateEarning,setdateEarning]=useState('')
   const fetchData = async () => {
     try {
+
         const response = await fetch(`/api/sales/?userId=${session?.user?.id}`);
         if (!response.ok) {
             throw new Error("Failed to fetch doctors");

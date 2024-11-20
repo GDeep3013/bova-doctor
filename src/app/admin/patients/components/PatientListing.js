@@ -4,8 +4,11 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
+import Loader from 'components/loader';
 export default function PatientList() {
     const { data: session } = useSession();
+    const [fetchLoader, setFetchLoader] = useState(false);
+
     const router = useRouter();
     const [patients, setPatients] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -20,6 +23,7 @@ export default function PatientList() {
 
     const fetchPatients = async (page) => {
         try {
+            setFetchLoader(true)
             const response = await fetch(`/api/admin/getPatients?page=${page}&limit=${itemsPerPage}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
@@ -27,8 +31,10 @@ export default function PatientList() {
             const data = await response.json();
             setPatients(data.data);
             setTotalPages(data.pagination.totalPages);
+            setFetchLoader(false)
         } catch (error) {
             setError(error.message);
+            setFetchLoader(false)
         }
     }
     const handleView = (id) => {
@@ -50,6 +56,7 @@ export default function PatientList() {
     return (
         <AppLayout>
             <div className="container mx-auto ">
+            {fetchLoader?<Loader/>:<>
                 <h1 className="text-2xl mt-4 md:mt-2 mb-1">Patient Listing</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
 
@@ -97,7 +104,7 @@ export default function PatientList() {
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className={`px-4 py-2 text-white bg-gray-500  rounded ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+                        className={`px-4 py-2 text-white bg-gray-500  rounded ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'}`}
                     >
                         Previous
                     </button>
@@ -107,11 +114,12 @@ export default function PatientList() {
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className={`px-4 py-2 text-white bg-gray-500 rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+                        className={`px-4 py-2 text-white bg-gray-500 rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'}`}
                     >
                         Next
                     </button>
-                </div>
+                    </div>
+                    </>}
             </div>
         </AppLayout>
     );

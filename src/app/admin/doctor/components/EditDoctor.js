@@ -3,6 +3,7 @@ import AppLayout from '../../../../components/Applayout';
 import Swal from 'sweetalert2';
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Loader from 'components/loader';
 export default function CreateDoctor() {
 
     const [firstName, setFirstName] = useState('');
@@ -15,6 +16,7 @@ export default function CreateDoctor() {
     const [userType, setUserType] = useState('');
     const [commissionPercentage, setCommissionPercentage] = useState('');
     const [laoding, setLaoding] = useState('');
+    const [fetchLoader, setFetchLoader] = useState(false);
 
 
     const router = useRouter();
@@ -67,6 +69,7 @@ export default function CreateDoctor() {
 
     useEffect(() => {
         if (id) {
+            setFetchLoader(true)
             const fetchDoctorData = async () => {
                 const response = await fetch(`/api/doctors/edit/${id}`);
                 const data = await response.json();
@@ -79,6 +82,7 @@ export default function CreateDoctor() {
                     setSpecialty(data?.specialty);
                     setClinicName(data?.clinicName);
                     setCommissionPercentage(data.commissionPercentage);
+                    setFetchLoader(false)
 
                 } else {
                     Swal.fire({
@@ -87,6 +91,7 @@ export default function CreateDoctor() {
                         icon: 'error',
                         confirmButtonText: 'OK',
                     });
+                    setFetchLoader(false)
                 }
             };
             fetchDoctorData();
@@ -157,6 +162,7 @@ export default function CreateDoctor() {
     return (
         <AppLayout>
             <div className="login-outer flex flex-col">
+            {fetchLoader?<Loader/>:<>
                 <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit  Doctors</h1>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">
@@ -274,7 +280,8 @@ export default function CreateDoctor() {
                             </form>
                         </div>
                     </div>
-                </div>
+                    </div>
+                    </>}
             </div>
         </AppLayout>
     );

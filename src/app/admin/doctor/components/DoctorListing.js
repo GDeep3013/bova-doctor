@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { DeleteIcon, EditIcon } from 'components/svg-icons/icons';
-
+import Loader from 'components/loader';
 export default function DoctorListing() {
     const { data: session } = useSession();
     const [doctors, setDoctors] = useState([]);
@@ -14,6 +14,7 @@ export default function DoctorListing() {
     const [totalPages, setTotalPages] = useState(1);
     const [limit] = useState(10); // Set the limit of doctors per page
     const router = useRouter();
+    const [fetchLoader, setFetchLoader] = useState(false);
 
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -48,6 +49,7 @@ export default function DoctorListing() {
 
     const fetchDoctors = async (currentPage = 1) => {
         try {
+            setFetchLoader(true)
             const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
@@ -55,8 +57,10 @@ export default function DoctorListing() {
             const data = await response.json();
             setDoctors(data.data);
             setTotalPages(data.pagination.totalPages);
+            setFetchLoader(false);
         } catch (error) {
             // console.log(error.message);
+            setFetchLoader(false);
         }
     };
 
@@ -68,6 +72,7 @@ export default function DoctorListing() {
     return (
         <AppLayout>
             <div className="container mx-auto">
+                {fetchLoader?<Loader/>:<>
                 <div className='flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-6'>
                     <div>
                         <h1 className="text-2xl">Doctors Listing</h1>
@@ -131,7 +136,7 @@ export default function DoctorListing() {
                     <button
                         disabled={page === 1}
                         onClick={() => setPage(page - 1)}
-                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
                             }`}
                     >
                         Previous
@@ -142,12 +147,13 @@ export default function DoctorListing() {
                     <button
                         disabled={page === totalPages}
                         onClick={() => setPage(page + 1)}
-                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
                             }`}
                     >
                         Next
                     </button>
                 </div>
+                </>}
             </div>
         </AppLayout>
     );
