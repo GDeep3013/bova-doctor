@@ -33,7 +33,7 @@ export async function GET() {
         // Sort doctors by revenue in descending order and take the top 8
         const topEarningDoctors = doctorEarningsData
             .sort((a, b) => b.revenue - a.revenue)
-            .slice(0, 8);
+            .slice(0, 7);
 
         const totalDoctors = await Doctor.countDocuments();
         const totalPatient = await Patient.countDocuments();
