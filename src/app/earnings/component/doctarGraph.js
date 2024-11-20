@@ -133,10 +133,10 @@ const LineChart = () => {
         <div className="p-4 bg-[#F9F9F9] rounded-lg">
             <div className="flex">
                 <div>
-                    <h3 className="text-xl md:text-2xl font-semibold mt-[29px] ml-[29px]">
+                    <h3 className="text-xl md:text-2xl font-semibold">
                         $ {graphData.reduce((sum, val) => sum + val, 0).toFixed(2)}
                     </h3>
-                    <p className="text-gray-500 ml-[29px]">
+                    <p className="text-gray-500">
                         Total Amount Earned this {timePeriod}
                     </p>
                 </div>
