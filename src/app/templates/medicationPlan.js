@@ -96,7 +96,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
   }
 
   .payment-btn:hover {
-    background-color: #fbb034;
+    background-color: #ff0000;
     color: #000;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     transform: scale(1.05);
