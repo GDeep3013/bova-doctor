@@ -135,9 +135,9 @@ export default function CreateDoctor() {
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full p-0">
                     <div className="w-full max-w-5xl bg-white rounded-lg border border-[#AFAAAC]">
-                        <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center">
+                        <div className="bg-customBg3 py-4 px-4 md:px-8 rounded-t-lg w-full flex justify-between items-center">
                             <span className="text-[19px] text-black">Add Doctor Information</span></div>
-                        <div className='flex p-8'>
+                        <div className='flex p-4 md:p-8'>
                             <form onSubmit={handleSubmit} className="space-y-4 w-full">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="relative">
@@ -180,7 +180,7 @@ export default function CreateDoctor() {
                                             placeholder="Phone"
                                             value={phone??""}
                                             onChange={(e) => { setPhone(e.target.value); if (errors.phone) setErrors({ ...errors, phone: '' }); }}
-                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
+                                            className={`appearance-none  w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                         />
                                         {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                                     </div>

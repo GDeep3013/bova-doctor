@@ -58,7 +58,7 @@ export default function PatientDetial() {
 
     return (
         <AppLayout>
-            <div className="flex flex-col p-6">
+            <div className="flex flex-col">
             {fetchLoader?<Loader/>:<>
 
             <h1 className="page-title pt-2 pb-3 text-2xl">Patient Profile</h1>
@@ -67,24 +67,24 @@ export default function PatientDetial() {
                 <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
 
                     <div className="space-y-2 text-gray-700">
-                        <div className="bg-customBg p-4 px-5 rounded-t-[8px] flex justify-between items-center">
-                            <span className="font-medium text-base text-gray-700">
+                        <div className="bg-customBg p-4 px-3 md:px-5 rounded-t-[8px] flex justify-between items-center">
+                            <span className="font-medium text-sm md:text-base text-gray-700">
                                 Patient Name: <span>{firstName +' ' + lastName}</span>
                             </span>
-                            <span className="text-gray-600 text-base">Date Created: {createdDate}</span>
+                            <span className="text-gray-600 text-sm md:text-base">Date Created: {createdDate}</span>
                         </div>
-                        <div className='px-5'>
+                        <div className='px-3 md:px-5'>
                         <p className='flex justify-between p-2'>
-                            <span className="text-textColor text-base">Patient Email:</span> <span className='text-left min-w-[126px]'> {email} </span>
+                            <span className="text-textColor text-base">Patient Email:</span> <span className='text-right min-w-[126px]'> {email} </span>
                         </p>
                         <p className='flex justify-between p-2'>
-                            <span className="text-textColor text-base">Patient Phone Number:</span> <span className='text-left min-w-[126px]'> {phone} </span>
+                            <span className="text-textColor text-base">Patient Phone Number:</span> <span className='text-right min-w-[126px]'> {phone} </span>
                         </p>
                         <p className='flex justify-between p-2'>
-                            <span className="text-textColor text-base">Discount Rate:</span> <span className='text-left min-w-[126px]'> 10% </span>
+                            <span className="text-textColor text-base">Discount Rate:</span> <span className='text-right min-w-[126px]'> 10% </span>
                         </p>
                         <p className='flex justify-between p-2'>
-                            <span className="text-textColor text-base">Current Subscriptions:</span> <span className='text-left min-w-[126px]'> L-01 </span>
+                            <span className="text-textColor text-base">Current Subscriptions:</span> <span className='text-right min-w-[126px]'> L-01 </span>
                         </p>
                         </div>
                     </div>

@@ -36,19 +36,19 @@ export default function Profile() {
                             </div>
                             <div className='px-5'>
                                 <p className='flex justify-between py-2'>
-                                    <span className="text-textColor text-[14px] md:text-base"> Email</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.email} </span>
+                                    <span className="text-textColor text-[14px] md:text-base"> Email</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.email} </span>
                                 </p>
                                 <p className='flex justify-between py-2'>
-                                    <span className="text-textColor text-[14px] md:text-base"> Phone Number</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.phone} </span>
+                                    <span className="text-textColor text-[14px] md:text-base"> Phone Number</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.phone} </span>
                                 </p>
                                 <p className='flex justify-between py-2'>
-                                    <span className="text-textColor text-[14px] md:text-base"> Specialty</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.specialty} </span>
+                                    <span className="text-textColor text-[14px] md:text-base"> Specialty</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.specialty} </span>
                                 </p>
                                 <p className='flex justify-between py-2'>
-                                    <span className="text-textColor text-[14px] md:text-base"> Clinic Name</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.clinicName} </span>
+                                    <span className="text-textColor text-[14px] md:text-base"> Clinic Name</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.clinicName} </span>
                                 </p>
                                 <p className='flex justify-between py-2'>
-                                    <span className="text-textColor text-[14px] md:text-base">Commission %</span> <span className='text-left text-[14px] md:text-base min-w-[126px]'> {session?.userDetail?.commissionPercentage}% </span>
+                                    <span className="text-textColor text-[14px] md:text-base">Commission %</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'> {session?.userDetail?.commissionPercentage}% </span>
                                 </p>
 
                             </div>

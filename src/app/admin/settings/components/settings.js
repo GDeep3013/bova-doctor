@@ -191,7 +191,7 @@ export default function CreatePlan() {
                                         <span className="text-textColor font-medium cursor-pointer">Select Products:</span>
                                         <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-5 items-center">
                                             {selectedItems.map((product, index) => (
-                                                <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
+                                                <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[43%] mt-3 md:mt-0' key={index}>
                                                     <button
                                                         onClick={() => { handleDeselectProduct(product?.variants[0]?.id, product) }}
                                                         className="top-[-9px] absolute right-[-9px] w-6 h-6 flex items-center justify-center
@@ -274,7 +274,7 @@ export default function CreatePlan() {
                                                                     <img
                                                                         src={product.image?.src || '/images/product-img1.png'}
                                                                         alt={product.title}
-                                                                        className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
+                                                                        className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
                                                                     />
                                                                 </td>
                                                                 <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>

@@ -716,7 +716,7 @@ export default function CreatePlan() {
                                                                                     : '/images/product-img1.png'
                                                                         }
                                                                         alt={variant.product.title}
-                                                                        className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
+                                                                        className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
                                                                     />
                                                                 </td>
                                                                 <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{variant.product.title}</td>
