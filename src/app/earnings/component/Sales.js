@@ -57,7 +57,7 @@ useEffect(() => {
 
         <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
           {data.map((item, index) => (
-            <div key={index} className="p-2 md:px-3 md:py-5 border-b border-[#AFAAAC] last:border-b-0">
+            <div key={index} className="p-2 md:px-3 md:py-4 border-b border-[#AFAAAC] last:border-b-0">
               <div
                 className="flex justify-between items-center cursor-pointer"
                 // onClick={() => togglePanel(index)}

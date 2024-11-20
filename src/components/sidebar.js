@@ -36,7 +36,7 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
   };
 
   return (
-    <div className={`w-full max-[1199px]:max-w-[290px] max-w-[300px] min-[1200px]:min-w-[300px] inset-y-0 transition-transform ease-in-out p-[30px] min-[1100px]:p-[50px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
+    <div className={`w-full max-[1199px]:max-w-[290px] max-w-[300px] inset-y-0 transition-transform ease-in-out p-[30px] min-[1100px]:p-[50px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
       <button className=' absolute right-0 top-4 pr-5 min-[1025px]:hidden ' onClick={toggleSidebar} >
         <CloseIcon/>
         </button>
