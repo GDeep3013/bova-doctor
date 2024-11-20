@@ -1,5 +1,5 @@
 export function medicationPlan(patient, doctor, link, items, selectedItems) {
-    
+
 
     const renderSelectedItems = (selectedItems) =>
         selectedItems
@@ -20,7 +20,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
                                                 item.image?.url ||
                                                 item.product.images?.[0]?.url ||
                                                 '/images/product-img1.png'
-                                            }" 
+                                            }"
                                             alt="product-img">
                                         <h3 style="font-size: 18px; font-weight: bold; line-height: 21px;">${
                                             item.title !== 'Default Title'
@@ -150,7 +150,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
     ${renderSelectedItems(selectedItems)}
     <tr>
       <td style="background-color: #CDD3CC; padding:11px 25px;">
-        <p style="display: block; text-align: center; position: relative; top: -34px;"><a class="payment-btn"  href="${link}">
+        <p style="display: block; text-align: center; padding-bottom: 24px;"><a class="payment-btn"  href="${link}">
           Make Payment Here
         </a>
       </p>
