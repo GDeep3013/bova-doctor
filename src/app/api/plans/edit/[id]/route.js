@@ -76,7 +76,7 @@ export async function PUT(req, { params }) {
       from: process.env.EMAIL_USER,
       to: patient.email,
       subject: 'Your Updated Medication Plan',
-      html: medicationPlan(updatedPlan?.patient_id,link), 
+      html: medicationPlan(patient,doctor,link,items,selectedItems), 
     };
 
     // Send the update notification email
