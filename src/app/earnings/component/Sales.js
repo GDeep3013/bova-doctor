@@ -63,7 +63,7 @@ useEffect(() => {
                 // onClick={() => togglePanel(index)}
                 >
                 <span className="font-medium">
-                  {item.title}: {item.value}
+                  {item.title}: <span className='font-bold text-xl'> {item.value} </span>
                 </span>
                 <svg
                   className={`w-5 h-5 transition-transform ${openIndex === index ? 'rotate-180' : ''
