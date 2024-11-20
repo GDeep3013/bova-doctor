@@ -158,10 +158,10 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
           Stay well,
         </p>
         <p style="color:#454545; font-size: 14px; line-height: 22px;">
-          ${doctor?.name}
+          Dr. ${doctor?.name}
         </p>
         <p style="color:#454545; font-size: 14px; line-height: 22px;">
-        ${doctor?.email}
+       Contact Email: ${doctor?.email}
         </p>
         <p style="color:#454545; font-size: 14px; line-height: 22px;">
         ${doctor?.ClinicName}
