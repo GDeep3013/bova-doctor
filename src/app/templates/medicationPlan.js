@@ -150,8 +150,8 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
     <tr>
       <td style="background-color: #CDD3CC; padding:11px 25px;">
         <p style="display: block; text-align: center; padding-bottom: 24px;"><a class="payment-btn"  href="${link}">
-          Make Payment Here
-        </a>
+          Make Payment
+                  </a>
       </p>
         <p style="color:#454545; font-size: 14px; line-height: 22px;">If you experience any unusual symptoms or side effects, do not hesitate to contact me immediately.</p>
         <p style="color:#454545; font-size: 14px; line-height: 22px; margin-top: 30px;">

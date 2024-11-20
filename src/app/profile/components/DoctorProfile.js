@@ -16,7 +16,7 @@ export default function Profile() {
             year: '2-digit',
         });
     }
-    console.log(session?.userDetail)
+  
     return (
         <AppLayout>
             <div className="flex flex-col">
