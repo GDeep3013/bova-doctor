@@ -11,7 +11,7 @@ export default function AppLayout({ children }) {
             <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             <div className="dashboard-outer flex">
                 <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar } />
-                <div className='dashboard-right w-full transition ease-in-out delay-150'>
+                <div className='dashboard-right relative w-full transition ease-in-out delay-150'>
                     <div className='dashboard-inner min-h pt-[0] p-[20px] xl:p-[40px] md:pt-[30px]'>
                         {children}
                     </div>
