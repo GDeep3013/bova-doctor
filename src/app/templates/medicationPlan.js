@@ -91,7 +91,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
     }
     a.payment-btn {
     display: inline-block;
-    padding: 16px 40px;
+    padding: 12px 34px;
     text-align: center;
     background-color: #000;
     border-radius: 8px;
