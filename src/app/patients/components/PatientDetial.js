@@ -76,16 +76,16 @@ export default function PatientDetial() {
                         </div>
                         <div className='px-5'>
                         <p className='flex justify-between py-2'>
-                            <span className="text-textColor text-base">Patient Email:</span> <span className='text-left min-w-[126px]'> {email} </span>
+                            <span className="text-textColor text-base">Patient Email:</span> <span className='text-right min-w-[126px]'> {email} </span>
                         </p>
                         <p className='flex justify-between py-2'>
-                            <span className="text-textColor text-base">Patient Phone Number:</span> <span className='text-left min-w-[126px]'> {phone} </span>
+                            <span className="text-textColor text-base">Patient Phone Number:</span> <span className='text-right min-w-[126px]'> {phone} </span>
                         </p>
                         <p className='flex justify-between py-2'>
-                            <span className="text-textColor text-base">Discount Rate:</span> <span className='text-left min-w-[126px]'> 10% </span>
+                            <span className="text-textColor text-base">Discount Rate:</span> <span className='text-right min-w-[126px]'> 10% </span>
                         </p>
                         <p className='flex justify-between py-2'>
-                            <span className="text-textColor text-base">Current Subscriptions:</span> <span className='text-left min-w-[126px]'> L-01 </span>
+                            <span className="text-textColor text-base">Current Subscriptions:</span> <span className='text-right min-w-[126px]'> L-01 </span>
                         </p>
                         </div>
                     </div>

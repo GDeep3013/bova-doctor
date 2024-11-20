@@ -285,7 +285,7 @@ export default function CreatePlan() {
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-5 xl:gap-8">
                     <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
-                        <div className="bg-customBg3 p-2 xl:px-8 xl:py-5 rounded-t-lg">
+                        <div className="bg-customBg3 py-2 px-4 xl:px-8 xl:py-5 rounded-t-lg">
                             {selectedPatient ? (
                                 <span className="font-medium text-base xl:text-[19px] text-black">
                                     Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
@@ -325,7 +325,7 @@ export default function CreatePlan() {
                         </div>
                         <div className='p-0'>
                             {/* Product Selection */}
-                            <div className="px-8 pt-3 pb-8">
+                            <div className=" px-4 xl:px-8 pt-3 pb-8">
                                 <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
                                     {selectedItems.map((variant, index) => (
                                         <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
@@ -617,7 +617,7 @@ export default function CreatePlan() {
                                                                                 : '/images/product-img1.png'
                                                                     }
                                                                     alt={variant.product.title}
-                                                                    className="w-[80px] h-[80px] p-2 bg-[#F9F9F9] rounded-lg"
+                                                                    className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
                                                                 />
                                                             </td>
                                                             <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{variant.product.title}</td>
