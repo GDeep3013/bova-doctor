@@ -2,6 +2,7 @@ import connectDB from '../../../../../db/db';
 import Order from '../../../../../models/order';
 import OrderItem from '../../../../../models/orderItem';
 import Patient from '../../../../../models/patient';
+import Doctor from '../../../../../models/Doctor';
 
 
 export async function POST(req) {
@@ -12,10 +13,20 @@ export async function POST(req) {
 
     // Find the _patient_id from the first line item that has it, or default to null
     const mainPatientId = orderData.line_items.find(item => item.properties?._patient_id)?.properties._patient_id || null;
-    const totalPrice = parseFloat(orderData.total_price); // Assuming total_price is a string that needs to be converted to number
-    const doctorPayment = totalPrice * 0.05;
+    let doctorPayment = 0; 
     
     const patient = await Patient.findById(mainPatientId)
+    if (patient.doctorId) {
+      const doctor = await Doctor.findById(patient.doctorId)
+      if (doctor) {
+        const totalPrice = parseFloat(orderData.total_price);
+        const doctorCommission = totalPrice * (doctor.commissionPercentage / 100);
+        // Assuming total_price is a string that needs to be converted to number
+        doctorPayment = doctorCommission
+      }
+      
+    }
+
     // Create a new order document with the mainPatientId
     const newOrder = new Order({
       order_id: orderData.id,
