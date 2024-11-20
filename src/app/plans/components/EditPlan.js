@@ -229,7 +229,7 @@ export default function CreatePlan() {
                 doctor: {
                     name: session?.userDetail?.firstName +' '+session?.userDetail?.lastName,
                     email: session?.userDetail?.email,
-                    ClinicName: session?.userDetail?.ClinicName
+                    clinicName: session?.userDetail?.clinicName
                 }
                 
             }

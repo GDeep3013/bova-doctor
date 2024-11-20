@@ -3,16 +3,16 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { signOut, getSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
-import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon, EarningIcon } from './svg-icons/icons';
+import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon, EarningIcon, CloseIcon } from './svg-icons/icons';
 
-export default function Sidebar({ isOpen, isSidebarOpen }) {
+export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
   const router = useRouter();
   const currentPath = usePathname();
 
   // Helper function to check if the link is active
   const isActive = (path) => currentPath === path;
 
-  const [isProfileOpen, setIsProfileOpen] = useState(isActive('/profile') || isActive('/admin/doctor') ||isActive('/sales')); // Start profile section open if on relevant page
+  const [isProfileOpen, setIsProfileOpen] = useState(isActive('/profile') || isActive('/admin/doctor') || isActive('/sales')); // Start profile section open if on relevant page
   const [isPatientsOpen, setIsPatientsOpen] = useState(isActive('/patients/listing')); // Patients section based on active route
   const [isPlansOpen, setIsPlansOpen] = useState(isActive('/plans/create-plan') || isActive('/plans/review') || isActive('/plans/incomplete')); // Plans section if any plan route is active
 
@@ -37,9 +37,13 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
 
   return (
     <div className={`w-full max-[1199px]:max-w-[290px] max-w-[300px] min-[1200px]:min-w-[300px] inset-y-0 transition-transform ease-in-out p-[30px] min-[1100px]:p-[50px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
+      <button className=' absolute right-0 top-4 pr-5 min-[1025px]:hidden ' onClick={toggleSidebar} >
+        <CloseIcon/>
+        </button>
       <Link href="/dashboard">
         <img src="/images/dash-logo.png" alt="Logo" className="max-w-[155px] max-[992px]:max-w-[120px]" />
       </Link>
+
       <nav className="space-y-4 pt-7">
         {session?.user?.userType === 'Admin' ? (
           <>
@@ -81,13 +85,13 @@ export default function Sidebar({ isOpen, isSidebarOpen }) {
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
                     <Link href="/profile" className={`block text-lg ${isActive('/profile') ? 'text-[#232424] font-bold' :
-                    'text-[#52595b] hover:text-gray-900'}`}>
+                      'text-[#52595b] hover:text-gray-900'}`}>
                       Edit
                     </Link>
                   </li>
                   <li>
-                  <Link href="/privacy-policies" className={`block text-lg ${isActive('/privacy-policies') ? 'text-[#232424] font-bold' :
-                    'text-[#52595b] hover:text-gray-900'}`}>
+                    <Link href="/privacy-policies" className={`block text-lg ${isActive('/privacy-policies') ? 'text-[#232424] font-bold' :
+                      'text-[#52595b] hover:text-gray-900'}`}>
                       Privacy & Policies
                     </Link>
 

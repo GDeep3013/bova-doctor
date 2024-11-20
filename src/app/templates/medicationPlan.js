@@ -164,7 +164,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
        Contact Email: ${doctor?.email}
         </p>
         <p style="color:#454545; font-size: 14px; line-height: 22px;">
-        ${doctor?.ClinicName}
+       Address: ${doctor?.clinicName}
         </p>
       </td>
     </tr>
