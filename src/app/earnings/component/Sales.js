@@ -62,10 +62,10 @@ useEffect(() => {
             <div key={index} className="p-2 md:px-3 md:py-4 border-b border-[#AFAAAC] last:border-b-0">
               <div
                 className="flex justify-between items-center cursor-pointer"
-                // onClick={() => togglePanel(index)}
+                onClick={() => togglePanel(index)}
                 >
                 <span className="font-medium">
-                  {item.title}: <span className='font-bold  text-[#53595B]  text-xl'> {item.value} </span>
+                  {item.title}
                 </span>
                 <svg
                   className={`w-5 h-5 transition-transform ${openIndex === index ? 'rotate-180' : ''

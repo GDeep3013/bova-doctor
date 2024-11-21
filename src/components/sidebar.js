@@ -47,51 +47,51 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
       <nav className="space-y-4 pt-7">
         {session?.user?.userType === 'Admin' ? (
           <>
-            <Link href="/admin/dashboard" className={`block text-xl ${isActive('/admin/dashboard') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+            <Link href="/admin/dashboard" className={`block text-xl ${isActive('/admin/dashboard') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
               <HomeIcon /> Home
             </Link>
             <div>
-              <button onClick={toggleProfile} className={`text-xl font-medium text-[#52595b]`}>
+              <button onClick={toggleProfile} className={`text-xl font-medium text-[#3a3c3d]`}>
                 <ProfileIcon /> Add Doctor
               </button>
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/admin/doctor" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+                    <Link href="/admin/doctor" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Doctors Listing
                     </Link>
                   </li>
                 </ul>
               )}
             </div>
-            <Link href="/admin/patients/" className={`block text-xl ${isActive('/admin/patients') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+            <Link href="/admin/patients/" className={`block text-xl ${isActive('/admin/patients') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
               <PatientIcon /> Patient Listing
             </Link>
 
-            <Link href="/admin/settings/" className={`block text-xl ${isActive('/admin/settings') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+            <Link href="/admin/settings/" className={`block text-xl ${isActive('/admin/settings') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
               <SettingIcon /> Settings
             </Link>
           </>
         ) : (
           <>
-            <Link href="/dashboard" className={`block text-xl ${isActive('/dashboard') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+            <Link href="/dashboard" className={`block text-xl ${isActive('/dashboard') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
               <HomeIcon /> Home
             </Link>
             <div>
-              <button onClick={toggleProfile} className={`text-xl font-medium text-[#52595b]`}>
+              <button onClick={toggleProfile} className={`text-xl font-medium text-[#3a3c3d]`}>
                 <ProfileIcon /> Profile
               </button>
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
                     <Link href="/profile" className={`block text-lg ${isActive('/profile') ? 'text-[#53595B] font-bold' :
-                      'text-[#52595b] hover:text-gray-900'}`}>
+                      'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Edit
                     </Link>
                   </li>
                   <li>
                     <Link href="/privacy-policies" className={`block text-lg ${isActive('/privacy-policies') ? 'text-[#53595B] font-bold' :
-                      'text-[#52595b] hover:text-gray-900'}`}>
+                      'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Privacy & Policies
                     </Link>
 
@@ -101,13 +101,13 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
             </div>
 
             <div>
-              <button onClick={togglePatients} className={`text-xl font-medium text-[#52595b]`}>
+              <button onClick={togglePatients} className={`text-xl font-medium text-[#3a3c3d]`}>
                 <PatientIcon /> Patients
               </button>
               {isPatientsOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/listing') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+                    <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/listing') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Search
                     </Link>
                   </li>
@@ -116,35 +116,35 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
             </div>
 
             <div>
-              <button onClick={togglePlans} className={`text-xl font-medium text-[#52595b]`}>
+              <button onClick={togglePlans} className={`text-xl font-medium text-[#3a3c3d]`}>
                 <PlanIcon /> Plans
               </button>
               {isPlansOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
-                    <Link href="/plans/create-plan" className={`block text-lg ${isActive('/plans/create-plan') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+                    <Link href="/plans/create-plan" className={`block text-lg ${isActive('/plans/create-plan') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Create
                     </Link>
                   </li>
                   <li>
-                    <Link href="/plans/review" className={`block text-lg ${isActive('/plans/review') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+                    <Link href="/plans/review" className={`block text-lg ${isActive('/plans/review') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Review
                     </Link>
                   </li>
                   <li>
-                    <Link href="/" className={`block text-lg ${isActive('/plans/incomplete') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+                    <Link href="/" className={`block text-lg ${isActive('/plans/incomplete') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Incomplete
                     </Link>
                   </li>
                 </ul>
               )}
             </div>
-            <Link href="/earnings" className={`block text-xl ${isActive('/earnings') ? 'text-[#53595B] font-bold' : 'text-[#52595b] hover:text-gray-900'}`}>
+            <Link href="/earnings" className={`block text-xl ${isActive('/earnings') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
               <EarningIcon /> Earnings
             </Link>
           </>
         )}
-        <button onClick={handleLogout} className="block text-[#52595b] hover:text-gray-900 text-xl">
+        <button onClick={handleLogout} className="block text-[#3a3c3d] hover:text-gray-900 text-xl">
           <LogoutIcon /> Logout
         </button>
       </nav>
