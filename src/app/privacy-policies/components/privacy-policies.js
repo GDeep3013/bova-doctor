@@ -6,8 +6,8 @@ export default function PrivacyPolicy() {
     return (
 
         <AppLayout>
-            <div className=" min-h-screen py-10 ">
-                <div className="max-w-4xl mx-auto rounded-lg  p-8">
+            <div className="min-h-screen">
+                <div className="max-w-4xl rounded-lg">
                     <h1 className="text-3xl font-bold text-[#53595B]  mb-6">Privacy Policy</h1>
                     <p className="text-gray-700 mb-4">
                         Welcome to our Doctor Panel application. This Privacy Policy outlines how we collect, use, and protect your data when you create patients and manage medication plans on our platform.
@@ -39,7 +39,7 @@ export default function PrivacyPolicy() {
                             <li>Legal compliance or law enforcement requests.</li>
                             <li>Third-party integrations explicitly authorized by you (e.g., pharmacies or labs).</li>
                         </ul>
-                    
+
 
                     <h2 className="text-xl font-semibold text-[#53595B] mb-4 mt-2">5. Your Rights</h2>
                     <ul className="list-disc list-inside text-gray-700 mb-6">
@@ -55,9 +55,9 @@ export default function PrivacyPolicy() {
 
                     <h2 className="text-xl font-semibold text-[#53595B] mb-4">7. Contact Us</h2>
                     <p className="text-gray-700 ">
-                        If you have questions or concerns about this Privacy Policy, please contact us at:</p>                        
+                        If you have questions or concerns about this Privacy Policy, please contact us at:</p>
                         <strong className='text-[#53595B] '>Email:</strong> support@bova.com
-                 
+
                 </div>
             </div>
 

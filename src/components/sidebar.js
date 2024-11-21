@@ -48,7 +48,7 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
         {session?.user?.userType === 'Admin' ? (
           <>
             <Link href="/admin/dashboard" className={`block text-xl ${isActive('/admin/dashboard') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
-              <HomeIcon /> Home
+               <HomeIcon /> Home
             </Link>
             <div>
               <button onClick={toggleProfile} className={`text-xl font-medium text-[#3a3c3d]`}>
