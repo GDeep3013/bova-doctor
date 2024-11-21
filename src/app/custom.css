@@ -15,7 +15,7 @@ button.bg-black svg.m-auto path { fill: #fff; }
 .min-h { height: calc(100vh - 0px); overflow: hidden; overflow-y: auto; }
 .dashboard-right input{ accent-color: #51595B; }
 .bg-gray-200{ background-color: #D6DEE5; }
-.sidebar nav svg{ display: inline-block; margin-right: 10px; width: 24px; }
+.sidebar nav svg{ display: inline-block; margin-right: 10px; width: 24px; height: 24px; }
 .sidebar nav svg path{ fill: #000; }
 .sidebar nav .submenu{ margin-left: 52px;}
 

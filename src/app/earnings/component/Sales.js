@@ -33,12 +33,12 @@ export default function Sales() {
 
   };
   const data = [
-    { title: 'Total Patients Using BOVA', value: `${totalPatients}`},
-    { title: 'Total of Plans', value: totalPlans },
-    { title: 'Total Number of Subscriptions', value: totalSubscriptions },
-    { title: 'Total Amount Earned this Month', value: '$ ' +thisMonthEarning },
-    { title: 'Total Amount Earned this Week', value:  '$ ' + thisweekEarning  },
-    { title: 'Total Amount Earned to Date', value:  '$ ' + dateEarning  },
+    { title: 'Total Patients Using BOVA', value: totalPatients?totalPatients:'No data found'},
+    { title: 'Total of Plans', value: totalPlans ?totalPlans:'No data found'},
+    { title: 'Total Number of Subscriptions', value: totalSubscriptions?totalSubscriptions: 'No data found'},
+    { title: 'Total Amount Earned this Month', value: thisMonthEarning?'$ ' +thisMonthEarning :'No data found'},
+    { title: 'Total Amount Earned this Week', value: thisweekEarning ? '$ ' + thisweekEarning :'No data found' },
+    { title: 'Total Amount Earned to Date', value: dateEarning ? '$ ' + dateEarning:'No data found'  },
   ];
 
 
