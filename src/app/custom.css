@@ -56,6 +56,8 @@ input[type='number'] {
 
 .admin-graph canvas{ width: 100% !important; height: 100% !important; }
 .doctor-listing thead tr th:first-child { min-width: 68px; }
+.dashboard-inner .card-icon .card-svg .plan-icon { width: 45px; height: 45px; margin: 0 !important; }
+
 
 @media screen and (min-width:1200px) and (max-width:1400px) {
 .login-after{ background-position: bottom !important; }
