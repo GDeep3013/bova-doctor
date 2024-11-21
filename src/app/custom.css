@@ -82,3 +82,6 @@ input[type='number'] {
 @media screen and (min-width: 667px) and (max-width:767px) {
  .login-after{ min-height: 520px !important; height: 100vh !important; }
 }
+@media screen and (max-width:767px) {
+  .dashboard-inner .card-icon .card-svg .plan-icon{ width: 30px !important; }
+}
