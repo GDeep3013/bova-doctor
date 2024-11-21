@@ -66,7 +66,7 @@ export default function LoginForm() {
         <div className="w-full md:max-w-[400px] lg:max-w-[480px] min-[1700px]:max-w-[600px] max-w-[100%] bg-[rgba(255,255,255,80%)] 2xl:p-8 p-5 flex flex-col items-center justify-center absolute lg:right-16 xl:right-37 min-[1700px]:right-40 z-[1] md:top-[50%] md:translate-y-[-50%] md:translate-x-[0] rounded-[20px] login-form ">
           <div className="text-center mb-4 w-full max-w-screen-sm">
             <Link href="/"> <img src='/images/logo.png' alt='logo' className='md:max-w-[144px] xl:max-w-[166px] max-w-[150px] m-auto'/> </Link>
-            <h2 className=" font-bold mt-4 xl:mt-7 text-lg lg:text-2xl">Sign In to your Account</h2>
+            <h2 className=" text-[#53595B] font-bold mt-4 xl:mt-7 text-lg lg:text-2xl">Sign In to your Account</h2>
             <p className="textColor mt-3 xl:mt-6 max-w-[500px] m-auto text-sm xl:text-base">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4 xl:py-5 py-3 w-full max-w-screen-sm">

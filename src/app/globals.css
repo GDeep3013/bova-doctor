@@ -15,7 +15,7 @@
 }
 
 @font-face {
-  font-family: 'Greycliff CF';
+  font-family: 'Greycliff CF Demi';
   src: url('/fonts/GreycliffCF-DemiBold.eot');
   src: url('/fonts/GreycliffCF-DemiBold.eot?#iefix') format('embedded-opentype'),
       url('/fonts/GreycliffCF-DemiBold.woff2') format('woff2'),
@@ -69,6 +69,7 @@
   --text-color: #202020;
   --primary-color:#512a3a;
   --theme-font:'Greycliff CF';
+  --semibold-font: 'Greycliff CF Demi';
 }
 
 @media (prefers-color-scheme: dark) {

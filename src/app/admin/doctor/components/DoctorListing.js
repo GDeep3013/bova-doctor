@@ -87,14 +87,14 @@ export default function DoctorListing() {
                     <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[8px]">
                         <thead>
                             <tr className="bg-gray-100 border-b">
-                                <th className="py-2 px-4 text-left text-gray-600">Sr no.</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Sr no.</th>
 
-                                <th className="py-2 px-4 text-left text-gray-600">Name</th>
-                                <th className="py-2 px-4 text-left text-gray-600">Email</th>
-                                <th className="py-2 px-4 text-left text-gray-600">Phone</th>
-                                <th className="py-2 px-4 text-left text-gray-600">Speciality</th>
-                                <th className="py-2 px-4 text-left text-gray-600">Commission %</th>
-                                <th className="py-2 px-4 text-left text-gray-600">Action</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Name</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Email</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Phone</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Speciality</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Commission %</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Action</th>
                             </tr>
                         </thead>
                         <tbody>

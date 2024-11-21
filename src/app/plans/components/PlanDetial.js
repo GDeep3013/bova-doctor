@@ -204,18 +204,54 @@ export default function CreatePlan() {
             <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
             <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                 <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-[#AFAAAC] w-full">
-                    <div className="bg-customBg3 p-2 md:p-4 rounded-t-lg">
-                            <span className="font-medium text-[19px] text-black">
-                                Patient Name: <span className="font-medium">{`${selectedPatient?.firstName} ${selectedPatient?.lastName}`}</span>
-                            </span>
-                        </div>
+                <div className="bg-customBg3 p-2 xl:px-8 xl:py-5 rounded-t-lg">
+                                {selectedPatient ? (
+                                    <span className="font-medium text-base xl:text-[19px] text-black">
+                                        Patient Name: <span className="font-medium">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
+                                    </span>
+
+                                ) : id ? (
+                                    <p>Loading patient details...</p>
+                                ) : (
+                                    <div>
+                                        {patients.length > 0 ? (
+                                            <div className='flex justify-between w-full items-center'>
+                                                <select
+                                                    id="select-patient"
+                                                    className={`select-patient border border-customBg2 bg-customBg2 text-sm rounded-[8px] text-white min-w-[170px] p-2 xl:p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-blue-500  border-gray-300 rounded focus:outline-none focus:border-blue-500`}
+
+                                                    onChange={handleSelectPatient}
+                                                    value={selectedPatient?.id || ""}
+                                                >
+                                                    <option value="">Select a patient</option>
+                                                    {patients.map((patient) => (
+                                                        <option key={patient._id} value={patient._id}>
+                                                            {patient.firstName} {patient.lastName}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                {selectedPatient && (
+                                                    <span className="font-medium text-base xl:text-[19px] text-black">
+                                                        Patient Name: <span className="font-bold">{`${selectedPatient.firstName} ${selectedPatient.lastName}`}</span>
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <p>No patients available</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                     <div className='p-0'>
 
 
                         {/* Product Info */}
                         {selectedItems.map((item, index) => {
                             const itemData = formData.items.find(fItem => fItem.id === item.id);
-                            return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                            return (<div key={index}
+                                className={`p-4 ${index === 0 ? "" : "border-t border-[#AFAAAC]"} flex max-[1200px]:flex-wrap gap-4`}
+
+                            >
                                <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                     <img
                                         src={
@@ -228,7 +264,7 @@ export default function CreatePlan() {
                                         alt="Product"
                                         className="w-24 h-24" />
                                     <div>
-                                        <h3 className="font-bold text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
+                                        <h3 className="font-bold text-[#53595B] mt-2 text-base xl:text-[18px]">{(item.title !="Default Title")?item.title:item.product.title }</h3>
                                         <p className="text-textColor mt-2 text-base max-w-[200px]">
                                         {item?.product?.descriptionHtml
                                                     ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
@@ -328,7 +364,7 @@ export default function CreatePlan() {
                                             </tr>
                                             <tr className="border-b border-[#AFAAAC] pb-4">
                                                 <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
-                                                <td className="py-2 text-[#51595B] font-semibold text-right">
+                                                <td className="py-2 font-bold text-[#53595B] text-right">
                                                     ${(subtotal - discount).toFixed(2)}
                                                 </td>
                                         </tr>

@@ -4,7 +4,7 @@ export default function doctorTable({doctors }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-4 pb-0 w-full mx-auto">
     <div className="flex justify-between items-center mb-4">
-        <h2 className="text-base md:text-lg font-semibold">Top Doctor Performance</h2>
+        <h2 className="text-base md:text-lg text-[#53595B] font-semibold">Top Doctor Performance</h2>
         {/* <select
             value={timePeriod}
             onChange={(e) => setTimePeriod(e.target.value)}
@@ -29,16 +29,16 @@ export default function doctorTable({doctors }) {
         <tbody>
             {doctors.map((doctor,index) => (
                 <tr key={index} className="">
-                    <td className="p-2 text-gray-700 font-semibold">{index + 1}</td>
+                    <td className="p-2  text-[#53595B]  font-semibold">{index + 1}</td>
                     <td className="p-2 flex items-center space-x-4">
                         <div>
-                            <p className="font-semibold text-gray-800 text-sm">Dr. {doctor.name}</p>
+                            <p className="font-semibold text-[#53595B] text-sm">Dr. {doctor.name}</p>
                         </div>
                     </td>
-                    <td className="p-2 text-gray-700">{doctor.patients}</td>
-                    <td className="p-2 text-gray-700">{doctor.plans}</td>
+                    <td className="p-2 text-[#53595B] ">{doctor.patients}</td>
+                    <td className="p-2 text-[#53595B] ">{doctor.plans}</td>
                     <td className="p-2 flex items-center space-x-2">
-                        <span className="text-gray-700 font-medium"> $ {doctor.revenue}</span>
+                        <span className="text-[#53595B] font-medium"> $ {doctor.revenue}</span>
                     </td>
                 </tr>
             ))}

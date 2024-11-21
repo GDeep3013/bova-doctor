@@ -488,7 +488,7 @@ export default function CreatePlan() {
                                                 alt="Product"
                                                 className="w-24 h-24" />
                                             <div>
-                                                <h3 className="font-bold text-base xl:text-[18px]">{(item.title != "Default Title") ? item.title : item.product.title}</h3>
+                                                <h3 className="font-bold text-[#53595B] mt-2 text-base xl:text-[18px]">{(item.title != "Default Title") ? item.title : item.product.title}</h3>
                                                 <p className="text-textColor mt-2 text-base max-w-full">
                                                     {item?.product?.descriptionHtml
                                                         ? new DOMParser().parseFromString(item.product.descriptionHtml, 'text/html').body.textContent
@@ -643,7 +643,7 @@ export default function CreatePlan() {
                                                     </tr>
                                                     <tr className="border-b border-[#AFAAAC] pb-4">
                                                         <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
-                                                        <td className="py-2 text-[#51595B] font-semibold text-right">
+                                                        <td className="py-2 font-bold text-[#53595B] text-right">
                                                             ${(subtotal - discount).toFixed(2)}
                                                         </td>
                                                     </tr>

@@ -28,7 +28,8 @@ module.exports = {
         customBorder: "#b9b4b6",
       },
       fontFamily: {
-        inter: "var(--theme-font)"
+        inter: "var(--theme-font)",
+        fontSemibold: "var(--semibold-font)"
       },
     },
   },

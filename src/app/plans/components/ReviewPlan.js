@@ -102,12 +102,12 @@ fetchLoader?<Loader/>:<>
                     <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[10px]">
                         <thead>
                             <tr className="bg-gray-100 border-b">
-                                <th className="py-2 px-4 text-left text-gray-800">Sr no.</th>
-                                <th className="py-2 px-4 text-left text-gray-800">Name</th>
-                                <th className="py-2 px-4 text-left text-gray-800">Email</th>
-                                <th className="py-2 px-4 text-left text-gray-800">Phone</th>
-                                <th className="py-2 px-4 text-left text-gray-800">Status</th>
-                                <th className="py-2 px-4 text-left text-gray-800">View</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Sr no.</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Name</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Email</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Phone</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Status</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">View</th>
                             </tr>
                         </thead>
                         <tbody>

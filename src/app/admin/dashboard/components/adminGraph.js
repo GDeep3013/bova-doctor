@@ -43,7 +43,6 @@ const LineChart = () => {
             }
     
             const response = await fetch(`/api/admin/dashboard/graph${query}`);
-            // if (!response.ok) throw new Error('Failed to fetch data');
                 const data = await response.json();
             
             if (data) {
@@ -144,7 +143,7 @@ const LineChart = () => {
         <div className="p-4 bg-[#F9F9F9] rounded-lg">
             <div className="flex">
                 <div>
-                    <h3 className="text-xl md:text-2xl font-semibold">
+                    <h3 className="text-xl md:text-2xl text-[#53595B]  font-semibold">
                         $ {graphData.reduce((sum, val) => sum + val, 0).toFixed(2)}
                     </h3>
                     <p className="text-gray-500">
