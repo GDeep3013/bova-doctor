@@ -10,14 +10,14 @@ export default function Home() {
     return (
         <>
 
-            <div className="w-full max-w-3xl bg-[#d6dee5] p-[20px] md:p-8 mt-6 rounded-lg">
+            <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:p-8 mt-6 rounded-lg">
                 <p className='text-lg'>Welcome to your BOVA <span className="">  Dr. {session?.user?.userName}</span></p>
                 <p className="mt-2 text-lg">We will be launching the full site access in less than 2 weeks! <br/>Stay tuned.</p>
                 <p className="mt-2 text-lg ">Team BOVA</p>
             </div>
 
             <div className="flex flex-col mt-8">
-                <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
+                <div className="w-full max-w-5xl bg-white rounded-lg border border-[#AFAAAC]">
                     <h2 className="text-lg md:text-xl font-bold text-[#53595B]  p-[16px] md:p-5 border-b border-[#AFAAAC]">BOVA Patient Order Form</h2>
                     <div className="border-b border-[#AFAAAC] flex items-center p-5 pb-4 md:pb-6 max-[767px]:flex-wrap">
                         <div className='patient-details max-w-[300px] w-full'>

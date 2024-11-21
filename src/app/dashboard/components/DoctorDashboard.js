@@ -61,7 +61,7 @@ export default function AdminDashboard() {
             <div className="flex flex-col">
                 {fetchLoader ?<Loader/>:
                 <>
-                <div className='doctor-graph max-w-3xl'>
+                <div className='doctor-graph max-w-5xl'>
                     <div className="min-[1025px]:mt-0 flex max-[575px]:gap-y-4 min-[576px]:space-x-5 max-[575px]:flex-wrap">
                         {cards.map((card, index) => (
                             <div
