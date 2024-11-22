@@ -60,7 +60,7 @@ input[type='number'] {
 
 
 .custom-checkbox { width: 25px; height: 25px; position: relative; overflow: hidden; margin-right: 9px;}
-.custom-checkbox input { width: 100%; height: 100%; opacity: 0; position: absolute; left: 0; top: 0; }
+.custom-checkbox input { width: 100%; height: 100%; opacity: 0; position: absolute; left: 0; top: 0; z-index: 1;}
 .custom-checkbox span { border: 3px solid #939095; width: 100%; height: 100%; display: inline-block; border-radius: 5px; }
 .custom-checkbox span svg { width: 28px; height: 28px; position: absolute; left: 50%; top: -100%; transform: translate(-50%, -50%); transition: all 0.3s ease-in-out;}
 .custom-checkbox input:checked+span{ background-color: #564f5b; border-color: #564f5b; }

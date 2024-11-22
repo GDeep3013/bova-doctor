@@ -64,10 +64,10 @@ export default function Home() {
                         <div className="patient-details max-w-[300px] w-full">
                             {patients.map((patient, index) => (
                                 <div className="flex items-center mb-4" key={patient._id}>
-                                    <div className="">
+                                    <div className="custom-checkbox">
                                         <input
                                             type="checkbox"
-                                            name={`${index} patient`}
+                                            name={`patient`}
                                             value={patient._id}
                                             checked={selectedPatient === patient._id}
                                             className="mr-2"
@@ -75,6 +75,8 @@ export default function Home() {
                                                 setSelectedPatient(selectedPatient === patient._id ? null : patient._id)
                                             }
                                         />
+                                        <span><CheckIcon />
+                                        </span>
                                     </div>
                                     <span className="text-gray-600">{`${patient.firstName} ${patient.lastName}`}</span>
                                 </div>
