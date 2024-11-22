@@ -8,7 +8,7 @@ export default function ForgetPassword() {
 
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState({});
-  const [loginError, setLoginError] = useState('')  
+  const [loginError, setLoginError] = useState('')
   const router = useRouter()
 
   const validateForm = () => {
@@ -71,9 +71,8 @@ export default function ForgetPassword() {
   return (
     <div className='login-outer'>
     <div className="container mx-auto max-w-full p-0">
-      <div className="min-h-screen h-full p-[20px] pb-[40px] md:p-0 bg-[url('/images/login-bg.jpg')] bg-no-repeat bg-cover relative login-after">
-
-        <div className="w-full md:max-w-[720px] max-w-[100%] bg-[rgba(255,255,255,80%)] md:p-16 p-5 flex flex-col items-center justify-center md:absolute relative md:right-6 lg:right-24 z-[1] md:top-[50%] top-4 md:translate-y-[-50%] md:translate-x-[0] rounded-[20px]">
+      <div className="min-h-screen h-full p-[20px] pb-[40px] bg-[url('/images/small-device.jpg')] md:p-0 min-[768px]:bg-[url('/images/login-mobile.jpg')] min-[1025px]:bg-[url('/images/login-bg.jpg')] bg-no-repeat bg-cover relative login-after">
+        <div className="w-full md:max-w-[400px] lg:max-w-[480px] min-[1700px]:max-w-[600px] max-w-[100%] bg-[rgba(255,255,255,80%)] 2xl:p-8 p-5 flex flex-col items-center justify-center absolute lg:right-16 xl:right-37 min-[1700px]:right-40 z-[1] md:top-[50%] md:translate-y-[-50%] md:translate-x-[0] rounded-[20px] login-form">
           <div className="text-center mb-6 w-full max-w-screen-sm">
             <h2 className="text-2xl font-bold">Forgot Password</h2>
             <p className="text-gray-600"> Please enter your email address.</p>
