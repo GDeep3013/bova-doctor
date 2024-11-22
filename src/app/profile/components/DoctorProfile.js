@@ -16,7 +16,7 @@ export default function Profile() {
             year: '2-digit',
         });
     }
-  
+
     return (
         <AppLayout>
             <div className="flex flex-col">
@@ -24,7 +24,7 @@ export default function Profile() {
                     <h1 className='page-title pt-4 md:pt-2 text-2xl pb-1'>Doctor Profile</h1>
                     <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
 
-                    <div className="w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
+                    <div className="w-full min-[1025px]:max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
 
                         <div className="space-y-2 text-gray-700">
                             <div className="bg-customBg p-4 px-3 md:px-5 rounded-t-[8px] flex justify-between items-center">

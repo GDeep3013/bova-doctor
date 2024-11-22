@@ -71,7 +71,7 @@ export default function DoctorListing() {
     }, [session, page]);
     return (
         <AppLayout>
-            <div className="container mx-auto">
+            <div className="mx-auto">
                 {fetchLoader?<Loader/>:<>
                 <div className='flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-6'>
                     <div>

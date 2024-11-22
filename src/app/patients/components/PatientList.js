@@ -84,7 +84,7 @@ export default function PatientList() {
 
     return (
         <AppLayout>
-            <div className="container mx-auto">
+            <div className="mx-auto">
                 {fetchLoader?<Loader/>:<>
                 <div className='flex justify-between mt-4 md:mt-2 mb-6'>
                     <h1 className="text-2xl">Patient List</h1>

@@ -88,7 +88,7 @@ export default function ReviewPlan() {
 
     return (
         <AppLayout>
-            <div className="container mx-auto">
+            <div className="mx-auto">
                 {
 fetchLoader?<Loader/>:<>
 
