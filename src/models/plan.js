@@ -17,6 +17,7 @@ const PlanSchema = new mongoose.Schema({
             price: { type: String },
             title: { type: String },
             properties: {
+                dosage:{ type: String, default: '' },
                 frequency: { type: String, default: '' },
                 duration: { type: String, default: '' },
                 takeWith: { type: String, default: '' },

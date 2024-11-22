@@ -109,8 +109,9 @@ export default function CreatePlan() {
                 id: variant.id,
                 price: variant.price,
                 title: variant.product?.title,
-                quantity: 5,
+                quantity: 1,
                 properties: {
+                    dosage:1,
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
@@ -134,10 +135,11 @@ export default function CreatePlan() {
             if (response.ok) {
                 const mappedItems = data.items.map(item => ({
                     id: item.id,
-                    quantity: item.quantity || 1,
+                    quantity:  1,
                     price: item.price,
                     title : item.title,
                     properties: {
+                        dosage: item.properties.dosage || 1 ,
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',
                         duration: item.properties.duration || 'Once Per Day',
                         takeWith: item.properties.takeWith || 'Water',
@@ -187,14 +189,14 @@ export default function CreatePlan() {
         fetchPlanData();
     }, [id, variants, patients]);
 
-
     const subtotal = formData.items.reduce((acc, item) => {
-        const itemQuantity = item.quantity || 1;
-        return acc + itemQuantity * item.price;
+        return acc + (parseFloat(item.price) || 0);  // Ensure item.price is treated as a float
     }, 0);
 
     const discount = subtotal * 0;
+
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
+
     const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
@@ -278,7 +280,7 @@ export default function CreatePlan() {
                                         <input
                                             type="number"
                                             readOnly
-                                            value={itemData?.quantity ?? ""}
+                                            value={itemData?.properties.dosage?? ""}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Quantity (e.g., 5, 10)"
                                         />
@@ -348,9 +350,9 @@ export default function CreatePlan() {
                                                     <td className="py-2 text-[#3F4647] text-sm">
                                                         {item.title}
                                                     </td>
-                                                    <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                    <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> </td>
                                                     <td className="py-2 text-[#3F4647] text-sm text-right">
-                                                        ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                    ${item?.price?(item?.price):'N/a'}
                                                     </td>
                                                 </tr>
                                             ))}
