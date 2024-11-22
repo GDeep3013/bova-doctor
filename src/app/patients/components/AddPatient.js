@@ -62,26 +62,30 @@ export default function Home() {
                     {/* Existing Patients Section */}
                     <div className="p-5 max-[767px]:pb-4 flex items-center max-[767px]:flex-wrap">
                         <div className="patient-details max-w-[300px] w-full">
-                            {patients.map((patient) => (
+                            {patients.map((patient, index) => (
                                 <div className="flex items-center mb-4" key={patient._id}>
-                                    <div className='custom-checkbox'>
-                                    <input
-                                        type="radio"
-                                        name="patient"
-                                        value={patient._id}
-                                        className="mr-2"
-                                        onChange={(e) => setSelectedPatient(e.target.value)}
+                                    <div className="">
+                                        <input
+                                            type="checkbox"
+                                            name={`${index} patient`}
+                                            value={patient._id}
+                                            checked={selectedPatient === patient._id}
+                                            className="mr-2"
+                                            onChange={() =>
+                                                setSelectedPatient(selectedPatient === patient._id ? null : patient._id)
+                                            }
                                         />
-                                        <span><CheckIcon />
-                                        </span>
                                     </div>
                                     <span className="text-gray-600">{`${patient.firstName} ${patient.lastName}`}</span>
                                 </div>
                             ))}
                             <button
-                                className={`py-2 px-4 border bg-customBg2 ${!selectedPatient?'bg-gray-300 border-gray-300 text-gray-500 hover:bg-#d1d5db cursor-not-allowed ':' hover:bg-inherit hover:text-customBg2 border-customBg2'}border border-customBg2 text-white rounded-[8px]`}
-                                onClick={() => handleRedirect(selectedPatient)}  
-                                disabled={!selectedPatient} 
+                                className={`py-2 px-4 border bg-customBg2 ${!selectedPatient
+                                    ? 'bg-gray-300 border-gray-300 text-gray-500 hover:bg-#d1d5db cursor-not-allowed'
+                                    : 'hover:bg-inherit hover:text-customBg2 border-customBg2'
+                                    } border border-customBg2 text-white rounded-[8px]`}
+                                onClick={() => handleRedirect(selectedPatient)}
+                                disabled={!selectedPatient}
                             >
                                 Updates Required
                             </button>
