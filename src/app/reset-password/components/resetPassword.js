@@ -13,6 +13,7 @@ export default function ResetPage() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const[token, setToken] =useState('')
+    const [loader, setLoader] = useState(false)
 
     const validateForm = () => {
         const newErrors = { confirmPassword: '', password: '' };
@@ -44,6 +45,7 @@ export default function ResetPage() {
         if (validateForm()) {
             try {
 
+                setLoader(true);
                 const response = await fetch('/api/reset', {
                     method: 'POST',
                     headers: {
@@ -61,9 +63,11 @@ export default function ResetPage() {
                         confirmButtonText: 'OK',
                     });
                     router.push('/login');
+                    setLoader(false);
                     setLoginError('');
                 } else {
                     setLoginError(result.error);
+                    setLoader(false);
                 }
             } catch (error) {
                 console.error('Error during login:', error);
@@ -125,7 +129,11 @@ export default function ResetPage() {
                             </div>
                             {loginError && <p className="text-red-500 text-sm mt-1">{loginError}</p>}
 
-                            <button type="submit" className="w-full py-2 bg-black text-white font-bold rounded hover:bg-customText focus:outline-none min-h-[50px]">Create New Password</button>
+                            <button type="submit"
+                            className={`w-full py-2 bg-black text-white font-bold rounded hover:bg-customText focus:outline-none min-h-[50px]
+                                ${loader ? "cursor-not-allowed opacity-50" : ""}`}
+                                  disabled={loader}
+                                  >{loader? "Please wait ...":"Create New Password"}</button>
                             <p className='text-center'> <Link href="/login" className='text-base text-textColor hover:text-black'>← Back to  Login Page</Link> </p>
 
                         </form>
