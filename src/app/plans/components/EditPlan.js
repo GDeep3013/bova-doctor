@@ -668,7 +668,7 @@ export default function CreatePlan() {
 
                     {isModalOpen && (
                         <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
-                            <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
+                            <div className=" create-popup-wrapper bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
                                 <div className='flex justify-between items-center md:pb-4'>
                                     <h2 className="text-xl font-bold mb-3">Select Product</h2>
                                     <button onClick={closeModal}> <CloseIcon /> </button>
@@ -682,69 +682,125 @@ export default function CreatePlan() {
                                 />
 
                                 {/* Product List in Single Line */}
-                                <div className="max-h-[600px] overflow-y-auto">
-                                    {filteredProducts.length > 0 ? (
-                                        <div className="mt-4">
-                                            <table className="min-w-full bg-white">
-                                                <thead>
-                                                    <tr>
-                                                        <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Image</th>
-                                                        <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Title</th>
-                                                        <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">SKU</th>
-                                                        <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Price</th>
-                                                        <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {filteredProducts.map((variant, index) => {
-                                                        const isProductAdded = selectedItems.some(item => item.id === variant.id);
-                                                        return (
-                                                            <tr
-                                                                key={index}
-                                                                className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
-                                                            >
-                                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                                    <img
-                                                                        src={
-                                                                            variant.image && variant.image.url
-                                                                                ? variant.image.url
-                                                                                : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
-                                                                                    ? variant.product.images[0].url
-                                                                                    : '/images/product-img1.png'
-                                                                        }
-                                                                        alt={variant.product.title}
-                                                                        className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
-                                                                    />
-                                                                </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{variant.product.title}</td>
-                                                                <td className="px-6 py-4 whitespace-nowrap text-gray-700">{variant.sku || 'N/A'}</td>
-                                                                <td className="px-6 py-4 whitespace-nowrap text-gray-700">${variant.price || 'N/A'}</td>
-                                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                                    <button
-                                                                        onClick={() => { handleSelectProduct(variant) }}
-                                                                        className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
-                                                                        disabled={isProductAdded}
-                                                                    >
-                                                                        {isProductAdded ? 'Added' : 'Add'}
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    ) : (
-                                        <div className='text-center w-full'>
-                                            <p className="text-gray-500 mt-7 font-bold">No products found</p>
-                                        </div>
-                                    )}
-                                </div>
+                                <div className='desktop-only'>
+
+                                    <div className="max-h-[600px] overflow-y-auto">
+                                        {filteredProducts.length > 0 ? (
+                                            <div className="mt-4">
+                                                <table className="min-w-full bg-white">
+                                                    <thead>
+                                                        <tr>
+                                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Image</th>
+                                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Title</th>
+                                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">SKU</th>
+                                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Price</th>
+                                                            <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-600 uppercase">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {filteredProducts.map((variant, index) => {
+                                                            const isProductAdded = selectedItems.some(item => item.id === variant.id);
+                                                            return (
+                                                                <tr
+                                                                    key={index}
+                                                                    className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
+                                                                >
+                                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                                        <img
+                                                                            src={
+                                                                                variant.image && variant.image.url
+                                                                                    ? variant.image.url
+                                                                                    : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
+                                                                                        ? variant.product.images[0].url
+                                                                                        : '/images/product-img1.png'
+                                                                            }
+                                                                            alt={variant.product.title}
+                                                                            className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{variant.product.title}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">{variant.sku || 'N/A'}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">${variant.price || 'N/A'}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                                        <button
+                                                                            onClick={() => { handleSelectProduct(variant) }}
+                                                                            className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
+                                                                            disabled={isProductAdded}
+                                                                        >
+                                                                            {isProductAdded ? 'Added' : 'Add'}
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        ) : (
+                                            <div className='text-center w-full'>
+                                                <p className="text-gray-500 mt-7 font-bold">No products found</p>
+                                            </div>
+                                        )}
+                                    </div>
                                     <button
                                         onClick={() => { closeModal() }}
                                         className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
                                         FINISH
                                     </button>
+                                </div>
+                                {filteredProducts.length > 0 ? (
+                                <div class="product-itm-wrapper mob-only">
+                                <div class="product-itm-container">
+                                
+                                        {filteredProducts.map((variant, index) => {
+                                                    const isProductAdded = selectedItems.some(item => item.id === variant.id);
+                                            return (
+                                                <div class="product-itm-mob">
+                                                    <div class="product-itm-img">
+                                                    <img src={
+                                                            variant.image && variant.image.url
+                                                                ? variant.image.url
+                                                                : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
+                                                                    ? variant.product.images[0].url
+                                                                    : '/images/product-img1.png'
+                                                        }
+                                                        alt={variant.product.title}
+                                                        className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
+                                                    />
+                                                    </div>
+                                                    <div class="product-itm-des">
+                                                        <h3>{variant.product.title}</h3>
+                                                        <div class="product-des-inner">
+                                                            <div class="product-des-price">
+                                                            <p>{variant.sku || 'N/A'}</p>
+                                                                <h6>${variant.price || 'N/A'}</h6>
+                                                            </div>
+                                                            <div class="product-price">
+                                                            <button
+                                                                    onClick={() => { handleSelectProduct(variant) }}
+                                                                    className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
+                                                                    disabled={isProductAdded}
+                                                                >
+                                                                    {isProductAdded ? 'Added' : 'Add'}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    
+                                    </div>
+                                    <button onClick={() => { closeModal() }}
+                                        className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
+                                     FINISH
+                                    </button>
+                                </div>
+                                ): (
+                                    <div className='text-center w-full'>
+                                        <p className="text-gray-500 mt-7 font-bold">No products found</p>
+                                    </div>
+                                )}
 
                             </div >
                         </div >

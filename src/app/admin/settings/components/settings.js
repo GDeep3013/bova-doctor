@@ -235,7 +235,7 @@ export default function CreatePlan() {
 
                     {isModalOpen && (
                         <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
-                            <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
+                            <div className=" create-popup-wrapper bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
                                 <div className='flex justify-between items-center p-2 md:py-4'>
                                     <h2 className="text-xl font-bold">Select Product</h2>
                                     <button onClick={closeModal}> <CloseIcon /> </button>
@@ -249,6 +249,8 @@ export default function CreatePlan() {
                                 />
 
                                 {/* Product List in Single Line */}
+                                <div className='desktop-only'>
+
                                 <div className="h-[600px] overflow-y-auto">
                                     {filteredProducts.length > 0 ? (
                                         <div className="mt-4">
@@ -305,7 +307,56 @@ export default function CreatePlan() {
                                         className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
                                         FINISH
                                     </button>
+                                    </div>
                                 </div>
+                                {filteredProducts.length > 0 ? (
+                                <div class="product-itm-wrapper mob-only">
+                                <div class="product-itm-container">
+                                
+                                        {filteredProducts.map((product, index) => {
+                                                        const isProductAdded = selectedItems.some(item => item.id === product.id);
+                                                        return (
+                                                <div class="product-itm-mob">
+                                                    <div class="product-itm-img">
+                                                    <img
+                                                        src={product.image?.src || '/images/product-img1.png'}
+                                                        alt={product.title}
+                                                        className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
+                                                    />
+                                                    </div>
+                                                    <div class="product-itm-des">
+                                                        <h3>{product.title}</h3>
+                                                        <div class="product-des-inner">
+                                                            <div class="product-des-price">
+                                                            <p>{product?.variants[0]?.sku || 'N/A'}</p>
+                                                                <h6>${product?.variants[0]?.price || 'N/A'}</h6>
+                                                            </div>
+                                                            <div class="product-price">
+                                                            <button
+                                                                    onClick={() => { handleSelectProduct(product) }}
+                                                                    className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
+                                                                    disabled={isProductAdded}
+                                                                    >
+                                                                        {isProductAdded ? 'Added' : 'Add'}
+                                                                    </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    
+                                    </div>
+                                    <button onClick={() => { closeModal() }}
+                                        className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
+                                     FINISH
+                                    </button>
+                                </div>
+                                ): (
+                                    <div className='text-center w-full'>
+                                        <p className="text-gray-500 mt-7 font-bold">No products found</p>
+                                    </div>
+                                )}
 
 
 
