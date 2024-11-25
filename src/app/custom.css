@@ -10,6 +10,9 @@
 .pro-add-btn { background: #3C96B5; border: 1px solid #3C96B5; width: 77px; min-height: 35px; font-size: 16px; color: #fff; border-radius: 5px; transition: all ease-in-out 0.5s; cursor: pointer; }
 .product-itm-img { line-height: 0; }
 .mob-only{ display:none; }
+body.clickup-chrome-ext_installe.clickup-chrome-ext_installed.modal-open {
+  overflow: hidden;
+}
 
 
 @media (max-width:950px){

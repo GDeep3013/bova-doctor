@@ -225,10 +225,14 @@ export default function CreatePlan() {
 
     const openModal = () => {
         setIsModalOpen(true);
+        document.body.classList.add('modal-open');
+
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
+        document.body.classList.remove('modal-open'); 
+
         // setSelectedProduct(null);
     };
 
