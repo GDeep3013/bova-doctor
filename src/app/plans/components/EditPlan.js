@@ -755,7 +755,7 @@ export default function CreatePlan() {
                                         {filteredProducts.map((variant, index) => {
                                                     const isProductAdded = selectedItems.some(item => item.id === variant.id);
                                             return (
-                                                <div class="product-itm-mob">
+                                                <div class="product-itm-mob" key={index}>
                                                     <div class="product-itm-img">
                                                     <img src={
                                                             variant.image && variant.image.url

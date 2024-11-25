@@ -316,7 +316,7 @@ export default function CreatePlan() {
                                         {filteredProducts.map((product, index) => {
                                                         const isProductAdded = selectedItems.some(item => item.id === product.id);
                                                         return (
-                                                <div class="product-itm-mob">
+                                                <div class="product-itm-mob" key={index}>
                                                     <div class="product-itm-img">
                                                     <img
                                                         src={product.image?.src || '/images/product-img1.png'}
