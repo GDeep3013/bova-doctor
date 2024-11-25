@@ -22,51 +22,6 @@ export default function CreatePlan() {
     const [loader, setLoader] = useState(false);
 
     
-    useEffect(() => {
-        // Find all <select> elements
-        const selects = document.querySelectorAll("select");
-      
-        selects.forEach((select) => {
-          // Add a custom class to the select element
-          select.classList.add("custom-select");
-      
-          // Create a new <ul> to replace the <option> elements
-          const dropdown = document.createElement("ul");
-          dropdown.className = "custom-options";
-      
-          // Populate the <ul> with <li> elements for each <option>
-          Array.from(select.options).forEach((option) => {
-            const listItem = document.createElement("li");
-            listItem.innerText = option.text;
-            listItem.setAttribute("data-value", option.value);
-      
-            // Add click event to update the <select> value
-            listItem.addEventListener("click", () => {
-              select.value = option.value; // Update the original <select>
-              const event = new Event("change", { bubbles: true }); // Trigger change event
-              select.dispatchEvent(event); // Dispatch change event
-              console.log(`Selected: ${option.text}`);
-            });
-      
-            dropdown.appendChild(listItem);
-          });
-      
-          // Insert the <ul> after the <select>
-          select.parentNode.insertBefore(dropdown, select.nextSibling);
-      
-          // Optionally hide the original <select>
-          select.style.display = "none";
-        });
-      
-        return () => {
-          // Clean up dynamically added <ul> elements
-          const dropdowns = document.querySelectorAll(".custom-options");
-          dropdowns.forEach((dropdown) => dropdown.remove());
-      
-          // Reset visibility of <select> elements
-          selects.forEach((select) => (select.style.display = "block"));
-        };
-      }, [selectedItems]);
 
     const fetchPatients = async () => {
         try {
