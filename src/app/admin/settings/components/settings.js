@@ -180,7 +180,7 @@ export default function CreatePlan() {
             <div className="flex flex-col">
                 {fetchLoader && !updateSelectedItems ? <Loader /> : <>
                     <h1 className="text-2xl pt-4 md:pt-1 mb-1">Products</h1>
-                    <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button>
+                    {/* <button className="text-gray-600 text-sm mb-4 text-left">&lt; Back</button> */}
                     <div className="mt-4 md:mt-8 flex max-[767px]:flex-wrap gap-8">
                         <div className="lg:col-span-2 space-y-4 rounded-lg bg-white border border-customBorder w-full max-w-[1334px]">
                             <div className='p-0'>
