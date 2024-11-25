@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { signOut, getSession } from 'next-auth/react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname  } from 'next/navigation';
 import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon, EarningIcon, CloseIcon } from './svg-icons/icons';
 
 export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
@@ -32,7 +32,7 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    router.push('/');
+    window.location.reload();
   };
 
   return (
