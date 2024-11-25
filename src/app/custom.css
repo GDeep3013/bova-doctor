@@ -67,6 +67,9 @@ input[type='number'] {
 .custom-checkbox input:checked+span svg{ top: 50%; }
 .custom-checkbox input:checked+span svg g{ fill: #fff; }
 
+.custom-select-wrapper select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-color: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px; width: 100%; font-size: 16px; color: #333; cursor: pointer; font-family: var(--theme-font);}
+.custom-select-wrapper select option{ background-color: #fff; font-family: var(--theme-font); color: #333;}
+
 @media screen and (min-width:1200px) and (max-width:1400px) {
 .login-after{ background-position: bottom !important; }
 }

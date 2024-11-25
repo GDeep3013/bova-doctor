@@ -133,6 +133,7 @@ export default function CreatePlan() {
                 title: variant.product?.title,
                 quantity: 5,
                 properties: {
+                    dosage:5,
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended)',
                     takeWith: 'Water',
@@ -165,12 +166,7 @@ export default function CreatePlan() {
             const updatedItems = prevData.items.map((item) => {
                 if (item.id === itemId) {
                     // Check if the field is 'quantity' or needs updating in 'properties'
-                    if (field === "quantity") {
-                        return {
-                            ...item,
-                            quantity: parseInt(value, 10),
-                        };
-                    } else if (field === "price" || field === "title") {
+                   if (field === "price" || field === "title") {
                         // Update price or title if those are the fields being changed
                         return {
                             ...item,
@@ -215,7 +211,7 @@ export default function CreatePlan() {
 
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
-            !item.quantity ||
+            !item.properties.dosage ||
             !item.properties.frequency ||
             !item.properties.duration ||
             !item.properties.takeWith
@@ -298,6 +294,7 @@ export default function CreatePlan() {
                     price: item.price,
                     title: item.title,
                     properties: {
+                        dosage:item.properties.dosage,
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',
                         duration: item.properties.duration || 'Once Per Day',
                         takeWith: item.properties.takeWith || 'Water',
@@ -366,11 +363,11 @@ export default function CreatePlan() {
     }, [id, variants, patients]);
 
 
-
     const subtotal = formData.items.reduce((acc, item) => {
-        const itemQuantity = item.quantity || 1;
-        return acc + itemQuantity * item.price;
+        console.log("Accumulator:", acc, "Item Price:", item.price);
+        return acc + (parseFloat(item.price) || 0);  // Ensure item.price is treated as a float
     }, 0);
+
     const discount = subtotal * 0;
 
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
@@ -504,8 +501,8 @@ export default function CreatePlan() {
                                                 <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                                 <div className="relative">
                                                     <select
-                                                        value={itemData?.quantity ?? ""}
-                                                        onChange={(e) => handleFormDataChange(item.id, 'quantity', e.target.value)}
+                                                        value={itemData?.properties.dosage  ?? ""}
+                                                        onChange={(e) => handleFormDataChange(item.id, 'dosage', e.target.value)}
                                                         className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
 
                                                         <option value="1">1 </option>
@@ -627,9 +624,9 @@ export default function CreatePlan() {
                                                             <td className="py-2 text-[#3F4647] text-sm">
                                                                 {item.title}
                                                             </td>
-                                                            <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> {item.quantity ? item.quantity : 1} x {item.price}</td>
+                                                            <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> </td>
                                                             <td className="py-2 text-[#3F4647] text-sm text-right">
-                                                                ${((item.quantity ? item.quantity : 1) * item.price).toFixed(2)}
+                                                                ${item?.price?(item?.price):'N/a'}
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -673,7 +670,7 @@ export default function CreatePlan() {
                         <div className="fixed p-3 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden overflow-y-auto">
                             <div className="bg-white p-6 pb-4 rounded-lg max-w-[98%] md:max-w-[1020px] max-h-[98%] md:max-h-[100%] w-full overflow-hidden overflow-y-auto">
                                 <div className='flex justify-between items-center md:pb-4'>
-                                    <h2 className="text-xl font-bold">Select Product</h2>
+                                    <h2 className="text-xl font-bold mb-3">Select Product</h2>
                                     <button onClick={closeModal}> <CloseIcon /> </button>
                                 </div>
                                 <input
@@ -681,11 +678,11 @@ export default function CreatePlan() {
                                     placeholder="Search for a product"
                                     value={searchTerm}
                                     onChange={handleSearchChange}
-                                    className="w-full px-4 py-2 mb-4 border rounded-lg"
+                                    className="w-full px-4 py-2 mb-3 border rounded-lg"
                                 />
 
                                 {/* Product List in Single Line */}
-                                <div className="h-[600px] overflow-y-auto">
+                                <div className="max-h-[600px] overflow-y-auto">
                                     {filteredProducts.length > 0 ? (
                                         <div className="mt-4">
                                             <table className="min-w-full bg-white">
@@ -742,12 +739,12 @@ export default function CreatePlan() {
                                             <p className="text-gray-500 mt-7 font-bold">No products found</p>
                                         </div>
                                     )}
+                                </div>
                                     <button
                                         onClick={() => { closeModal() }}
                                         className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
                                         FINISH
                                     </button>
-                                </div>
 
                             </div >
                         </div >

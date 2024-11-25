@@ -36,7 +36,7 @@ export function medicationPlan(patient, doctor, link, items, selectedItems) {
                                     <td style="vertical-align: top;">
                                         <ul style="width: 100%;">
                                             <li style="color:#373737; display: block; padding: 16px 20px; font-size: 14px; border-radius: 5px; background-color: ${(index +1) % 2 === 0 ? '#f6f6f6' : '#ffffff'}">
-                                                <span style="color: #898989;">Capsules</span> ${itemData?.quantity ?? ''}
+                                                <span style="color: #898989;">Capsules</span> ${itemData?.properties.dosage ?? ''}
                                             </li>
                                             <li style="color:#373737; display: block; margin-top: 10px; padding: 16px 20px; font-size: 14px; border-radius: 5px; background-color: ${(index +1) % 2 === 0 ? '#f6f6f6' : '#ffffff'}">
                                                 <span style="color: #898989;">Frequency</span> ${itemData?.properties.frequency ?? ''}
