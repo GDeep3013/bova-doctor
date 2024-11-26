@@ -111,7 +111,7 @@ export default function CreatePlan() {
                 title: variant.product?.title,
                 quantity: 1,
                 properties: {
-                    dosage:1,
+                    capsule:1,
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
@@ -139,7 +139,7 @@ export default function CreatePlan() {
                     price: item.price,
                     title : item.title,
                     properties: {
-                        dosage: item.properties.dosage || 1 ,
+                        capsule: item.properties.capsule || 1 ,
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',
                         duration: item.properties.duration || 'Once Per Day',
                         takeWith: item.properties.takeWith || 'Water',
@@ -283,7 +283,7 @@ export default function CreatePlan() {
                                         <input
                                             type="number"
                                             readOnly
-                                            value={itemData?.properties.dosage?? ""}
+                                            value={itemData?.properties.capsule?? ""}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Quantity (e.g., 5, 10)"
                                         />
