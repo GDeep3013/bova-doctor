@@ -244,6 +244,7 @@ export default function CreatePlan() {
                 text: 'Plan updated successfully and mail has been sent!',
                 icon: 'success',
                 confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
             });
             setLoader(false)
             router.push('/plans/review');
@@ -264,7 +265,7 @@ export default function CreatePlan() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        document.body.classList.remove('modal-open'); 
+        document.body.classList.remove('modal-open');
         setSelectedProduct(null);
     };
 
@@ -342,6 +343,7 @@ export default function CreatePlan() {
                     text: 'Failed to fetch Plan data.',
                     icon: 'error',
                     confirmButtonText: 'OK',
+                    confirmButtonColor: "#3c96b5",
                 });
                 setFetchLoader(false)
 
@@ -353,6 +355,7 @@ export default function CreatePlan() {
                 text: 'An error occurred while fetching plan data.',
                 icon: 'error',
                 confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
             });
             setFetchLoader(false)
 
@@ -377,7 +380,7 @@ export default function CreatePlan() {
     const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
-            {!fetchLoader ? 
+            {!fetchLoader ?
                 <div className="flex flex-col">
                     <h1 className="text-2xl pt-4 md:pt-1 mb-1">Edit Patient Plan</h1>
                     <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
@@ -753,7 +756,7 @@ export default function CreatePlan() {
                                 {filteredProducts.length > 0 ? (
                                 <div class="product-itm-wrapper mob-only">
                                 <div class="product-itm-container">
-                                
+
                                         {filteredProducts.map((variant, index) => {
                                                     const isProductAdded = selectedItems.some(item => item.id === variant.id);
                                             return (
@@ -791,7 +794,7 @@ export default function CreatePlan() {
                                                 </div>
                                             );
                                         })}
-                                    
+
                                     </div>
                                     <button onClick={() => { closeModal() }}
                                         className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">

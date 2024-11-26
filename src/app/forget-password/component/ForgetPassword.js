@@ -49,6 +49,7 @@ export default function ForgetPassword() {
             text: 'Password change link send on our email',
             icon: 'success',
             confirmButtonText: 'OK',
+            confirmButtonColor: "#3c96b5",
           });
           setLoader(false);
           router.push('/login');

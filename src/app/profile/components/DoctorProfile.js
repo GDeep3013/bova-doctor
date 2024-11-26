@@ -29,7 +29,7 @@ export default function Profile() {
                         <div className="space-y-2 text-gray-700">
                             <div className="bg-customBg p-4 px-3 md:px-5 rounded-t-[8px] flex justify-between items-center">
                                 <span className="font-medium text-[14px] md:text-base text-gray-700">
-                                    Name: <span>{session?.userDetail?.firstName}  {session?.userDetail?.lastName}</span>
+                                    <span>{session?.userDetail?.firstName}  {session?.userDetail?.lastName}</span>
                                 </span>
                                 <span className="text-gray-600 text-[14px] md:text-base">Date Created: {formatDate(session?.userDetail?.createdAt)}  </span>
 
@@ -41,9 +41,9 @@ export default function Profile() {
                                 <p className='flex justify-between py-2'>
                                     <span className="text-textColor text-[14px] md:text-base"> Phone Number</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.phone} </span>
                                 </p>
-                                <p className='flex justify-between py-2'>
+                                {/* <p className='flex justify-between py-2'>
                                     <span className="text-textColor text-[14px] md:text-base"> Specialty</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.specialty} </span>
-                                </p>
+                                </p> */}
                                 <p className='flex justify-between py-2'>
                                     <span className="text-textColor text-[14px] md:text-base"> Clinic Name</span> <span className='text-right text-[14px] md:text-base min-w-[126px]'>{session?.userDetail?.clinicName} </span>
                                 </p>

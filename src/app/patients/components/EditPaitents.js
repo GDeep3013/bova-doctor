@@ -37,6 +37,7 @@ export default function EditPatient() {
                         text: 'Failed to fetch patient data.',
                         icon: 'error',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                 }
                 setFetchLoader(false)
@@ -98,6 +99,7 @@ export default function EditPatient() {
                         text: 'Patient updated successfully!',
                         icon: 'success',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                     setLoader(false);
                     router.push(`/patients/detail/${result?._id}`);

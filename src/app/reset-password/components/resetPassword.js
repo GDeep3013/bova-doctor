@@ -61,6 +61,7 @@ export default function ResetPage() {
                         text: 'Password changed successfully',
                         icon: 'success',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                     router.push('/login');
                     setLoader(false);
