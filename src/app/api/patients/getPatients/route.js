@@ -20,9 +20,11 @@ export async function GET(req) {
   }
 
   try {
-    const patients = await Patient.find({ doctorId: userId })
-    .sort({ createdAt: -1 })
-      .skip(skip).limit(limit);
+
+    if (url.searchParams.get('page')) {
+      const patients = await Patient.find({ doctorId: userId })
+        .sort({ createdAt: -1 })
+        .skip(skip).limit(limit);
       const totalPatient = await Patient.countDocuments({ doctorId: userId });
 
       return new Response(
@@ -37,6 +39,16 @@ export async function GET(req) {
         }),
         { status: 200 }
       );
+    } else {
+      const patients = await Patient.find({ doctorId: userId })
+        .sort({ createdAt: -1 });
+
+      return new Response(
+        JSON.stringify(patients),
+        { status: 200 }
+      )
+      
+    }
     
   } catch (error) {
     console.error('Error fetching patients:', error);
