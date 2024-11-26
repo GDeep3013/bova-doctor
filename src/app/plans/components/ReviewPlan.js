@@ -14,6 +14,9 @@ export default function ReviewPlan() {
     const router = useRouter();
     const [error, setError] = useState('')
     const [fetchLoader, setFetchLoader] = useState(false);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [limit] = useState(10);
 
     function formatPhoneNumber(phoneNumber) {
         if (!phoneNumber) return phoneNumber; // Return as is if not 10 digits
@@ -61,17 +64,18 @@ export default function ReviewPlan() {
         }
     };
 
-    const fetchPlans = async () => {
+    const fetchPlans = async (currentPage = 1) => {
 
         try {
             setFetchLoader(true)
-            const response = await fetch(`/api/plans/getPlans?userId=${session?.user?.id}`);
+            const response = await fetch(`/api/plans/getPlans?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
             }
             const data = await response.json();
-            setPlans(data);
+            setPlans(data.plans);
             setFetchLoader(false)
+            setTotalPages(data.pagination.totalPages);
 
         } catch (error) {
             setError(error.message);
@@ -81,8 +85,8 @@ export default function ReviewPlan() {
     }
 
     useEffect(() => {
-        fetchPlans();
-    }, [session]);
+        fetchPlans(page);
+    }, [session,page]);
 
 
 
@@ -90,7 +94,7 @@ export default function ReviewPlan() {
         <AppLayout>
             <div className="mx-auto">
                 {
-fetchLoader?<Loader/>:<>
+        fetchLoader?<Loader/>:<>
 
                 <div className='flex justify-between mt-2 mb-6'>
                     <h1 className="text-2xl">Plan List</h1>
@@ -119,7 +123,7 @@ fetchLoader?<Loader/>:<>
                                 </tr>
                             ) : plans.map((plan, index) => (
                                 <tr key={plan._id} className="hover:bg-gray-50 border-b">
-                                    <td className="py-2 px-4">{index + 1}</td>
+                                    <td className="py-2 px-4"> {(page - 1) * 10 + index + 1}</td>
                                     <td className="py-2 px-4">{plan?.patient_id?.firstName} {plan?.patient_id?.lastName}</td>
                                     <td className="py-2 px-4">{plan?.patient_id?.email}</td>
                                     <td className="py-2 px-4">{formatPhoneNumber(plan?.patient_id?.phone) || "Not available"}</td>
@@ -156,6 +160,27 @@ fetchLoader?<Loader/>:<>
                         </tbody>
                     </table>
                         </div>
+                        <div className="flex justify-end items-center space-x-4 mt-6">
+                    <button
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
+                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
+                            }`}
+                    >
+                        Previous
+                    </button>
+                    <span className="text-gray-700">
+                        Page {page} of {totalPages}
+                    </span>
+                    <button
+                        disabled={page === totalPages}
+                        onClick={() => setPage(page + 1)}
+                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
+                            }`}
+                    >
+                        Next
+                    </button>
+                </div>
                         </>
                 }
             </div>

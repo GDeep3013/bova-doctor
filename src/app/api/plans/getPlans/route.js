@@ -9,7 +9,10 @@ export async function GET(req) {
   // Access query parameters directly from the URL using req.nextUrl
   const { searchParams } = req.nextUrl;
   const userId = searchParams.get('userId'); // Extract userId (doctorId) from query params
-
+  const url = new URL(req.url);
+  const page = parseInt(url.searchParams.get('page') || '1', 10); // Default to page 1
+  const limit = parseInt(url.searchParams.get('limit') || '10', 10); // Default to 10 items per page
+  const skip = (page - 1) * limit;
   if (!userId) {
     return new Response(JSON.stringify({ error: 'User ID is required' }), {
       status: 400,
@@ -22,12 +25,28 @@ export async function GET(req) {
     const patientIds = patients.map(patient => patient._id);
 
     // Step 2: Find all plans where patient_id is in the list of patientIds
-    const plans = await Plan.find({ patient_id: { $in: patientIds } }).sort({ createdAt: -1 }).populate('patient_id');
+    const plans = await Plan.find({ patient_id: { $in: patientIds } }).sort({ createdAt: -1 })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+      .limit(limit).populate('patient_id');
+      const totalPlan = await Plan.countDocuments({ patient_id: { $in: patientIds } });
 
+      return new Response(
+        JSON.stringify({
+          plans: plans,
+          pagination: {
+            total: totalPlan,
+            page,
+            limit,
+            totalPages: Math.ceil(totalPlan / limit),
+          },
+        }),
+        { status: 200 }
+      );
     // Respond with the plans data
-    return new Response(JSON.stringify(plans), {
-      status: 200,
-    });
+    // return new Response(JSON.stringify(plans), {
+    //   status: 200,
+    // });
   } catch (error) {
     console.error('Error fetching plans:', error);
     return new Response(
