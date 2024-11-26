@@ -241,7 +241,7 @@ export default function CreatePlan() {
             if (!response.ok) throw new Error('Failed to submit data');
             Swal.fire({
                 title: 'Success!',
-                text: 'Plan updated successfully and mail has been sent!',
+                text:  `You have successfully emailed ${selectedPatient.firstName} ${selectedPatient.lastName}`,
                 icon: 'success',
                 confirmButtonText: 'OK',
                 confirmButtonColor: "#3c96b5",
