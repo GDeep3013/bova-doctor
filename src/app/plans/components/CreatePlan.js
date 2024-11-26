@@ -345,7 +345,7 @@ export default function CreatePlan() {
                                                             : '/images/product-img1.png'
                                                 }
                                                 alt={variant.product.title}
-                                                className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                className={` border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
                                                 onClick={() => handleSelectProduct(variant)}
                                             />
                                             {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>

@@ -31,12 +31,12 @@ export default function CreatePlan() {
             if (updateSelectedItems) {
                 setFetchLoader(false)
             }
-      
+
         }
     }
 
         const fetchSavedProduct = async () => {
-            try {             
+            try {
             const response = await fetch(`/api/products`);
             if (!response.ok) throw new Error('Failed to fetch product status');
                 const data = await response.json();
@@ -68,20 +68,20 @@ export default function CreatePlan() {
             }).filter(item => item !== null);
             setSelectedItems(updatedSelectedItems);
         }
-  
+
 
     }, [products, savedProduct ,updateSelectedItems]);
 
 
     const handleSelectProduct = (product) => {
-      
+
         setSelectedItems((prevSelectedItems) => {
             const productExists = prevSelectedItems.some((item) => item.id === product.id);
             if (productExists) return prevSelectedItems;
             return [...prevSelectedItems, product];
         });
         updateStatus(product, 'active')
-      
+
 
     };
 
@@ -111,7 +111,7 @@ export default function CreatePlan() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        document.body.classList.remove('modal-open'); 
+        document.body.classList.remove('modal-open');
 
     };
 
@@ -161,7 +161,7 @@ export default function CreatePlan() {
                 setProducts(data);
           } catch (error) {
                 console.log('error', error)
-                
+
           }
         };
         if (searchTerm) {
@@ -208,7 +208,7 @@ export default function CreatePlan() {
                                                         <img
                                                             src={product.image.src} // Replace with actual paths
                                                             alt={product.title}
-                                                            className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                            className={`border-4 border-[#3c637a] p-3 ${isProductSelected(product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
                                                             onClick={() => handleSelectProduct(product)}
                                                         />
                                                     )}
@@ -316,7 +316,7 @@ export default function CreatePlan() {
                                 {filteredProducts.length > 0 ? (
                                 <div class="product-itm-wrapper mob-only">
                                 <div class="product-itm-container">
-                                
+
                                         {filteredProducts.map((product, index) => {
                                                         const isProductAdded = selectedItems.some(item => item.id === product.id);
                                                         return (
@@ -349,7 +349,7 @@ export default function CreatePlan() {
                                                 </div>
                                             );
                                         })}
-                                    
+
                                     </div>
                                     <button onClick={() => { closeModal() }}
                                         className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">

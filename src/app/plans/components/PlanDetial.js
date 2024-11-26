@@ -328,7 +328,7 @@ export default function CreatePlan() {
                             </div>)
                         })
                         }
-                         <div className="p-4 border-t border-b border-[#AFAAAC]">
+                         <div className="p-4 border-t">
                                 <textarea
                                     value={formData.message}
                                     className="w-full border outline-none border-[#AFAAAC] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
