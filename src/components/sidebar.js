@@ -23,7 +23,7 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    const fetchSession = async () => {
+    const fetchSession = async () => { 
       const sessionData = await getSession();
       setSession(sessionData);
     };

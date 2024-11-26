@@ -314,28 +314,28 @@ export default function CreatePlan() {
                                     </div>
                                 </div>
                                 {filteredProducts.length > 0 ? (
-                                <div class="product-itm-wrapper mob-only">
-                                <div class="product-itm-container">
+                                <div className="product-itm-wrapper mob-only">
+                                <div className="product-itm-container">
                                 
                                         {filteredProducts.map((product, index) => {
                                                         const isProductAdded = selectedItems.some(item => item.id === product.id);
                                                         return (
-                                                <div class="product-itm-mob" key={index}>
-                                                    <div class="product-itm-img">
+                                                <div className="product-itm-mob" key={index}>
+                                                    <div className="product-itm-img">
                                                     <img
                                                         src={product.image?.src || '/images/product-img1.png'}
                                                         alt={product.title}
                                                         className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
                                                     />
                                                     </div>
-                                                    <div class="product-itm-des">
+                                                    <div className="product-itm-des">
                                                         <h3>{product.title}</h3>
-                                                        <div class="product-des-inner">
-                                                            <div class="product-des-price">
+                                                        <div className="product-des-inner">
+                                                            <div className="product-des-price">
                                                             <p>{product?.variants[0]?.sku || 'N/A'}</p>
                                                                 <h6>${product?.variants[0]?.price || 'N/A'}</h6>
                                                             </div>
-                                                            <div class="product-price">
+                                                            <div className="product-price">
                                                             <button
                                                                     onClick={() => { handleSelectProduct(product) }}
                                                                     className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
