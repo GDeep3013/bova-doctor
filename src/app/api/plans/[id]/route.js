@@ -36,7 +36,13 @@ export async function GET(req, { params }) {
     }
 
     // Retrieve the plan by its decrypted ID
-    const plan = await Plan.findById(planId);
+    const plan = await Plan.findById(planId).populate({
+      path: 'patient_id', // Populates the patient data
+      populate: {
+        path: 'doctorId', // Populates the doctor data from the patient's doctorId field
+        model: 'Doctor',
+      },
+    });
 
     if (!plan) {
       return new Response(

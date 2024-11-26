@@ -91,6 +91,7 @@ export default function RegisterForm() {
                         text: 'Your registration was successful!',
                         icon: 'success',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                     setLoginError('');
                     router.push('/login');

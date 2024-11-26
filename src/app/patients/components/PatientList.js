@@ -14,6 +14,9 @@ export default function PatientList() {
     const [error, setError] = useState("");
     const [fetchLoader, setFetchLoader] = useState(false);
     const router = useRouter();
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [limit] = useState(10);
 
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -59,17 +62,18 @@ export default function PatientList() {
     const handleView = (id) => {
         router.push(`/patients/detail/${id}`);
     };
-    const fetchPatients = async () => {
+    const fetchPatients = async (currentPage = 1) => {
         try {
             setFetchLoader(true)
-            const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
+            const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
             }
             const data = await response.json();
 
-            setPatients(data);
+            setPatients(data.patients);
             setFetchLoader(false)
+            setTotalPages(data.pagination.totalPages);
         } catch (error) {
             setError(error.message);
             setFetchLoader(false)
@@ -77,8 +81,8 @@ export default function PatientList() {
     }
 
     useEffect(() => {
-        fetchPatients();
-    }, [session]);
+        fetchPatients(page);
+    }, [session,page]);
 
 
 
@@ -113,7 +117,7 @@ export default function PatientList() {
                             </tr>
                         ) : patients.map((patient,index) => (
                             <tr key={patient._id} className="hover:bg-gray-50 border-b">
-                                <td className="py-2 px-4">{index +1}</td>
+                                <td className="py-2 px-4"> {(page - 1) * 10 + index + 1}</td>
                                 <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
                                 <td className="py-2 px-4">{patient.email}</td>
                                 <td className="py-2 px-4">{patient?.phone || "Not available"}</td>
@@ -149,6 +153,27 @@ export default function PatientList() {
                     </tbody>
                 </table>
                     </div>
+                    <div className="flex justify-end items-center space-x-4 mt-6">
+                    <button
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
+                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
+                            }`}
+                    >
+                        Previous
+                    </button>
+                    <span className="text-gray-700">
+                        Page {page} of {totalPages}
+                    </span>
+                    <button
+                        disabled={page === totalPages}
+                        onClick={() => setPage(page + 1)}
+                        className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
+                            }`}
+                    >
+                        Next
+                    </button>
+                </div>
                     </>}
             </div>
         </AppLayout>

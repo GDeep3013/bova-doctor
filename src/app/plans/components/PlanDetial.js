@@ -111,7 +111,7 @@ export default function CreatePlan() {
                 title: variant.product?.title,
                 quantity: 1,
                 properties: {
-                    dosage:1,
+                    capsule:1,
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
@@ -139,7 +139,7 @@ export default function CreatePlan() {
                     price: item.price,
                     title : item.title,
                     properties: {
-                        dosage: item.properties.dosage || 1 ,
+                        capsule: item.properties.capsule || 1 ,
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',
                         duration: item.properties.duration || 'Once Per Day',
                         takeWith: item.properties.takeWith || 'Water',
@@ -169,6 +169,8 @@ export default function CreatePlan() {
                     text: 'Failed to fetch Plan data.',
                     icon: 'error',
                     confirmButtonText: 'OK',
+                    confirmButtonColor: "#3c96b5",
+
                 });
                 setfetchLoader(false)
 
@@ -180,6 +182,7 @@ export default function CreatePlan() {
                 text: 'An error occurred while fetching plan data.',
                 icon: 'error',
                 confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
             });
             setfetchLoader(false)
         }
@@ -200,7 +203,7 @@ export default function CreatePlan() {
     const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
-             {!fetchLoader ? 
+             {!fetchLoader ?
         <div className="flex flex-col">
             <h1 className="text-2xl pt-4 md:pt-1 mb-1">View Patient Plan</h1>
             <button className="text-gray-600 text-sm mb-4 text-left" onClick={()=>{router.back()} }>&lt; Back</button>
@@ -280,7 +283,7 @@ export default function CreatePlan() {
                                         <input
                                             type="number"
                                             readOnly
-                                            value={itemData?.properties.dosage?? ""}
+                                            value={itemData?.properties.capsule?? ""}
                                             className="w-full border border-[#AFAAAC] outline-none min-h-[50px] rounded-[8px] p-2 mt-1 mb-4"
                                             placeholder="Enter Quantity (e.g., 5, 10)"
                                         />
@@ -325,7 +328,7 @@ export default function CreatePlan() {
                             </div>)
                         })
                         }
-                         <div className="p-4 border-t border-b border-[#AFAAAC]">
+                         <div className="p-4 border-t">
                                 <textarea
                                     value={formData.message}
                                     className="w-full border outline-none border-[#AFAAAC] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
@@ -378,7 +381,7 @@ export default function CreatePlan() {
                                     onClick={() => { router.push(`/plans/edit-plan/${id}`);}}
                                     // disabled={formData.items.length === 0 || !formData.patient_id}
                                     className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                    Edit to Patient Plan
+                                    Edit Patient Plan
                                 </button>
                             </div>
                         </div>

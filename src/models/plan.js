@@ -17,7 +17,7 @@ const PlanSchema = new mongoose.Schema({
             price: { type: String },
             title: { type: String },
             properties: {
-                dosage:{ type: String, default: '' },
+                capsule:{ type: String, default: '' },
                 frequency: { type: String, default: '' },
                 duration: { type: String, default: '' },
                 takeWith: { type: String, default: '' },
@@ -26,10 +26,8 @@ const PlanSchema = new mongoose.Schema({
                 _patient_id: { type: String, default: '' },
             },
         },
-
     ],
-  
-    createdAt: { type: Date, default: Date.now },
+   createdAt: { type: Date, default: Date.now },
 });
 
 export default mongoose.models.Plan || mongoose.model('Plan', PlanSchema);

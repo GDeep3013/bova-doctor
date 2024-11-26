@@ -21,7 +21,7 @@ export default function CreatePlan() {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
 
-    
+
 
     const fetchPatients = async () => {
         try {
@@ -147,7 +147,7 @@ export default function CreatePlan() {
                             properties: {
                                 ...item.properties,
                                 [field]: value,
-                                _patient_id: selectedPatient?.id || id, 
+                                _patient_id: selectedPatient?.id || id,
                             },
                         };
                     }
@@ -176,7 +176,7 @@ export default function CreatePlan() {
             };
         });
     };
- 
+
 
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
@@ -199,7 +199,7 @@ export default function CreatePlan() {
                     email: session?.userDetail?.email,
                     clinicName: session?.userDetail?.clinicName
                 }
-                
+
             }
             const response = await fetch('/api/plans/create', {
                 method: 'POST',
@@ -209,9 +209,10 @@ export default function CreatePlan() {
             if (!response.ok) throw new Error('Failed to submit data');
             Swal.fire({
                 title: 'Success!',
-                text: 'Plan created successfully!',
+                text:  `You have successfully emailed ${selectedPatient.firstName} ${selectedPatient.lastName}`,
                 icon: 'success',
                 confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
             });
             setLoader(false);
             router.push('/plans/review');
@@ -231,7 +232,7 @@ export default function CreatePlan() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        document.body.classList.remove('modal-open'); 
+        document.body.classList.remove('modal-open');
 
         // setSelectedProduct(null);
     };
@@ -344,7 +345,7 @@ export default function CreatePlan() {
                                                             : '/images/product-img1.png'
                                                 }
                                                 alt={variant.product.title}
-                                                className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                className={` border-4 border-[#3c637a] p-3 ${isProductSelected(variant.product.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
                                                 onClick={() => handleSelectProduct(variant)}
                                             />
                                             {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>
@@ -498,7 +499,7 @@ export default function CreatePlan() {
                                 ></textarea>
                             </div>}
                             {/* Send to Patient Button */}
-                            <div className="p-4 text-right border-t border-[#AFAAAC]">
+                            <div className="hidden min-[768px]:block p-4 text-right border-t border-[#AFAAAC]">
                                 <button
                                     onClick={() => { handleSubmit() }}
                                     disabled={formData.items.length === 0 || !formData.patient_id}
@@ -691,7 +692,7 @@ export default function CreatePlan() {
                                                 </div>
                                             );
                                         })}
-                                    
+
                                     </div>
                                     <button onClick={() => { closeModal() }}
                                         className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">

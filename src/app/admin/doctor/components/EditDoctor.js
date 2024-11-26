@@ -90,6 +90,7 @@ export default function CreateDoctor() {
                         text: 'Failed to fetch patient data.',
                         icon: 'error',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                     setFetchLoader(false)
                 }
@@ -125,6 +126,7 @@ export default function CreateDoctor() {
                         text: 'Doctor added successfully!',
                         icon: 'success',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                     setFirstName('');
                     setLastName('');
@@ -142,6 +144,7 @@ export default function CreateDoctor() {
                         text: 'Failed to update doctor.',
                         icon: 'error',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                 setLaoding(false)
 
@@ -152,6 +155,7 @@ export default function CreateDoctor() {
                     text: 'Something went wrong.',
                     icon: 'error',
                     confirmButtonText: 'OK',
+                    confirmButtonColor: "#3c96b5",
                 });
                 setLaoding(false)
 
@@ -272,8 +276,8 @@ export default function CreateDoctor() {
                                     type="submit"
                                     className="min-w-[200px] py-2 bg-customBg2 text-white rounded-[8px] hover:bg-customText focus:outline-none"
                                 >
-                              {laoding?"Please Wait...":"  Update Doctor Detail"}   
-                                  
+                              {laoding?"Please Wait...":"  Update Doctor Detail"}
+
                                 </button>
 
                                 {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}

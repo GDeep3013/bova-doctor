@@ -93,6 +93,7 @@ export default function CreateDoctor() {
                         text: 'Doctor added successfully!',
                         icon: 'success',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                     setFirstName('');
                     setLastName('');

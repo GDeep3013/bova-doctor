@@ -48,6 +48,7 @@ export default function PatientDetial() {
                         text: 'Failed to fetch patient data.',
                         icon: 'error',
                         confirmButtonText: 'OK',
+                        confirmButtonColor: "#3c96b5",
                     });
                     setFetchLoader(false)
                 }

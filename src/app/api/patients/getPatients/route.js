@@ -7,7 +7,11 @@ export async function GET(req) {
 
   // Access query parameters directly from the URL using req.nextUrl
   const { searchParams } = req.nextUrl;
-  const userId = searchParams.get('userId'); // Extract userId from query params
+  const userId = searchParams.get('userId');
+  const url = new URL(req.url);
+  const page = parseInt(url.searchParams.get('page') || '1', 10); // Default to page 1
+  const limit = parseInt(url.searchParams.get('limit') || '10', 10); // Default to 10 items per page
+  const skip = (page - 1) * limit;// Extract userId from query params
 
   if (!userId) {
     return new Response(JSON.stringify({ error: 'User ID is required' }), {
@@ -16,10 +20,24 @@ export async function GET(req) {
   }
 
   try {
-    const patients = await Patient.find({ doctorId: userId }).sort({ createdAt: -1 });
-    return new Response(JSON.stringify(patients), {
-      status: 200,
-    });
+    const patients = await Patient.find({ doctorId: userId })
+    .sort({ createdAt: -1 })
+      .skip(skip).limit(limit);
+      const totalPatient = await Patient.countDocuments({ doctorId: userId });
+
+      return new Response(
+        JSON.stringify({
+          patients: patients,
+          pagination: {
+            total: totalPatient,
+            page,
+            limit,
+            totalPages: Math.ceil(totalPatient / limit),
+          },
+        }),
+        { status: 200 }
+      );
+    
   } catch (error) {
     console.error('Error fetching patients:', error);
     return new Response(

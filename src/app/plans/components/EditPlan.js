@@ -133,7 +133,7 @@ export default function CreatePlan() {
                 title: variant.product?.title,
                 quantity: 5,
                 properties: {
-                    dosage:5,
+                    capsule:5,
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended)',
                     takeWith: 'Water',
@@ -211,7 +211,7 @@ export default function CreatePlan() {
 
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
-            !item.properties.dosage ||
+            !item.properties.capsule ||
             !item.properties.frequency ||
             !item.properties.duration ||
             !item.properties.takeWith
@@ -241,9 +241,10 @@ export default function CreatePlan() {
             if (!response.ok) throw new Error('Failed to submit data');
             Swal.fire({
                 title: 'Success!',
-                text: 'Plan updated successfully and mail has been sent!',
+                text:  `You have successfully emailed ${selectedPatient.firstName} ${selectedPatient.lastName}`,
                 icon: 'success',
                 confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
             });
             setLoader(false)
             router.push('/plans/review');
@@ -264,7 +265,7 @@ export default function CreatePlan() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        document.body.classList.remove('modal-open'); 
+        document.body.classList.remove('modal-open');
         setSelectedProduct(null);
     };
 
@@ -296,7 +297,7 @@ export default function CreatePlan() {
                     price: item.price,
                     title: item.title,
                     properties: {
-                        dosage:item.properties.dosage,
+                        capsule:item.properties.capsule,
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',
                         duration: item.properties.duration || 'Once Per Day',
                         takeWith: item.properties.takeWith || 'Water',
@@ -342,6 +343,7 @@ export default function CreatePlan() {
                     text: 'Failed to fetch Plan data.',
                     icon: 'error',
                     confirmButtonText: 'OK',
+                    confirmButtonColor: "#3c96b5",
                 });
                 setFetchLoader(false)
 
@@ -353,6 +355,7 @@ export default function CreatePlan() {
                 text: 'An error occurred while fetching plan data.',
                 icon: 'error',
                 confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
             });
             setFetchLoader(false)
 
@@ -377,7 +380,7 @@ export default function CreatePlan() {
     const doctorCommission = subtotal * (commissionPercentage / 100);
     return (
         <AppLayout>
-            {!fetchLoader ? 
+            {!fetchLoader ?
                 <div className="flex flex-col">
                     <h1 className="text-2xl pt-4 md:pt-1 mb-1">Edit Patient Plan</h1>
                     <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
@@ -444,7 +447,7 @@ export default function CreatePlan() {
                                                                 : '/images/product-img1.png'
                                                     }
                                                     alt={variant?.product?.title}
-                                                    className={`w-[150px] h-[120px] border-4 border-[#3c637a] p-3 ${isProductSelected(variant?.product?.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
+                                                    className={`border-4 border-[#3c637a] p-3 ${isProductSelected(variant?.product?.id) ? 'bg-white shadow-2xl' : 'bg-[#F9F9F9]'} rounded-[8px]`}
                                                     onClick={() => handleSelectProduct(variant)}
                                                 />
                                                 {/* <p className={`font-bold text-[12px] text-center pt-2 ${isProductSelected(variant.product.id) ? 'text-black' : 'text-textColor'}`}>
@@ -503,8 +506,8 @@ export default function CreatePlan() {
                                                 <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                                 <div className="relative">
                                                     <select
-                                                        value={itemData?.properties.dosage  ?? ""}
-                                                        onChange={(e) => handleFormDataChange(item.id, 'dosage', e.target.value)}
+                                                        value={itemData?.properties.capsule  ?? ""}
+                                                        onChange={(e) => handleFormDataChange(item.id, 'capsule', e.target.value)}
                                                         className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
 
                                                         <option value="1">1 </option>
@@ -598,7 +601,7 @@ export default function CreatePlan() {
                                     ></textarea>
                                 </div>}
                                 {/* Send to Patient Button */}
-                                <div className="p-4 text-right border-t border-[#AFAAAC]">
+                                <div className="hidden min-[768px]:block p-4 text-right border-t border-[#AFAAAC]">
                                     <button
                                         onClick={() => { handleSubmit() }}
                                         disabled={formData.items.length === 0 || !formData.patient_id}
@@ -791,7 +794,7 @@ export default function CreatePlan() {
                                                 </div>
                                             );
                                         })}
-                                    
+
                                     </div>
                                     <button onClick={() => { closeModal() }}
                                         className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
