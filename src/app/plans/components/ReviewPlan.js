@@ -123,7 +123,7 @@ export default function ReviewPlan() {
                                 </tr>
                             ) : plans.map((plan, index) => (
                                 <tr key={plan._id} className="hover:bg-gray-50 border-b">
-                                    <td className="py-2 px-4">0</td>
+                                    <td className="py-2 px-4"> {(page - 1) * 10 + index + 1}</td>
                                     <td className="py-2 px-4">{plan?.patient_id?.firstName} {plan?.patient_id?.lastName}</td>
                                     <td className="py-2 px-4">{plan?.patient_id?.email}</td>
                                     <td className="py-2 px-4">{formatPhoneNumber(plan?.patient_id?.phone) || "Not available"}</td>
