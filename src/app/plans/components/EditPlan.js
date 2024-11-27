@@ -369,8 +369,7 @@ export default function CreatePlan() {
 
 
     const subtotal = formData.items.reduce((acc, item) => {
-        console.log("Accumulator:", acc, "Item Price:", item.price);
-        return acc + (parseFloat(item.price) || 0);  // Ensure item.price is treated as a float
+        return acc + (parseFloat(item.price) || 0);  
     }, 0);
 
     const discount = subtotal * 0;
