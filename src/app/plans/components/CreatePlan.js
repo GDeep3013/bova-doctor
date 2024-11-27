@@ -21,8 +21,6 @@ export default function CreatePlan() {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
 
-
-
     const fetchPatients = async () => {
         try {
             const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
