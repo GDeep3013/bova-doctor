@@ -137,7 +137,9 @@ export default function CreatePlan() {
                     id: item.id,
                     quantity:  1,
                     price: item.price,
-                    title : item.title,
+                    title: item.title,
+                    image: item?.image,
+                    description:item?.description,
                     properties: {
                         capsule: item.properties.capsule || 1 ,
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',

@@ -19,12 +19,28 @@ export async function POST(req) {
     items,
     createdAt: new Date()
   };
-
+  
   // Save the new plan to the database
-
   try {
+    // console.log(selectedItems, items);
+    const mergeArrays = (selectedItems, items) => {
+      const mailData = selectedItems.map(selectedItem => {
+        const matchingItem = items.find(item => item.id === selectedItem.id);
+        const plainDescription = selectedItem.product.descriptionHtml.replace(/<[^>]*>/g, '').trim();
+
+        return {
+          title: selectedItem.product.title,
+          description: plainDescription,
+          image: selectedItem.product.images?.[0].url || null, // Use first image if available
+          properties: matchingItem?.properties || {}, // Add properties from items if matched
+        };
+      });
+    
+      return mailData;
+    };
+    const mailData = mergeArrays(selectedItems, items);    
+    
     const plan = await Plan.create(planData);
-    // console.log(selectedItems);
 
     const encryptedId = await crypto.encrypt(plan._id.toString());
 
@@ -36,49 +52,14 @@ export async function POST(req) {
     const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
 
     const patient = await Patient.findOne({ _id: patient_id })
-    // const customProperties = {
-    //   patient_name: `${patient.firstName} ${patient.lastName}`,
-    //   doctor_name: doctor.name,
-    //   doctor_email: doctor.email,
-    //   doctor_clinic_name: doctor.clinicName,
-    //   payment_link: link,
-    //   product_details: items,
-    // };
-    
-    
-  
-    
-    // return customProperties;
-    // console.log(items.properties);
-
-    // console.log(customProperties);
-    // return customProperties;
-    // const transporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: process.env.EMAIL_USER,
-    //     pass: process.env.EMAIL_PASS,
-    //   },
-    // });
-
-    // Set up the email content
-    // const mailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: patient.email,
-    //   subject: 'Your Medication Plan',
-    //   html: medicationPlan(patient, doctor, link, items, selectedItems)  // 
-    // };
-    // await transporter.sendMail(mailOptions);
-
     try {
-      // const user = { firstName, lastName };
       const customProperties = {
         patient_name: patient.firstName+' '+patient.lastName,
         doctor_name: doctor.name,
         doctor_email:doctor.email,
         doctor_clinic_name:doctor.clinicName,
         payment_link: link,
-        product_details: items,
+        product_details: mailData,
       };
       const listId = 'XY5765';
 
@@ -91,7 +72,7 @@ export async function POST(req) {
         } catch (error) {
           console.error('Error deleting profile:', error);
         }
-      }, 60000);
+      }, 120000);
 
       const [createResponse, subscribeResponse] = await Promise.all([
         createProfilePromise,
@@ -101,8 +82,6 @@ export async function POST(req) {
     catch (error) {
       console.error('Error handling Klaviyo actions:', error);
     }
-
-
     return new Response(JSON.stringify({ success: true, data: plan }), {
       status: 201,
     });

@@ -6,10 +6,11 @@ import NextCrypto from 'next-crypto';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
-import {medicationPlan} from '../../../../templates/medicationPlan'
+import { medicationPlan } from '../../../../templates/medicationPlan'
+import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 
 export async function GET(req, { params }) {
-  const { id } = params; 
+  const { id } = params;
   await connectDB();
 
   try {
@@ -35,10 +36,10 @@ export async function GET(req, { params }) {
 export async function PUT(req, { params }) {
   await connectDB();
   const crypto = new NextCrypto();
-  const { id } = params; 
-  const { formData: { items, patient_id, message } ,status = 'pending',selectedItems ,doctor} = await req.json();
+  const { id } = params;
+  const { formData: { items, patient_id, message }, status = 'pending', selectedItems, doctor } = await req.json();
   try {
-     const updatedPlan = await Plan.findByIdAndUpdate(
+    const updatedPlan = await Plan.findByIdAndUpdate(
       id,
       { items, status, patient_id, message, updatedAt: new Date() },
       { new: true }
@@ -47,8 +48,6 @@ export async function PUT(req, { params }) {
     if (!updatedPlan) {
       return new Response(JSON.stringify({ success: false, message: 'Plan not found' }), { status: 404 });
     }
-
-   
     const encryptedId = await crypto.encrypt(updatedPlan._id.toString());
 
     // Make the encrypted ID URL-safe by replacing `/` and `=` characters
@@ -57,30 +56,60 @@ export async function PUT(req, { params }) {
       .replace(/\=/g, '_'); // Replace `=` with `_`
 
     const link = ` https://bovalabs.com//pages/view-plans?id=${urlSafeEncryptedId}`;
-  
-     const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
 
     const patient = await Patient.findById(patient_id);
 
     if (!patient) {
       return new Response(JSON.stringify({ success: false, message: 'Patient not found' }), { status: 404 });
     }
+    const mergeArrays = (selectedItems, items) => {
+      const mailData = selectedItems.map(selectedItem => {
+        const matchingItem = items.find(item => item.id === selectedItem.id);
+        const plainDescription = selectedItem.product.descriptionHtml.replace(/<[^>]*>/g, '').trim();
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: patient.email,
-      subject: 'Your Updated Medication Plan',
-      html: medicationPlan(patient,doctor,link,items,selectedItems), 
+        return {
+          title: selectedItem.product.title,
+          description: plainDescription,
+          image: selectedItem.product.images?.[0].url || null, // Use first image if available
+          properties: matchingItem?.properties || {}, // Add properties from items if matched
+        };
+      });
+
+      return mailData;
     };
+    const mailData = mergeArrays(selectedItems, items);
 
-    // Send the update notification email
-    await transporter.sendMail(mailOptions);
+    try {
+      const customProperties = {
+        patient_name: patient.firstName + ' ' + patient.lastName,
+        doctor_name: doctor.name,
+        doctor_email: doctor.email,
+        doctor_clinic_name: doctor.clinicName,
+        payment_link: link,
+        product_details: mailData,
+      };
+      const listId = 'XY5765';
+
+      const createProfilePromise = createProfile(patient, customProperties);
+      const subscribeProfilePromise = subscribeProfiles(patient, listId);
+
+      setTimeout(async () => {
+        try {
+          const deleteProfileResponse = await deleteProfile(patient);
+        } catch (error) {
+          console.error('Error deleting profile:', error);
+        }
+      }, 120000);
+
+      const [createResponse, subscribeResponse] = await Promise.all([
+        createProfilePromise,
+        subscribeProfilePromise,
+      ]);
+    }
+    catch (error) {
+      console.error('Error handling Klaviyo actions:', error);
+    }
+
 
     return new Response(JSON.stringify({ success: true, data: updatedPlan }), { status: 200 });
   } catch (error) {
@@ -92,7 +121,6 @@ export async function PUT(req, { params }) {
 export async function DELETE(req, { params }) {
   const { id } = params; // Get 'id' from the URL
 
-  // Connect to the database
   await connectDB();
 
   try {

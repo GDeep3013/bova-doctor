@@ -35,11 +35,9 @@ export default function CreatePlan() {
             const data = await response.json();
             setPatients(data);
             // setFetchLoader(false)
-
         } catch (error) {
             setError(error.message);
             // setFetchLoader(false)
-
         }
     }
 
@@ -47,24 +45,19 @@ export default function CreatePlan() {
         try {
             const response = await fetch(`/api/products?status=active`);
             if (!response.ok) throw new Error('Failed to fetch product status');
-
             const data = await response.json();
-
             // Check if the data has products and then map and push variant IDs into an array
             if (Array.isArray(data) && data.length > 0) {
                 const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
                 getVariants(variantIds)
                 // setLoader(false)
-
             } else {
                 console.log('No products found or data is empty');
                 // setLoader(false)
-
             }
         } catch (error) {
             console.error('Error fetching product status:', error);
             // setLoader(false)
-
         }
     };
     const getVariants = async (variantIds) => {
@@ -132,6 +125,8 @@ export default function CreatePlan() {
                 price: variant.price,
                 title: variant.product?.title,
                 quantity: 5,
+                image: variant?.product?.images[0]?.url,
+                description:variant?.product?.descriptionHtml,
                 properties: {
                     capsule:5,
                     frequency: 'Once Per Day (Anytime)',
@@ -286,6 +281,8 @@ export default function CreatePlan() {
         }));
     }
 
+    // console.log(formData.items)
+
     const fetchPlanData = async () => {
         try {
             const response = await fetch(`/api/plans/edit/${id}`);
@@ -296,6 +293,8 @@ export default function CreatePlan() {
                     quantity: item.quantity || 1,
                     price: item.price,
                     title: item.title,
+                    image: item.image , // Ensure the image is present in properties or set as null
+                    description:item.description,
                     properties: {
                         capsule:item.properties.capsule,
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',

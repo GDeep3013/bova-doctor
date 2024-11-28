@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const KLAVIYO_API_BASE_URL = 'https://a.klaviyo.com/api/';
-const KLAVIYO_API_KEY = 'pk_a78bbe87edb7bcb4eafa6ee141c04f2896';
-const KLAVIYO_REVISION = '2024-07-15';
+const KLAVIYO_API_BASE_URL = process.env.KLAVIYO_API_BASE_URL;
+const KLAVIYO_API_KEY = process.env.KLAVIYO_API_KEY;
+const KLAVIYO_REVISION = process.env.KLAVIYO_REVISION;
 
-
+console.log("API",KLAVIYO_API_BASE_URL, KLAVIYO_API_KEY, KLAVIYO_REVISION);
 export async function createProfile(user, customProperties) {
   try {
     const response = await axios.post(

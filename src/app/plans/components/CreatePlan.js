@@ -115,7 +115,7 @@ export default function CreatePlan() {
                 image: variant?.product?.images[0]?.url,
                 description:variant?.product?.descriptionHtml,
                 properties: {
-                    dosage:5,
+                    capsule:5,
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
@@ -178,7 +178,7 @@ export default function CreatePlan() {
 
     const handleSubmit = async () => {
         const invalidItems = formData.items.filter(item => (
-            !item.properties.dosage ||
+            !item.properties.capsule ||
             !item.properties.frequency ||
             !item.properties.duration ||
             !item.properties.takeWith
@@ -402,8 +402,8 @@ export default function CreatePlan() {
                                             <label className="block text-sm ml-2 font-normal text-gray-700">Capsules</label>
                                             <div className="relative">
                                                 <select
-                                                    value={itemData?.properties.dosage ?? ""}
-                                                    onChange={(e) => handleFormDataChange(item.id, 'dosage', e.target.value)}
+                                                    value={itemData?.properties.capsule ?? ""}
+                                                    onChange={(e) => handleFormDataChange(item.id, 'capsule', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
 
                                                     <option value="1">1 </option>
