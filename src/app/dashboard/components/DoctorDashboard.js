@@ -23,7 +23,7 @@ export default function AdminDashboard() {
             }
             const data = await response.json();
             if (data) {
-                setTotalEarning(data.totalEarnings);
+               setTotalEarning(data.totalEarnings);
                 setTotalPatients(data.totalPatients);
                 setTotalPlans(data.totalPlans);
                 setFetchLoader(false)

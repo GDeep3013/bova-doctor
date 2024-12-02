@@ -23,7 +23,7 @@ export default function Home() {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const response = await fetch("/api/doctors/dashboard/latestPatients");
+                const response = await fetch(`/api/doctors/dashboard/latestPatients?doctorId=${session?.user?.id}`);
                 const result = await response.json();
                 if (result.success) {
                     setPatients(result.data);
