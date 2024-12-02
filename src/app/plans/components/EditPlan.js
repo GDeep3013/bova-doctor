@@ -475,7 +475,7 @@ export default function CreatePlan() {
                                 {/* Product Info */}
                                 {selectedItems.length > 0 && selectedItems.map((item, index) => {
                                     const itemData = formData.items.find(fItem => fItem.id === item.id);
-                                    return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                                    return (<div key={index} className="p-8 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
                                         <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                             <img
                                                 src={
@@ -589,7 +589,7 @@ export default function CreatePlan() {
                                 })
                                 }
                                 {/* Message Section */}
-                                {selectedItems.length > 0 && <div className="p-4 border-t border-[#AFAAAC]">
+                                {selectedItems.length > 0 && <div className="p-8 pb-4 border-t border-[#AFAAAC]">
                                     <textarea
                                         value={formData.message}
                                         onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}

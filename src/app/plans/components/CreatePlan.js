@@ -325,7 +325,7 @@ export default function CreatePlan() {
                             <div className=" px-4 xl:px-8 pt-3 pb-8">
                                 <div className="flex max-[767px]:flex-wrap max-[767px]:gap-x-8 max-[767px]:gap-y-4 md:space-x-6 mt-0 md:mt-2 items-center">
                                     {selectedItems.map((variant, index) => (
-                                        <div className='thumbnail-box relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
+                                        <div className='thumbnail-box  relative max-w-[120px] max-[767px]:max-w-[46%] mt-3 md:mt-0' key={index}>
                                             <button
                                                 onClick={() => { handleDeselectProduct(variant.id) }}
                                                 className="top-[-9px] absolute right-[-9px] w-6 h-6 flex items-center justify-center
@@ -373,7 +373,7 @@ export default function CreatePlan() {
                             {/* Product Info */}
                             {selectedItems.map((item, index) => {
                                 const itemData = formData.items.find(fItem => fItem.id === item.id);
-                                  return (<div key={index} className="p-4 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
+                                  return (<div key={index} className="p-8 border-t border-[#AFAAAC] flex max-[1200px]:flex-wrap gap-4">
                                     <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
                                         <img
                                             src={
@@ -474,11 +474,11 @@ export default function CreatePlan() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className='w-full min-[768px]:max-w-[510px]'>
+                                        <div className='w-full min-[768px]:max-w-[510px] ' >
                                             <div className="mt-1">
                                                   <textarea placeholder='Add Notes'
                                                         value={itemData?.properties.notes ?? ""}
-                                                       onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)}className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
+                                                       onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)} className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -487,7 +487,7 @@ export default function CreatePlan() {
                             })
                             }
                             {/* Message Section */}
-                            {selectedItems.length > 0 && <div className="p-4 border-t border-[#AFAAAC]">
+                            {selectedItems.length > 0 && <div className="p-8 pb-4 border-t border-[#AFAAAC]">
                                 <textarea
                                     value={formData.message}
                                     onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}

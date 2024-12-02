@@ -256,7 +256,7 @@ export default function CreatePlan() {
                         {selectedItems.map((item, index) => {
                             const itemData = formData.items.find(fItem => fItem.id === item.id);
                             return (<div key={index}
-                                className={`p-4 ${index === 0 ? "" : "border-t border-[#AFAAAC]"} flex max-[1200px]:flex-wrap gap-4`}
+                                className={`p-8 ${index === 0 ? "" : "border-t border-[#AFAAAC]"} flex max-[1200px]:flex-wrap gap-4`}
 
                             >
                                <div className="pr-5 xl:pr-9 w-full min-[1201px]:max-w-[400px]">
@@ -330,7 +330,7 @@ export default function CreatePlan() {
                             </div>)
                         })
                         }
-                         <div className="p-4 border-t">
+                         <div className="p-8 pb-4 border-t">
                                 <textarea
                                     value={formData.message}
                                     className="w-full border outline-none border-[#AFAAAC] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
