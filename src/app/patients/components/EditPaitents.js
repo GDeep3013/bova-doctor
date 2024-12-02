@@ -142,9 +142,9 @@ export default function EditPatient() {
                                             onChange={(e) => {
                                                 setFirstName(e.target.value); if (errors.firstName) setErrors({ ...errors, firstName: '' });
                                             }}
-                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                         />
-                                        {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                                        {errors.firstName && <p className="text-red-500 text-[13px] mt-0">{errors.firstName}</p>}
                                     </div>
 
                                     <div className="relative">
@@ -157,7 +157,7 @@ export default function EditPatient() {
                                             }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                         />
-                                        {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                                        {errors.lastName && <p className="text-red-500 text-[13px] mt-0">{errors.lastName}</p>}
                                     </div>
                                 </div>
 
@@ -171,7 +171,7 @@ export default function EditPatient() {
                                         }}
                                         className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
-                                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                                    {errors.email && <p className="text-red-500 text-[13px] mt-0">{errors.email}</p>}
                                 </div>
 
                                 <div className="relative">
@@ -184,25 +184,23 @@ export default function EditPatient() {
                                         }}
                                         className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                     />
-                                    {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                                    {errors.phone && <p className="text-red-500 text-[13px] mt-0">{errors.phone}</p>}
                                 </div>
 
 
-                                <div className="message-text">
-                                    <p className='text-base text-textColor'>A plan sent via text message connects better than just email.</p>
+                                <div className="message-text !mt-0 ">
+                                    <p className='text-base text-slate-900 font-light'>A plan sent via text message connects better than just email.</p>
                                 </div>
 
-                                <div className="text-right mt-5">
+                                <div className="text-left mt-5">
                                     <button
                                         type="submit"
-                                        className="min-w-[200px] py-2 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"
+                                        className="min-w-[200px] py-2 mt-3 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"
                                     >
                                         {loader ? "Please wait..." : "Update Patient Detail"}
-
-
                                     </button>
                                 </div>
-                                {errors.apiError && <p className="text-red-500 text-sm mt-3">{errors.apiError}</p>}
+                                {errors.apiError && <p className="text-red-500 text-[13px] mt-0">{errors.apiError}</p>}
                             </form>
                         </div>
                     </div>
