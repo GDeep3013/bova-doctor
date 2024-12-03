@@ -28,6 +28,7 @@
     "next-connect": "^1.0.0",
     "next-crypto": "^1.0.8",
     "nextjs-cors": "^2.2.0",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",

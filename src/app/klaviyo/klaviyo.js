@@ -10,10 +10,10 @@ async function fetchWithErrorHandling(url, options) {
     const error = await response.json();
     throw new Error(`Error: ${response.status} ${response.statusText}, ${JSON.stringify(error)}`);
   }
-  return response.json();
+  return response;
 }
 
-export async function createProfile(user, customProperties) {
+ async function createProfile(user, customProperties) {
   try {
     const response = await fetchWithErrorHandling(`${KLAVIYO_API_BASE_URL}profile-import`, {
       method: 'POST',
@@ -33,6 +33,7 @@ export async function createProfile(user, customProperties) {
         },
       }),
     });
+    console.log(response);
     return response;
   } catch (error) {
     console.error('Error creating profile:', error);
@@ -40,7 +41,7 @@ export async function createProfile(user, customProperties) {
   }
 }
 
-export async function subscribeProfiles(user, listId) {
+ async function subscribeProfiles(user, listId) {
   try {
     const response = await fetchWithErrorHandling(`${KLAVIYO_API_BASE_URL}profile-subscription-bulk-create-jobs/`, {
       method: 'POST',
@@ -91,7 +92,7 @@ export async function subscribeProfiles(user, listId) {
   }
 }
 
-export async function deleteProfileSubscription(user, listId) {
+ async function deleteProfileSubscription(user, listId) {
   try {
     const response = await fetchWithErrorHandling(`${KLAVIYO_API_BASE_URL}profile-subscription-bulk-delete-jobs/`, {
       method: 'POST',
@@ -133,7 +134,7 @@ export async function deleteProfileSubscription(user, listId) {
   }
 }
 
-export async function deleteProfile(user) {
+ async function deleteProfile(user) {
   try {
     const response = await fetchWithErrorHandling(`${KLAVIYO_API_BASE_URL}data-privacy-deletion-jobs/`, {
       method: 'POST',
@@ -164,3 +165,9 @@ export async function deleteProfile(user) {
     throw error;
   }
 }
+
+module.exports = {
+  createProfile,
+  subscribeProfiles,
+  deleteProfile
+};

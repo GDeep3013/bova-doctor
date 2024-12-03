@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const PlanSchema = new mongoose.Schema({
     status: {
@@ -29,5 +29,6 @@ const PlanSchema = new mongoose.Schema({
     ],
    createdAt: { type: Date, default: Date.now },
 });
+const Plan = mongoose.models.Plan || mongoose.model('Plan', PlanSchema);
+module.exports = Plan;
 
-export default mongoose.models.Plan || mongoose.model('Plan', PlanSchema);
