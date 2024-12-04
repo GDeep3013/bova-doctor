@@ -91,21 +91,21 @@ export async function GET(req) {
 
             const customProperties = {
                 patient_name: `${firstName} ${lastName}`,
-                doctor_name: `${doctor.firstName} ${doctor.lastName}`,
-                doctor_email: doctor.email,
-                doctor_clinic_name: doctor.clinicName,
+                doctor_name: `${doctor?.firstName} ${doctor?.lastName}`,
+                doctor_email: doctor?.email,
+                doctor_clinic_name: doctor?.clinicName,
                 payment_link: link,
                 product_details: mailData
             };
             // console.log(customProperties);
 
             const listId = 'Yt5xRh';
-            const createProfilePromise = createProfile(plan.patient_id, customProperties);
-            const subscribeProfilePromise = subscribeProfiles(plan.patient_id, listId);
+            const createProfilePromise = createProfile(plan?.patient_id, customProperties);
+            const subscribeProfilePromise = subscribeProfiles(plan?.patient_id, listId);
 
             setTimeout(async () => {
                 try {
-                    await deleteProfile(plan.patient_id);
+                    await deleteProfile(plan?.patient_id);
                 } catch (error) {
                     console.error('Error deleting profile:', error);
                 }
