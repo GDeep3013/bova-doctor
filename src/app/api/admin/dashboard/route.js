@@ -82,7 +82,7 @@ export async function GET() {
                     totalRevenue: 1,
                     _id: 0,
                 },
-            },
+            }, 
         ]);
 
         // Map monthly revenue data to match the months array

@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+  "compilerOptions": { 
     "baseUrl": "src"
   },
   "include": ["src", "cron.js", "src/models", "src/app/klaviyo"]

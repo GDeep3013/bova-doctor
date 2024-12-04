@@ -2,7 +2,7 @@ const KLAVIYO_API_BASE_URL = process.env.KLAVIYO_API_BASE_URL;
 const KLAVIYO_API_KEY = process.env.KLAVIYO_API_KEY;
 const KLAVIYO_REVISION = process.env.KLAVIYO_REVISION;
 
-console.log("API", KLAVIYO_API_BASE_URL, KLAVIYO_API_KEY, KLAVIYO_REVISION);
+// console.log("API", KLAVIYO_API_BASE_URL, KLAVIYO_API_KEY, KLAVIYO_REVISION);
 
 async function fetchWithErrorHandling(url, options) {
   const response = await fetch(url, options);
@@ -14,7 +14,8 @@ async function fetchWithErrorHandling(url, options) {
 }
 
  async function createProfile(user, customProperties) {
-  try {
+   try {
+   
     const response = await fetchWithErrorHandling(`${KLAVIYO_API_BASE_URL}profile-import`, {
       method: 'POST',
       headers: {

@@ -9,7 +9,7 @@ import { createProfile, subscribeProfiles, deleteProfile } from '../../../klaviy
 
 export async function POST(req) {
   await connectDB();
-  const crypto = new NextCrypto();
+  const crypto = new NextCrypto();   
 
   const { formData: { items, patient_id, message }, status = 'pending', selectedItems, doctor } = await req.json();
   const planData = {
@@ -82,7 +82,7 @@ export async function POST(req) {
     catch (error) {
       console.error('Error handling Klaviyo actions:', error);
     }
-    return new Response(JSON.stringify({ success: true, data: plan }), {
+    return new Response(JSON.stringify({ success: true, data: plan }), {  
       status: 201,
     });
   } catch (error) {

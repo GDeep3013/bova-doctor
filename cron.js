@@ -3,7 +3,7 @@ const cron = require('node-cron');
 const Plan = require('./src/models/plan')
 const Patient = require('./src/models/patient')
 const Doctor = require('./src/models/Doctor')
-const  NextCrypto = require('next-crypto');
+const NextCrypto = require('next-crypto');
 const connectDB = require('./src/db/db')
 require('dotenv').config();
 const { createProfile, subscribeProfiles, deleteProfile } = require('./src/app/klaviyo/klaviyo');
@@ -73,12 +73,12 @@ async function checkPendingPlans() {
         const { firstName, lastName, email, doctorId } = plan?.patient_id;
         const encryptedId = await crypto.encrypt(plan._id.toString());
 
-    // Make the encrypted ID URL-safe by replacing `/` and `=` characters
-    const urlSafeEncryptedId = encryptedId
-      .replace(/\//g, '-')  // Replace `/` with `-`
-      .replace(/\=/g, '_'); // Replace `=` with `_`
+        // Make the encrypted ID URL-safe by replacing `/` and `=` characters
+        const urlSafeEncryptedId = encryptedId
+            .replace(/\//g, '-')  // Replace `/` with `-`
+            .replace(/\=/g, '_'); // Replace `=` with `_`
 
-    const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
+        const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
         const variantIds = plan?.items.map(item => item.id);
         let variants = await getVariants(variantIds)
         const mailData = variants.map(selectedItem => {
@@ -96,54 +96,46 @@ async function checkPendingPlans() {
         const doctor = await Doctor.findOne({ _id: doctorId })
         // console.log(doctor);
         const customProperties = {
-            patient_name: firstName+' '+lastName,
-            doctor_name: doctor.firstName +' '+doctor.lastName,
-            doctor_email:doctor.email,
-            doctor_clinic_name:doctor.clinicName,
+            patient_name: firstName + ' ' + lastName,
+            doctor_name: doctor.firstName + ' ' + doctor.lastName,
+            doctor_email: doctor.email,
+            doctor_clinic_name: doctor.clinicName,
             payment_link: link,
             product_details: mailData,
         };
-        
-        const listId = 'XY5765';
-        console.log(plan?.patient_id);
+
+        const listId = 'Yt5xRh';
+        const patient = plan?.patient_id;
+        const createProfilePromise = await createProfile(patient, customProperties);
+
+        const subscribeProfilePromise = await subscribeProfiles(patient, listId);
+
         setTimeout(async () => {
             try {
-                const status= await createProfile(plan?.patient_id, customProperties);
-                console.log(status,'vcreateProfilePromise completing');
+                await deleteProfile(patient);
             } catch (error) {
-              console.error('Error deleting profile:', error);
+                console.error('Error deleting profile:', error);
             }
-        }, 6000);
+        }, 120000);
         setTimeout(async () => {
             try {
-                await subscribeProfiles(plan?.patient_id, listId);
-                console.log('subscribeProfilePromise completing');
+                await deleteProfile(patient);
             } catch (error) {
-              console.error('Error deleting profile:', error);
+                console.error('Error deleting profile:', error);
             }
-          }, 6000);                 
-             
-
-      setTimeout(async () => {
-        try {
-          await deleteProfile(plan?.patient_id);
-        } catch (error) {
-          console.error('Error deleting profile:', error);
-        }
-      }, 120000);
-
-    
-    
+        }, 120000);
+        const [createResponse, subscribeResponse] = await Promise.all([
+            createProfilePromise,
+            subscribeProfilePromise,
+        ]);
     });
-
-
 
 }
 
 checkPendingPlans();
 // Schedule the job to run every hour
 // 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('0 * * * *', async () => {
     console.log('Checking for pending plans...');
     await checkPendingPlans();
 });
