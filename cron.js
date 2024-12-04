@@ -130,7 +130,9 @@ async function checkPendingPlans() {
         ]);
     });
 
+    console.log("Cron job run successfully");
 }
+
 
 checkPendingPlans();
 // Schedule the job to run every hour

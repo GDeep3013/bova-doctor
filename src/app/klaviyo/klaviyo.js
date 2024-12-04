@@ -34,7 +34,6 @@ async function fetchWithErrorHandling(url, options) {
         },
       }),
     });
-    console.log(response);
     return response;
   } catch (error) {
     console.error('Error creating profile:', error);
