@@ -65,8 +65,8 @@ export default function Create() {
 
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Patient added successfully!',
-                        icon: 'success',
+                        text: 'Patient added successfully!',                        
+                        iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
                         confirmButtonText: 'OK',
                         confirmButtonColor: "#3c96b5",
                     });

@@ -87,9 +87,9 @@ export default function RegisterForm() {
 
                 if (response.ok) {
                     Swal.fire({
-                        title: 'Success!',
-                        text: 'Your registration was successful!',
-                        icon: 'success',
+                        title: 'Success!',             
+                        iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                        text: 'Your registration was successful!',                      
                         confirmButtonText: 'OK',
                         confirmButtonColor: "#3c96b5",
                     });

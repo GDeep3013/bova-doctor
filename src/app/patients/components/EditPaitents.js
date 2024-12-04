@@ -96,13 +96,13 @@ export default function EditPatient() {
 
                     Swal.fire({
                         title: 'Success!',
+                        iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
                         text: 'Patient updated successfully!',
-                        icon: 'success',
                         confirmButtonText: 'OK',
                         confirmButtonColor: "#3c96b5",
                     });
                     setLoader(false);
-                    router.push(`/patients/detail/${result?._id}`);
+                    router.push(`/patients/detail/${result?._id}`); 
                 } else {
                     const result = await response.json();
                     const apiErrors = result.error;

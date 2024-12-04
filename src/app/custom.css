@@ -85,6 +85,13 @@ input[type='number'] {
 .mob-only{ display:none; }
 body.clickup-chrome-ext_installe.clickup-chrome-ext_installed.modal-open { overflow: hidden; }
 
+h2#swal2-title { padding-top: 0; color: #29282b;}
+.swal2-popup.swal2-modal { padding-bottom: 40px; background-color: #e2e8ed; }
+.swal2-icon.swal2-icon-show { border: none; }
+div#swal2-html-container { padding-top: 0;  }
+div#swal2-html-container{ color: #29282b; }
+
+
 @media screen and (min-width:1200px) and (max-width:1400px) {
 .login-after{ background-position: bottom !important; }
 }

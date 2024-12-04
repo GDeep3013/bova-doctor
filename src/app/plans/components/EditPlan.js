@@ -235,9 +235,9 @@ export default function CreatePlan() {
             });
             if (!response.ok) throw new Error('Failed to submit data');
             Swal.fire({
-                title: 'Success!',
-                text:  `You have successfully emailed ${selectedPatient.firstName} ${selectedPatient.lastName}`,
-                icon: 'success',
+                title: 'Success!',             
+                iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                text:`You have successfully emailed ${selectedPatient.firstName} ${selectedPatient.lastName}`,
                 confirmButtonText: 'OK',
                 confirmButtonColor: "#3c96b5",
             });

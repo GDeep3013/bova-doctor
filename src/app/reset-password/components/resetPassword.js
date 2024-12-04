@@ -58,8 +58,8 @@ export default function ResetPage() {
                 if (response.ok) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Password changed successfully',
-                        icon: 'success',
+                        iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                        text: 'Password changed successfully',                    
                         confirmButtonText: 'OK',
                         confirmButtonColor: "#3c96b5",
                     });
