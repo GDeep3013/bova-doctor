@@ -612,7 +612,7 @@ export default function CreatePlan() {
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </div> 
                         {/* Right Column - Price Summary */}
                         {selectedItems.length > 0 &&
                             <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">

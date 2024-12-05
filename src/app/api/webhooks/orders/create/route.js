@@ -3,6 +3,7 @@ import Order from '../../../../../models/order';
 import OrderItem from '../../../../../models/orderItem';
 import Patient from '../../../../../models/patient';
 import Doctor from '../../../../../models/Doctor';
+import Plan from '../../../../../models/plan';
 
 
 export async function POST(req) {
@@ -10,11 +11,13 @@ export async function POST(req) {
 
   try {
     const orderData = await req.json(); // Parse incoming JSON data
-
+    
     // Find the _patient_id from the first line item that has it, or default to null
     const mainPatientId = orderData.line_items.find(item => item.properties?._patient_id)?.properties._patient_id || null;
-    let doctorPayment = 0; 
-    
+    const planId = orderData.line_items.find(item => item.properties?._plan_id)?.properties._plan_id || null;
+
+    let doctorPayment = 0;
+
     const patient = await Patient.findById(mainPatientId)
     if (patient.doctorId) {
       const doctor = await Doctor.findById(patient.doctorId)
@@ -24,7 +27,7 @@ export async function POST(req) {
         // Assuming total_price is a string that needs to be converted to number
         doctorPayment = doctorCommission
       }
-      
+
     }
 
     // Create a new order document with the mainPatientId
@@ -66,7 +69,7 @@ export async function POST(req) {
 
     // Save all OrderItems to the database
     await OrderItem.insertMany(orderItems);
-
+    await Plan.findByIdAndUpdate(planId, { status: "completed" }, { new: true })
     return new Response(JSON.stringify({ message: 'Order and items saved successfully' }), { status: 201 });
 
   } catch (error) {

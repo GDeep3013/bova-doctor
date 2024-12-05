@@ -426,13 +426,13 @@ export default function CreatePlan() {
                                                     onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
                                                     <option>Daily Anytime</option>
-                                                    <option>Once Per Day(anytime)</option>
+                                                    <option>Once Per Day(anytime)</option> 
                                                     <option>Once Per Day(morning)</option>
                                                     <option>Once Per Day(evening)</option>
                                                     <option>Once Per Day(on an empty stomach)</option>
                                                     <option>Once Per Day(after a meal)</option>
                                                     <option>Twice Per Day(anytime)</option>
-                                                    <option>Twice Per Day(evening)</option>
+                                                    <option>Twice Per Day(evening)</option> 
                                                     <option>Twice Per Day(on an empty stomach)</option>
                                                     <option>Twice Per Day(after a meal)</option>
                                                     <option>3 Times Per Day(anytime)</option>

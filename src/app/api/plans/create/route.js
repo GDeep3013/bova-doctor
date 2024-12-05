@@ -25,7 +25,7 @@ export async function POST(req) {
     // console.log(selectedItems, items);
     const mergeArrays = (selectedItems, items) => {
       const mailData = selectedItems.map(selectedItem => {
-        const matchingItem = items.find(item => item.id === selectedItem.id);
+        const matchingItem = items.find(item => item.id === selectedItem.id); 
         const plainDescription = selectedItem.product.descriptionHtml.replace(/<[^>]*>/g, '').trim();
 
         return {
