@@ -713,7 +713,7 @@ export default function CreatePlan() {
                                                                             src={
                                                                                 variant.image && variant.image.url
                                                                                     ? variant.image.url
-                                                                                    : (variant.prod    uct.images && variant.product.images[0] && variant.product.images[0].url)
+                                                                                    : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
                                                                                         ? variant.product.images[0].url
                                                                                         : '/images/product-img1.png'
                                                                             }
