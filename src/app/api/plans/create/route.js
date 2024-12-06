@@ -38,8 +38,7 @@ export async function POST(req) {
     // Create price rule and discount code
     let discountCode = null;
     try {
-      console.log(patient, "Ankit Sharma")
-      const priceRule = await createDiscountPriceRule(discount, patient.customerId);
+      const priceRule = await createDiscountPriceRule(discount, patient);
       if (priceRule) {
         discountCode = await createDiscountCode(priceRule);
       }

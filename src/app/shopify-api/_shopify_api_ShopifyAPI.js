@@ -3,10 +3,10 @@ const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 
 console.log(SHOPIFY_DOMAIN, SHOPIFY_ACCESS_TOKEN, "ShopDetails")
 
-export async function createDiscountPriceRule(discount, customerId) {
+export async function createDiscountPriceRule(discount, patient) {
     const url = `https://${SHOPIFY_DOMAIN}/admin/api/2024-10/price_rules.json`;
     const currentDateTime = new Date().toISOString(); 
-    const uniqueTitle = `Discount-${uuidv4()}-${Date.now()}`;
+    const uniqueTitle = `Discount-${patient.firstName}-${Date.now()}`;
     try {
         const response = await fetch(url, {
             method: "POST",
@@ -24,7 +24,7 @@ export async function createDiscountPriceRule(discount, customerId) {
                     "value": -Number(discount),
                     "customer_selection": "prerequisite",
                     "once_per_customer": true,
-                    'prerequisite_customer_ids': [customerId],
+                    'prerequisite_customer_ids': [patient.customerId],
                     "starts_at": currentDateTime
                 },
             }),
