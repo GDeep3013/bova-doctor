@@ -90,7 +90,7 @@ h2#swal2-title { padding-top: 0; color: #29282b;}
 .swal2-icon.swal2-icon-show { border: none; }
 div#swal2-html-container { padding-top: 0;  }
 div#swal2-html-container{ color: #29282b; }
-
+.dashboard-inner select.form-select { background-position: 95% 17px; }
 
 @media screen and (min-width:1200px) and (max-width:1400px) {
 .login-after{ background-position: bottom !important; }

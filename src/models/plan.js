@@ -10,6 +10,10 @@ const PlanSchema = new mongoose.Schema({
         type: String
     },
     patient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true, },
+    discount: Number,
+    priceRuleId:Number,
+    discountId: Number,
+    discountCode:String, 
     items: [
         {
             id: { type: Number, required: true },

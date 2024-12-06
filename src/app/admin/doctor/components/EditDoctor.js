@@ -223,7 +223,7 @@ export default function CreateDoctor() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="relative">
                                             <input
-                                                type="text"
+                                                type="text"  
                                                 placeholder="Specialty"
                                                 value={specialty ?? ""}
                                                 onChange={(e) => { setSpecialty(e.target.value); if (errors.specialty) setErrors({ ...errors, specialty: '' }); }}
@@ -261,7 +261,7 @@ export default function CreateDoctor() {
 
                                         <div className="relative">
                                             <input
-                                                type="text"
+                                                type="text"           m    
                                                 placeholder="Clinic Name"
                                                 value={clinicName ?? ""}
                                                 onChange={(e) => { setClinicName(e.target.value); }}

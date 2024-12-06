@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import { CloseIcon } from '../../../components/svg-icons/icons';
+// import { parse } from 'next/dist/build/swc/generated-native';
 
 
 export default function CreatePlan() {
@@ -17,10 +18,24 @@ export default function CreatePlan() {
     const [variants, setVariants] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
-    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null });
+    const [dicountPrice, setDicountPrice] = useState(0);
+    const [doctorCommission, setDoctorCommission] = useState(0)
+    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null, discount: "" });
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
-
+    const DISCOUNT_CODE_PERCENTAGE = [
+        { label: "Select discount", value: "" },
+        { label: "5% OFF", value: "5" },
+        { label: "10% OFF", value: "10" },
+        { label: "15% OFF", value: "15" },
+        { label: "20% OFF", value: "20" },
+        { label: "25% OFF", value: "25" },
+        { label: "30% OFF", value: "30" },
+        { label: "35% OFF", value: "35" },
+        { label: "40% OFF", value: "40" },
+        { label: "45% OFF", value: "45" },
+        { label: "50% OFF", value: "50" },
+    ];
     const fetchPatients = async () => {
         try {
             const response = await fetch(`/api/patients/getPatients?userId=${session?.user?.id}`);
@@ -269,12 +284,27 @@ export default function CreatePlan() {
         return acc + (parseFloat(item.price) || 0);  // Ensure item.price is treated as a float
     }, 0);
 
-    const discount = subtotal * 0;
+    // const discount = subtotal * parseFloat(formData.discount);
 
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
 
-    const doctorCommission = subtotal * (commissionPercentage / 100);
 
+
+    useEffect(() => {
+        if (subtotal > 0 && parseFloat(commissionPercentage) > 0) {
+            const discountValue = formData.discount === "" ? 0 : parseFloat(formData.discount);
+
+            // Calculate discount amount
+            const discount = (subtotal * discountValue) / 100;
+
+            // Calculate doctor commission after discount
+            const doctorPrice = (subtotal * parseFloat(commissionPercentage)) / 100 - discount;
+
+            // Update states
+            setDicountPrice(discount); // Discount amount
+            setDoctorCommission(doctorPrice); // Doctor's final commission
+        }
+    }, [formData.discount, commissionPercentage, subtotal]);
     return (
         <AppLayout>
             <div className="flex flex-col">
@@ -426,13 +456,13 @@ export default function CreatePlan() {
                                                     onChange={(e) => handleFormDataChange(item.id, 'frequency', e.target.value)}
                                                     className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-md rounded-md">
                                                     <option>Daily Anytime</option>
-                                                    <option>Once Per Day(anytime)</option> 
+                                                    <option>Once Per Day(anytime)</option>
                                                     <option>Once Per Day(morning)</option>
                                                     <option>Once Per Day(evening)</option>
                                                     <option>Once Per Day(on an empty stomach)</option>
                                                     <option>Once Per Day(after a meal)</option>
                                                     <option>Twice Per Day(anytime)</option>
-                                                    <option>Twice Per Day(evening)</option> 
+                                                    <option>Twice Per Day(evening)</option>
                                                     <option>Twice Per Day(on an empty stomach)</option>
                                                     <option>Twice Per Day(after a meal)</option>
                                                     <option>3 Times Per Day(anytime)</option>
@@ -514,6 +544,32 @@ export default function CreatePlan() {
                     {/* Right Column - Price Summary */}
                     {selectedItems.length > 0 &&
                         <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
+                            <div className='border border-customBorder p-5 rounded-lg'>
+                                <div class="form-floating">
+                                    <label for="floatingSelect" className='font-semibold text-base text-textColor3 block'>Select Patient Discount</label>
+                                    <select
+                                        value={formData.discount}
+                                        onChange={(e) => {
+                                            setFormData((prevData) => ({
+                                                ...prevData,
+                                                discount: e.target.value,
+                                            }));
+                                        }}
+                                        class="form-select border border-customBorder block w-full max-w-[175px] font-medium p-3 mt-2 text-base border-gray-300 focus:outline-none focus:ring-[#3c637a] focus:border-[#3c637a] text-[#52595b] text-md rounded-md" id="floatingSelect" aria-label="Floating label select example">
+                                        {DISCOUNT_CODE_PERCENTAGE.filter(discount => {
+                                            const discountValue = parseFloat(discount.value);
+                                            return (
+                                                isNaN(discountValue) ||
+                                                discountValue <= commissionPercentage
+                                            );
+                                        }).map((discount, index) => (
+                                            <option key={index} value={discount.value}>
+                                                {discount.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
                             <div className="bg-customBg3 rounded-lg">
                                 <div className='p-5'>
                                     <span className="font-semibold text-base text-textColor3 uppercase">Price</span>
@@ -532,8 +588,8 @@ export default function CreatePlan() {
                                                     </tr>
                                                 ))}
                                                 <tr className="">
-                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount (0%)</td>
-                                                    <td className="py-2 text-textColor3 text-sm text-right">-${discount.toFixed(2)}</td>
+                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount ({formData.discount ? formData.discount : 0}%)</td>
+                                                    <td className="py-2 text-textColor3 text-sm text-right">-${dicountPrice.toFixed(2)}</td>
                                                 </tr>
                                                 <tr className="">
                                                     <td className="py-2 text-textColor3 text-sm" colSpan="2">Doctor commission</td>
@@ -542,7 +598,7 @@ export default function CreatePlan() {
                                                 <tr className="border-b border-[#AFAAAC] pb-4">
                                                     <td className="py-2 text-textColor3 text-sm" colSpan="2">Subtotal</td>
                                                     <td className="py-2 font-bold text-[#53595B]  text-right">
-                                                        ${(subtotal - discount).toFixed(2)}
+                                                        ${(subtotal - dicountPrice).toFixed(2)}
                                                     </td>
                                                 </tr>
                                             </tbody>

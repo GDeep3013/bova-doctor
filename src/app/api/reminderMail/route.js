@@ -94,7 +94,7 @@ export async function GET(req) {
                 doctor_name: `${doctor?.firstName} ${doctor?.lastName}`,
                 doctor_email: doctor?.email,
                 doctor_clinic_name: doctor?.clinicName,
-                payment_link: link,
+                payment_link: link,  
                 product_details: mailData
             };
             // console.log(customProperties);
