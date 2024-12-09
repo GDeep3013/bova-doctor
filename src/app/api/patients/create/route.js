@@ -2,6 +2,8 @@
 // Import NextResponse for handling responses
 import connectDB from '../../../../db/db';  // Adjust path based on your folder structure
 import Patient from '../../../../models/patient';
+import { createCustomer, searchCustomer } from '../../../shopify-api/_shopify_api_ShopifyAPI'
+
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
 const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 export async function POST(req) {
@@ -51,7 +53,11 @@ export async function POST(req) {
 
     // Create a Shopify customer and link it
     try {
-      const customer = await createCustomer(firstName, lastName, email, newPatient);
+      const customer = await searchCustomer(firstName, lastName, email, phone);
+      await Patient.findByIdAndUpdate(
+        newPatient._id,
+        { customerId: customer.id },
+    );
       return Response.json(
         {
           message: 'Patient created successfully',
@@ -63,7 +69,10 @@ export async function POST(req) {
     } catch (error) {
       console.error('Error creating Shopify customer:', error);
       return Response.json(
-        { message: 'Patient created but failed to create Shopify customer', patient: newPatient },
+        {
+          message: 'Patient created but failed to create Shopify customer',
+          patient: newPatient
+        },
         { status: 201 }
       );
     }
@@ -73,45 +82,10 @@ export async function POST(req) {
   }
 }
 
-async function createCustomer(firstName, lastName, email, newPatient) {
-  const url = `https://${SHOPIFY_DOMAIN}/admin/api/2024-10/customers.json`;
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-      },
-      body: JSON.stringify({
-        customer: {
-          email: email,
-          first_name: firstName,
-          last_name: lastName,
-        },
-      }),
-    });
 
-    if (!response.ok) {
-      throw new Error(
-        `Shopify API error creating customer: ${response.statusText}`
-      );
-    }
 
-    const data = await response.json();
 
-    // Update the patient document with the new customer ID
-    const updatedPatient = await Patient.findByIdAndUpdate(
-      newPatient._id, 
-      { customerId: data.customer.id },
-    );
 
-    console.log('Customer ID updated successfully', updatedPatient);
-    return data.customer;
-  } catch (error) {
-    console.error("Error creating customer:", error.message);
-    throw error;
-  }
-}
 
 
 

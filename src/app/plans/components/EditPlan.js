@@ -17,13 +17,29 @@ export default function CreatePlan() {
     const [products, setProducts] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
-    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null, mail_data: [] });
+    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null, mail_data: [] , discount: ""});
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
     const [fetchLoader, setFetchLoader] = useState(false);
 
+    const [dicountPrice, setDicountPrice] = useState(0);
+    const [doctorCommission, setDoctorCommission] = useState(0)
+
     const [variants, setVariants] = useState([]);
+    const DISCOUNT_CODE_PERCENTAGE = [
+        { label: "Select discount", value: "" },
+        { label: "5% OFF", value: "5" },
+        { label: "10% OFF", value: "10" },
+        { label: "15% OFF", value: "15" },
+        { label: "20% OFF", value: "20" },
+        { label: "25% OFF", value: "25" },
+        { label: "30% OFF", value: "30" },
+        { label: "35% OFF", value: "35" },
+        { label: "40% OFF", value: "40" },
+        { label: "45% OFF", value: "45" },
+        { label: "50% OFF", value: "50" },
+    ];
 
     const fetchPatients = async () => {
 
@@ -288,12 +304,15 @@ export default function CreatePlan() {
             const response = await fetch(`/api/plans/edit/${id}`);
             const data = await response.json();
             if (response.ok) {
+              
                 const mappedItems = data.items.map(item => ({
                     id: item.id,
                     quantity: item.quantity || 1,
                     price: item.price,
                     title: item.title,
-                    image: item.image , // Ensure the image is present in properties or set as null
+                    image: item.image,
+                    discount :item.discount,
+                    // Ensure the image is present in properties or set as null
                     description:item.description,
                     properties: {
                         capsule:item.properties.capsule,
@@ -313,6 +332,7 @@ export default function CreatePlan() {
                 setFormData(prevData => ({
                     ...prevData,
                     items: mappedItems,
+                    discount: data?.discount,   
                     mailData: mappedMailData,
                     message: data?.message
                 }));
@@ -365,17 +385,34 @@ export default function CreatePlan() {
         fetchPlanData();
         // setFetchLoader(false);
     }, [id, variants, patients]);
-
-
-    const subtotal = formData.items.reduce((acc, item) => {
-        return acc + (parseFloat(item.price) || 0);  
+  
+    
+   
+   const subtotal = formData.items.reduce((acc, item) => {
+       return acc + (parseFloat(item.price) || 0);  // Ensure item.price is treated as a float
     }, 0);
+   
 
-    const discount = subtotal * 0;
+    // const discount = subtotal * parseFloat(formData.discount);
 
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
 
-    const doctorCommission = subtotal * (commissionPercentage / 100);
+    // const doctorCommission = subtotal * (commissionPercentage / 100);
+    useEffect(() => {
+        if (subtotal > 0 && parseFloat(commissionPercentage) > 0) {
+            const discountValue = formData.discount === "" ? 0 : parseFloat(formData.discount);
+
+            // Calculate discount amount
+            const discount = (subtotal * discountValue) / 100;
+
+            // Calculate doctor commission after discount
+            const doctorPrice = (subtotal * parseFloat(commissionPercentage)) / 100 - discount;
+
+            // Update states
+            setDicountPrice(discount); // Discount amount
+            setDoctorCommission(doctorPrice); 
+        }
+    }, [formData.discount, commissionPercentage, subtotal]);
     return (
         <AppLayout>
             {!fetchLoader ?
@@ -552,7 +589,7 @@ export default function CreatePlan() {
                                                         onChange={(e) => handleFormDataChange(item.id, 'duration', e.target.value)}
                                                         className="block w-full font-medium px-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-lg rounded-md">
                                                         <option> Monthly (Recommended)</option>
-                                                        <option>1 Day</option>
+                                                        <option>1 Day</option> 
                                                         <option>5 Days</option>
                                                         <option>7 Days (1 Week)</option>
                                                         <option>2 Weeks</option>
@@ -580,7 +617,7 @@ export default function CreatePlan() {
                                                 <div className="mt-1">
                                                     <textarea placeholder='Add Notes'
                                                         value={itemData?.properties.notes ?? ""}
-                                                        onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)} className="block w-full p-2.5 border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
+                                                        onChange={(e) => handleFormDataChange(item.id, 'notes', e.target.value)} className="block w-full px-[25px] py-[10px] border border-customBorder rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[#52595b] text-base xl:text-lg" rows="3"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -615,58 +652,84 @@ export default function CreatePlan() {
                         </div> 
                         {/* Right Column - Price Summary */}
                         {selectedItems.length > 0 &&
-                            <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
-                                <div className="bg-customBg3 rounded-lg">
-                                    <div className='p-5'>
-                                        <span className="font-medium text-base text-[#51595B] uppercase">Price</span>
-                                        <div className="mt-2 overflow-x-auto">
-                                            <table className="min-w-full table-auto">
-                                                <tbody>
-                                                    {formData.items.map((item, index) => (
-                                                        <tr key={index} className="">
-                                                            <td className="py-2 text-[#3F4647] text-sm">
-                                                                {item.title}
-                                                            </td>
-                                                            <td className="py-2 text-[#3F4647] text-sm text-center w-[43%]"> </td>
-                                                            <td className="py-2 text-[#3F4647] text-sm text-right">
-                                                                ${item?.price?(item?.price):'N/a'}
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    <tr className="">
-                                                        <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Patient Discount (0%)</td>
-                                                        <td className="py-2 text-[#3F4647] text-sm text-right">-${discount.toFixed(2)}</td>
-                                                    </tr>
-                                                    <tr className="">
-                                                        <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Doctor commission</td>
-                                                        <td className="py-2 text-[#3F4647] text-sm text-right">${doctorCommission.toFixed(2)}</td>
-                                                    </tr>
-                                                    <tr className="border-b border-[#AFAAAC] pb-4">
-                                                        <td className="py-2 text-[#3F4647] text-sm" colSpan="2">Subtotal</td>
-                                                        <td className="py-2 font-bold text-[#53595B] text-right">
-                                                            ${(subtotal - discount).toFixed(2)}
+                        <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
+                            <div className='border border-customBorder p-5 rounded-lg'>
+                                <div class="form-floating">
+                                    <label for="floatingSelect" className='font-semibold text-base text-textColor3 block'>Select Patient Discount</label>
+                                    <select
+                                        value={formData.discount}
+                                        onChange={(e) => {
+                                            setFormData((prevData) => ({
+                                                ...prevData,
+                                                discount: e.target.value,
+                                            }));
+                                        }}
+                                        class="form-select border border-customBorder block w-full max-w-[175px] font-medium p-3 mt-2 text-base border-gray-300 focus:outline-none focus:ring-[#3c637a] focus:border-[#3c637a] text-[#52595b] text-md rounded-md" id="floatingSelect" aria-label="Floating label select example">
+                                        {DISCOUNT_CODE_PERCENTAGE.filter(discount => {
+                                            const discountValue = parseFloat(discount.value);
+                                            return (
+                                                isNaN(discountValue) ||
+                                                discountValue <= commissionPercentage
+                                            );
+                                        }).map((discount, index) => (
+                                            <option key={index} value={discount.value}>
+                                                {discount.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="bg-customBg3 rounded-lg">
+                                <div className='p-5'>
+                                    <span className="font-semibold text-base text-textColor3 uppercase">Price</span>
+                                    <div className="mt-2 overflow-x-auto">
+                                        <table className="min-w-full table-auto">
+                                            <tbody>
+                                                {formData.items.map((item, index) => (
+                                                    <tr key={index} className="">
+                                                        <td className="py-2 text-textColor3 text-sm">
+                                                            {item.title}
+                                                        </td>
+                                                        <td className="py-2 text-textColor3 text-sm text-center w-[43%]"> </td>
+                                                        <td className="py-2 text-textColor3 text-sm text-right">
+                                                            ${(item.price)}
                                                         </td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                ))}
+                                                <tr className="">
+                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount ({formData.discount ? formData.discount : 0}%)</td>
+                                                    <td className="py-2 text-textColor3 text-sm text-right">-${dicountPrice.toFixed(2)}</td>
+                                                </tr>
+                                                <tr className="">
+                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Doctor commission</td>
+                                                    <td className="py-2 text-textColor3 text-sm text-right">${doctorCommission.toFixed(2)}</td>
+                                                </tr>
+                                                <tr className="border-b border-[#AFAAAC] pb-4">
+                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Subtotal</td>
+                                                    <td className="py-2 font-bold text-[#53595B]  text-right">
+                                                        ${(subtotal - dicountPrice).toFixed(2)}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                        <div className='text-right py-5'>
-                                            <button
-                                                onClick={() => { handleSubmit() }}
-                                                disabled={formData.items.length === 0 || !formData.patient_id}
-                                                className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
-                                        ${formData.items.length === 0 || !formData.patient_id
-                                                        ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
-                                                        : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
-                                                }>
-                                                {loader ? "Please wait ..." : 'Update Patient Plan'}
-                                            </button>
-                                        </div>
+                                    <div className='text-right py-5'>
+                                        <button
+                                            onClick={() => { handleSubmit() }}
+                                            disabled={formData.items.length === 0 || !formData.patient_id}
+                                            className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
+                                            ${formData.items.length === 0 || !formData.patient_id
+                                                    ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                                    : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                            }>
+                                            {loader ? "Please wait ..." : 'Send to Patient'}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        }
+                        </div>
+                    }
                     </div>
 
                     {isModalOpen && (
@@ -775,7 +838,7 @@ export default function CreatePlan() {
                                                         <h3>{variant.product.title}</h3>
                                                         <div className="product-des-inner">
                                                             <div className="product-des-price">
-                                                            <p>{variant.sku || 'N/A'}</p>
+                                                            <p>{variant.sku || 'N/A'}</p>  
                                                                 <h6>${variant.price || 'N/A'}</h6>
                                                             </div>
                                                             <div className="product-price">

@@ -61,8 +61,8 @@ export async function POST(req) {
       resetTokenExpiry,
     });
 
-    const mailtype = 'Create Password';
-    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}`;
+    const mailtype = 'Set Up Password';
+    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/create-password?token=${resetToken}`;
 
     try {
       const user = { email, firstName, lastName };

@@ -32,7 +32,7 @@ export async function POST(req) {
     try {
       const user = { email, firstName, lastName };
       const customProperties = { user_name: `${firstName} ${lastName}`, generate_password: resetLink, btn_type: mailtype };
-      const listId = 'X4rheV';
+      const listId = 'YkrJmz';
 
       // Asynchronous actions
       const createProfilePromise = createProfile(user, customProperties);

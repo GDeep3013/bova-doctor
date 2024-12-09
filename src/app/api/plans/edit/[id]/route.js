@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { medicationPlan } from '../../../../templates/medicationPlan'
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
+import { createDiscountPriceRule, createDiscountCode } from '../../../../shopify-api/_shopify_api_ShopifyAPI'
 
 export async function GET(req, { params }) {
   const { id } = params;
@@ -37,13 +38,46 @@ export async function PUT(req, { params }) {
   await connectDB();
   const crypto = new NextCrypto();
   const { id } = params;
-  const { formData: { items, patient_id, message }, status = 'pending', selectedItems, doctor } = await req.json();
+  const { formData: { items, patient_id, message ,discount}, status = 'pending', selectedItems, doctor } = await req.json();
   try {
     const updatedPlan = await Plan.findByIdAndUpdate(
       id,
-      { items, status, patient_id, message, updatedAt: new Date() },
+      { items, status, patient_id, message, discount,updatedAt: new Date() },
       { new: true }
     ).populate('patient_id');
+
+    const patient = await Patient.findById(patient_id);
+    if (!patient) {
+      return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
+    }
+
+    // Create price rule and discount code
+    let discountCode = null;
+    try {
+      const priceRule = await createDiscountPriceRule(discount, patient);
+      if (priceRule) {
+        discountCode = await createDiscountCode(priceRule);
+      }
+    } catch (error) {
+      console.error("Error creating discount code:", error.message);
+    }
+
+    // Create plan
+    // const plan = await Plan.create(planData);
+
+    // Update plan with discount details if available
+    if (discountCode?.code) {
+      await Plan.updateOne(
+        { _id: updatedPlan._id },
+        {
+          $set: {
+            priceRuleId: discountCode.price_rule_id,
+            discountId: discountCode.id,
+            discountCode: discountCode.code,
+          },
+        }
+      );
+    }
 
     if (!updatedPlan) {
       return new Response(JSON.stringify({ success: false, message: 'Plan not found' }), { status: 404 });
@@ -57,7 +91,7 @@ export async function PUT(req, { params }) {
 
     const link = ` https://bovalabs.com//pages/view-plans?id=${urlSafeEncryptedId}`;
 
-    const patient = await Patient.findById(patient_id);
+    
 
     if (!patient) {
       return new Response(JSON.stringify({ success: false, message: 'Patient not found' }), { status: 404 });

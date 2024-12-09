@@ -118,7 +118,7 @@ div#swal2-html-container{ color: #29282b; }
 @media screen and (max-width:950px){
   .create-popup-wrapper { padding: 12px 8px 8px; max-width: 425px; }
   .product-price button { height: 30px; line-height: normal; padding: 0px; min-width: 65px; text-align: center; }
-  .product-itm-container { height: 65vh; overflow: auto; margin-bottom: 10px; }
+  .product-itm-container { height: calc(100vh - 217px); overflow: auto; margin-bottom: 10px; }
     button.btn-submit-product { width: 100%; font-size: 14px; min-height: 40px; margin: 0px; }
   .create-popup-wrapper { padding: 12px 8px 8px; }
  .mob-only{ display:block; }

@@ -19,7 +19,7 @@ export async function POST(req) {
     }
 
     // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);        
 
     // Update the user's password and clear the reset token fields
     await Doctor.updateOne(

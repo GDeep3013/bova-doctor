@@ -56,7 +56,7 @@ export default function Home() {
                                 Add Patient
                             </Link>
                         </div>
-                        <p className="text-sm text-gray-500 mt-2 w-full">Add patient button takes you to the patient information form.</p>
+                        <p className="text-sm text-gray-500 mt-4 md:mt-2 w-full">Add patient button takes you to the patient information form.</p>
                     </div>
 
                     {/* Existing Patients Section */}

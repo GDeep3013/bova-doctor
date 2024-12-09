@@ -16,18 +16,20 @@ export async function POST(req) {
     const mainPatientId = orderData.line_items.find(item => item.properties?._patient_id)?.properties._patient_id || null;
     const planId = orderData.line_items.find(item => item.properties?._plan_id)?.properties._plan_id || null;
 
+
     let doctorPayment = 0;
 
     const patient = await Patient.findById(mainPatientId)
+    const plan = await Plan.findById(planId)
+   
     if (patient.doctorId) {
       const doctor = await Doctor.findById(patient.doctorId)
       if (doctor) {
         const totalPrice = parseFloat(orderData.total_price);
-        const doctorCommission = totalPrice * (doctor.commissionPercentage / 100);
-        // Assuming total_price is a string that needs to be converted to number
+        const discount = (totalPrice * plan.discount) / 100;
+        const doctorCommission = totalPrice * (doctor.commissionPercentage / 100) - discount;
         doctorPayment = doctorCommission
       }
-
     }
 
     // Create a new order document with the mainPatientId
@@ -47,9 +49,9 @@ export async function POST(req) {
       order_date: new Date(orderData.created_at),
       patient_id: mainPatientId,
       doctor: {
-        doctor_id: patient ? patient.doctorId : null, // Set doctor ID if found
-        doctor_payment: doctorPayment // Set doctor payment
-      }// Save patientId found in line items, if available
+        doctor_id: patient ? patient.doctorId : null, 
+        doctor_payment: doctorPayment 
+      }
     });
 
     // Save the order to the database

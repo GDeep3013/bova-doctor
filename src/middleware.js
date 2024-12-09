@@ -10,23 +10,16 @@ export async function middleware(req) {
   res.headers.append('Access-Control-Allow-Origin', '*') // replace this your actual origin
   res.headers.append('Access-Control-Allow-Methods', 'GET,DELETE,PATCH,POST,PUT')// Allowed methods
   // Define accessible routes based on user roles
-  const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password'];
-  const adminRoutes = [
-    '/admin/dashboard',
-    '/admin/settings',
-    '/admin/patients',
-    '/admin/doctor/listing',
-    '/admin/doctor',
-    '/admin/doctor/create',
-    '/admin/doctor/edit',
-  ];
+  const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password','/privacy-policies','/terms-services'];
+  
+  const adminRoutes = ['/admin/dashboard', '/admin/settings', '/admin/patients', '/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit', ];
   const doctorRoutes = [
     '/dashboard',
     '/profile',
-    '/privacy-policies',
     '/patients/listing',
     '/patients/create',
     '/patients/edit',
+    '/privacy-policies',
     '/patients/detail',
     '/sale',
     '/plans/create-plan',
@@ -103,6 +96,7 @@ export const config = {
     '/register',
     '/reset-password',
     '/create-password',
+    '/terms-services'
 
 
   ]

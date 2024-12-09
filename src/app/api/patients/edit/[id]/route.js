@@ -1,5 +1,6 @@
 import connectDB from '../../../../../db/db';
 import Patient from '../../../../../models/patient';
+import {  searchCustomer } from '../../../../shopify-api/_shopify_api_ShopifyAPI'
 
 export async function GET(req, { params }) {
   const { id } = params; // Get 'id' from the URL
@@ -29,7 +30,7 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
   const { id } = params; // Get 'id' from the URL
-  const { email, phone, firstName, lastName, doctorId ,message } = await req.json(); // Get request body
+  const { email, phone, firstName, lastName, doctorId, message } = await req.json(); // Get request body
 
   // Connect to the database
   await connectDB();
@@ -47,7 +48,7 @@ export async function PUT(req, { params }) {
         },
       ],
     };
-  
+
     // Check for existing patient
     const existingPatient = await Patient.findOne(query);
 
@@ -64,12 +65,17 @@ export async function PUT(req, { params }) {
       });
     }
 
-    const updatedPatient = await Patient.findByIdAndUpdate(
+    const updatedPatients = await Patient.findByIdAndUpdate(
       id,
-      { email, phone, firstName, lastName ,message},
+      { email, phone, firstName, lastName, message },
       { new: true } // This option returns the updated document
     );
 
+    const customer = await searchCustomer(firstName, lastName, email, phone);
+    const updatedPatient = await Patient.findByIdAndUpdate(
+      id,
+      { customerId: customer.id },
+    );
     return new Response(JSON.stringify(updatedPatient), {
       status: 200,
     });
