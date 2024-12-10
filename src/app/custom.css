@@ -43,7 +43,9 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
+.dashboard-inner select.select-arrow {
+  background-position: 98% 50%;
+}
 /* For Firefox */
 input[type='number'] {
   -moz-appearance: textfield;

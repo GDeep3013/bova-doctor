@@ -3,6 +3,7 @@ import AppLayout from '../../../../components/Applayout';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+
 export default function CreateDoctor() {
     const router = useRouter();
     const [firstName, setFirstName] = useState('');
@@ -13,7 +14,7 @@ export default function CreateDoctor() {
     const [errors, setErrors] = useState({});
     const [specialty, setSpecialty] = useState('');
     const [userType, setUserType] = useState('');
-    const [commissionPercentage, setCommissionPercentage] = useState('');
+    const [commissionPercentage, setCommissionPercentage] = useState('30');
     const [laoding, setLaoding] = useState(false);
 
     const validateForm = () => {
@@ -57,7 +58,6 @@ export default function CreateDoctor() {
         setErrors(newErrors);
         return valid;
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -203,6 +203,7 @@ export default function CreateDoctor() {
                                             type="number"
                                             placeholder="Commission Percentage"
                                             value={commissionPercentage ?? ""}
+                                            title="Commission Percentage"
                                             max='100'
                                             onChange={(e) => { setCommissionPercentage(e.target.value); if (errors.commissionPercentage) setErrors({ ...errors, commissionPercentage: '' }); }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.commissionPercentage ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
@@ -217,7 +218,7 @@ export default function CreateDoctor() {
                                         <select
                                             value={userType}
                                             onChange={(e) => { setUserType(e.target.value); if (errors.userType) setErrors({ ...errors, userType: '' }); }}
-                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.userType ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
+                                            className={`w-full select-arrow border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.userType ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                         >
                                             <option value="">Select User Type</option>
                                             <option value="Admin">Admin</option>

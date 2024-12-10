@@ -41,7 +41,7 @@ export default function DoctorListing() {
                 console.log(error.message);
             }
         }
-    };
+    }; 
 
     const handleEdit = (id) => {
         router.push(`/admin/doctor/edit/${id}`);
@@ -86,7 +86,7 @@ export default function DoctorListing() {
                 <div className='overflow-hidden overflow-x-auto max-w-full w-full'>
                     <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[8px]">
                         <thead>
-                            <tr className="bg-gray-100 border-b">
+                            <tr className="bg-gray-100 border-b"> 
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Sr no.</th>
 
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Name</th>
@@ -105,7 +105,7 @@ export default function DoctorListing() {
                                     </td>
                                 </tr>
                             ) : doctors.map((doctor, index) => (
-                                <tr key={doctor._id} className="hover:bg-gray-50">
+                                <tr key={doctor._id} className="hover:bg-gray-50">     
                                     <td className='w-[100px] text-center'> {index + 1}</td>
 
                                     <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
@@ -120,7 +120,7 @@ export default function DoctorListing() {
                                         >
                                             <EditIcon />
                                         </button>
-                                        <button
+                                        <button 
                                             onClick={() => handleDelete(doctor._id)}
                                             className="text-red-600 hover:underline"
                                         >

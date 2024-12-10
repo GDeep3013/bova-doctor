@@ -100,7 +100,7 @@ export default function CreatePage() {
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Password"
-                                    value={password}
+                                    value={password} 
                                     onChange={(e) => {
                                         setPassword(e.target.value);
                                         if (errors.password) setErrors({ ...errors, password: '' });

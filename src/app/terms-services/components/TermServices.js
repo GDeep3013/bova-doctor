@@ -3,12 +3,14 @@ import React from 'react'
 
 export default function TermServices() {
     return (
-        <div className='terms-services max-w-[1100px] m-auto p-4'>
+        <div className='terms-services max-w-[900px] m-auto p-6 my-4 border border-[#ccc] shadow-xl rounded-[4px]'>
             <div className='paragragh'>
-                <img alt="Logo" className="max-w-[200px] max-[992px]:max-w-[120px] mb-5" src="/images/dash-logo.png" />
-                <h4 className='text-lg font-semibold'>
+                <div className='text-center'>
+                    <img alt="Logo" className="max-w-[200px] max-[992px]:max-w-[120px] mb-5 " src="/images/dash-logo.png" />
+                    </div>
+                <h1 className='text-xl font-semibold'>
                     BOVA TERMS OF SERVICE: PRACTITIONERS
-                </h4>
+                </h1>
                 <p className='text-[15px] my-3 text-gray-500'>The content and information available on this Platform are provided solely for informational purposes and are not intended to serve as medical advice or a replacement for your professional expertise. The Platform is not designed for use in medical emergencies. Information provided on the Platform should not replace medical care or consultation with a qualified healthcare professional. You should not rely on the Platform&apos;s content (including, but not limited to, information provided by healthcare professionals affiliated with or contracted by us) for diagnosing, treating, curing, or preventing any health condition or disease.</p>
                 <p className='text-[15px] my-3 text-gray-500'>All features, specifications, products, and prices listed on BOVA are subject to change at any time without prior notice. We reserve the right to update or modify information regarding pricing, descriptions, or availability without notice. The presence of any products or services on the Platform does not guarantee or imply their availability at any specific time.</p>
                 <h4 className='text-lg font-semibold'>Requirements</h4>
@@ -19,8 +21,8 @@ export default function TermServices() {
                 <p className='text-[15px] my-3 text-gray-500'>You must charge Patients no more than is permitted under the laws of the jurisdiction in which you operate or where the Patient resides. Additionally, you must comply with all applicable suppliers&apos;brand restrictions, internet reselling policies, and minimum advertised price (MAP) policies.</p>
                 <p className='text-[15px] my-3 text-gray-500'>You must not be in violation of any embargoes, export controls, or other laws of the U.S., Canada or any other country that has jurisdiction over these terms, BOVA, or your activities.
                     In addition to meeting the user requirements above, you agree to comply with the following rules governing the use of our Platform and Services:
-                </p>
-                <ul className='pl-[27px]'>
+                </p>    
+                <ul className='pl-[27px]'>  
                     <li className='text-[15px] my-3 text-gray-500 list-disc'>
                         You shall not make any representations, warranties, guarantees, indemnities, commitments, or other similar claims actually, apparently, or ostensibly on behalf of BOVA that are inconsistent with these Terms.
                     </li>

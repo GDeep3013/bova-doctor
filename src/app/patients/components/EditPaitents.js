@@ -131,7 +131,7 @@ export default function EditPatient() {
                     <div className="container mx-auto max-w-full mt-6">
                         <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
                             <div className="bg-customBg3 py-4 px-4 md:px-8 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Patient Information</span></div>
-                            <form onSubmit={handleSubmit} className="space-y-2 p-4 md:p-8 w-full">
+                            <form onSubmit={handleSubmit} className="space-y-2 p-4 md:p-8 md:pr-24  w-full">
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="relative">
@@ -177,7 +177,7 @@ export default function EditPatient() {
                                 <div className="relative">
                                     <input
                                         type="number"
-                                        placeholder="Phone"
+                                        placeholder="Phone (optional)"
                                         value={phone}
                                         onChange={(e) => {
                                             setPhone(e.target.value); if (errors.phone) { setErrors((prevErrors) => ({ ...prevErrors, phone: '' })); }
@@ -192,7 +192,7 @@ export default function EditPatient() {
                                     <p className='text-base text-slate-900 font-light'>A plan sent via text message connects better than just email.</p>
                                 </div>
 
-                                <div className="text-left mt-5">
+                                <div className="text-left mt-7">
                                     <button
                                         type="submit"
                                         className="min-w-[200px] py-2 mt-3 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:bg-white hover:text-customBg2 focus:outline-none"

@@ -98,6 +98,9 @@ const LineChart = () => {
                 tension: 0.4,
             },
         ],
+        options: {
+            maintainAspectRatio: false,
+        }
     };
 
     const options = {
@@ -154,7 +157,7 @@ const LineChart = () => {
                     <select
                         value={timePeriod}
                         onChange={(e) => setTimePeriod(e.target.value)}
-                        className="text-gray-500 min-w-[150px] p-2 text-sm focus:outline-none"
+                        className="text-gray-500 min-w-[150px] p-2 text-sm focus:outline-none select-arrow"
                     >
                         <option value="Month">Month</option>
                         <option value="Year">Year</option>
