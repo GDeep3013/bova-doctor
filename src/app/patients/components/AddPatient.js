@@ -19,7 +19,6 @@ export default function Home() {
             alert("Please select a patient."); // Prompt if no patient is selected
         }
     };
-
     useEffect(() => {
         const fetchPatients = async () => {
             try {
@@ -99,7 +98,7 @@ export default function Home() {
 
                     {/* Profit Margin Section */}
                     <div className="border-t border-[#AFAAAC] p-5 pt-4 text-gray-600">
-                        <p>Profit Margin: 25%</p>
+                        <p>Profit Margin: {session?.userDetail?.commissionPercentage}%</p>
                     </div>
                 </div>
 

@@ -265,7 +265,7 @@ export default function CreateDoctor() {
                                                 placeholder="Clinic Name"
                                                 value={clinicName ?? ""}
                                                 onChange={(e) => { setClinicName(e.target.value); }}
-                                                className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
+                                                className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
                                             />
                                         </div>
 
