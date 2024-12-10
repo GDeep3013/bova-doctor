@@ -104,7 +104,7 @@ export default function Create() {
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full mt-6">
                     <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
-                    <div className="bg-customBg3 py-4 px-4 md:px-8 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Create Patient</span></div>
+                    {/* <div className="bg-customBg3 py-4 px-4 md:px-8 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Create Patient</span></div> */}
                         <form onSubmit={handleSubmit} className="space-y-2 p-4 md:p-8 md:pr-24   w-full">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="relative">

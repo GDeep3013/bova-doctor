@@ -167,11 +167,11 @@ export default function CreateDoctor() {
         <AppLayout>
             <div className="login-outer flex flex-col">
                 {fetchLoader ? <Loader /> : <>
-                    <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit  Doctors</h1>
+                    <h1 className="page-title pt-2 pb-3 text-2xl font-semibold">Edit  Doctor</h1>
                     <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                     <div className="container mx-auto max-w-full p-0">
                         <div className="w-full max-w-5xl bg-white rounded-lg rounded-lg border border-[#AFAAAC]">
-                            <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Doctor Information</span></div>
+                            {/* <div className="bg-customBg3 p-4 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Doctor Information</span></div> */}
                             <div className='flex p-8'>
                                 <form onSubmit={handleSubmit} className="space-y-4 w-full">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -270,7 +270,7 @@ export default function CreateDoctor() {
                                         </div>
 
                                     </div>
-                                    <div className="message-text"><p className="text-base text-textColor">A plan sent via text message connects better than just email.</p></div>
+                                    <div className="message-text"><p className="text-base text-slate-900 font-light">A plan sent via text message connects better than just email.</p></div>
 
                                     <button
                                         type="submit"
