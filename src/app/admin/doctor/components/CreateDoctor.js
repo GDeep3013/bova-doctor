@@ -155,7 +155,7 @@ export default function CreateDoctor() {
 
                                     <div className="relative">
                                         <input type="text"
-                                            placeholder="LastName"
+                                            placeholder="Last Name"
                                             value={lastName ?? ""}
                                             onChange={(e) => { setLastName(e.target.value); if (errors.lastName) setErrors({ ...errors, lastName: '' }); }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`} />
@@ -178,7 +178,7 @@ export default function CreateDoctor() {
                                     <div className="relative">
                                         <input
                                             type="number"
-                                            placeholder="Phone"
+                                            placeholder="Phone Number"
                                             value={phone ?? ""}
                                             onChange={(e) => { setPhone(e.target.value); if (errors.phone) setErrors({ ...errors, phone: '' }); }}
                                             className={`appearance-none  w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}

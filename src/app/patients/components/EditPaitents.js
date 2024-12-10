@@ -177,7 +177,7 @@ export default function EditPatient() {
                                 <div className="relative">
                                     <input
                                         type="number"
-                                        placeholder="Phone (optional)"
+                                        placeholder="Phone Number (optional)"
                                         value={phone}
                                         onChange={(e) => {
                                             setPhone(e.target.value); if (errors.phone) { setErrors((prevErrors) => ({ ...prevErrors, phone: '' })); }
