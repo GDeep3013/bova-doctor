@@ -100,7 +100,7 @@ export default function DoctorListing() {
                         <tbody>
                             {doctors.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="py-2 px-4 text-center text-gray-500 border-r border-[#B0BAAE]">
+                                    <td colSpan={7} className="py-2 px-4 text-center text-gray-500 border-r border-[#B0BAAE]">
                                         No records found
                                     </td>
                                 </tr>

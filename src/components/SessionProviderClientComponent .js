@@ -11,7 +11,7 @@ export default function SessionProviderClientComponent({ children }) {
 
   const [session, setSession] = useState(null);
   const pathname = usePathname(); // Get the current path
-  const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password','/terms-services'];
+  const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password','/terms-services','/not-found'];
 
   useEffect(() => {
     // Fetch session

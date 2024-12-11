@@ -1,5 +1,11 @@
 'use client'
+import { useSession } from 'next-auth/react';
+
 export default function doctorTable({doctors }) {
+    const { data: session } = useSession();
+    const filteredDoctors = session?.userDetail
+    ? doctors.filter(doctor => doctor.id !== session.userDetail._id)
+        : doctors;
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 pb-0 w-full mx-auto">
@@ -27,7 +33,7 @@ export default function doctorTable({doctors }) {
             </tr>
         </thead>
         <tbody>
-            {doctors.map((doctor,index) => (
+            {filteredDoctors.map((doctor,index) => (
                 <tr key={index} className="">
                     <td className="p-2  text-[#53595B]  font-semibold">{index + 1}</td>
                     <td className="p-2 flex items-center space-x-4">
