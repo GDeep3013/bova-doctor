@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { signOut, getSession } from 'next-auth/react';
 import { useRouter, usePathname  } from 'next/navigation';
 import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon, EarningIcon, CloseIcon } from './svg-icons/icons';
-
+import { useSession } from 'next-auth/react';
 export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
   const router = useRouter();
   const currentPath = usePathname();
-
+  const { data: session } = useSession();
   // Helper function to check if the link is active
   const isActive = (path) => currentPath === path;
 
@@ -20,15 +20,15 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
   const togglePatients = () => setIsPatientsOpen(!isPatientsOpen);
   const togglePlans = () => setIsPlansOpen(!isPlansOpen);
 
-  const [session, setSession] = useState(null);
+  // const [session, setSession] = useState(null);
 
-  useEffect(() => {
-    const fetchSession = async () => { 
-      const sessionData = await getSession();
-      setSession(sessionData);
-    };
-    fetchSession();
-  }, []);
+  // useEffect(() => {
+  //   const fetchSession = async () => { 
+  //     const sessionData = await getSession();
+  //     setSession(sessionData);
+  //   };
+  //   fetchSession();
+  // }, []);
 
   const handleLogout = async () => {
     await signOut({ redirect: false });

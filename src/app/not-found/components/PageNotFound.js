@@ -11,7 +11,7 @@ export default function PageNotFound() {
                 <h1 class="text-gray-700 text-4xl font-bold mb-4">404</h1>
                 <p class="text-gray-600 text-lg mb-4">Page not found</p>
                 <p class="text-gray-500 text-sm">
-                    The page you are looking for doesn&apos;t exist or an error occurred.<br />
+                    The page you are looking for doesn &apos;t exist or an error occurred.<br />
                     
                     <Link href="/" class="text-blue-500 underline">Go back</Link> 
                 </p>
