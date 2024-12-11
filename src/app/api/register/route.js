@@ -8,7 +8,7 @@ connectDB();
 
 export async function POST(req) {
     try {
-        const { firstName, lastName, email, password, phone, specialty } = await req.json();
+        const { firstName, lastName, email, password, phone, specialty ,commissionPercentage} = await req.json();
 
         const existingDoctor = await Doctor.findOne({ 
             $or: [{ email }, { phone }] 
@@ -35,10 +35,11 @@ export async function POST(req) {
             phone,
             userType: "Admin",
             specialty,
+            commissionPercentage
         });
 
         const { password: _, ...doctorData } = newDoctor.toObject();
-        return new Response(JSON.stringify(doctorData), { status: 201 });
+        return new Response(JSON.stringify(doctorData), { status: 201 ,message:'New user created successfully'});
     } catch (error) {
         console.error(error);
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
