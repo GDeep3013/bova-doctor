@@ -6,7 +6,9 @@ import AdminGraph from './adminGraph';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Loader from 'components/loader';
+import { useSession } from 'next-auth/react';
 export default function AdminDashboard() {
+    const { data: session } = useSession();
     const [totalDoctors, setTotalDoctors] = useState('')
     const [totalPatient, setTotalPatient] = useState('')
     const [doctors, setDoctors] = useState([])
@@ -25,11 +27,14 @@ export default function AdminDashboard() {
             }
             const data = await response.json();
             if (data) {
-
+                const filteredDoctors = session?.userDetail
+                ? data?.doctorsData.filter(doctor => doctor.id !== session.userDetail._id)
+                    : doctors;
+            
                 setCurrentMonthEarning(data.currentMonthEarnings)
                 setTotalDoctors(data.totalPatient)
                 setTotalPatient(data.totalDoctors - 1)
-                setDoctors(data.doctorsData)
+                setDoctors(filteredDoctors)
                 SetGraphMonths(data.graphMonth)
                 SetGraphValue(data.graphValue)
                 setFetchLoader(false)
