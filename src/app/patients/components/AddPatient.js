@@ -45,7 +45,7 @@ export default function Home() {
 
             <div className="flex flex-col mt-8">
                 <div className="w-full max-w-5xl bg-white rounded-lg border border-[#AFAAAC]">
-                    <h2 className="text-lg md:text-xl font-bold text-[#53595B]  p-[16px] md:p-5 border-b border-[#AFAAAC]">BOVA Patient Order Form</h2>
+                    <h2 className="text-lg md:text-xl font-bold text-[#2b6175]  p-[16px] md:p-5 border-b border-[#AFAAAC]">BOVA Patient Order Form</h2>
                     <div className="border-b border-[#AFAAAC] flex items-center p-5 pb-4 md:pb-6 max-[767px]:flex-wrap">
                         <div className='patient-details max-w-[300px] w-full'>
                             {/* <div className="flex items-center mb-4">

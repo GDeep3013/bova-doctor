@@ -34,7 +34,7 @@ export async function POST(req) {
     if (!patient) {
       return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
     }
-
+    
     // Create price rule and discount code
     let discountCode = null;
     try {

@@ -30,9 +30,12 @@ export async function createDiscountPriceRule(discount, patient) {
 
         if (!response.ok) {
             console.error("Error response:", await response.text());
-            throw new Error(
-                `Shopify API error creating customer: ${response.statusText}`
-            );
+            // throw new Error(
+            //     `Shopify API error creating customer: ${response.statusText}`
+            // );
+    //   return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
+
+            return new Response( JSON.stringify({ error: 'Failed to fetch patients' }), { status: 500 } );
         }
         const data = await response.json();
         return data.price_rule;
@@ -61,7 +64,6 @@ export async function createDiscountCode(priceRule) {
                 `Shopify API error creating customer: ${response.statusText}`
             );
         }
-
         const data = await response.json();
         return data.discount_code;
     } catch (error) {
@@ -71,7 +73,7 @@ export async function createDiscountCode(priceRule) {
 }
 
 
-export async function searchCustomer(firstName, lastName,email, phone=null) {
+export async function searchCustomer(firstName, lastName, email, phone = null) {
     const url = `https://${SHOPIFY_DOMAIN}/admin/api/2024-10/customers/search.json?query=${email}`;
     try {
         const searchResponse = await fetch(url, {
@@ -86,7 +88,7 @@ export async function searchCustomer(firstName, lastName,email, phone=null) {
             );
         }
         const searchData = await searchResponse.json();
-        if (searchData.customers && searchData.customers.length > 0) {         
+        if (searchData.customers && searchData.customers.length > 0) {
             const customer = searchData.customers[0]; // Assuming the first result is the correct customer
             const customerId = customer.id;
             const existingTags = customer.tags ? customer.tags.split(", ") : [];
@@ -94,20 +96,20 @@ export async function searchCustomer(firstName, lastName,email, phone=null) {
             if (!existingTags.includes("PATIENT")) {
                 // Add the "PATIENT" tag
                 const updatedTags = [...existingTags, "PATIENT"].join(", ");
-                return  await updateCustomer(customerId,firstName,lastName ,phone,updatedTags);               
-            } else {           
-                return  await updateCustomer(customerId, firstName, lastName, phone);
+                return await updateCustomer(customerId, firstName, lastName, phone, updatedTags);
+            } else {
+                return await updateCustomer(customerId, firstName, lastName, phone);
             }
-        } else {    
-          return  await createCustomer(firstName, lastName, email,phone);
+        } else {
+            return await createCustomer(firstName, lastName, email, phone);
         }
     } catch (error) {
         console.error("Error searching or updating customer:", error.message);
         throw error;
     }
 }
- async function createCustomer(firstName, lastName, email, phone=null) {
-      const url = `https://${SHOPIFY_DOMAIN}/admin/api/2024-10/customers.json`;
+async function createCustomer(firstName, lastName, email, phone = null) {
+    const url = `https://${SHOPIFY_DOMAIN}/admin/api/2024-10/customers.json`;
     try {
         const response = await fetch(url, {
             method: "POST",
@@ -120,19 +122,19 @@ export async function searchCustomer(firstName, lastName,email, phone=null) {
                     email: email,
                     first_name: firstName,
                     last_name: lastName,
-                    phone:phone,
+                    phone: phone,
                     tags: "PATIENT",
                 },
             }),
         });
 
         if (!response.ok) {
-            
+
             throw new Error(
                 `Shopify API error creating customer: ${response.statusText}`
             );
         }
-        const data = await response.json(); 
+        const data = await response.json();
         return data.customer;
     } catch (error) {
         console.error("Error creating customer:", error.message);
@@ -141,7 +143,7 @@ export async function searchCustomer(firstName, lastName,email, phone=null) {
 }
 
 
- async function updateCustomer(customer_id, firstName, lastName, phone=null, updatedTags=null) {
+async function updateCustomer(customer_id, firstName, lastName, phone = null, updatedTags = null) {
     const url = `https://${SHOPIFY_DOMAIN}/admin/api/2024-10/customers/${customer_id}.json`;
     try {
         const response = await fetch(url, {
@@ -165,7 +167,7 @@ export async function searchCustomer(firstName, lastName,email, phone=null) {
                 `Shopify API error creating customer: ${response.statusText}`
             );
         }
-        const data = await response.json(); 
+        const data = await response.json();
         return data.customer;
     } catch (error) {
         console.error("Error creating customer:", error.message);

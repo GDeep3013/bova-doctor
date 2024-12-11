@@ -11,10 +11,10 @@ export default function PrivacyPolicy() {
         <AppLayout>
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
 
-            <div className='terms-services max-w-[1100px]  p-4'>
+            <div className='terms-services max-w-[1100px] p-4'>
                 <div className='paragragh'>
                     {/* <img alt="Logo" className="max-w-[150px] max-[992px]:max-w-[120px] mb-5" src="/images/dash-logo.png" /> */}
-                    <h4 className='text-3xl font-semibold'> Privacy Statement </h4>
+                    <h4 className='text-3xl font-medium'> Privacy Statement </h4>
                     <p className='text-[15px] my-3 text-gray-500'><strong>BOVA</strong> is dedicated to safeguarding your privacy and ensuring a positive experience when using our website and services (collectively, the &apos;&apos;Services&apos;&apos;). This Privacy Statement outlines how we handle your personal information, your rights regarding your data, and our obligations under applicable laws. By using our Services, you acknowledge and agree to the practices outlined in this Privacy Statement.</p>
                     <p className='text-[15px] my-3 text-gray-500'>If you do not understand or agree with the terms of this Privacy Statement, please refrain from using our Services. If you are using our Services on behalf of another person or entity, you confirm that you are authorized to act on their behalf and agree to this Privacy Statement on their behalf.</p>
                     <p className='text-[15px] my-3 text-gray-500'>This Privacy Statement applies to interactions with BOVA across all platforms, including our websites, any future mobile applications, social media channels, and offline engagements such as visits to our offices or attendance at BOVA-hosted events. For region-specific terms, additional privacy notices, or information about specific products or services, this Privacy Statement supplements any other policies provided to you.</p>

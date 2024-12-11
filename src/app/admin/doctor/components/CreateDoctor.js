@@ -48,7 +48,7 @@ export default function CreateDoctor() {
             valid = false;
         }
         if (!specialty) {
-            newErrors.specialty = 'specialty field is required';
+            newErrors.specialty = 'Specialty field is required';
             valid = false;
         }
         if (!commissionPercentage) {
@@ -208,7 +208,7 @@ export default function CreateDoctor() {
                                             onChange={(e) => { setCommissionPercentage(e.target.value); if (errors.commissionPercentage) setErrors({ ...errors, commissionPercentage: '' }); }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.commissionPercentage ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                         />
-                                        <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                                        <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
 
                                         {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>}
                                     </div>

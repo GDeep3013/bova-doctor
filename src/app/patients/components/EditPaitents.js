@@ -128,7 +128,7 @@ export default function EditPatient() {
                 {fetchLoader ? <Loader /> : <>
                     <h1 className='page-title pt-2 text-2xl pb-1'>Edit Patient</h1>
                     <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
-                    <div className="container mx-auto max-w-full mt-6">
+                    <div className="container mx-auto max-w-full mt-2">
                         <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
                             {/* <div className="bg-customBg3 py-4 px-4 md:px-8 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Edit Patient Information</span></div> */}
                             <form onSubmit={handleSubmit} className="space-y-2 p-4 md:p-8 md:pr-24  w-full">
@@ -153,7 +153,8 @@ export default function EditPatient() {
                                             placeholder="Last Name"
                                             value={lastName}
                                             onChange={(e) => {
-                                                setLastName(e.target.value); if (errors.lastName) setErrors({ ...errors, lastName: '' });
+                                                setLastName(e.target.value);
+                                                if (errors.lastName) setErrors({ ...errors, lastName: '' });
                                             }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-blue-500`}
                                         />

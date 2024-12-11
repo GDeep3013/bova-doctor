@@ -73,7 +73,7 @@ export default function DoctorListing() {
         <AppLayout>
             <div className="mx-auto">
                 {fetchLoader?<Loader/>:<>
-                <div className='flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-6'>
+                <div className='flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-2'>
                     <div>
                         <h1 className="text-2xl">Doctors Listing</h1>
                         <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>

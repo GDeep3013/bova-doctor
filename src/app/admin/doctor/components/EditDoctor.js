@@ -55,7 +55,7 @@ export default function CreateDoctor() {
         }
 
         if (!specialty) {
-            newErrors.specialty = 'specialty field is required';
+            newErrors.specialty = 'Specialty field is required';
             valid = false;
         }
         if (!commissionPercentage) {
@@ -186,7 +186,6 @@ export default function CreateDoctor() {
                                             />
                                             {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                                         </div>
-
                                         <div className="relative">
                                             <input type="text"
                                                 placeholder="Last Name"
@@ -195,8 +194,7 @@ export default function CreateDoctor() {
                                                 className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`} />
                                             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                                         </div>
-                                    </div>
-
+                                   </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="relative">
                                             <input
@@ -229,6 +227,7 @@ export default function CreateDoctor() {
                                                 onChange={(e) => { setSpecialty(e.target.value); if (errors.specialty) setErrors({ ...errors, specialty: '' }); }}
                                                 className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.specialty ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                             />
+
                                             {errors.specialty && <p className="text-red-500 text-sm mt-1">{errors.specialty}</p>}
 
                                         </div>
@@ -241,6 +240,8 @@ export default function CreateDoctor() {
                                                 onChange={(e) => { setCommissionPercentage(e.target.value); if (errors.commissionPercentage) setErrors({ ...errors, commissionPercentage: '' }); }}
                                                 className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.commissionPercentage ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                             />
+                                        <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
+
                                             {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>}
                                         </div>
                                     </div>
