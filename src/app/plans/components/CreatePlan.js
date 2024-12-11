@@ -256,7 +256,7 @@ export default function CreatePlan() {
     const filteredProducts = variants.filter(variants =>
         variants.product.title.toLowerCase().includes(searchTerm)
     )
-
+    
     useEffect(() => {
         if (id) {
             const matchedPatient = patients.find(patient => patient._id === id);
@@ -301,7 +301,7 @@ export default function CreatePlan() {
 
             // Update states
             setDicountPrice(discount); // Discount amount
-            setDoctorCommission(doctorPrice); 
+            setDoctorCommission(doctorPrice);
         }
     }, [formData.discount, commissionPercentage, subtotal]);
     return (
@@ -703,60 +703,62 @@ export default function CreatePlan() {
                                     FINISH
                                 </button>
                             </div>
+                            <div className='mob-only'>
 
-                            {filteredProducts.length > 0 ? (
-                                <div className="product-itm-wrapper mob-only">
-                                    <div className="product-itm-container">
+                                {filteredProducts.length > 0 ? (
+                                    <div className="product-itm-wrapper ">
+                                        <div className="product-itm-container">
 
-                                        {filteredProducts.map((variant, index) => {
-                                            const isProductAdded = selectedItems.some(item => item.id === variant.id);
-                                            return (
-                                                <div className="product-itm-mob" key={index}>
-                                                    <div className="product-itm-img">
-                                                        <img src={
-                                                            variant.image && variant.image.url
-                                                                ? variant.image.url
-                                                                : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
-                                                                    ? variant.product.images[0].url
-                                                                    : '/images/product-img1.png'
-                                                        }
-                                                            alt={variant.product.title}
-                                                            className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
-                                                        />
-                                                    </div>
-                                                    <div className="product-itm-des">
-                                                        <h3>{variant.product.title}</h3>
-                                                        <div className="product-des-inner">
-                                                            <div className="product-des-price">
-                                                                <p>{variant.sku || 'N/A'}</p>
-                                                                <h6>${variant.price || 'N/A'}</h6>
-                                                            </div>
-                                                            <div className="product-price">
-                                                                <button
-                                                                    onClick={() => { handleSelectProduct(variant) }}
-                                                                    className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
-                                                                    disabled={isProductAdded}
-                                                                >
-                                                                    {isProductAdded ? 'Added' : 'Add'}
-                                                                </button>
+                                            {filteredProducts.map((variant, index) => {
+                                                const isProductAdded = selectedItems.some(item => item.id === variant.id);
+                                                return (
+                                                    <div className="product-itm-mob" key={index}>
+                                                        <div className="product-itm-img">
+                                                            <img src={
+                                                                variant.image && variant.image.url
+                                                                    ? variant.image.url
+                                                                    : (variant.product.images && variant.product.images[0] && variant.product.images[0].url)
+                                                                        ? variant.product.images[0].url
+                                                                        : '/images/product-img1.png'
+                                                            }
+                                                                alt={variant.product.title}
+                                                                className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
+                                                            />
+                                                        </div>
+                                                        <div className="product-itm-des">
+                                                            <h3>{variant.product.title}</h3>
+                                                            <div className="product-des-inner">
+                                                                <div className="product-des-price">
+                                                                    <p>{variant.sku || 'N/A'}</p>
+                                                                    <h6>${variant.price || 'N/A'}</h6>
+                                                                </div>
+                                                                <div className="product-price">
+                                                                    <button
+                                                                        onClick={() => { handleSelectProduct(variant) }}
+                                                                        className="bg-customBg2 border border-customBg2 text-white px-4 py-2 rounded hover:bg-white hover:text-customBg2 disabled:opacity-50"
+                                                                        disabled={isProductAdded}
+                                                                    >
+                                                                        {isProductAdded ? 'Added' : 'Add'}
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            );
-                                        })}
+                                                );
+                                            })}
 
+                                        </div>
+                                        <button onClick={() => { closeModal() }}
+                                            className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
+                                            FINISH
+                                        </button>
                                     </div>
-                                    <button onClick={() => { closeModal() }}
-                                        className="btn-submit-product py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] ">
-                                        FINISH
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className='text-center w-full'>
-                                    <p className="text-gray-500 mt-7 font-bold">No products found</p>
-                                </div>
-                            )}
+                                ) : (
+                                    <div className='text-center w-full'>
+                                        <p className="text-gray-500 mt-7 font-bold">No products found</p>
+                                    </div>
+                                )}
+                            </div>
                         </div >
                     </div >
                 )

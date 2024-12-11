@@ -119,6 +119,7 @@ export default function CreatePlan() {
         product.title.toLowerCase().includes(searchTerm)
     )
 
+    // const filteredProducts = [];
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
 
@@ -269,7 +270,8 @@ export default function CreatePlan() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    { (fetchLoader && updateSelectedItems) ? <Loader /> : filteredProducts.map((product, index) => {
+                                                        {
+                                                            (fetchLoader && updateSelectedItems) ? <Loader /> : filteredProducts.map((product, index) => {
                                                         const isProductAdded = selectedItems.some(item => item.id === product.id);
                                                         return (
                                                             <tr
@@ -313,8 +315,9 @@ export default function CreatePlan() {
                                     </button>
                                     </div>
                                 </div>
+                                <div className='mob-only'>
                                 {filteredProducts.length > 0 ? (
-                                <div className="product-itm-wrapper mob-only">
+                                <div className="product-itm-wrapper ">
                                 <div className="product-itm-container">                                
                                         {filteredProducts.map((product, index) => {
                                                         const isProductAdded = selectedItems.some(item => item.id === product.id);
@@ -359,7 +362,8 @@ export default function CreatePlan() {
                                         <p className="text-gray-500 mt-7 font-bold">No products found</p>
                                     </div>
                                 )}
-                            </div >
+                                </div >
+                                </div>
                         </div >
                     )
                     }
