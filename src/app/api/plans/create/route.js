@@ -34,14 +34,14 @@ export async function POST(req) {
     if (!patient) {
       return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
     }
-    
+
     // Create price rule and discount code
-    let discountCode = null;
+    let priceRule = null;
     try {
-      const priceRule = await createDiscountPriceRule(discount, patient);
-      if (priceRule) {
-        discountCode = await createDiscountCode(priceRule);
-      }
+      priceRule = await createDiscountPriceRule(discount, patient);
+      // if (priceRule) {
+      //   discountCode = await createDiscountCode(priceRule);
+      // }
     } catch (error) {
       console.error("Error creating discount code:", error.message);
     }
@@ -50,14 +50,14 @@ export async function POST(req) {
     const plan = await Plan.create(planData);
 
     // Update plan with discount details if available
-    if (discountCode?.code) {
+    if (priceRule?.codes?.nodes[0]?.code) {
       await Plan.updateOne(
         { _id: plan._id },
         {
           $set: {
-            priceRuleId: discountCode.price_rule_id,
-            discountId: discountCode.id,
-            discountCode: discountCode.code,
+            priceRuleId: "",
+            discountId: priceRule?.codes?.nodes[0]?.id,
+            discountCode: priceRule?.codes?.nodes[0]?.code
           },
         }
       );
