@@ -332,7 +332,7 @@ export default function CreatePlan() {
                 setFormData(prevData => ({
                     ...prevData,
                     items: mappedItems,
-                    discount: data?.discount,
+                    discount: data.discount?data.discount:"",
                     mailData: mappedMailData,
                     message: data?.message
                 }));
