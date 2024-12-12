@@ -26,10 +26,10 @@ export default function EditPatient() {
                 const response = await fetch(`/api/patients/edit/${id}`);
                 const data = await response.json();
                 if (response.ok) {
-                    setFirstName(data.firstName);
-                    setLastName(data.lastName);
-                    setEmail(data.email);
-                    setPhone(data.phone);
+                    setFirstName(data?.patient?.firstName);
+                    setLastName(data?.patient?.lastName);
+                    setEmail(data?.patient?.email);
+                    setPhone(data?.patient?.phone);
                     setFetchLoader(false)
                 } else {
                     Swal.fire({
@@ -66,8 +66,8 @@ export default function EditPatient() {
             valid = false;
         }
         if (phone) {
-            if (!/^\d{10}$/.test(phone)) {
-                newErrors.phone = 'Phone number must be 10 digits';
+            if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
+                newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
                 valid = false;
             }
         }
@@ -177,7 +177,7 @@ export default function EditPatient() {
 
                                 <div className="relative">
                                     <input
-                                        type="number"
+                                        type="text"
                                         placeholder="Phone Number (optional)"
                                         value={phone}
                                         onChange={(e) => {

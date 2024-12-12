@@ -1,6 +1,7 @@
 import connectDB from '../../../../../db/db';
 import Patient from '../../../../../models/patient';
-import {  searchCustomer } from '../../../../shopify-api/_shopify_api_ShopifyAPI'
+import Plan from '../../../../../models/plan';
+import { searchCustomer, } from '../../../../shopify-api/_shopify_api_ShopifyAPI'
 
 export async function GET(req, { params }) {
   const { id } = params; // Get 'id' from the URL
@@ -16,8 +17,13 @@ export async function GET(req, { params }) {
         status: 404,
       });
     }
+    const plans = await Plan.find({ patient_id: id });
 
-    return new Response(JSON.stringify(patient), {
+    const responseData = {
+      patient,
+      plans,
+    };
+    return new Response(JSON.stringify(responseData), {
       status: 200,
     });
   } catch (error) {
@@ -102,3 +108,43 @@ export async function DELETE(req, { params }) {
     });
   }
 }
+
+// export async function DELETE(req, { params }) {
+  //   const { id } = params; // Extract 'id' from the URL parameters
+  
+  //   // Ensure database connection
+  //   try {
+  //     await connectDB();
+  //   } catch (error) {
+  //     return new Response(
+  //       JSON.stringify({ error: "Failed to connect to the database." }),
+  //       { status: 500 }
+  //     );
+  //   }
+  
+  //   try {
+  //     const patient = await Patient.findByIdAndDelete(id);
+  //     if (!patient) {
+  //       return new Response(
+  //         JSON.stringify({ error: "Patient not found." }),
+  //         { status: 404 }
+  //       );
+  //     }
+  
+  //     if (patient.customerId) {
+  //       console.log(patient.customerId);
+  //       try {
+  //         await DeleteCustomer(patient.customerId);
+  //       } catch (error) {
+  //         console.error(`Failed to delete Shopify customer ID: ${patient.customerId}`, error);
+  //       }
+  //     }
+  
+  //     return new Response(null, { status: 204 }); // Successfully deleted, no content
+  //   } catch (error) {
+  //     return new Response(
+  //       JSON.stringify({ error: "Failed to delete the patient." }),
+  //       { status: 500 }
+  //     );
+  //   }
+  // }

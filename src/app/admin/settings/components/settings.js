@@ -119,7 +119,6 @@ export default function CreatePlan() {
         product.title.toLowerCase().includes(searchTerm)
     )
 
-    // const filteredProducts = [];
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
 

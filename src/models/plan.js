@@ -31,7 +31,15 @@ const PlanSchema = new mongoose.Schema({
             },
         },
     ],
-   createdAt: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+PlanSchema.pre('save', function (next) {
+    this.updatedAt = Date.now();
+    next();
 });
 const Plan = mongoose.models.Plan || mongoose.model('Plan', PlanSchema);
 module.exports = Plan;

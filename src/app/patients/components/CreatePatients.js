@@ -35,10 +35,11 @@ export default function Create() {
             valid = false;
         }
         if (phone) {
-            if (!/^\d{10}$/.test(phone)) {
-                newErrors.phone = 'Phone number must be 10 digits';
+            if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
+                newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
                 valid = false;
             }
+
         }
 
         setErrors(newErrors);
@@ -65,7 +66,7 @@ export default function Create() {
 
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Patient added successfully!',                        
+                        text: 'Patient added successfully!',
                         iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
                         confirmButtonText: 'OK',
                         confirmButtonColor: "#3c96b5",
@@ -104,7 +105,7 @@ export default function Create() {
                 <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
                 <div className="container mx-auto max-w-full mt-2">
                     <div className="flex flex-wrap w-full max-w-3xl bg-white rounded-lg border border-[#AFAAAC]">
-                    {/* <div className="bg-customBg3 py-4 px-4 md:px-8 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Create Patient</span></div> */}
+                        {/* <div className="bg-customBg3 py-4 px-4 md:px-8 rounded-t-lg w-full flex justify-between items-center"><span className="text-[19px] text-black">Create Patient</span></div> */}
                         <form onSubmit={handleSubmit} className="space-y-2 p-4 md:p-8 md:pr-24   w-full">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="relative">
@@ -151,10 +152,11 @@ export default function Create() {
 
                             <div className="relative">
                                 <input
-                                    type="number"
+                                    type="text"
                                     placeholder="Phone Number (optional)"
                                     value={phone}
-                                    onChange={(e) => {setPhone(e.target.value); if (errors.phone) { setErrors((prevErrors) => ({ ...prevErrors, phone: '' })); }
+                                    onChange={(e) => {
+                                        setPhone(e.target.value); if (errors.phone) { setErrors((prevErrors) => ({ ...prevErrors, phone: '' })); }
                                     }}
                                     className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-2 rounded focus:outline-none ${errors.phone ? 'border-red-500' : 'border-gray-300'}  focus:border-blue-500`}
                                 />

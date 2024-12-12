@@ -45,8 +45,8 @@ export default function CreateDoctor() {
         if (!phone) {
             newErrors.phone = 'Phone number is required';
             valid = false;
-        } else if (!/^\d{10}$/.test(phone)) {
-            newErrors.phone = 'Phone number must be exactly 10 digits and numeric';
+        } else if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
+            newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
             valid = false;
         }
         if (userType == '') {
@@ -209,7 +209,7 @@ export default function CreateDoctor() {
 
                                         <div className="relative">
                                             <input
-                                                type="number"
+                                                type="text"
                                                 placeholder="Phone Number"
                                                 value={phone ?? ""}
                                                 onChange={(e) => { setPhone(e.target.value); if (errors.phone) setErrors({ ...errors, phone: '' }); }}
