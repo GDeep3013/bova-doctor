@@ -25,7 +25,7 @@ export default function SessionProviderClientComponent({ children }) {
   // Show loading if no session and current path is not in guestRoutes
   if (!session && !guestRoutes.includes(pathname)) {
     return (<div className="loader">
-      <img src="https://inventory.webziainfotech.com/images/logo.png" alt="BOVA Logo"/>
+      <img src="/images/logo.png" alt="BOVA Logo"/>
     </div>);
   }
 

@@ -66,8 +66,8 @@ export default function EditPatient() {
             valid = false;
         }
         if (phone) {
-            if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
-                newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
+            if (!/^\d{10}$/.test(phone)) {
+                newErrors.phone = 'Phone number must be 10 digits';
                 valid = false;
             }
         }
@@ -177,7 +177,7 @@ export default function EditPatient() {
 
                                 <div className="relative">
                                     <input
-                                        type="text"
+                                        type="number"
                                         placeholder="Phone Number (optional)"
                                         value={phone}
                                         onChange={(e) => {
