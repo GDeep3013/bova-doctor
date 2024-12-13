@@ -51,11 +51,12 @@ const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_DOMAIN}/admin/api/2024-10
 
 
 
-export async function createDiscountPriceRule(discount, patient) {
+export async function createDiscountPriceRule(discount, patient,) {
     const query = `
       mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
         discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) {
             codeDiscountNode {
+              id
               codeDiscount {
                 ... on DiscountCodeBasic {
                   title
@@ -130,43 +131,93 @@ export async function createDiscountPriceRule(discount, patient) {
         }
     };
 
-        try {
-            const response = await fetch(SHOPIFY_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN,
-                },
-                body: JSON.stringify({ query, variables }),
-            });
+    try {
+        const response = await fetch(SHOPIFY_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN,
+            },
+            body: JSON.stringify({ query, variables }),
+        });
 
-            if(!response.ok) {
-                console.error('HTTP error:', response.status, response.statusText);
-    throw new Error(`HTTP error ${response.status}`);
-}
+        if (!response.ok) {
+            console.error('HTTP error:', response.status, response.statusText);
+            throw new Error(`HTTP error ${response.status}`);
+        }
 
-const result = await response.json();
+        const result = await response.json();
 
-if (result.errors) {
-    console.error('GraphQL errors:', result.errors);
-    throw new Error('Failed to create discount code');
-}
+        if (result.errors) {
+            console.error('GraphQL errors:', result.errors);
+            throw new Error('Failed to create discount code');
+        }
 
-const { userErrors, codeDiscountNode } = result.data.discountCodeBasicCreate;
+        const { userErrors, codeDiscountNode } = result.data.discountCodeBasicCreate;
 
-if (userErrors && userErrors.length > 0) {
-    console.error('User errors:', userErrors);
-    throw new Error(userErrors[0].message);
-}
+        if (userErrors && userErrors.length > 0) {
+            console.error('User errors:', userErrors);
+            throw new Error(userErrors[0].message);
+        }
 
-console.log('Discount Code Created:', codeDiscountNode?.codeDiscount?.codes?.nodes[0]?.id, codeDiscountNode?.codeDiscount?.codes?.nodes[0]?.code);
-return codeDiscountNode.codeDiscount;
+        console.log('Discount Code Created:', codeDiscountNode, codeDiscountNode?.codeDiscount?.codes?.nodes)
+        return codeDiscountNode;
     } catch (error) {
-    console.error('Error creating discount code:', error);
-    throw error;
-}
+        console.error('Error creating discount code:', error);
+        throw error;
+    }
 }
 
+
+
+export async function DeleteDiscountCode(discountCodeId) {
+    console.log(discountCodeId)
+    const query = `
+    mutation discountCodeDelete($id: ID!) {
+      discountCodeDelete(id: $id) {
+        deletedCodeDiscountId
+        userErrors {
+          field
+          code
+          message
+        }
+      }
+    }
+  `;
+    const variables = {
+        id: discountCodeId,
+    };
+
+    try {
+        const response = await fetch(SHOPIFY_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN,
+            },
+            body: JSON.stringify({ query, variables }),
+        });
+
+        const result = await response.json();
+
+        if (result.data.discountCodeDelete.userErrors.length > 0) {
+            console.error('Errors:', result.data.discountCodeDelete.userErrors);
+            return {
+                success: false,
+                errors: result.data.discountCodeDelete.userErrors,
+            };
+        }
+
+        return {
+            success: true,
+            deletedCodeDiscountId: result.data.discountCodeDelete.deletedCodeDiscountId,
+        };
+    } catch (error) {
+        console.error('Error deleting discount code:', error);
+        return { success: false, error: error.message };
+    }
+
+}
 
 
 

@@ -37,10 +37,10 @@ export default function Home() {
     return (
         <>
 
-            <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:p-8 mt-6 rounded-lg">
-                <p className='text-lg'>Welcome to your BOVA <span className="">  Dr. {session?.user?.userName}</span></p>
-                <p className="mt-2 text-lg">We will be launching the full site access in less than 2 weeks! <br />Stay tuned.</p>
-                <p className="mt-2 text-lg ">Team BOVA</p>
+            <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:pb-16 md:p-12 mt-6 rounded-lg">
+                <p className='text-lg font-bold'>Welcome to Your BOVA Dispensary,<span className="">  Dr. {session?.user?.userName}!</span></p>
+                <p className="my-4 text-lg font-normal text-[#323232]">We've built this online dispensary to feel familiar and easy to use. Since it's brand new, you might notice a few things that could use a tweak-if you do, let us know! Your feedback helps shape the future of our platform-yes, we really mean that. We're excited to partner with you and build something amazing together.</p>
+                <p className="mt-2 text-lg font-bold">Team BOVA</p>
             </div>
 
             <div className="flex flex-col mt-8">

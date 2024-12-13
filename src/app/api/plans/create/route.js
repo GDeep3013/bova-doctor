@@ -50,14 +50,15 @@ export async function POST(req) {
     const plan = await Plan.create(planData);
 
     // Update plan with discount details if available
-    if (priceRule?.codes?.nodes[0]?.code) {
+    
+    if (priceRule?.codeDiscount?.codes?.nodes[0]?.code) {
       await Plan.updateOne(
         { _id: plan._id },
         {
           $set: {
             priceRuleId: "",
-            discountId: priceRule?.codes?.nodes[0]?.id,
-            discountCode: priceRule?.codes?.nodes[0]?.code
+            discountId: priceRule?.id,
+            discountCode: priceRule?.codeDiscount?.codes?.nodes[0]?.code
           },
         }
       );

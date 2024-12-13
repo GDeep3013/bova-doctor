@@ -105,7 +105,7 @@ div#swal2-html-container{ color: #29282b; }
 .doctor-listing tbody tr td, .doctor-listing th { padding: 10px 8px; font-size: 14px; }
 }
 @media screen and (max-width: 1024px)  {
-    .dashboard-outer .sidebar{ position: fixed; left: 0; max-width: 280px !important; box-shadow: 0 0 3px #5b5b5b; z-index: 1;}
+    .dashboard-outer .sidebar{ position: fixed; left: 0; max-width: 280px !important; box-shadow: 0 0 3px #5b5b5b; z-index: 1; overflow: hidden; overflow-y: auto;}
     .dashboard-outer .sidebar-close { transform: translateX(-100%); }
     .dashboard-outer .sidebar-open{ transform: translateX(0);  }
     .admin-logo.sidebar-close{ max-width: 100%; }
@@ -133,5 +133,10 @@ div#swal2-html-container{ color: #29282b; }
   .dashboard-inner .card-icon .card-svg .plan-icon{ width: 30px !important; }
   .create-popup-wrapper{ max-width: 500px; }
   .product-itm-mob{ max-width: 100%; }
+  .need-help{ position: initial; margin-top: 40px; }
+}
+
+@media screen and (max-width:480px) {
+  .need-help{ position: absolute; margin-top: 0; }
 }
 
