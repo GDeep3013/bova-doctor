@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { signIn } from 'next-auth/react';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -12,7 +12,17 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('email');
+    const savedPassword = localStorage.getItem('password');
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
   const validateForm = () => {
     let valid = true;
     const newErrors = { email: '', password: '' };
@@ -40,6 +50,14 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      if (rememberMe) {
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
+      } else {
+        // Clear saved credentials if "Remember Me" is unchecked
+        localStorage.removeItem('email');
+        localStorage.removeItem('password');
+      }
       try {
         const result = await signIn('credentials', {
           redirect: false,
@@ -85,7 +103,7 @@ export default function LoginForm() {
             </div>
             <div className="flex items-center justify-between">
               <label className="flex items-center space-x-2 cursor-pointer">
-                <input type="checkbox" className="form-checkbox w-5 h-5" />
+                <input type="checkbox" className="form-checkbox w-5 h-5"  checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}/>
                 <span className='text-textColor text-base'>Remember me</span>
               </label>
               <Link href="/forget-password" className="text-base text-textColor hover:text-black">Forgot Password?</Link>
