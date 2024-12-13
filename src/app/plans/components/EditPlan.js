@@ -630,8 +630,8 @@ export default function CreatePlan() {
                                     <textarea
                                         value={formData.message}
                                         onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}
-                                        className="w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none"
-                                        rows="4"
+                                        className="w-full border border-customBorder rounded-md focus:outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none focus:border-indigo-500 text-[#52595b] text-base xl:text-lg"
+                                   rows="4"
                                         placeholder="Message"
                                     ></textarea>
                                 </div>}
