@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { signOut, getSession } from 'next-auth/react';
-import { useRouter, usePathname  } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon, EarningIcon, CloseIcon } from './svg-icons/icons';
 import { useSession } from 'next-auth/react';
-export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
+export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const router = useRouter();
   const currentPath = usePathname();
   const { data: session } = useSession();
@@ -38,8 +38,8 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
   return (
     <div className={`w-full max-[1199px]:max-w-[290px] max-w-[300px] inset-y-0 transition-transform ease-in-out p-[30px] min-[1100px]:p-[50px] duration-1500 bg-customBg transform sidebar ${isSidebarOpen ? 'translate-x-0 sidebar-close' : '-translate-x-[100%] sidebar-open'}`}>
       <button className=' absolute right-0 top-4 pr-5 min-[1025px]:hidden ' onClick={toggleSidebar} >
-        <CloseIcon/>
-        </button>
+        <CloseIcon />
+      </button>
       <Link href="/dashboard">
         <img src="/images/dash-logo.png" alt="Logo" className="max-w-[155px] max-[992px]:max-w-[120px]" />
       </Link>
@@ -48,7 +48,7 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
         {session && session?.user?.userType === 'Admin' ? (
           <>
             <Link href="/admin/dashboard" className={`block text-xl ${isActive('/admin/dashboard') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
-               <HomeIcon /> Home
+              <HomeIcon /> Home
             </Link>
             <div>
               <button onClick={toggleProfile} className={`text-xl font-medium text-[#3a3c3d]`}>
@@ -147,7 +147,15 @@ export default function Sidebar({  isSidebarOpen ,toggleSidebar }) {
         <button onClick={handleLogout} className="block text-[#3a3c3d] hover:text-gray-900 text-xl">
           <LogoutIcon /> Logout
         </button>
+     
+
       </nav>
+     
+      <div className='absolute bottom-[20px] need-help'>
+      <p className='text-md font-semibold text-[#53595B]'>Need Help?</p>
+      <Link href="mailto:support@bovalabs.com" className='underline text-[#53595B]'>support@bovalabs.com</Link>
+      </div>
+      
     </div>
   );
 }

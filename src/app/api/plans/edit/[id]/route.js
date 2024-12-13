@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { medicationPlan } from '../../../../templates/medicationPlan'
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
-import { createDiscountPriceRule, createDiscountCode } from '../../../../shopify-api/_shopify_api_ShopifyAPI'
+import { createDiscountPriceRule, createDiscountCode ,updateDiscountPriceRule,DeleteDiscountCode} from '../../../../shopify-api/_shopify_api_ShopifyAPI'
 
 export async function GET(req, { params }) {
   const { id } = params;
@@ -51,29 +51,28 @@ export async function PUT(req, { params }) {
       return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
     }
 
-    // Create price rule and discount code
-    let discountCode = null;
+    let priceRule = null;   
     try {
-      const priceRule = await createDiscountPriceRule(discount, patient);
-      if (priceRule) {
-        discountCode = await createDiscountCode(priceRule);
-      }
+      await DeleteDiscountCode(updatedPlan?.discountId);
+      priceRule = await createDiscountPriceRule(discount, patient);
+      // if (priceRule) {
+      //   discountCode = await createDiscountCode(priceRule);
+      // }
     } catch (error) {
       console.error("Error creating discount code:", error.message);
     }
 
-    // Create plan
-    // const plan = await Plan.create(planData);
 
+    
     // Update plan with discount details if available
-    if (discountCode?.code) {
+      if (priceRule?.codeDiscount?.codes?.nodes[0]?.code) {
       await Plan.updateOne(
         { _id: updatedPlan._id },
         {
           $set: {
-            priceRuleId: discountCode.price_rule_id,
-            discountId: discountCode.id,
-            discountCode: discountCode.code,
+            priceRuleId: "",
+            discountId: priceRule?.id,
+            discountCode: priceRule?.codeDiscount?.codes?.nodes[0]?.code
           },
         }
       );
