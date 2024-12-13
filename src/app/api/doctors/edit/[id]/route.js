@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import connectDB from '../../../../../db/db';
 import Doctor from '../../../../../models/Doctor';
+import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 
 connectDB();
 
@@ -50,42 +51,79 @@ export async function GET(req, { params }) {
 export async function PUT(req, { params }) {
     const { id } = params;
     
-    try {
-      const formData = await req.formData(); // Use formData to retrieve file data
+  try {
+    const formData = await req.formData(); // Use formData to retrieve file data
   
-      const firstName = formData.get('firstName');
-      const lastName = formData.get('lastName');
-      const email = formData.get('email');
-      const phone = formData.get('phone');
-      const userType = formData.get('userType');
-      const specialty = formData.get('specialty');
-      const clinicName = formData.get('clinicName');
-      const commissionPercentage = formData.get('commissionPercentage');
+    const firstName = formData.get('firstName');
+    const lastName = formData.get('lastName');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const userType = formData.get('userType');
+    const specialty = formData.get('specialty');
+    const clinicName = formData.get('clinicName');
+    const commissionPercentage = formData.get('commissionPercentage');
 
-      // Check for existing doctor with the same email or phone (excluding the current doctor)
-      const existingDoctor = await Doctor.findOne({
-        $or: [
-          { email, _id: { $ne: id } },
-          { phone, _id: { $ne: id } },
-        ],
-      });
+    // Check for existing doctor with the same email or phone (excluding the current doctor)
+    const existingDoctor = await Doctor.findOne({
+      $or: [
+        { email, _id: { $ne: id } },
+        { phone, _id: { $ne: id } },
+      ],
+    });
   
-      if (existingDoctor) {
-        const errors = [];
-        if (existingDoctor.email === email) errors.push('Email already exists');
-        if (existingDoctor.phone === phone) errors.push('Phone number already exists');
-        return new Response(JSON.stringify({ error: errors }), { status: 400 });
-      }
+    if (existingDoctor) {
+      const errors = [];
+      if (existingDoctor.email === email) errors.push('Email already exists');
+      if (existingDoctor.phone === phone) errors.push('Phone number already exists');
+      return new Response(JSON.stringify({ error: errors }), { status: 400 });
+    }
   
-      // If a new profile image is uploaded, handle the image deletion and upload
+    const currentDoctor = await Doctor.findById(id);
+    if (!currentDoctor) {
+        return new Response(JSON.stringify({ error: 'Doctor not found' }), { status: 404 });
+    }
+    const oldEmail = currentDoctor.email;
+    const isEmailUpdated = oldEmail !== email;
+    // If a new profile image is uploaded, handle the image deletion and upload
     
-      // Update the doctor in the database, including the new profile image if available
-      const updatedDoctor = await Doctor.findByIdAndUpdate(
-        id,
-        { firstName, lastName, email, phone, userType, clinicName, specialty, commissionPercentage },
-        { new: true, runValidators: true }
-      );
+    // Update the doctor in the database, including the new profile image if available
+    const updatedDoctor = await Doctor.findByIdAndUpdate(
+      id,
+      { firstName, lastName, email, phone, userType, clinicName, specialty, commissionPercentage },
+      { new: true, runValidators: true }
+    );
+    if (isEmailUpdated) {
+      
+      try {
+   
+        // console.log(oldEmail, firstName, lastName ,'users');
+        const user = { email:oldEmail, firstName, lastName };
+        const customProperties = {
+          user_name: `${firstName} ${lastName}`,
+          user_email:email,
+        };
+        console.log(user, customProperties);
+        const listId = 'WPB4EV';
   
+        const createProfilePromise = createProfile(user, customProperties);
+        const subscribeProfilePromise = subscribeProfiles(user, listId);
+        
+        setTimeout(async () => {
+          try {
+            const deleteProfileResponse = await deleteProfile(user);
+          } catch (error) {
+            console.error('Error deleting profile:', error);
+          }
+        }, 60000);
+  
+        const [createResponse, subscribeResponse] = await Promise.all([
+          createProfilePromise,
+          subscribeProfilePromise,
+        ]);
+      } catch (error) {
+        console.error('Error handling Klaviyo actions:', error);
+      }
+  }
       return new Response(JSON.stringify(updatedDoctor), { status: 200 });
     } catch (error) {
       console.error(error);
