@@ -153,7 +153,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
      
       <div className='absolute bottom-[20px] need-help'>
       <p className='text-md font-semibold text-[#53595B]'>Need Help?</p>
-      <Link  to="mailto:support@bovalabs.com"  className='underline text-[#53595B]'>support@bovalabs.com</Link>
+      <Link href={"mailto:support@bovalabs.com"}  className='underline text-[#53595B]'>support@bovalabs.com</Link>
       </div>
       
     </div>
