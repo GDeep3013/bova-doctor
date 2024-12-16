@@ -50,7 +50,7 @@ export async function POST(req) {
     const plan = await Plan.create(planData);
 
     // Update plan with discount details if available
-    
+
     if (priceRule?.codeDiscount?.codes?.nodes[0]?.code) {
       await Plan.updateOne(
         { _id: plan._id },
@@ -99,6 +99,14 @@ export async function POST(req) {
     // Klaviyo actions
     try {
       const listId = 'XY5765';
+     setTimeout(async () => {
+        try {
+          await deleteProfile(patient);
+        } catch (error) {
+          console.error('Error deleting profile:', error);
+        }
+     }, 60000);
+      
       const createProfilePromise = createProfile(patient, customProperties);
       const subscribeProfilePromise = subscribeProfiles(patient, listId);
 

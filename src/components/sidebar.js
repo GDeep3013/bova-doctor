@@ -13,7 +13,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const isActive = (path) => currentPath === path;
 
   const [isProfileOpen, setIsProfileOpen] = useState(isActive('/profile') || isActive('/admin/doctor') || isActive('/sales')); // Start profile section open if on relevant page
-  const [isPatientsOpen, setIsPatientsOpen] = useState(isActive('/patients/listing')); // Patients section based on active route
+  const [isPatientsOpen, setIsPatientsOpen] = useState(isActive('/patients/listing')||isActive('/patients/create')); // Patients section based on active route
   const [isPlansOpen, setIsPlansOpen] = useState(isActive('/plans/create-plan') || isActive('/plans/review') || isActive('/plans/incomplete')); // Plans section if any plan route is active
 
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
@@ -106,7 +106,12 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
               </button>
               {isPatientsOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
-                  <li>
+                    <li>
+                    <Link href="/patients/create" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/create') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
+                      Add
+                      </Link>
+                    </li>
+                    <li>
                     <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/listing') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Search
                     </Link>
@@ -114,7 +119,6 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
                 </ul>
               )}
             </div>
-
             <div>
               <button onClick={togglePlans} className={`text-xl font-medium text-[#3a3c3d]`}>
                 <PlanIcon /> Plans
