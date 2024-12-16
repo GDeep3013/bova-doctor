@@ -32,7 +32,7 @@ export async function GET(req, { params }) {
         });
 
         const currentDayEarnings = dayOrders.reduce(
-            (total, order) => total + (parseFloat(order.total) || 0),
+            (total, order) => total + (parseFloat(order.doctor.doctor_payment) || 0),
             0
         );
 
@@ -51,7 +51,7 @@ export async function GET(req, { params }) {
         });
 
         const currentWeekEarnings = weekOrders.reduce(
-            (total, order) => total + (parseFloat(order.total) || 0),
+            (total, order) => total + (parseFloat(order.doctor.doctor_payment) || 0),
             0
         );
 
@@ -64,7 +64,7 @@ export async function GET(req, { params }) {
         });
 
         const currentMonthEarnings = monthOrders.reduce(
-            (total, order) => total + (parseFloat(order.total) || 0),
+            (total, order) => total + (parseFloat(order.doctor.doctor_payment) || 0),
             0
         );
 

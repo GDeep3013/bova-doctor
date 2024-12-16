@@ -23,16 +23,15 @@ export async function GET(req) {
       const totalPlans = await Plan.countDocuments({ patient_id: { $in: patientIds } });
   
 
-    //   const orders = await Order.find({ 'doctor.doctor_id': doctorId }).select('doctor.doctor_payment');
-    //   const totalEarnings = orders.reduce((total, order) => {
-    //     return total + parseFloat(order.doctor.doctor_payment || 0);
-    //   }, 0);
+      const orders = await Order.find({ 'doctor.doctor_id': doctorId }).select('doctor.doctor_payment');
+      const totalEarnings = orders.reduce((total, order) => {
+        return total + parseFloat(order.doctor.doctor_payment || 0);
+      }, 0);
   
-    const orders = await Order.find({ 'doctor.doctor_id': doctorId }).select('total');
-    const totalEarnings = orders.reduce((total, order) => {
-      
-      return total + parseFloat(order.total || 0);  
-    }, 0);
+    // const orders = await Order.find({ 'doctor.doctor_id': doctorId }).select('total');
+    // const totalEarnings = orders.reduce((total, order) => {
+    //   return total + parseFloat(order.total || 0);  
+    // }, 0);
         
       return new Response(
         JSON.stringify({
