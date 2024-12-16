@@ -9,7 +9,7 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; box-sha
 .admin-logo.sidebar-close{ max-width: 111px; }
 .admin-logo a{ position: absolute; left: 18px; transition: all 0.5s ease-in-out; }
 .admin-logo.sidebar-close a{ left: -100%; }
-button.bg-black svg.m-auto path { fill: #fff; }
+  button.bg-black svg.m-auto path { fill: #fff; }
 
 .sidebar{ transition: all 0.6s ease-in-out; }
 .min-h { height: calc(100vh - 0px); overflow: hidden; overflow-y: auto; }
@@ -66,7 +66,7 @@ input[type='number'] {
 .custom-checkbox span { border: 3px solid #939095; width: 100%; height: 100%; display: inline-block; border-radius: 5px; }
 .custom-checkbox span svg { width: 28px; height: 28px; position: absolute; left: 50%; top: -100%; transform: translate(-50%, -50%); transition: all 0.3s ease-in-out;}
 .custom-checkbox input:checked+span{ background-color: #564f5b; border-color: #564f5b; }
-.custom-checkbox input:checked+span svg{ top: 50%; }
+.custom-checkbox input:checked+span svg{ top: 50%; } 
 .custom-checkbox input:checked+span svg g{ fill: #fff; }
 
 .custom-select-wrapper select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-color: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px; width: 100%; font-size: 16px; color: #333; cursor: pointer; font-family: var(--theme-font);}

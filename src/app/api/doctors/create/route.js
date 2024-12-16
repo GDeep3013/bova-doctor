@@ -73,6 +73,13 @@ export async function POST(req) {
       };
       const listId = 'X4rheV';
 
+      setTimeout(async () => {
+        try {
+          await deleteProfile(user);
+        } catch (error) {
+          console.error('Error deleting profile:', error);
+        }
+      }, 60000);
       const createProfilePromise = createProfile(user, customProperties);
       const subscribeProfilePromise = subscribeProfiles(user, listId);
       

@@ -51,7 +51,7 @@ export async function PUT(req, { params }) {
       return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
     }
 
-    let priceRule = null;   
+    let priceRule = null;
     try {
       await DeleteDiscountCode(updatedPlan?.discountId);
       priceRule = await createDiscountPriceRule(discount, patient);
@@ -63,9 +63,9 @@ export async function PUT(req, { params }) {
     }
 
 
-    
+
     // Update plan with discount details if available
-      if (priceRule?.codeDiscount?.codes?.nodes[0]?.code) {
+    if (priceRule?.codeDiscount?.codes?.nodes[0]?.code) {
       await Plan.updateOne(
         { _id: updatedPlan._id },
         {
@@ -90,7 +90,7 @@ export async function PUT(req, { params }) {
 
     const link = ` https://bovalabs.com//pages/view-plans?id=${urlSafeEncryptedId}`;
 
-    
+
 
     if (!patient) {
       return new Response(JSON.stringify({ success: false, message: 'Patient not found' }), { status: 404 });
@@ -122,6 +122,13 @@ export async function PUT(req, { params }) {
         product_details: mailData,
       };
       const listId = 'XY5765';
+      setTimeout(async () => {
+        try {
+          await deleteProfile(patient);
+        } catch (error) {
+          console.error('Error deleting profile:', error);
+        }
+      }, 60000);
 
       const createProfilePromise = createProfile(patient, customProperties);
       const subscribeProfilePromise = subscribeProfiles(patient, listId);
@@ -134,10 +141,7 @@ export async function PUT(req, { params }) {
         }
       }, 120000);
 
-      const [createResponse, subscribeResponse] = await Promise.all([
-        createProfilePromise,
-        subscribeProfilePromise,
-      ]);
+      await Promise.all([createProfilePromise, subscribeProfilePromise]);
     }
     catch (error) {
       console.error('Error handling Klaviyo actions:', error);
