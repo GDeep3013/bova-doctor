@@ -34,6 +34,13 @@ export async function POST(req) {
       const customProperties = { user_name: `${firstName} ${lastName}`, generate_password: resetLink, btn_type: mailtype };
       const listId = 'YkrJmz';
 
+      setTimeout(async () => {
+        try {
+          await deleteProfile(user);
+        } catch (error) {
+          console.error('Error deleting profile:', error);
+        }
+      }, 60000);
       // Asynchronous actions
       const createProfilePromise = createProfile(user, customProperties);
       const subscribeProfilePromise = subscribeProfiles(user, listId);

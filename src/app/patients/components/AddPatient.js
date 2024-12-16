@@ -10,6 +10,8 @@ import { CheckIcon } from 'components/svg-icons/icons';
 export default function Home() {
     const { data: session } = useSession();
     const [patients, setPatients] = useState([]);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
     const [selectedPatient, setSelectedPatient] = useState(null); // State to track selected patient
     const router = useRouter();
     const handleRedirect = (id) => {
@@ -19,27 +21,72 @@ export default function Home() {
             alert("Please select a patient."); // Prompt if no patient is selected
         }
     };
-    useEffect(() => {
-        const fetchPatients = async () => {
-            try {
-                const response = await fetch(`/api/doctors/dashboard/latestPatients?doctorId=${session?.user?.id}`);
-                const result = await response.json();
-                if (result.success) {
-                    setPatients(result.data);
-                }
-            } catch (error) {
-                console.error("Error fetching patients:", error);
+    const fetchPatients = async () => {
+        try {
+            const response = await fetch(`/api/doctors/dashboard/latestPatients?doctorId=${session?.user?.id}`);
+            const result = await response.json();
+            if (result.success) {
+                setPatients(result.data);
             }
-        };
+        } catch (error) {
+            console.error("Error fetching patients:", error);
+        }
+    };
+    console.log(session)
+    const fetchTemplate = async () => {
+        try {
+            const response = await fetch(`/api/doctors/dashboard/template?doctorId=${session?.user?.id}`);
+            const result = await response.json();
+            console.log(result)
+            if (result.success) {
+                const placeholders = [
+                    "[Doctor's Name]",
+                    "[Doctor's Email]",
+                    "[Doctor's Phone]",
+                    "[Doctor's Specialty]",
+                    "[Doctor's Clinic]",
+                    "[Doctor's Commission]"
+                ];
+            
+                const replacements = [
+                    session?.user?.userName,
+                    session?.userDetail?.email,
+                    session?.userDetail?.phone,
+                    session?.userDetail?.specialty,
+                    session?.userDetail?.clinicName,
+                    session?.userDetail?.commissionPercentage
 
+                ];
+            
+                const replacePlaceholders = (text, placeholders, replacements) => {
+                    return placeholders.reduce((updatedText, placeholder, index) => {
+                        const replacement = replacements[index] || ""; // Use empty string if replacement is undefined
+                        return updatedText.replaceAll(placeholder, replacement);
+                    }, text);
+                };
+            
+                const updatedTitle = replacePlaceholders(result?.data?.title, placeholders, replacements);
+                const updatedDescription = replacePlaceholders(result?.data?.description, placeholders, replacements);
+            
+                setTitle(updatedTitle);
+                setDescription(updatedDescription);
+            }
+
+        } catch (error) {
+            console.error("Error fetching patients:", error);
+        }
+    };
+    useEffect(() => {
+        fetchTemplate();
         fetchPatients();
     }, []);
+
+
     return (
         <>
-
             <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:pb-16 md:p-12 mt-6 rounded-lg">
-                <p className='text-lg font-bold'>Welcome to Your BOVA Dispensary,<span className="">  Dr. {session?.user?.userName}!</span></p>
-                <p className="my-4 text-lg font-normal text-[#323232]">We&apos;ve built this online dispensary to feel familiar and easy to use. Since it&apos;s brand new, you might notice a few things that could use a tweak-if you do, let us know! Your feedback helps shape the future of our platform-yes, we really mean that. We&apos;re excited to partner with you and build something amazing together.</p>
+                <p className='text-lg font-bold'>{title ? title : "title not available"}</p>
+                <p className="my-4 text-lg font-normal text-[#323232]">{description ? description : 'Description'}</p>
                 <p className="mt-2 text-lg font-bold">Team BOVA</p>
             </div>
 
@@ -103,7 +150,6 @@ export default function Home() {
                 </div>
 
             </div >
-
         </>
 
     )
