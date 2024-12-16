@@ -94,6 +94,10 @@ div#swal2-html-container { padding-top: 0;  }
 div#swal2-html-container{ color: #29282b; }
 .dashboard-inner select.form-select { background-position: 94% 20px}
 
+.theme-customizer input, .theme-customizer textarea { position: relative; background-color: #f7f7f7; font-size: 16px; text-overflow: ellipsis; line-height: normal; min-height: 44px; }
+.theme-customizer input:focus-visible, .theme-customizer textarea:focus-visible { border-color: #000; outline: none; box-shadow: none; }
+.theme-customizer .form-control > h2 { background: #d6dee5; padding: 14px 20px; text-transform: capitalize; border-bottom: 1px solid #e5e7eb; }
+
 @media screen and (min-width:1200px) and (max-width:1400px) {
 .login-after{ background-position: bottom !important; }
 }
@@ -134,6 +138,7 @@ div#swal2-html-container{ color: #29282b; }
   .create-popup-wrapper{ max-width: 500px; }
   .product-itm-mob{ max-width: 100%; }
   .need-help{ position: initial; margin-top: 40px; }
+  .theme-customizer .grid-cols-2 { grid-template-columns: 100%; }
 }
 
 @media screen and (max-width:480px) {

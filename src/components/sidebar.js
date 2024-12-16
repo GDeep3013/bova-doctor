@@ -13,10 +13,12 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const isActive = (path) => currentPath === path;
 
   const [isProfileOpen, setIsProfileOpen] = useState(isActive('/profile') || isActive('/admin/doctor') || isActive('/sales')); // Start profile section open if on relevant page
-  const [isPatientsOpen, setIsPatientsOpen] = useState(isActive('/patients/listing')||isActive('/patients/create')); // Patients section based on active route
+  const [isSettingOpen, setIsSettingOpen] = useState(isActive('/admin/products') || isActive('/admin/notification')); // Start profile section open if on relevant page
+  const [isPatientsOpen, setIsPatientsOpen] = useState(isActive('/patients/listing') || isActive('/patients/create')); // Patients section based on active route
   const [isPlansOpen, setIsPlansOpen] = useState(isActive('/plans/create-plan') || isActive('/plans/review') || isActive('/plans/incomplete')); // Plans section if any plan route is active
 
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
+  const toggleSetting = () => setIsSettingOpen(!isSettingOpen);
   const togglePatients = () => setIsPatientsOpen(!isPatientsOpen);
   const togglePlans = () => setIsPlansOpen(!isPlansOpen);
 
@@ -68,9 +70,32 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
               <PatientIcon /> Patient Listing
             </Link>
 
-            <Link href="/admin/settings/" className={`block text-xl ${isActive('/admin/settings') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
+            {/* <Link href="/admin/settings/" className={`block text-xl ${isActive('/admin/settings') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
               <SettingIcon /> Settings
-            </Link>
+            </Link> */}
+
+            <div>
+              <button onClick={toggleSetting} className={`text-xl font-medium text-[#3a3c3d]`}>
+                <SettingIcon /> Settings
+              </button>
+              {isSettingOpen && (
+                <ul className="pl-0 submenu my-4 space-y-1">
+                  <li>
+                    <Link href="/admin/products" className={`block text-lg ${isActive('/admin/products') ? 'text-[#53595B] font-bold' :
+                      'text-[#3a3c3d] hover:text-gray-900'}`}>
+                      Products
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/admin/notification" className={`block text-lg ${isActive('/admin/notification') ? 'text-[#53595B] font-bold' :
+                      'text-[#3a3c3d] hover:text-gray-900'}`}>
+                      Notifications
+                    </Link>
+
+                  </li>
+                </ul>
+              )}
+            </div>
           </>
         ) : (
           <>
@@ -106,12 +131,12 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
               </button>
               {isPatientsOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
-                    <li>
+                  <li>
                     <Link href="/patients/create" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/create') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Add
-                      </Link>
-                    </li>
-                    <li>
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/patients/listing" onClick={() => togglePatients(true)} className={`block text-lg  ${isActive('/patients/listing') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Search
                     </Link>
@@ -151,15 +176,15 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         <button onClick={handleLogout} className="block text-[#3a3c3d] hover:text-gray-900 text-xl">
           <LogoutIcon /> Logout
         </button>
-     
+
 
       </nav>
-     
+
       <div className='absolute bottom-[20px] need-help'>
-      <p className='text-md font-semibold text-[#53595B]'>Need Help?</p>
-      <Link href={"mailto:support@bovalabs.com"}  className='underline text-[#53595B]'>support@bovalabs.com</Link>
+        <p className='text-md font-semibold text-[#53595B]'>Need Help?</p>
+        <Link href={"mailto:support@bovalabs.com"} className='underline text-[#53595B]'>support@bovalabs.com</Link>
       </div>
-      
+
     </div>
   );
 }
