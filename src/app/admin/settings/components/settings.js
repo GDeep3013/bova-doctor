@@ -277,14 +277,14 @@ export default function CreatePlan() {
                                                                 key={index}
                                                                 className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
                                                             >
-                                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                                <td className="px-6 py-4 whitespace-nowrap min-w-[125px]">
                                                                     <img
                                                                         src={product.image?.src || '/images/product-img1.png'}
                                                                         alt={product.title}
                                                                         className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
                                                                     />
                                                                 </td>
-                                                                <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{product.title}</td>
+                                                                <td className="px-6 py-4 whitespace-break-spaces text-gray-700 font-medium">{product.title}</td>
                                                                 <td className="px-6 py-4 whitespace-nowrap text-gray-700">{product?.variants[0]?.sku || 'N/A'}</td>
                                                                 <td className="px-6 py-4 whitespace-nowrap text-gray-700">${product?.variants[0]?.price || 'N/A'}</td>
                                                                 <td className="px-6 py-4 whitespace-nowrap">

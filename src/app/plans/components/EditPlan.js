@@ -771,7 +771,7 @@ export default function CreatePlan() {
                                                                     key={index}
                                                                     className={`border-b hover:bg-gray-50 ${isProductAdded ? 'opacity-50 pointer-events-none' : ''}`} // Disable product selection if already added
                                                                 >
-                                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                                    <td className="px-6 py-4 whitespace-nowrap min-w-[125px] ">
                                                                         <img
                                                                             src={
                                                                                 variant.image && variant.image.url
@@ -784,7 +784,7 @@ export default function CreatePlan() {
                                                                             className="w-[40px] md:w-[80px] h-[40px] md:h-[80px] p-0 md:p-2 bg-[#F9F9F9] rounded-lg"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{variant.product.title}</td>
+                                                                    <td className="px-6 py-4  whitespace-break-spaces text-gray-700 font-medium">{variant.product.title}</td>
                                                                     <td className="px-6 py-4 whitespace-nowrap text-gray-700">{variant.sku || 'N/A'}</td>
                                                                     <td className="px-6 py-4 whitespace-nowrap text-gray-700">${variant.price || 'N/A'}</td>
                                                                     <td className="px-6 py-4 whitespace-nowrap">

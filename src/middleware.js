@@ -12,7 +12,7 @@ export async function middleware(req) {
   // Define accessible routes based on user roles
   const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password','/terms-services','/not-found'];
   
-  const adminRoutes = ['/admin/dashboard', '/admin/settings', '/admin/patients', '/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit','/admin/notification' ];
+  const adminRoutes = ['/admin/dashboard', '/admin/settings', '/admin/patients', '/admin/doctor/listing', '/admin/doctor', '/admin/doctor/create', '/admin/doctor/edit','/admin/products','/admin/notification' ];
   const doctorRoutes = [
     '/dashboard',
     '/profile',
@@ -82,6 +82,7 @@ export const config = {
     '/admin/patients/:path*',
     '/admin/doctor/:path*',
     '/admin/theme',
+    '/admin/products',
     '/admin/notification' ,
 
     //doctor
