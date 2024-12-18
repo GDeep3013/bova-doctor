@@ -4,7 +4,7 @@ const PlanSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: ['pending', 'completed'],
+        enum: ['pending', 'completed','ordered'],
     },
     message: {
         type: String

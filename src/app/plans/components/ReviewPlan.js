@@ -83,7 +83,13 @@ export default function ReviewPlan() {
 
         }
     }
-
+    const formatDate = (isoString) => {
+        const date = new Date(isoString); // Convert to Date object
+        const day = String(date.getDate()).padStart(2, '0'); // Get day with leading zero
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-based index)
+        const year = date.getFullYear(); // Get full year
+        return `${day}-${month}-${year}`;
+      };
     useEffect(() => {
         fetchPlans(page);
     }, [session,page]);
@@ -111,6 +117,7 @@ export default function ReviewPlan() {
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Email</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Phone</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Status</th>
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Created Date</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">View</th>
                             </tr>
                         </thead>
@@ -128,6 +135,7 @@ export default function ReviewPlan() {
                                     <td className="py-2 px-4">{plan?.patient_id?.email}</td>
                                     <td className="py-2 px-4">{formatPhoneNumber(plan?.patient_id?.phone) || "Not available"}</td>
                                     <td className="py-2 px-4">{plan.status || "Not available"}</td>
+                                    <td className="py-2 px-4">{formatDate(plan?.createdAt) || "Not available"}</td>
                                     <td className="py-2 px-4">
                                         <div className='flex'>
                                             <img
