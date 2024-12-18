@@ -102,7 +102,6 @@ export async function PUT(req, { params }) {
           user_name: `${firstName} ${lastName}`,
           user_email:email,
         };
-        console.log(user, customProperties);
         const listId = 'WPB4EV';
 
         setTimeout(async () => {
