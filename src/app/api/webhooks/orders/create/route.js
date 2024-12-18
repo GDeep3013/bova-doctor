@@ -71,7 +71,7 @@ export async function POST(req) {
 
     // Save all OrderItems to the database
     await OrderItem.insertMany(orderItems);
-    await Plan.findByIdAndUpdate(planId, { status: "completed" }, { new: true })
+    await Plan.findByIdAndUpdate(planId, { status: "ordered" }, { new: true })
     return new Response(JSON.stringify({ message: 'Order and items saved successfully' }), { status: 201 });
 
   } catch (error) {

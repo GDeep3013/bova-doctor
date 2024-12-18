@@ -139,14 +139,29 @@ export default function CreateDoctor() {
 
                     router.push('/admin/doctor');
                 } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Failed to update doctor.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: "#3c96b5",
-                    });
-                    setLaoding(false)
+                 
+                        const result = await response.json();
+                        const errors = result.error;
+                        if (errors) {
+    
+                            if (errors.includes('Email already exists')) {
+                                setErrors({ ...errors, email: 'Email already exists' });
+                            }
+                            if (errors.includes('Phone number already exists')) {
+                                setErrors({ ...errors, phone: 'Phone number already exists' });
+                            }
+                        }
+                        setLaoding(false)
+    
+                 
+                    // Swal.fire({
+                    //     title: 'Error!',
+                    //     text: 'Failed to update doctor.',
+                    //     icon: 'error',
+                    //     confirmButtonText: 'OK',
+                    //     confirmButtonColor: "#3c96b5",
+                    // });
+                    // setLaoding(false)
 
                 }
             } catch (error) {
