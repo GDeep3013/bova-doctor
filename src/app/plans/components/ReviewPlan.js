@@ -145,7 +145,7 @@ export default function ReviewPlan() {
                                             <td className="py-2 px-4">{plan.order?.doctor.doctor_payment ?('$ '+ plan?.order?.doctor?.doctor_payment.toFixed(2)): "Not Available Yet"} </td>
                                             <td className="py-2 px-4">{plan.status ? (
                                                 <span
-                                                    className={`px-2 py-1 rounded-full text-white ${plan.status === "pending"
+                                                    className={`px-2 py-1 rounded-full capitalize text-white ${plan.status === "pending"
                                                         ? "bg-yellow-500"
                                                         : "bg-green-500"
                                                         }`}

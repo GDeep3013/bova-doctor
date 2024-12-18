@@ -51,7 +51,6 @@ const ThemeCustomized = () => {
       const response = await fetch(`/api/template/edit`);
       if (!response.ok) throw new Error('Failed to fetch templates');
       const data = await response.json();
-      console.log(data?.newDoctorTemplates[0]?._id);
       setNewDoctorId(data?.newDoctorTemplates[0]?._id)
       setNewDoctorTitle(data?.newDoctorTemplates[0]?.title)
       setNewDoctorDescription(data?.newDoctorTemplates[0]?.description)
