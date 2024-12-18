@@ -146,8 +146,8 @@ export default function ReviewPlan() {
                                             <td className="py-2 px-4">{plan.status ? (
                                                 <span
                                                     className={`px-2 py-1 rounded-full capitalize text-white ${plan.status === "pending"
-                                                        ? "bg-yellow-500"
-                                                        : "bg-green-500"
+                                                        ? "bg-[#b5b8bf]"
+                                                        : "bg-[#3c96b5]"
                                                         }`}
                                                 >
                                                     {plan.status}
