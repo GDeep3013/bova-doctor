@@ -13,10 +13,11 @@ export default function CreatePlan() {
     const [products, setProducts] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [patients, setPatients] = useState([]);
-    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null ,mail_data: [], discount: ""});
+    const [formData, setFormData] = useState({ items: [], message: '', patient_id: null, mail_data: [], discount: "" });
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [variants, setVariants] = useState([]);
     const [fetchLoader, setfetchLoader] = useState(false);
+    const [planStatus, setPlanStatus] = useState('');
 
     const [dicountPrice, setDicountPrice] = useState(0);
     const [doctorCommission, setDoctorCommission] = useState(0)
@@ -147,6 +148,7 @@ export default function CreatePlan() {
         try {
             const response = await fetch(`/api/plans/edit/${id}`);
             const data = await response.json();
+            // console.log(data?.status);
             if (response.ok) {
                 const mappedItems = data.items.map(item => ({
                     id: item.id,
@@ -164,6 +166,7 @@ export default function CreatePlan() {
                         notes: item.properties.notes || ''
                     }
                 }));
+                setPlanStatus(data?.status);
                 mappedItems.forEach(mappedItem => {
                     const matchingProduct = variants.find(item => item.id === mappedItem.id);
                     if (matchingProduct) {
@@ -185,10 +188,10 @@ export default function CreatePlan() {
                 setFormData(prevData => ({
                     ...prevData,
                     items: mappedItems,
-                    discount: data.discount?data.discount:"",
+                    discount: data.discount ? data.discount : "",
                     mailData: mappedMailData,
                     message: data?.message
-                }));    
+                }));
                 setfetchLoader(false)
             } else {
                 Swal.fire({
@@ -367,12 +370,13 @@ export default function CreatePlan() {
                                     </div>)
                                 })
                                 }
-                               {selectedItems.length > 0 && <div className="p-8 pb-4 border-t border-[#AFAAAC]">
+                                {selectedItems.length > 0 && <div className="p-8 pb-4 border-t border-[#AFAAAC]">
                                     <textarea
                                         value={formData.message}
                                         onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}
-                                        className="w-full border border-customBorder rounded-md focus:outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none focus:border-indigo-500 text-[#52595b] text-base xl:text-lg"
+                                        className="w-full border border-customBorder rounded-md focus:outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none  text-[#52595b] text-base xl:text-lg"
                                         rows="4"
+                                        readOnly
                                         placeholder="Message"
                                     ></textarea>
                                 </div>}
@@ -440,14 +444,15 @@ export default function CreatePlan() {
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div className='text-right py-5'>
-                                        <button
-                                            onClick={() => { router.push(`/plans/edit-plan/${id}`); }}
-                                            // disabled={formData.items.length === 0 || !formData.patient_id}
-                                            className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
-                                            Edit Patient Plan
-                                        </button>
-                                    </div>
+                                    {planStatus != 'ordered' &&
+                                        <div className='text-right py-5'>
+                                            <button
+                                                onClick={() => { router.push(`/plans/edit-plan/${id}`); }}
+                                                // disabled={formData.items.length === 0 || !formData.patient_id}
+                                                className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-white min-w-[150px] min-h-[46px] ">
+                                                Edit Patient Plan
+                                            </button>
+                                        </div>}
                                 </div>
                             </div>
                         </div>

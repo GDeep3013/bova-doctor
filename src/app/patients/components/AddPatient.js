@@ -37,7 +37,7 @@ export default function Home() {
         try {
             const response = await fetch(`/api/doctors/dashboard/template?doctorId=${session?.user?.id}`);
             const result = await response.json();
-            console.log(result)
+        
             if (result.success) {
                 const placeholders = [
                     "[Doctor's Name]",

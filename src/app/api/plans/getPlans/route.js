@@ -1,6 +1,7 @@
 import connectDB from '../../../../db/db';
 import Patient from '../../../../models/patient';
 import Plan from '../../../../models/plan';
+import Order from '../../../../models/order';
 
 export async function GET(req) {
   // Connect to the database
@@ -29,11 +30,21 @@ export async function GET(req) {
     .sort({ createdAt: -1 })
     .skip(skip)
       .limit(limit).populate('patient_id');
-      const totalPlan = await Plan.countDocuments({ patient_id: { $in: patientIds } });
+    const totalPlan = await Plan.countDocuments({ patient_id: { $in: patientIds } });
+    
+    const plansWithOrders = await Promise.all(
+      plans.map(async (plan) => {
+        const order = await Order.findOne({ plan_id: plan._id }); // Check for an order linked to the plan
+        return {
+          ...plan.toObject(), // Convert the Mongoose document to a plain JS object
+          order: order || null, // Include the order data or null if it doesn't exist
+        };
+      })
+    );
 
       return new Response(
         JSON.stringify({
-          plans: plans,
+          plans: plansWithOrders,
           pagination: {
             total: totalPlan,
             page,

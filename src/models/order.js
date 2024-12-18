@@ -15,6 +15,7 @@ const orderSchema = new mongoose.Schema({
   fulfillment: { type: String, required: null },
   order_date: { type: Date, required: true },
   patient_id: { type: String, default: null },
+  plan_id: { type: String, default: null },
   doctor: {
     doctor_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' },
     doctor_payment: { type: Number, required: true }

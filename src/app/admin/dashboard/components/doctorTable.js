@@ -21,7 +21,7 @@ export default function doctorTable({ doctors }) {
                 <table className="min-w-[max-content] w-full text-left custom-table">
                     <thead>
                         <tr className="border-b">
-                            <th className="py-2 p-2">S.No</th>
+                            <th className="py-2 p-2">Serial No.</th>
                             <th className='p-2'>Doctors</th>
                             <th className='p-2'>Total Patients</th>
                             <th className='p-2'>Total Plans</th>

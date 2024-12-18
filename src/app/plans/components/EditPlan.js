@@ -41,6 +41,7 @@ export default function CreatePlan() {
         { label: "50% OFF", value: "50" },
     ];
 
+    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
     const fetchPatients = async () => {
 
         try {
@@ -241,8 +242,8 @@ export default function CreatePlan() {
                     name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
                     email: session?.userDetail?.email,
                     clinicName: session?.userDetail?.clinicName
-                }
-
+                },
+                doctorCommission: formData.discount ? (commissionPercentage - formData.discount) : commissionPercentage,
             }
             const response = await fetch(`/api/plans/edit/${id}`, {
                 method: 'PUT',
@@ -395,7 +396,7 @@ export default function CreatePlan() {
 
     // const discount = subtotal * parseFloat(formData.discount);
 
-    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
+    
 
     // const doctorCommission = subtotal * (commissionPercentage / 100);
     useEffect(() => {
