@@ -49,7 +49,7 @@ export default function CreatePlan() {
         }
     }
 
-
+    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
     const fetchSavedProduct = async () => {
         try {
             const response = await fetch(`/api/products?status=active`);
@@ -211,7 +211,8 @@ export default function CreatePlan() {
                     name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
                     email: session?.userDetail?.email,
                     clinicName: session?.userDetail?.clinicName
-                }
+                },
+                doctorCommission: formData.discount ? (commissionPercentage - formData.discount) : commissionPercentage,
 
             }
             const response = await fetch('/api/plans/create', {
@@ -286,8 +287,7 @@ export default function CreatePlan() {
 
     // const discount = subtotal * parseFloat(formData.discount);
 
-    const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
-
+  
 
     useEffect(() => {
         if (subtotal > 0 && parseFloat(commissionPercentage) > 0) {

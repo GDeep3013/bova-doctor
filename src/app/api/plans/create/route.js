@@ -1,5 +1,7 @@
 import connectDB from '../../../../db/db';
 import Plan from '../../../../models/plan'
+import doctor from '../../../../models/Doctor'
+
 import Patient from '../../../../models/patient';
 
 import NextCrypto from 'next-crypto';
@@ -16,8 +18,10 @@ export async function POST(req) {
     formData: { items, patient_id, message, discount },
     status = 'pending',
     selectedItems,
-    doctor
+    doctor,
+    doctorCommission
   } = await req.json();
+
 
   const planData = {
     patient_id,
@@ -25,6 +29,7 @@ export async function POST(req) {
     status,
     items,
     discount,
+    doctorCommission,
     createdAt: new Date(),
   };
 

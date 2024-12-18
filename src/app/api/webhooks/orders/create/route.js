@@ -11,7 +11,7 @@ export async function POST(req) {
 
   try {
     const orderData = await req.json(); // Parse incoming JSON data
-    
+  
     // Find the _patient_id from the first line item that has it, or default to null
     const mainPatientId = orderData.line_items.find(item => item.properties?._patient_id)?.properties._patient_id || null;
     const planId = orderData.line_items.find(item => item.properties?._plan_id)?.properties._plan_id || null;
@@ -21,7 +21,7 @@ export async function POST(req) {
 
     const patient = await Patient.findById(mainPatientId)
     const plan = await Plan.findById(planId)
-   
+    
     if (patient.doctorId) {
       const doctor = await Doctor.findById(patient.doctorId)
       if (doctor) {
@@ -48,6 +48,7 @@ export async function POST(req) {
       fulfillment: orderData.fulfillment_status || "unfulfilled",
       order_date: new Date(orderData.created_at),
       patient_id: mainPatientId,
+      plan_id: planId,
       doctor: {
         doctor_id: patient ? patient.doctorId : null, 
         doctor_payment: doctorPayment 

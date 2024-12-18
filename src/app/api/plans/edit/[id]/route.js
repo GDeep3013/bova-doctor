@@ -38,11 +38,11 @@ export async function PUT(req, { params }) {
   await connectDB();
   const crypto = new NextCrypto();
   const { id } = params;
-  const { formData: { items, patient_id, message ,discount}, status = 'pending', selectedItems, doctor } = await req.json();
+  const { formData: { items, patient_id, message ,discount}, status = 'pending', selectedItems, doctor ,doctorCommission} = await req.json();
   try {
     const updatedPlan = await Plan.findByIdAndUpdate(
       id,
-      { items, status, patient_id, message, discount,updatedAt: new Date() },
+      { items, status, patient_id, message, discount,doctorCommission,updatedAt: new Date() },
       { new: true }
     ).populate('patient_id');
 

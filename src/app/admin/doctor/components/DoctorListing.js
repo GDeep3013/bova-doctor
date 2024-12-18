@@ -87,8 +87,7 @@ export default function DoctorListing() {
                     <table className="min-w-[max-content] w-full bg-white doctor-listing rounded-[8px]">
                         <thead>
                             <tr className="bg-gray-100 border-b"> 
-                                <th className="py-2 px-4 text-left text-[#53595B] ">Sr no.</th>
-
+                                <th className="py-2 px-4 text-left text-[#53595B] ">Serial No.</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Name</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Email</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Phone</th>
@@ -106,7 +105,7 @@ export default function DoctorListing() {
                                 </tr>
                             ) : doctors.map((doctor, index) => (
                                 <tr key={doctor._id} className="hover:bg-gray-50">     
-                                    <td className='w-[100px] text-center'> {index + 1}</td>
+                                    <td className='w-[100px] text-center py-2 px-4' > {index + 1}</td>
 
                                     <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
                                     <td className="py-2 px-4">{doctor.email}</td>
