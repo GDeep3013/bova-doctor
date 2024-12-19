@@ -50,6 +50,16 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+.html-content ol,.html-content ul{
+padding-left: 20px;
+}
+ol li[data-list="bullet"] {
+  list-style-type: disc !important;
+}
+
+.ql-editor ol li{ padding-left: 0 !important; }
+.ql-editor ol li[data-list="bullet"]:before{ content: none !important; }
+
 
 .lds-ripple { display: inline-block; position: absolute; width: 80px; height: 80px; top: 50%; left: 50%; transform: translate(-50%, -50%); } .lds-ripple div { position: absolute; border: 4px solid #564f5b; opacity: 1; border-radius: 50%; -webkit-animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite; animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite; }
  .lds-ripple div:nth-child(2) { -webkit-animation-delay: -0.8s; animation-delay: -0.8s; }
@@ -100,11 +110,13 @@ div#swal2-html-container{ color: #29282b; }
 .theme-customizer input:focus-visible, .theme-customizer textarea:focus-visible { border-color: #000; outline: none; box-shadow: none; }
 .theme-customizer .form-control > h2 { background: #d6dee5; padding: 14px 20px; text-transform: capitalize; border-bottom: 1px solid #e5e7eb; }
 
+@media screen and (min-width:2000px) {
+  .login-outer { background-position: 0 75%; }
+}
+
 @media screen and (min-width:1200px) and (max-width:1400px) {
 .login-after{ background-position: bottom !important; }
 }
-
-
 @media screen and (min-width: 1025px) and (max-width:1199px) {
 .login-after{ background-position: bottom; }
 .login-form{ max-width: 420px !important; right: 40px !important; }
