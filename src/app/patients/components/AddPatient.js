@@ -86,7 +86,8 @@ export default function Home() {
         <>
             <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:pb-16 md:p-12 mt-6 rounded-lg">
                 <p className='text-lg font-bold'>{title ? title : "Title is not available"}</p>
-                <p className="my-4 text-lg font-normal text-[#323232]">{description ? description : 'Description is not available'}</p>
+                <p className='my-4 text-lg font-normal text-[#323232] html-content' dangerouslySetInnerHTML={{ __html: description ? description : 'Description is not available' }}></p>
+                {/* <p className="my-4 text-lg font-normal text-[#323232]">{description ? description : 'Description is not available'}</p> */}
                 <p className="mt-2 text-lg font-bold">Team BOVA</p>
             </div>
 

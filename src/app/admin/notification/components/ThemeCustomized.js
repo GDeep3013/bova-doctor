@@ -1,9 +1,13 @@
 "use client"
 import AppLayout from 'components/Applayout';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
-
+// import "react-quill/dist/quill.snow.css";
+import '../../../quill.css';
+import dynamic from 'next/dynamic';
+// import ReactQuill from 'react-quill-new';
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 const ThemeCustomized = () => {
   const router = useRouter();
   const [newDoctorTitle, setNewDoctorTitle] = useState('');
@@ -33,11 +37,12 @@ const ThemeCustomized = () => {
   const validateFormOldDoctor = () => {
     let valid = true;
     const newErrors = {};
+    const plainTextDescription = oldDoctorDescription.replace(/<[^>]*>/g, '').trim();
     if (!oldDoctorTitle) {
       newErrors.oldDoctorTitle = 'Title is required';
       valid = false;
     }
-    if (!oldDoctorDescription) {
+    if (!plainTextDescription) {
       newErrors.oldDoctorDescription = 'Description is required';
       valid = false;
     }
@@ -45,7 +50,6 @@ const ThemeCustomized = () => {
     setErrors(newErrors);
     return valid;
   };
-
   const fetchTemplates = async () => {
     try {
       const response = await fetch(`/api/template/edit`);
@@ -80,7 +84,7 @@ const ThemeCustomized = () => {
         if (!response.ok) throw new Error('Failed to save template');
         Swal.fire({
           title: 'Success!',
-          iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+          iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" className="custom-icon" style="width: 63px; height: 63px;">',
           text: 'New Doctor Template Updated Successfully!',
           confirmButtonText: 'OK',
           confirmButtonColor: "#3c96b5",
@@ -112,7 +116,7 @@ const ThemeCustomized = () => {
         if (!response.ok) throw new Error('Failed to save template');
         Swal.fire({
           title: 'Success!',
-          iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+          iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" className="custom-icon" style="width: 63px; height: 63px;">',
           text: 'Old Doctor Template Updated Successfully!',
           confirmButtonText: 'OK',
           confirmButtonColor: "#3c96b5",
@@ -158,11 +162,26 @@ const ThemeCustomized = () => {
               </div>
               <div className='form-field mb-4'>
                 <label>Description</label>
-                <textarea
+                <ReactQuill
+                  theme="snow"
+                  value={newDoctorDescription}
+                  onChange={(value) => setNewDoctorDescription(value)}
+                  modules={{
+                    toolbar: [
+                      [{ 'header': '1' }, { 'header': '2' },],
+                      [{ 'list': 'ordered' },{ 'list': 'bullet' }],
+                      ['bold', 'italic', 'underline',]
+                    ]
+                  }}
+                  formats={['header', 'font', 'list','bullet', 'bold', 'italic', 'underline',
+                  ]}
+                  placeholder="Write some description..."
+                />
+                {/* <textarea
                   value={newDoctorDescription}
                   onChange={(e) => setNewDoctorDescription(e.target.value)}
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300 h-32"
-                ></textarea>
+                ></textarea> */}
                 {errors.newDoctorDescription && <p className="text-red-500 text-sm">{errors.newDoctorDescription}</p>}
               </div>
               <button
@@ -190,11 +209,27 @@ const ThemeCustomized = () => {
               </div>
               <div className='form-field mb-4'>
                 <label>Description</label>
-                <textarea
+                {/* <textarea
                   value={oldDoctorDescription}
                   onChange={(e) => setOldDoctorDescription(e.target.value)}
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300 h-32"
-                ></textarea>
+                ></textarea> */}
+                <ReactQuill
+                  theme="snow"
+                  onChange={(value) => setOldDoctorDescription(value)}
+                  value={oldDoctorDescription}
+                  modules={{
+                    toolbar: [
+                      [{ 'header': '1' }, { 'header': '2' },],
+                      [{ 'list': 'ordered' },{ 'list': 'bullet' }],
+                      ['bold', 'italic', 'underline',]
+
+                    ]
+                  }}
+                  formats={['header', 'font', 'list','bullet', 'bold', 'italic', 'underline',
+                  ]}
+                  placeholder="Write some description..."
+                />
                 {errors.oldDoctorDescription && <p className="text-red-500 text-sm">{errors.oldDoctorDescription}</p>}
               </div>
               <button
@@ -208,25 +243,25 @@ const ThemeCustomized = () => {
           <div className='note'>
           </div>
         </div>
-        <div class="bg-[#f7f7f7] border-l-4 border-gray-500 p-6 rounded-lg">
-          <div class="flex items-start gap-3">
-            <svg class="w-6 h-6 text-[#53595B] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+        <div className="bg-[#f7f7f7] border-l-4 border-gray-500 p-6 rounded-lg">
+          <div className="flex items-start gap-3">
+            <svg className="w-6 h-6 text-[#53595B] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
             </svg>
             <div>
-              <p class="text-lg text-[#53595B] font-bold">Note:</p>
-              <p class="text-sm text-[#53595B]">
+              <p className="text-lg text-[#53595B] font-bold">Note:</p>
+              <p className="text-sm text-[#53595B]">
                 Use the following variables in your template:
               </p>
             </div>
           </div>
-          <ul class="list-disc mt-4 ml-8 space-y-2 text-gray-800 text-sm">
-            <li class="text-[#53595B]">[Doctor&apos;s Name]</li>
-            <li class="text-[#53595B]">[Doctor&apos;s Email]</li>
-            <li class="text-[#53595B]">[Doctor&apos;s Phone]</li>
-            <li class="text-[#53595B]">[Doctor&apos;s Specialty]</li>
-            <li class="text-[#53595B]">[Doctor&apos;s Clinic]</li>
-            <li class="text-[#53595B]">[Doctor&apos;s Commission]</li>
+          <ul className="list-disc mt-4 ml-8 space-y-2 text-gray-800 text-sm">
+            <li className="text-[#53595B]">[Doctor&apos;s Name]</li>
+            <li className="text-[#53595B]">[Doctor&apos;s Email]</li>
+            <li className="text-[#53595B]">[Doctor&apos;s Phone]</li>
+            <li className="text-[#53595B]">[Doctor&apos;s Specialty]</li>
+            <li className="text-[#53595B]">[Doctor&apos;s Clinic]</li>
+            <li className="text-[#53595B]">[Doctor&apos;s Commission]</li>
           </ul>
         </div> </div>
     </AppLayout>
