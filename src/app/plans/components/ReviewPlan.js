@@ -102,7 +102,11 @@ export default function ReviewPlan() {
         fetchPlans(page);
     }, [session, page])
 
- 
+
+    const EarningPercentage = (price) => {
+        return session?.userDetail?.commissionPercentage - price +"%"
+    }
+
     return (
         <AppLayout>
             <div className="mx-auto">
@@ -123,7 +127,7 @@ export default function ReviewPlan() {
                                         <th className="py-2 px-4 text-left text-[#53595B] ">Name</th>
                                         <th className="py-2 px-4 text-left text-[#53595B] ">Email</th>
                                         <th className="py-2 px-4 text-left text-[#53595B] ">Patient Discount</th>
-                                        <th className="py-2 px-4 text-left text-[#53595B] ">Commission </th>
+                                        <th className="py-2 px-4 text-left text-[#53595B] ">Earning Rate (%)</th>
                                         <th className="py-2 px-4 text-left text-[#53595B] ">Status</th>
                                         <th className="py-2 px-4 text-left text-[#53595B] ">Created Date</th>
                                         <th className="py-2 px-4 text-left text-[#53595B] ">View</th>
@@ -142,7 +146,8 @@ export default function ReviewPlan() {
                                             <td className="py-2 px-4">{plan?.patient_id?.firstName} {plan?.patient_id?.lastName}</td>
                                             <td className="py-2 px-4">{plan?.patient_id?.email}</td>
                                             <td className="py-2 px-4">{plan.discount ? plan?.discount + '%' : "Not available"}</td>
-                                            <td className="py-2 px-4">{plan.order?.doctor.doctor_payment ?('$ '+ plan?.order?.doctor?.doctor_payment.toFixed(2)): "Not Available Yet"} </td>
+                                            {/* <td className="py-2 px-4">{plan.order?.doctor.doctor_payment ? ('$ ' + plan?.order?.doctor?.doctor_payment.toFixed(2)) : "Not Available Yet"} </td> */}
+                                            <td className="py-2 px-4">{plan.doctorCommission ? (plan.doctorCommission + "%") : (plan.discount?EarningPercentage(plan.discount) :session?.userDetail?.commissionPercentage+"%")} </td>
                                             <td className="py-2 px-4">{plan.status ? (
                                                 <span
                                                     className={`px-2 py-1 rounded-full capitalize text-white ${plan.status === "pending"
@@ -169,9 +174,8 @@ export default function ReviewPlan() {
                                                         onClick={() => handleEdit(plan._id)}
                                                         title='Edit plan'
                                                         disabled={plan.status === "ordered"}
-                                                        className={`text-blue-600 hover:underline px-4 w-6 ${
-                                                            plan.status === "ordered" ? "cursor-not-allowed opacity-50" : ""
-                                                          }`}
+                                                        className={`text-blue-600 hover:underline px-4 w-6 ${plan.status === "ordered" ? "cursor-not-allowed opacity-50" : ""
+                                                            }`}
                                                     >
                                                         <EditIcon />
                                                     </button>
@@ -179,9 +183,8 @@ export default function ReviewPlan() {
                                                         onClick={() => handleDelete(plan._id)}
                                                         title='Delete plan'
                                                         disabled={plan.status === "ordered"}
-                                                         className={`text-blue-600 hover:underline px-4 w-6 ${
-                                                            plan.status === "ordered" ? "cursor-not-allowed opacity-50" : ""
-                                                          }`}
+                                                        className={`text-blue-600 hover:underline px-4 w-6 ${plan.status === "ordered" ? "cursor-not-allowed opacity-50" : ""
+                                                            }`}
                                                     >
                                                         <DeleteIcon className="w-2 h-2" />
                                                     </button>
