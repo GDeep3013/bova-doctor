@@ -110,6 +110,10 @@ div#swal2-html-container{ color: #29282b; }
 .theme-customizer input:focus-visible, .theme-customizer textarea:focus-visible { border-color: #000; outline: none; box-shadow: none; }
 .theme-customizer .form-control > h2 { background: #d6dee5; padding: 14px 20px; text-transform: capitalize; border-bottom: 1px solid #e5e7eb; }
 .html-content p, .html-content ol , .html-content ul { margin-bottom: 11px;}
+
+.copy svg { width: 19px; height: 19px; cursor: pointer; }
+.copy { display: inline-block; vertical-align: middle; margin-left: 8px; }
+
 @media screen and (min-width:2000px) {
   .login-outer { background-position: 0 75%; }
 }
