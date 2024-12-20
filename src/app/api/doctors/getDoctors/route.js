@@ -26,12 +26,16 @@ export async function GET(req) {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
+      const doctorsWithSignupStatus = doctors.map((doctor) => ({
+        ...doctor.toObject(),
+        signupStatus: doctor.password ? 'Completed' : 'Incomplete',
+      }));
     const totalDoctors = await Doctor.countDocuments({ _id: { $ne: userId } });
 
     // Return the list of doctors along with pagination info
     return new Response(
       JSON.stringify({
-        data: doctors,
+        data: doctorsWithSignupStatus,
         pagination: {
           total: totalDoctors,
           page,

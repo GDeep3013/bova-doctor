@@ -43,11 +43,8 @@ export async function POST(req) {
       return new Response(JSON.stringify({ error: errors }), { status: 400 });
     }
 
-    // Generate reset token and expiry (for password reset)
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
 
-    // Create a new doctor document in the database
     const newDoctor = await Doctor.create({
       firstName,
       lastName,
@@ -57,8 +54,7 @@ export async function POST(req) {
       userType,
       specialty,
       commissionPercentage,
-      resetToken,
-      resetTokenExpiry,
+      resetToken,     
     });
 
     const mailtype = 'Set Up Password';

@@ -10,8 +10,7 @@ export async function POST(req) {
     const { token, newPassword } = await req.json();
 
     const user = await Doctor.findOne({
-      resetToken: token,
-      resetTokenExpiry: { $gte: new Date() }, // Check if the token is still valid
+      resetToken: token,     
     });
 
     if (!user) {
@@ -26,8 +25,7 @@ export async function POST(req) {
       { _id: user._id }, // Find user by their unique ID
       {
         password: hashedPassword,
-        resetToken: null, // Clear the reset token
-        resetTokenExpiry: null, // Clear the token expiry
+        resetToken: null,   
       }
     );
 
