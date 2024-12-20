@@ -47,7 +47,7 @@ export default function ForgetPassword() {
           Swal.fire({
             title: 'Success!',                  
             iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
-            text: 'Password change link send on our email',        
+            text: 'Check your email! We’ve sent a link to reset your password. Be sure to check your spam folder if you don’t see it in your inbox. ',        
             confirmButtonText: 'OK',
             confirmButtonColor: "#3c96b5",
           });

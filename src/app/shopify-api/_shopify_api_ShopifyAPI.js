@@ -237,13 +237,13 @@ export async function createDiscountCode(priceRule) {
 
         if (!response.ok) {
             throw new Error(
-                `Shopify API error creating customer: ${response.statusText}`
+                `Shopify API error creating discount: ${response.statusText}`
             );
         }
         const data = await response.json();
         return data.discount_code;
     } catch (error) {
-        console.error("Error creating customer:", error.message);
+        console.error("Error Creating discount:", error.message);
         throw error;
     }
 }
@@ -339,14 +339,27 @@ async function updateCustomer(customer_id, firstName, lastName, phone = null, up
             }),
         });
         if (!response.ok) {
-            throw new Error(
-                `Shopify API error creating customer: ${response.statusText}`
-            );
+            const errorData = await response.json();
+            const errors = [];
+            if (errorData.errors) {
+                if (errorData.errors.phone && errorData.errors.phone.includes('Enter a valid phone number')) {
+                    errors.push('Invalid phone number format.');
+                }
+                if (errorData.errors.email && errorData.errors.email.includes('Email already exists')) {
+                    errors.push('Email already exists');
+                }
+            }
+            if (errors.length === 0) {
+                errors.push(`Shopify API error updating customer: ${response.statusText}`);
+            }
+
+            return Response.json({ error: errors }, { status: 400 });
+
         }
         const data = await response.json();
         return data.customer;
     } catch (error) {
-        console.error("Error creating customer:", error.message);
+        console.error("Error Updating customer:", error.message);
         throw error;
     }
 }
