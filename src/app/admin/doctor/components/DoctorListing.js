@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { DeleteIcon, EditIcon } from 'components/svg-icons/icons';
+import { CloseIcon, CopyIcon, DeleteIcon, EditIcon } from 'components/svg-icons/icons';
 import Loader from 'components/loader';
 export default function DoctorListing() {
     const { data: session } = useSession();
@@ -15,6 +15,8 @@ export default function DoctorListing() {
     const [limit] = useState(10); // Set the limit of doctors per page
     const router = useRouter();
     const [fetchLoader, setFetchLoader] = useState(false);
+    const [isModal, setIsModal] = useState(false);
+    const [resetLink, setResetLink] = useState('false');
 
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -69,7 +71,18 @@ export default function DoctorListing() {
             fetchDoctors(page);
         }
     }, [session, page]);
-    console.log(doctors)
+
+    const handleCopy = (link) => {
+        setIsModal(true);
+        const url = process.env.NEXT_PUBLIC_BASE_URL + '/reset-password?token=' + link
+        setResetLink(url)  
+    }
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(resetLink);     
+        setIsModal(false);
+    };
+    
     return (
         <AppLayout>
             <div className="mx-auto">
@@ -114,7 +127,7 @@ export default function DoctorListing() {
                                         <td className="py-2 px-4">{doctor.phone || "Not available"}</td>
                                         <td className="py-2 px-4">{doctor.specialty || "Not available"}</td>
                                         <td className="py-2 px-4">{doctor.signupStatus ? (
-                                            <span
+                                            <>   <span
                                                 className={`px-2 py-1 rounded-full capitalize text-white ${doctor.signupStatus === "Incomplete"
                                                     ? "bg-[#b5b8bf]"
                                                     : "bg-[#3c96b5]"
@@ -122,6 +135,8 @@ export default function DoctorListing() {
                                             >
                                                 {doctor.signupStatus}
                                             </span>
+                                                {doctor.signupStatus == "Incomplete" && <div className='copy' title={"Copy reset password link"} onClick={() => { handleCopy(doctor.resetToken) }}> <CopyIcon /></div>}
+                                            </>
                                         ) : (
                                             "Not available"
                                         )}</td>
@@ -168,6 +183,37 @@ export default function DoctorListing() {
                     </div>
                 </>}
             </div>
+
+            {isModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                    <div className="bg-white p-6 pb-4 rounded-lg shadow-lg w-full max-w-[95%] md:max-w-[580px]">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold mb-3">Copy the Reset Password Link</h2>
+
+                            <button
+                                className="text-gray-500 hover:text-gray-700"
+                                onClick={() => { setIsModal(false); setResetLink(''); }}
+                            >
+                                <CloseIcon />
+                            </button>
+                        </div>
+                        <div>
+                            <input
+                                type="text"
+                                value={resetLink}
+                                readOnly
+                                className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:none"
+                            />
+                            <button
+                                className="py-2 mt-4 float-right px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-[150px] min-h-[46px] "
+                                onClick={handleCopyLink}
+                            >
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AppLayout>
     );
 }
