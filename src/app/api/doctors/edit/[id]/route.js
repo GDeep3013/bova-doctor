@@ -57,24 +57,27 @@ export async function PUT(req, { params }) {
     const firstName = formData.get('firstName');
     const lastName = formData.get('lastName');
     const email = formData.get('email');
-    const phone = formData.get('phone');
+
+    let phone = formData.get('phone');
+    phone = phone ? phone.trim() : null;
     const userType = formData.get('userType');
     const specialty = formData.get('specialty');
     const clinicName = formData.get('clinicName');
     const commissionPercentage = formData.get('commissionPercentage');
 
     // Check for existing doctor with the same email or phone (excluding the current doctor)
-    const existingDoctor = await Doctor.findOne({
+    const query = {
       $or: [
-        { email, _id: { $ne: id } },
-        { phone, _id: { $ne: id } },
+        { email, ...(id ? { _id: { $ne: id } } : {}) },
+        ...(phone ? [{ phone, ...(id ? { _id: { $ne: id } } : {}) }] : []),
       ],
-    });
+    };
 
+    const existingDoctor = await Doctor.findOne(query);
     if (existingDoctor) {
       const errors = [];
       if (existingDoctor.email === email) errors.push('Email already exists');
-      if (existingDoctor.phone === phone) errors.push('Phone number already exists');
+      if (phone && existingDoctor.phone === phone) errors.push('Phone number already exists');
       return new Response(JSON.stringify({ error: errors }), { status: 400 });
     }
 
@@ -97,10 +100,10 @@ export async function PUT(req, { params }) {
       try {
 
         // console.log(oldEmail, firstName, lastName ,'users');
-        const user = { email:oldEmail, firstName, lastName };
+        const user = { email: oldEmail, firstName, lastName };
         const customProperties = {
           user_name: `${firstName} ${lastName}`,
-          user_email:email,
+          user_email: email,
         };
         const listId = 'WPB4EV';
 

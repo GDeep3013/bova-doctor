@@ -42,26 +42,25 @@ export default function CreateDoctor() {
             valid = false;
         }
 
-        if (!phone) {
-            newErrors.phone = 'Phone number is required';
-            valid = false;
-        } else if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
-            newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
-            valid = false;
+        if (phone) {
+            if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
+                newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
+                valid = false;
+            }
         }
         if (userType == '') {
             newErrors.userType = 'User type field is required';
             valid = false;
         }
 
-        if (!specialty) {
-            newErrors.specialty = 'Specialty field is required';
-            valid = false;
-        }
-        if (!commissionPercentage) {
-            newErrors.commissionPercentage = 'Commission Percentage field is required';
-            valid = false;
-        }
+        // if (!specialty) {
+        //     newErrors.specialty = 'Specialty field is required';
+        //     valid = false;
+        // }
+        // if (!commissionPercentage) {
+        //     newErrors.commissionPercentage = 'Commission Percentage field is required';
+        //     valid = false;
+        // }
         setErrors(newErrors);
         return valid;
     };
@@ -109,7 +108,7 @@ export default function CreateDoctor() {
                 formData.append('firstName', firstName);
                 formData.append('lastName', lastName);
                 formData.append('email', email);
-                formData.append('phone', phone);
+                 formData.append('phone', phone);     
                 formData.append('userType', userType);
                 formData.append('specialty', specialty);
                 formData.append('clinicName', clinicName ? clinicName : '');
@@ -139,21 +138,21 @@ export default function CreateDoctor() {
 
                     router.push('/admin/doctor');
                 } else {
-                 
-                        const result = await response.json();
-                        const errors = result.error;
-                        if (errors) {
-    
-                            if (errors.includes('Email already exists')) {
-                                setErrors({ ...errors, email: 'Email already exists' });
-                            }
-                            if (errors.includes('Phone number already exists')) {
-                                setErrors({ ...errors, phone: 'Phone number already exists' });
-                            }
+
+                    const result = await response.json();
+                    const errors = result.error;
+                    if (errors) {
+
+                        if (errors.includes('Email already exists')) {
+                            setErrors({ ...errors, email: 'Email already exists' });
                         }
-                        setLaoding(false)
-    
-                 
+                        if (errors.includes('Phone number already exists')) {
+                            setErrors({ ...errors, phone: 'Phone number already exists' });
+                        }
+                    }
+                    setLaoding(false)
+
+
                     // Swal.fire({
                     //     title: 'Error!',
                     //     text: 'Failed to update doctor.',
@@ -209,7 +208,7 @@ export default function CreateDoctor() {
                                                 className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`} />
                                             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                                         </div>
-                                   </div>
+                                    </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="relative">
                                             <input
@@ -236,7 +235,7 @@ export default function CreateDoctor() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="relative">
                                             <input
-                                                type="text"  
+                                                type="text"
                                                 placeholder="Specialty"
                                                 value={specialty ?? ""}
                                                 onChange={(e) => { setSpecialty(e.target.value); if (errors.specialty) setErrors({ ...errors, specialty: '' }); }}
@@ -255,7 +254,7 @@ export default function CreateDoctor() {
                                                 onChange={(e) => { setCommissionPercentage(e.target.value); if (errors.commissionPercentage) setErrors({ ...errors, commissionPercentage: '' }); }}
                                                 className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.commissionPercentage ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                             />
-                                        <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
+                                            <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
 
                                             {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>}
                                         </div>
@@ -277,7 +276,7 @@ export default function CreateDoctor() {
 
                                         <div className="relative">
                                             <input
-                                                type="text"             
+                                                type="text"
                                                 placeholder="Clinic Name"
                                                 value={clinicName ?? ""}
                                                 onChange={(e) => { setClinicName(e.target.value); }}

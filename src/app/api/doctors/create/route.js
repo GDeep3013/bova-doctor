@@ -21,23 +21,28 @@ export async function POST(req) {
     const firstName = formData.get('firstName');
     const lastName = formData.get('lastName');
     const email = formData.get('email');
-    const phone = formData.get('phone');
+    let phone = formData.get('phone');
+    phone = phone ? phone.trim() : null;
     const userType = formData.get('userType');
     const clinicName = formData.get('clinicName');
     const specialty = formData.get('specialty');
     const commissionPercentage = formData.get('commissionPercentage');
-
+    console.log(phone, 'phone')
     // Check if the doctor already exists with the same email or phone
-    const existingDoctor = await Doctor.findOne({
-      $or: [{ email }, { phone }],
-    });
-
+    const query = {
+      $or: [
+        { email },
+        ...(phone ? [{ phone }] : []) // Only check phone if provided
+      ]
+    };
+    const existingDoctor = await Doctor.findOne(query);
     if (existingDoctor) {
       const errors = [];
       if (existingDoctor.email === email) {
         errors.push('Email already exists');
       }
-      if (existingDoctor.phone === phone) {
+
+      if (phone && existingDoctor.phone === phone) {
         errors.push('Phone number already exists');
       }
       return new Response(JSON.stringify({ error: errors }), { status: 400 });
@@ -54,7 +59,7 @@ export async function POST(req) {
       userType,
       specialty,
       commissionPercentage,
-      resetToken,     
+      resetToken,
     });
 
     const mailtype = 'Set Up Password';
@@ -78,7 +83,7 @@ export async function POST(req) {
       }, 60000);
       const createProfilePromise = createProfile(user, customProperties);
       const subscribeProfilePromise = subscribeProfiles(user, listId);
-      
+
       setTimeout(async () => {
         try {
           const deleteProfileResponse = await deleteProfile(user);

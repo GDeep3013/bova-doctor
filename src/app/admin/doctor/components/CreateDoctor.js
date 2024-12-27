@@ -35,26 +35,25 @@ export default function CreateDoctor() {
             newErrors.email = 'Email address is invalid';
             valid = false;
         }
-
-        if (!phone) {
-            newErrors.phone = 'Phone number is required';
-            valid = false;
-        } else if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
-            newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
-            valid = false;
+        if (phone) {
+            if (!/^\d{3}-?\d{3}-?\d{4}$/.test(phone)) {
+                newErrors.phone = 'Phone number must be valid (e.g., 123-456-7890 or 1234567890)';
+                valid = false;
+            }
         }
         if (userType == '') {
             newErrors.userType = 'User type field is required';
             valid = false;
         }
-        if (!specialty) {
-            newErrors.specialty = 'Specialty field is required';
-            valid = false;
-        }
-        if (!commissionPercentage) {
-            newErrors.commissionPercentage = 'Commission Percentage field is required';
-            valid = false;
-        }
+        // if (!specialty) {
+        //     newErrors.specialty = 'Specialty field is required';
+        //     valid = false;
+        // }
+        // if (!commissionPercentage) {
+        //     newErrors.commissionPercentage = 'Commission Percentage field is required';
+        //     valid = false;
+        // }
+
         setErrors(newErrors);
         return valid;
     };
@@ -177,7 +176,7 @@ export default function CreateDoctor() {
 
                                     <div className="relative">
                                         <input
-                                             type="text"
+                                            type="text"
                                             placeholder="Phone Number"
                                             value={phone ?? ""}
                                             onChange={(e) => { setPhone(e.target.value); if (errors.phone) setErrors({ ...errors, phone: '' }); }}
@@ -195,7 +194,7 @@ export default function CreateDoctor() {
                                             onChange={(e) => { setSpecialty(e.target.value); if (errors.specialty) setErrors({ ...errors, specialty: '' }); }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.specialty ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
                                         />
-                                        {errors.specialty && <p className="text-red-500 text-sm mt-1">{errors.specialty}</p>}
+                                        {/* {errors.specialty && <p className="text-red-500 text-sm mt-1">{errors.specialty}</p> */}
 
                                     </div>
                                     <div className="relative">
@@ -210,7 +209,7 @@ export default function CreateDoctor() {
                                         />
                                         <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
 
-                                        {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>}
+                                        {/* {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>} */}
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

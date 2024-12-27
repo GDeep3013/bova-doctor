@@ -75,14 +75,14 @@ export default function DoctorListing() {
     const handleCopy = (link) => {
         setIsModal(true);
         const url = process.env.NEXT_PUBLIC_BASE_URL + '/reset-password?token=' + link
-        setResetLink(url)  
+        setResetLink(url)
     }
 
     const handleCopyLink = () => {
-        navigator.clipboard.writeText(resetLink);     
+        navigator.clipboard.writeText(resetLink);
         setIsModal(false);
     };
-    
+
     return (
         <AppLayout>
             <div className="mx-auto">
