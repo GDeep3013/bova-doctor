@@ -59,7 +59,7 @@ export async function PUT(req, { params }) {
     const email = formData.get('email');
 
     let phone = formData.get('phone');
-    phone = phone ? phone.trim() : null;
+    phone = phone ? phone.trim() : '';
     const userType = formData.get('userType');
     const specialty = formData.get('specialty');
     const clinicName = formData.get('clinicName');
