@@ -22,7 +22,7 @@ export async function POST(req) {
     const lastName = formData.get('lastName');
     const email = formData.get('email');
     let phone = formData.get('phone');
-    phone = phone ? phone.trim() : null;
+    phone = phone ? phone.trim() : '';
     const userType = formData.get('userType');
     const clinicName = formData.get('clinicName');
     const specialty = formData.get('specialty');
