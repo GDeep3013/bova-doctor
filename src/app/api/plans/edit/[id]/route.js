@@ -54,7 +54,10 @@ export async function PUT(req, { params }) {
     let priceRule = null;
     try {
       await DeleteDiscountCode(updatedPlan?.discountId);
-      priceRule = await createDiscountPriceRule(discount, patient);
+      if (discount) {       
+        priceRule = await createDiscountPriceRule(discount, patient);
+      }
+      // priceRule = await createDiscountPriceRule(discount, patient);
       // if (priceRule) {
       //   discountCode = await createDiscountCode(priceRule);
       // }
