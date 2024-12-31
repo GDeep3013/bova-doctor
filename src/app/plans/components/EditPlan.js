@@ -27,6 +27,7 @@ export default function CreatePlan() {
     const [doctorCommission, setDoctorCommission] = useState(0)
 
     const [variants, setVariants] = useState([]);
+    const [allVariants, setAllVariants] = useState([]);
     const DISCOUNT_CODE_PERCENTAGE = [
         { label: "Select discount", value: "" },
         { label: "5% OFF", value: "5" },
@@ -59,14 +60,15 @@ export default function CreatePlan() {
     }
 
     const fetchSavedProduct = async () => {
-        try {
+ 
+         try {
             const response = await fetch(`/api/products?status=active`);
             if (!response.ok) throw new Error('Failed to fetch product status');
             const data = await response.json();
             // Check if the data has products and then map and push variant IDs into an array
             if (Array.isArray(data) && data.length > 0) {
                 const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
-                getVariants(variantIds)
+                getVariants(variantIds, 'active');
                 // setLoader(false)
             } else {
                 console.log('No products found or data is empty');
@@ -77,7 +79,27 @@ export default function CreatePlan() {
             // setLoader(false)
         }
     };
-    const getVariants = async (variantIds) => {
+    const fetchAllProduct = async () => {
+        try {
+            const response = await fetch(`/api/products`);
+            if (!response.ok) throw new Error('Failed to fetch product status');
+            const data = await response.json();
+            // Check if the data has products and then map and push variant IDs into an array
+            if (Array.isArray(data) && data.length > 0) {
+                const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
+                getVariants(variantIds,'All')
+                // setLoader(false)
+            } else {
+                console.log('No products found or data is empty');
+                // setLoader(false)
+            }
+        } catch (error) {
+            console.error('Error fetching product status:', error);
+            // setLoader(false)
+        }
+    };
+
+    const getVariants = async (variantIds,type) => {
         try {
             const response = await fetch(`/api/shopify/products/variants`, {
                 method: 'POST',
@@ -110,21 +132,29 @@ export default function CreatePlan() {
                     }))
                 }
             }));
-            setVariants(variants);
+            if (type === 'All') {                
+                setAllVariants(variants)
+            }
+            if (type === 'active') {
+                setVariants(variants)                
+            }
         } catch (error) {
             console.error("Error updating product status:", error);
         }
     };
-
+    
     useEffect(() => {
+        fetchAllProduct()
         setFetchLoader(true);
         fetchPatients();
         fetchSavedProduct()
         // setFetchLoader(false);
     }, []);
 
+    
 
     const handleSelectProduct = (variant) => {
+        console.log(variant,'tesrt');
         setSelectedItems((prevSelectedItems) => {
             const productExists = prevSelectedItems.some((item) => item.id === variant.id);
             if (productExists) return prevSelectedItems;
@@ -173,6 +203,7 @@ export default function CreatePlan() {
             return { ...prevData, items: updatedItems, mail_data: updatedMailData };
         });
     };
+
     function handleFormDataChange(itemId, field, value) {
         setFormData((prevData) => {
             const updatedItems = prevData.items.map((item) => {
@@ -300,6 +331,7 @@ export default function CreatePlan() {
 
     // console.log(formData.items)
 
+
     const fetchPlanData = async () => {
         try {
             const response = await fetch(`/api/plans/edit/${id}`);
@@ -339,7 +371,7 @@ export default function CreatePlan() {
                 }));
 
                 mappedItems.forEach(mappedItem => {
-                    const matchingProduct = variants.find(item => item.id == mappedItem.id);
+                    const matchingProduct = allVariants.find(item => item.id == mappedItem.id);
 
 
                     if (matchingProduct) {

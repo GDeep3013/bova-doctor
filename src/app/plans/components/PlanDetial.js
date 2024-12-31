@@ -50,7 +50,7 @@ export default function CreatePlan() {
 
     const fetchSavedProduct = async () => {
         try {
-            const response = await fetch(`/api/products?status=active`);
+            const response = await fetch(`/api/products`);
             if (!response.ok) throw new Error('Failed to fetch product status');
 
             const data = await response.json();
