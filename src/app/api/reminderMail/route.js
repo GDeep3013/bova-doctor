@@ -51,7 +51,6 @@ export async function GET(req) {
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const twoDaysAgo = new Date(startOfToday.getTime() - 48 * 60 * 60 * 1000);
-
     try {
         const pendingPlans = await Plan.find({
             status: 'pending',
@@ -64,19 +63,25 @@ export async function GET(req) {
         if (!pendingPlans.length) {
             return new Response(JSON.stringify({ success: true, message: 'No pending plans found.' }), { status: 200 });
         }
-
         const crypto = new NextCrypto();
-
-        await Promise.all(pendingPlans.map(async (plan) => {
+        await Promise.all(pendingPlans.map(async (plan,index) => {
             const { firstName, lastName, email, doctorId } = plan.patient_id;
             const encryptedId = await crypto.encrypt(plan._id.toString());
             const urlSafeEncryptedId = encryptedId.replace(/\//g, '-').replace(/=/g, '_');
             const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
-
             const variantIds = plan.items.map(item => item.id);
             const variants = await getVariants(variantIds);
+            let createdAt = plan?.createdAt;
 
-            const mailData = variants.map(selectedItem => {
+            if (createdAt) {
+                createdAt = new Intl.DateTimeFormat('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                }).format(new Date(createdAt));
+            }
+                   
+           const mailData = variants.map(selectedItem => {
                 const matchingItem = plan.items.find(item => item.id === selectedItem.id);
                 const plainDescription = selectedItem.product.descriptionHtml.replace(/<[^>]*>/g, '').trim();
                 return {
@@ -88,17 +93,16 @@ export async function GET(req) {
             });
 
             const doctor = await Doctor.findOne({ _id: doctorId });
-
             const customProperties = {
                 patient_name: `${firstName} ${lastName}`,
                 doctor_name: `${doctor?.firstName} ${doctor?.lastName}`,
                 doctor_email: doctor?.email,
                 doctor_clinic_name: doctor?.clinicName,
                 payment_link: link,  
-                product_details: mailData
+                product_details: mailData,
+                created_date:createdAt
             };
-            // console.log(customProperties);
-
+          
             const listId = 'Yt5xRh';
             const createProfilePromise = createProfile(plan?.patient_id, customProperties);
             const subscribeProfilePromise = subscribeProfiles(plan?.patient_id, listId);
@@ -110,8 +114,7 @@ export async function GET(req) {
                     console.error('Error deleting profile:', error);
                 }
             }, 120000);      
-      
-            const [createResponse, subscribeResponse] = await Promise.all([
+          const [createResponse, subscribeResponse] = await Promise.all([
               createProfilePromise,
               subscribeProfilePromise,
             ]);
