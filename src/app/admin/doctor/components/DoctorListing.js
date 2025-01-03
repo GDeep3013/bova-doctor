@@ -17,7 +17,7 @@ export default function DoctorListing() {
     const [fetchLoader, setFetchLoader] = useState(false);
     const [isModal, setIsModal] = useState(false);
     const [resetLink, setResetLink] = useState('false');
-
+    const itemsPerPage = 10;
     const handleDelete = async (id) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
@@ -120,8 +120,8 @@ export default function DoctorListing() {
                                     </tr>
                                 ) : doctors.map((doctor, index) => (
                                     <tr key={doctor._id} className="hover:bg-gray-50">
-                                        <td className='w-[100px] text-center py-2 px-4' > {index + 1}</td>
-
+                                        {/* <td className='w-[100px] text-center py-2 px-4' > {index + 1}</td> */}
+                                        <td>{(page - 1) * itemsPerPage + index + 1}</td>
                                         <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
                                         <td className="py-2 px-4">{doctor.email}</td>
                                         <td className="py-2 px-4">{doctor.phone || "Not available"}</td>

@@ -80,7 +80,7 @@ export default function PatientList() {
                                 </tr>
                             ) : patients.map((patient,index) => (
                                 <tr key={patient._id} className="hover:bg-gray-50 ">
-                                    <td className="py-2 px-4">{index+1}</td>
+                                    <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>                                 
                                     <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
                                     <td className="py-2 px-4">{patient.email}</td>
                                     <td className="py-2 px-4">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
