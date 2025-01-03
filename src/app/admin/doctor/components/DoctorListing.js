@@ -17,7 +17,7 @@ export default function DoctorListing() {
     const [fetchLoader, setFetchLoader] = useState(false);
     const [isModal, setIsModal] = useState(false);
     const [resetLink, setResetLink] = useState('false');
-    const itemsPerPage = 10;
+    const itemsPerPage = 30;
     const handleDelete = async (id) => {
         const result = await Swal.fire({
             title: 'Are you sure?',
@@ -82,6 +82,32 @@ export default function DoctorListing() {
         navigator.clipboard.writeText(resetLink);
         setIsModal(false);
     };
+    const formatDate= (isoString) => {
+        const date = new Date(isoString);
+        // Format the date
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        // Format the time
+        // const hours = String(date.getHours()).padStart(2, '0');
+        // const minutes = String(date.getMinutes()).padStart(2, '0');
+        // const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${day}-${month}-${year}`;
+    };
+    const formatTime= (isoString) => {
+        const date = new Date(isoString);
+        // Format the date
+        // const day = String(date.getDate()).padStart(2, '0');
+        // const month = String(date.getMonth() + 1).padStart(2, '0');
+        // const year = date.getFullYear();
+
+        // Format the time
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+    };
 
     return (
         <AppLayout>
@@ -133,7 +159,11 @@ export default function DoctorListing() {
                                                     : "bg-[#3c96b5]"
                                                     }`}
                                             >
-                                                {doctor.signupStatus}
+                                                {doctor.signupStatus === "Incomplete" ? doctor.signupStatus : (doctor.passwordCreatedDate ?
+                                                    <span title={formatTime(doctor.passwordCreatedDate)}>{formatDate(doctor.passwordCreatedDate)}</span>
+                                                    
+                                                    : <span title={formatTime(doctor.updatedAt)}>{formatDate(doctor.updatedAt)}</span>)
+                                                }
                                             </span>
                                                 {doctor.signupStatus == "Incomplete" && <div className='copy' title={"Copy reset password link"} onClick={() => { handleCopy(doctor.resetToken) }}> <CopyIcon /></div>}
                                             </>

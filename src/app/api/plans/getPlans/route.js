@@ -11,8 +11,8 @@ export async function GET(req) {
   const { searchParams } = req.nextUrl;
   const userId = searchParams.get('userId'); // Extract userId (doctorId) from query params
   const url = new URL(req.url);
-  const page = parseInt(url.searchParams.get('page') || '1', 10); // Default to page 1
-  const limit = parseInt(url.searchParams.get('limit') || '10', 10); // Default to 10 items per page
+  const page = parseInt(url.searchParams.get('page') || '1', 30); // Default to page 1
+  const limit = parseInt(url.searchParams.get('limit') || '30', 30); // Default to 10 items per page
   const skip = (page - 1) * limit;
   if (!userId) {
     return new Response(JSON.stringify({ error: 'User ID is required' }), {

@@ -8,8 +8,8 @@ export async function GET() {
     await connectDB();
 
     try {
-        // Fetch all doctors and calculate their earnings
-        const allDoctors = await Doctor.find();
+    
+        const allDoctors = await Doctor.find({ userType: "Doctor" });
 
         const doctorEarningsData = await Promise.all(
             allDoctors.map(async (doctor) => {
@@ -29,14 +29,36 @@ export async function GET() {
                 };
             })
         );
+        const totalItemCount = await Order.aggregate([
+            {
+              $group: {
+                _id: null, // No grouping key, summing across all documents
+                totalItems: { $sum: { $toInt: "$item_count" } } // Convert item_count to integer and sum
+              }
+            }
+          ]);
 
+          const units = totalItemCount[0]?.totalItems || 0; // If no documents, total is 0
+        
+          
         // Sort doctors by revenue in descending order and take the top 8
         const topEarningDoctors = doctorEarningsData
             .sort((a, b) => b.revenue - a.revenue)
-            .slice(0, 7);
+            .slice(0, 10);
 
-        const totalDoctors = await Doctor.countDocuments();
+        const totalDoctors = await Doctor.countDocuments({ userType: "Doctor" });
         const totalPatient = await Patient.countDocuments();
+        const doctorsSignedIn = await Doctor.countDocuments({ 
+            password: { $exists: true, $ne: '' }, 
+            userType: "Doctor" 
+          });
+          const inviteSent = await Doctor.countDocuments({ 
+            password: { $exists: false }, 
+            resetToken: { $exists: true }, 
+            userType: "Doctor" 
+          });
+
+    
 
         // Get the last 6 months including the current month
         const currentDate = new Date();
@@ -82,7 +104,7 @@ export async function GET() {
                     totalRevenue: 1,
                     _id: 0,
                 },
-            }, 
+            },
         ]);
 
         // Map monthly revenue data to match the months array
@@ -100,6 +122,9 @@ export async function GET() {
             )?.totalRevenue || 0;
 
         return Response.json({
+            unitSolds:units,
+            doctorsSignedIn: doctorsSignedIn,
+            inviteSent:inviteSent,
             doctorsData: topEarningDoctors,
             totalDoctors: totalDoctors,
             totalPatient: totalPatient,

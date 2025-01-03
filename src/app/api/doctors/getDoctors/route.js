@@ -9,8 +9,8 @@ export async function GET(req) {
     // Extract userId, page, and limit from the query string in the URL
     const url = new URL(req.url);
     const userId = url.searchParams.get('userId');
-    const page = parseInt(url.searchParams.get('page') || '1', 10); // Default to page 1
-    const limit = parseInt(url.searchParams.get('limit') || '10', 10); // Default to 10 items per page
+    const page = parseInt(url.searchParams.get('page') || '1', 30); // Default to page 1
+    const limit = parseInt(url.searchParams.get('limit') || '30', 30); // Default to 10 items per page
     const skip = (page - 1) * limit;
 
     // If no userId is provided, return an error response
@@ -22,14 +22,17 @@ export async function GET(req) {
     }
 
     // Fetch doctors excluding the one with the given userId, and apply pagination
-    const doctors = await Doctor.find({ _id: { $ne: userId } })
+    const doctors = await Doctor.find({
+      _id: { $ne: userId },
+      userType: "Doctor"
+    })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
-      const doctorsWithSignupStatus = doctors.map((doctor) => ({
-        ...doctor.toObject(),
-        signupStatus: doctor.password ? 'Completed' : 'Incomplete',
-      }));
+    const doctorsWithSignupStatus = doctors.map((doctor) => ({
+      ...doctor.toObject(),
+      signupStatus: doctor.password ? 'Completed' : 'Incomplete',
+    }));
     const totalDoctors = await Doctor.countDocuments({ _id: { $ne: userId } });
 
     // Return the list of doctors along with pagination info
