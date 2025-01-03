@@ -54,13 +54,18 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
             </Link>
             <div>
               <button onClick={toggleProfile} className={`text-xl font-medium text-[#3a3c3d]`}>
-                <ProfileIcon /> Add Doctor
+                <ProfileIcon />  Doctors
               </button>
               {isProfileOpen && (
                 <ul className="pl-0 submenu my-4 space-y-1">
                   <li>
+                    <Link href="/admin/doctor/create" className={`block text-lg ${isActive('/admin/doctor/create') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
+                      Add Doctor
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/admin/doctor" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
-                      Doctors Listing
+                      Analytics
                     </Link>
                   </li>
                 </ul>

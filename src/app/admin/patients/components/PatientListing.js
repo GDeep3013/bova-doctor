@@ -14,7 +14,7 @@ export default function PatientList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [error, setError] = useState(null);
-    const itemsPerPage = 10; // Adjust this value to set the number of patients per page
+    const itemsPerPage = 30; // Adjust this value to set the number of patients per page
 
     function formatPhoneNumber(phoneNumber) {
         if (!phoneNumber) return phoneNumber;

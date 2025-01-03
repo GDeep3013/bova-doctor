@@ -1,7 +1,7 @@
 'use client'
 import AppLayout from 'components/Applayout';
 import DoctorTable from './doctorTable';
-import { ReactionIcon, StethoscopeIcon } from 'components/svg-icons/icons';
+import { ReactionIcon, StethoscopeIcon ,InviteSend ,MedicinePill} from 'components/svg-icons/icons';
 import AdminGraph from './adminGraph';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -17,7 +17,10 @@ export default function AdminDashboard() {
     const [graphValue, SetGraphValue] = useState([]);
     const [fetchLoader, setFetchLoader] = useState(false);
 
-
+    const [doctorsSignedIn, SetDoctorsSignedIn] = useState('');
+    const [inviteSent, SetInviteSent] = useState('');
+    const [unitSolds, SetUnitSolds] = useState('');
+ 
     const fetchData = async () => {
         try {
             setFetchLoader(true)
@@ -31,6 +34,9 @@ export default function AdminDashboard() {
                 ? data?.doctorsData.filter(doctor => doctor.id !== session.userDetail._id)
                     : doctors;
             
+                SetDoctorsSignedIn(data?.doctorsSignedIn)
+                SetUnitSolds(data?.unitSolds)
+                SetInviteSent(data?.inviteSent)
                 setCurrentMonthEarning(data.currentMonthEarnings)
                 setTotalDoctors(data.totalPatient)
                 setTotalPatient(data.totalDoctors - 1)
@@ -52,15 +58,26 @@ export default function AdminDashboard() {
 
     const cards = [
         {
-            title: totalPatient + ' Doctors',
-            subtitle: 'Total Doctors Using BOVA',
+            title: doctorsSignedIn + ' Doctors',
+            subtitle: 'Total Number of Doctors Signed In',
             icon: <StethoscopeIcon />,
+        },
+        {
+            title: inviteSent + ' Doctors',
+            subtitle: 'Have Yet to Sign in',
+            icon: <InviteSend />,
+        },
+        {
+            title: unitSolds + ' Units',
+            subtitle: 'Total Number of Units Sold by Doctors',
+            icon: <MedicinePill />,
         },
         {
             title: totalDoctors + ' Patients',
             subtitle: 'Total Number of Patients',
             icon: <ReactionIcon />,
         },
+        
     ];
 
     return (
@@ -79,18 +96,18 @@ export default function AdminDashboard() {
                     <div className='flex min-[1361px]:space-x-5 max-[1360px]:flex-wrap'>
                         <DoctorTable className="w-full" doctors={doctors} />
                         <div className='w-full max-[1360px]:mt-4'>
-                            <div className="mt-5 min-[1025px]:mt-0 flex max-[575px]:gap-y-4 min-[576px]:space-x-5 max-[575px]:flex-wrap">
+                            <div className="mt-5 min-[1025px]:mt-0 flex flex-wrap justify-center gap-x-4 gap-y-2 sm:gap-x-6 sm:gap-y-3">
                                 {cards.map((card, index) => (
                                     <div
                                         key={index}
-                                        className="flex justify-between items-center bg-[#F9F9F9] rounded-lg p-4 xl:p-5 w-full shadow-sm"
+                                        className="max-[575px]:w-full max-[767px]:w-[48%] w-[48%] flex justify-between items-center bg-[#F9F9F9] rounded-lg p-4 xl:p-5 shadow-sm"
                                     >
                                         <div>
                                             <h3 className="text-base md:text-xl xl:text-xl text-[#53595B] font-bold">{card.title}</h3>
                                             <p className="text-sm mt-1 text-gray-500">{card.subtitle}</p>
                                         </div>
                                         <div className="flex-shrink-0 bg-[#EBEDEB] w-[41px] h-[41px] rounded-[5px] shadow-sm relative card-icon">
-                                            <div className="text-3xl text-[#53595B] absolute card-svg">
+                                            <div className="text-3xl text-[#53595B] absolute card-svg w-[45px] h-[45px]">
                                                 {card.icon}
                                             </div>
                                         </div>
