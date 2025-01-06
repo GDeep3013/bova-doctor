@@ -60,6 +60,7 @@ export async function POST(req) {
       specialty,
       commissionPercentage,
       resetToken,
+      reminderDate: new Date()
     });
 
     const mailtype = 'Set Up Password';

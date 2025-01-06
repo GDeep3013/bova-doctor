@@ -37,6 +37,7 @@ const PlanSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    reminderDate: { type: Date, default: Date.now },
 });
 PlanSchema.pre('save', function (next) {
     this.updatedAt = Date.now();
