@@ -20,7 +20,8 @@ const doctorSchema = new mongoose.Schema({
     profileImage: { type: String },
     resetToken: { type: String }, // Token to reset password
     resetTokenExpiry: { type: Date },
-    passwordCreatedDate: { type: Date },
+    passwordCreatedDate: { type: Date },    
+    reminderDate: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);

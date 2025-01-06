@@ -1,9 +1,9 @@
-import connectDB from '../../../db/db';
-import Plan from '../../../models/plan';
-import Patient from '../../../models/patient';
-import Doctor from '../../../models/Doctor';
+import connectDB from '../../../../db/db';
+import Plan from '../../../../models/plan';
+import Patient from '../../../../models/patient';
+import Doctor from '../../../../models/Doctor';
 import NextCrypto from 'next-crypto';
-import { createProfile, subscribeProfiles, deleteProfile } from '../../klaviyo/klaviyo';
+import { createProfile, subscribeProfiles, deleteProfile } from '../../../klaviyo/klaviyo';
 
 const getVariants = async (variantIds) => {
     try {
@@ -45,6 +45,9 @@ const getVariants = async (variantIds) => {
     }
 };
 
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 export async function GET(req) {
     await connectDB();
 
@@ -54,17 +57,26 @@ export async function GET(req) {
     try {
         const pendingPlans = await Plan.find({
             status: 'pending',
-            createdAt: {
+            reminderDate: {
                 $gte: twoDaysAgo,
                 $lt: startOfToday
             }
         }).populate('patient_id');
 
+        const pendingPlanscountDocuments = await Plan.countDocuments({
+            status: 'pending',
+            reminderDate: {
+                $gte: twoDaysAgo,
+                $lt: startOfToday
+            }
+        }).populate('patient_id');
+
+        console.log(pendingPlanscountDocuments);
         if (!pendingPlans.length) {
             return new Response(JSON.stringify({ success: true, message: 'No pending plans found.' }), { status: 200 });
         }
         const crypto = new NextCrypto();
-        await Promise.all(pendingPlans.map(async (plan,index) => {
+        for (const plan of pendingPlans) {
             const { firstName, lastName, email, doctorId } = plan.patient_id;
             const encryptedId = await crypto.encrypt(plan._id.toString());
             const urlSafeEncryptedId = encryptedId.replace(/\//g, '-').replace(/=/g, '_');
@@ -80,8 +92,8 @@ export async function GET(req) {
                     year: 'numeric',
                 }).format(new Date(createdAt));
             }
-                   
-           const mailData = variants.map(selectedItem => {
+
+            const mailData = variants.map(selectedItem => {
                 const matchingItem = plan.items.find(item => item.id === selectedItem.id);
                 const plainDescription = selectedItem.product.descriptionHtml.replace(/<[^>]*>/g, '').trim();
                 return {
@@ -98,14 +110,15 @@ export async function GET(req) {
                 doctor_name: `${doctor?.firstName} ${doctor?.lastName}`,
                 doctor_email: doctor?.email,
                 doctor_clinic_name: doctor?.clinicName,
-                payment_link: link,  
+                payment_link: link,
                 product_details: mailData,
-                created_date:createdAt
+                created_date: createdAt
             };
-          
+            plan.reminderDate = now;
+            await plan.save();
             const listId = 'Yt5xRh';
-            const createProfilePromise = createProfile(plan?.patient_id, customProperties);
-            const subscribeProfilePromise = subscribeProfiles(plan?.patient_id, listId);
+            await createProfile(plan?.patient_id, customProperties);
+            await subscribeProfiles(plan?.patient_id, listId);
 
             setTimeout(async () => {
                 try {
@@ -113,15 +126,14 @@ export async function GET(req) {
                 } catch (error) {
                     console.error('Error deleting profile:', error);
                 }
-            }, 120000);      
-          const [createResponse, subscribeResponse] = await Promise.all([
-              createProfilePromise,
-              subscribeProfilePromise,
-            ]);
+            }, 120000);
           
-        }));
 
-        return new Response(JSON.stringify({ success: true, message: 'Pending plans processed successfully.' }), {
+            await delay(1000);
+
+        };
+
+        return new Response(JSON.stringify({ success: true, message: `Pending plans processed successfully.${pendingPlanscountDocuments}` }), {
             status: 200
         });
     } catch (error) {
