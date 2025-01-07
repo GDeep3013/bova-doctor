@@ -55,7 +55,7 @@ export async function GET(req) {
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const twoDaysAgo = new Date(startOfToday.getTime() - 48 * 60 * 60 * 1000);
     try {
-        const pendingPlans = await Plan.find({
+       const pendingPlans = await Plan.find({
             status: 'pending',
             reminderDate: {
                 $gte: twoDaysAgo,
@@ -71,10 +71,11 @@ export async function GET(req) {
             }
         }).populate('patient_id');
 
-        console.log(pendingPlanscountDocuments);
+        // console.log(pendingPlanscountDocuments);
         if (!pendingPlans.length) {
             return new Response(JSON.stringify({ success: true, message: 'No pending plans found.' }), { status: 200 });
         }
+
         const crypto = new NextCrypto();
         for (const plan of pendingPlans) {
             const { firstName, lastName, email, doctorId } = plan.patient_id;
@@ -104,6 +105,7 @@ export async function GET(req) {
                 };
             });
 
+            
             const doctor = await Doctor.findOne({ _id: doctorId });
             const customProperties = {
                 patient_name: `${firstName} ${lastName}`,
@@ -127,9 +129,8 @@ export async function GET(req) {
                     console.error('Error deleting profile:', error);
                 }
             }, 120000);
-          
 
-            await delay(1000);
+          await delay(1000);
 
         };
 
