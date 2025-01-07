@@ -144,7 +144,7 @@ export default function DoctorListing() {
                         <div className='flex justify-end gap-2 w-full max-w-[348px] ml-auto md:m-0 md:max-w-[500px]'>
                         <input
                             type="text"
-                            placeholder="Search doctors..."
+                            placeholder="Search Doctors..."
                             value={searchQuery}
                             onChange={handleSearchChange}
                             className="border border-gray-300 focus:border-[#25464f] rounded-[8px] px-3 min-h-[38px] focus:border-[#25464f] focus:outline-none focus:border-[#25464f] w-full"
