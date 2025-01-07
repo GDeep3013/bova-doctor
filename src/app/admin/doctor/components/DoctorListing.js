@@ -17,6 +17,10 @@ export default function DoctorListing() {
     const [fetchLoader, setFetchLoader] = useState(false);
     const [isModal, setIsModal] = useState(false);
     const [resetLink, setResetLink] = useState('false');
+    const [sortOrder, setSortOrder] = useState("desc");
+    const [sortColumn, setSortColumn] = useState("desc");
+    const [isAscending, setIsAscending] = useState(true);
+
     const itemsPerPage = 30;
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -49,10 +53,17 @@ export default function DoctorListing() {
         router.push(`/admin/doctor/edit/${id}`);
     };
 
-    const fetchDoctors = async (currentPage = 1) => {
+    const toggleSortOrder = (column) => {
+        const newOrder = sortOrder === "asc" ? "desc" : "asc";
+        setSortOrder(newOrder);
+        setSortColumn(column);
+        fetchDoctors(1, column, newOrder);
+    };
+
+    const fetchDoctors = async (currentPage = 1, sortColumn = "createdAt", order = "desc") => {
         try {
-            setFetchLoader(true)
-            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}`);
+        
+            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
             }
@@ -68,6 +79,7 @@ export default function DoctorListing() {
 
     useEffect(() => {
         if (session?.user?.id) {
+            setFetchLoader(true);
             fetchDoctors(page);
         }
     }, [session, page]);
@@ -82,22 +94,38 @@ export default function DoctorListing() {
         navigator.clipboard.writeText(resetLink);
         setIsModal(false);
     };
-    const formatDate= (isoString) => {
+    const formatDate = (isoString) => {
         const date = new Date(isoString);
-      
+
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
         return `${day}-${month}-${year}`;
     };
-    const formatTime= (isoString) => {
+    const formatTime = (isoString) => {
         const date = new Date(isoString);
-    
+
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
         const seconds = String(date.getSeconds()).padStart(2, '0');
         return `${hours}:${minutes}:${seconds}`;
+    };
+
+    const formatDateTime = (isoString) => {
+        const date = new Date(isoString);
+
+        // Format the date
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        // Format the time
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     };
 
     return (
@@ -119,14 +147,52 @@ export default function DoctorListing() {
                             <thead>
                                 <tr className="bg-gray-100 border-b">
                                     <th className="py-2 px-4 text-left text-[#53595B] ">Serial No.</th>
-                                    <th className="py-2 px-4 text-left text-[#53595B] ">Name</th>
-                                    <th className="py-2 px-4 text-left text-[#53595B] ">Email</th>
-                                    <th className="py-2 px-4 text-left text-[#53595B] ">Phone</th>
-                                    <th className="py-2 px-4 text-left text-[#53595B] ">Speciality</th>
+                                    <th className="py-2 px-4 text-left text-[#53595B] ">Name
+                                        <button onClick={() => toggleSortOrder("firstName")}
+                                            className="ml-2 text[#53595B] "
+                                        >
+                                            {sortColumn === "firstName" && sortOrder === "asc" ? "▲" : "▼"}
+                                        </button>
+                                    </th>
+                                    <th className="py-2 px-4 text-left text-[#53595B] ">Email
+                                        <button onClick={() => toggleSortOrder("email")}
+                                            className="ml-2 text[#53595B] "
+                                        >
+                                            {sortColumn === "email" && sortOrder === "asc" ? "▲" : "▼"}
+                                        </button>
+                                    </th>
+                                    <th className="py-2 px-4 text-left text-[#53595B] ">Phone
+                                        <button onClick={() => toggleSortOrder("phone")}
+                                            className="ml-2 text[#53595B] "
+                                        >
+                                            {sortColumn === "phone" && sortOrder === "asc" ? "▲" : "▼"}
+                                        </button>
+                                    </th>
+                                    <th className="py-2 px-4 text-left text-[#53595B] ">Speciality
+                                        <button onClick={() => toggleSortOrder("specialty")}
+                                            className="ml-2 text[#53595B] "
+                                        >
+                                            {sortColumn === "specialty" && sortOrder === "asc" ? "▲" : "▼"}
+                                        </button>
+                                    </th>
                                     <th className="py-2 px-4 text-left text-[#53595B] ">Signup Status</th>
-                                    <th className="py-2 px-4 text-left text-[#53595B] ">Commission %</th>
+                                    <th className="py-2 px-4 text-left text-[#53595B] ">Commission %
+                                        <button onClick={() => toggleSortOrder("commissionPercentage")}
+                                            className="ml-2 text[#53595B] "
+                                        >
+                                            {sortColumn === "commissionPercentage" && sortOrder === "asc" ? "▲" : "▼"}
+                                        </button>
+                                    </th>
+                                    <th className="py-2 px-4 text-left text-[#53595B] flex">Created Date
+                                        <button onClick={() => toggleSortOrder("createdAt")}
+                                            className="ml-2 text[#53595B] "
+                                        >
+                                            {sortColumn === "createdAt" && sortOrder === "asc" ? "▲" : "▼"}
+                                        </button>
+                                    </th>
                                     <th className="py-2 px-4 text-left text-[#53595B] ">Action</th>
                                 </tr>
+
                             </thead>
                             <tbody>
                                 {doctors.length === 0 ? (
@@ -152,7 +218,7 @@ export default function DoctorListing() {
                                             >
                                                 {doctor.signupStatus === "Incomplete" ? doctor.signupStatus : (doctor.passwordCreatedDate ?
                                                     <span title={formatTime(doctor.passwordCreatedDate)}>{formatDate(doctor.passwordCreatedDate)}</span>
-                                                    
+
                                                     : <span title={formatTime(doctor.updatedAt)}>{formatDate(doctor.updatedAt)}</span>)
                                                 }
                                             </span>
@@ -162,6 +228,7 @@ export default function DoctorListing() {
                                             "Not available"
                                         )}</td>
                                         <td className="py-2 px-4">{doctor.commissionPercentage || "Not available"}</td>
+                                        <td className="py-2 px-4">{formatDateTime(doctor.createdAt)}</td>
                                         <td className="py-2 px-4">
                                             <button
                                                 onClick={() => handleEdit(doctor._id)}
