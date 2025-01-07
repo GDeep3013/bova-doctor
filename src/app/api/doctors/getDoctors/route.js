@@ -11,10 +11,10 @@ export async function GET(req) {
     const userId = url.searchParams.get('userId');
     const page = parseInt(url.searchParams.get('page') || '1', 30); // Default to page 1
     const limit = parseInt(url.searchParams.get('limit') || '30', 30); // Default to 10 items per page
-    const sortOrder = url.searchParams.get('sortOrder') || 'desc'; 
+    const sortOrder = url.searchParams.get('sortOrder') || 'desc';
     const sortColumn = url.searchParams.get("sortColumn") || "createdAt";
     const skip = (page - 1) * limit;
-
+    const searchQuery = url.searchParams.get('searchQuery') || '';
     // If no userId is provided, return an error response
     if (!userId) {
       return new Response(
@@ -23,12 +23,27 @@ export async function GET(req) {
       );
     }
 
-    // Fetch doctors excluding the one with the given userId, and apply pagination
+    let searchFilter = {};
+    if (searchQuery) {
+      searchFilter = {
+        ...searchFilter,
+        $or: [
+          { firstName: { $regex: searchQuery, $options: 'i' } },
+          { lastName: { $regex: searchQuery, $options: 'i' } },
+          { email: { $regex: searchQuery, $options: 'i' } },
+          { phone: { $regex: searchQuery, $options: 'i' } },
+          { commissionPercentage: { $regex: searchQuery, $options: 'i' } },
+          { specialty: { $regex: searchQuery, $options: 'i' } }
+        ]
+      };
+    }
+
     const doctors = await Doctor.find({
       _id: { $ne: userId },
-      userType: "Doctor"
+      userType: "Doctor",
+      ...searchFilter
     })
-    .sort({ [sortColumn]: sortOrder === "asc" ? 1 : -1 })
+      .sort({ [sortColumn]: sortOrder === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(limit);
     const doctorsWithSignupStatus = doctors.map((doctor) => ({

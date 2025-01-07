@@ -20,7 +20,7 @@ export default function DoctorListing() {
     const [sortOrder, setSortOrder] = useState("desc");
     const [sortColumn, setSortColumn] = useState("desc");
     const [isAscending, setIsAscending] = useState(true);
-
+    const [searchQuery, setSearchQuery] = useState("");
     const itemsPerPage = 30;
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -57,13 +57,13 @@ export default function DoctorListing() {
         const newOrder = sortOrder === "asc" ? "desc" : "asc";
         setSortOrder(newOrder);
         setSortColumn(column);
-        fetchDoctors(1, column, newOrder);
+        fetchDoctors(1, column, newOrder,searchQuery);
     };
 
-    const fetchDoctors = async (currentPage = 1, sortColumn = "createdAt", order = "desc") => {
+    const fetchDoctors = async (currentPage = 1, sortColumn = "createdAt", order = "desc", searchQuery = "") => {
         try {
-        
-            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}`);
+
+            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}&searchQuery=${searchQuery}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
             }
@@ -127,19 +127,32 @@ export default function DoctorListing() {
 
         return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     };
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+        fetchDoctors(1, "createdAt", "desc", e.target.value); 
+    }
 
     return (
         <AppLayout>
             <div className="mx-auto">
                 {fetchLoader ? <Loader /> : <>
-                    <div className='flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-2'>
+                    <div className='min-[575px]:flex justify-between items-start mt-4 md:mt-2 mb-4 md:mb-2'>
                         <div>
                             <h1 className="text-2xl">Doctors Listing</h1>
-                            <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
+                            {/* <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button> */}
                         </div>
-                        <Link href='/admin/doctor/create' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 text-center hover:bg-inherit min-w-[130px]">
+                        <div className='flex justify-end gap-2 w-full max-w-[348px] ml-auto md:m-0 md:max-w-[500px]'>
+                        <input
+                            type="text"
+                            placeholder="Search Doctors..."
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            className="border border-gray-300 focus:border-[#25464f] rounded-[8px] px-3 min-h-[38px] focus:border-[#25464f] focus:outline-none focus:border-[#25464f] w-full"
+                        />
+                        <Link href='/admin/doctor/create' className="py-2 px-4 min-h-[38px] bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 text-center hover:bg-inherit min-w-[130px]">
                             Add Doctor
-                        </Link>
+                            </Link>
+                            </div>
                     </div>
 
                     <div className='overflow-hidden overflow-x-auto max-w-full w-full'>
@@ -197,7 +210,7 @@ export default function DoctorListing() {
                             <tbody>
                                 {doctors.length === 0 ? (
                                     <tr>
-                                        <td colSpan={7} className="py-2 px-4 text-center text-gray-500 border-r border-[#B0BAAE]">
+                                        <td colSpan={9} className="py-2 px-4 text-center text-gray-500 border-r border-[#B0BAAE]">
                                             No records found
                                         </td>
                                     </tr>
