@@ -11,6 +11,8 @@ export async function GET(req) {
     const userId = url.searchParams.get('userId');
     const page = parseInt(url.searchParams.get('page') || '1', 30); // Default to page 1
     const limit = parseInt(url.searchParams.get('limit') || '30', 30); // Default to 10 items per page
+    const sortOrder = url.searchParams.get('sortOrder') || 'desc'; 
+    const sortColumn = url.searchParams.get("sortColumn") || "createdAt";
     const skip = (page - 1) * limit;
 
     // If no userId is provided, return an error response
@@ -26,7 +28,7 @@ export async function GET(req) {
       _id: { $ne: userId },
       userType: "Doctor"
     })
-      .sort({ createdAt: -1 })
+    .sort({ [sortColumn]: sortOrder === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(limit);
     const doctorsWithSignupStatus = doctors.map((doctor) => ({

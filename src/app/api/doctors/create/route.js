@@ -27,7 +27,7 @@ export async function POST(req) {
     const clinicName = formData.get('clinicName');
     const specialty = formData.get('specialty');
     const commissionPercentage = formData.get('commissionPercentage');
-    console.log(phone, 'phone')
+    // console.log(phone, 'phone')
     // Check if the doctor already exists with the same email or phone
     const query = {
       $or: [

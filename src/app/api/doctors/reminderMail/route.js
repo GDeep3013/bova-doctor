@@ -42,8 +42,6 @@ export async function GET(req) {
 
         //     console.log(firstName, lastName, email, resetToken);
         //     const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/create-password?token=${resetToken}`;
-
-
         //     const user = { email, firstName, lastName };
         //     const customProperties = {
         //         user_name: `${firstName} ${lastName}`,
@@ -81,8 +79,7 @@ export async function GET(req) {
                 last_name: lastName,
                 generate_password: resetLink,
             };
-
-            const listId = 'UckSDK';
+            const listId = 'UckSDK';            
             try {
                 setTimeout(async () => {
                     try {
@@ -94,6 +91,7 @@ export async function GET(req) {
 
                 await createProfile(user, customProperties);
                 await subscribeProfiles(user, listId);                
+              
                 setTimeout(async () => {
                     try {
                         const deleteProfileResponse = await deleteProfile(user);
@@ -103,12 +101,13 @@ export async function GET(req) {
                 }, 60000);
                 doctor.reminderDate = now;
                 await doctor.save();
+
                 await delay(1000);
             } catch (error) {
                 console.error('Error processing doctor:', email, error);
             }
         }
-        return new Response(JSON.stringify({ success: true, message: `Pending doctor reminder send processed successfully. Total pending doctor ${pendingDoctorsCount}` }), {
+        return new Response(JSON.stringify({ success: true, message: `Pending doctor reminder send processed successfully.Total pending doctor ${pendingDoctorsCount}` }), {
             status: 200
         });
     } catch (error) {
