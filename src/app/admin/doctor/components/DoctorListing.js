@@ -183,13 +183,13 @@ export default function DoctorListing() {
                                             {sortColumn === "commissionPercentage" && sortOrder === "asc" ? "▲" : "▼"}
                                         </button>
                                     </th>
-                                    <th className="py-2 px-4 text-left text-[#53595B] flex">Created Date
+                                    {/* <th className="py-2 px-4 text-left text-[#53595B] flex">Created Date
                                         <button onClick={() => toggleSortOrder("createdAt")}
                                             className="ml-2 text[#53595B] "
                                         >
                                             {sortColumn === "createdAt" && sortOrder === "asc" ? "▲" : "▼"}
                                         </button>
-                                    </th>
+                                    </th> */}
                                     <th className="py-2 px-4 text-left text-[#53595B] ">Action</th>
                                 </tr>
 
@@ -228,7 +228,7 @@ export default function DoctorListing() {
                                             "Not available"
                                         )}</td>
                                         <td className="py-2 px-4">{doctor.commissionPercentage || "Not available"}</td>
-                                        <td className="py-2 px-4">{formatDateTime(doctor.createdAt)}</td>
+                                        {/* <td className="py-2 px-4">{formatDateTime(doctor.createdAt)}</td> */}
                                         <td className="py-2 px-4">
                                             <button
                                                 onClick={() => handleEdit(doctor._id)}
