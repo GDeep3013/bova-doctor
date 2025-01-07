@@ -221,7 +221,7 @@ export default function DoctorListing() {
                                         <td className="py-2 px-4">{doctor.firstName} {doctor.lastName}</td>
                                         <td className="py-2 px-4">{doctor.email}</td>
                                         <td className="py-2 px-4">{doctor.phone || "Not available"}</td>
-                                        <td className="py-2 px-4">{doctor.specialty || "Not available"}</td>
+                                        <td className="py-2 px-4"><span className='max-w-[143px] overflow-hidden whitespace-nowrap truncate inline-block'>{doctor.specialty || "Not available"}</span></td>
                                         <td className="py-2 px-4">{doctor.signupStatus ? (
                                             <>   <span
                                                 className={`px-2 py-1 rounded-full capitalize text-white ${doctor.signupStatus === "Incomplete"
