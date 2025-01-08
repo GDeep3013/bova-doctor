@@ -94,6 +94,7 @@ export default function DoctorListing() {
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
+        setPage(1)
         fetchDoctors(1, sortColumn, sortOrder, searchQuery, tab);
     };
 
