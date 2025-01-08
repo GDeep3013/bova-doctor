@@ -67,12 +67,13 @@ export default function DoctorListing() {
         const newOrder = sortOrder === "asc" ? "desc" : "asc";
         setSortOrder(newOrder);
         setSortColumn(column);
+        setPage(1)
         fetchDoctors(1, column, newOrder, searchQuery, activeTab);
     };
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchQuery(value);
-        
+        setPage(1)
         fetchDoctors(1, sortColumn, sortOrder, value, activeTab);
     };
     const fetchDoctors = async (currentPage = 1, sortColumn = "createdAt", order = "desc", searchQuery = "", activeTab = "Completed") => {
