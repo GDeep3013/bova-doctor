@@ -15,6 +15,8 @@ export async function GET(req) {
     const sortColumn = url.searchParams.get("sortColumn") || "createdAt";
     const skip = (page - 1) * limit;
     const searchQuery = url.searchParams.get('searchQuery') || '';
+    const signupStatus = url.searchParams.get('signupStatus') || 'Completed';
+    
     // If no userId is provided, return an error response
     if (!userId) {
       return new Response(
@@ -23,7 +25,14 @@ export async function GET(req) {
       );
     }
 
-    let searchFilter = {};
+    // Build the search filter based on query parameters
+    let searchFilter = {
+      _id: { $ne: userId },
+      userType: "Doctor",
+      password: signupStatus === 'Completed' ? { $exists: true } : { $exists: false },
+    };
+
+    // Add search query filtering
     if (searchQuery) {
       searchFilter = {
         ...searchFilter,
@@ -38,19 +47,35 @@ export async function GET(req) {
       };
     }
 
-    const doctors = await Doctor.find({
-      _id: { $ne: userId },
-      userType: "Doctor",
-      ...searchFilter
-    })
+    // Fetch doctors based on the filter
+    const doctors = await Doctor.find(searchFilter)
+      .collation({ locale: 'en', strength: 2 })
       .sort({ [sortColumn]: sortOrder === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(limit);
+
+    // Map doctors to include their signup status
     const doctorsWithSignupStatus = doctors.map((doctor) => ({
       ...doctor.toObject(),
       signupStatus: doctor.password ? 'Completed' : 'Incomplete',
     }));
-    const totalDoctors = await Doctor.countDocuments({ _id: { $ne: userId } });
+
+    const completedCount = await Doctor.countDocuments({
+      _id: { $ne: userId },
+      userType: "Doctor",
+      password: { $exists: true },
+
+    });
+
+    const incompleteCount = await Doctor.countDocuments({
+      _id: { $ne: userId },
+      userType: "Doctor",
+      password: { $exists: false },
+
+    });
+
+    // Count the total number of doctors matching the filter for pagination
+    const totalDoctors = await Doctor.countDocuments(searchFilter);
 
     // Return the list of doctors along with pagination info
     return new Response(
@@ -62,6 +87,9 @@ export async function GET(req) {
           limit,
           totalPages: Math.ceil(totalDoctors / limit),
         },
+        completedCount: completedCount,
+        incompleteCount: incompleteCount,
+
       }),
       { status: 200 }
     );
