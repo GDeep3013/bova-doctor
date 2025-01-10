@@ -3,21 +3,20 @@ import Doctor from '../../../../models/Doctor';
 
 export async function GET(req) {
   try {
-    // Ensure the database connection is established first
+ 
     await connectDB();
-
-    // Extract userId, page, and limit from the query string in the URL
+  
     const url = new URL(req.url);
     const userId = url.searchParams.get('userId');
-    const page = parseInt(url.searchParams.get('page') || '1', 30); // Default to page 1
-    const limit = parseInt(url.searchParams.get('limit') || '30', 30); // Default to 10 items per page
+    const page = parseInt(url.searchParams.get('page') || '1', 30);
+    const limit = parseInt(url.searchParams.get('limit') || '30', 30);
     const sortOrder = url.searchParams.get('sortOrder') || 'desc';
     const sortColumn = url.searchParams.get("sortColumn") || "createdAt";
     const skip = (page - 1) * limit;
     const searchQuery = url.searchParams.get('searchQuery') || '';
     const signupStatus = url.searchParams.get('signupStatus') || 'Completed';
     
-    // If no userId is provided, return an error response
+    
     if (!userId) {
       return new Response(
         JSON.stringify({ error: 'User ID is required' }),
@@ -25,17 +24,17 @@ export async function GET(req) {
       );
     }
 
-    // Build the search filter based on query parameters
+ 
     let searchFilter = {
       _id: { $ne: userId },
       userType: "Doctor",
-      password: signupStatus === 'Completed' ? { $exists: true } : { $exists: false },
+      password: 'Completed' === signupStatus  ? { $exists: true } : { $exists: false },
     };
 
     // Add search query filtering
-    if (searchQuery) {
-      searchFilter = {
-        ...searchFilter,
+      if (searchQuery) {
+        searchFilter = {
+          ...searchFilter,
         $or: [
           { firstName: { $regex: searchQuery, $options: 'i' } },
           { lastName: { $regex: searchQuery, $options: 'i' } },
@@ -43,9 +42,9 @@ export async function GET(req) {
           { phone: { $regex: searchQuery, $options: 'i' } },
           { commissionPercentage: { $regex: searchQuery, $options: 'i' } },
           { specialty: { $regex: searchQuery, $options: 'i' } }
-        ]
-      };
-    }
+          ]
+        };
+      }
 
     // Fetch doctors based on the filter
     const doctors = await Doctor.find(searchFilter)
