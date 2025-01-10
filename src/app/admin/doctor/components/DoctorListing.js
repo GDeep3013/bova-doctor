@@ -52,6 +52,12 @@ export default function DoctorListing() {
                     throw new Error("Failed to delete doctor");
                 }
                 setDoctors(doctors.filter(doctor => doctor._id !== id));
+                if (activeTab === "Completed") {
+                    setTotalDoctorsComplete(prev => prev - 1);
+                } else {
+                    setTotalDoctorsInComplete(prev => prev - 1);
+                }
+
                 Swal.fire('Deleted!', 'Doctor has been deleted.', 'success');
             } catch (error) {
                 console.log(error.message);
