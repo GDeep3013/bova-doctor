@@ -15,7 +15,7 @@ export async function GET(req) {
     const skip = (page - 1) * limit;
     const searchQuery = url.searchParams.get('searchQuery') || '';
     const signupStatus = url.searchParams.get('signupStatus') || 'Completed';
-    
+
     
     if (!userId) {
       return new Response(
@@ -23,7 +23,6 @@ export async function GET(req) {
         { status: 400 }
       );
     }
-
  
     let searchFilter = {
       _id: { $ne: userId },

@@ -102,7 +102,7 @@ export default function DoctorListing() {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
         setPage(1)
-        fetchDoctors(1, sortColumn, sortOrder, searchQuery, tab);
+        fetchDoctors(1, "createdAt", "desc", searchQuery, tab);
     };
 
     const handlePagination = (page, activeTab) => {
