@@ -22,6 +22,10 @@ const doctorSchema = new mongoose.Schema({
     resetTokenExpiry: { type: Date },
     passwordCreatedDate: { type: Date },    
     reminderDate: { type: Date, default: Date.now },
+    address: { type: String },
+    city :{ type: String },
+    state: { type: String },
+    zipCode:{type: String},
 }, { timestamps: true });
 
 const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);
