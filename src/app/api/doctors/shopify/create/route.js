@@ -4,6 +4,17 @@ import Doctor from '../../../../../models/Doctor';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 
 connectDB();
+export async function OPTIONS(req) {
+    return new Response(null, {
+        status: 204,  // No Content
+        headers: {
+            'Access-Control-Allow-Origin': '*',  // Replace with specific origin if needed
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',  // Adjust as needed
+            'Access-Control-Allow-Credentials': 'true',  // Set this based on your needs
+        },
+    });
+}
 
 
 
@@ -11,7 +22,7 @@ export async function POST(req) {
 
     try {
         const APP_HEADERS = {
-            'Access-Control-Allow-Origin': '*',  // replace with your actual origin if needed
+            'Access-Control-Allow-Origin': '*',  // Replace with specific origin if needed
             'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
             'Access-Control-Allow-Credentials': 'true',
             'Content-Type': 'application/json',
