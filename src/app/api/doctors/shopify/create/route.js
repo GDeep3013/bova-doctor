@@ -45,7 +45,7 @@ export async function POST(req) {
         if (!zipCode || zipCode.trim() === '') errors.zipCode = 'Zip code is required';
 
         if (Object.keys(errors).length > 0) {
-            return new Response(JSON.stringify({ error: errors }), { status: 400, headers: APP_HEADERS, });
+            return new Response(JSON.stringify({ success: false ,error: errors }), { status: 500, headers: APP_HEADERS, });
         }
 
         const query = {
@@ -66,7 +66,7 @@ export async function POST(req) {
 
         // If errors exist, return a keyed response
         if (Object.keys(errors).length > 0) {
-            return new Response(JSON.stringify({ error: errors }), { status: 400, headers: APP_HEADERS, });
+            return new Response(JSON.stringify({ success: false, error: errors }), { status: 400, headers: APP_HEADERS, });
         }
         await Doctor.create({
             firstName,
@@ -125,12 +125,12 @@ export async function POST(req) {
 
         return new Response(
             JSON.stringify({
-                message: 'Doctor created  successfully',
+                success: true, message: 'Doctor created  successfully',
             }),
             { status: 201, headers: APP_HEADERS, }
         );
     } catch (error) {
         console.error('Error in POST request:', error);
-        return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: APP_HEADERS, });
+        return new Response(JSON.stringify({ success: false, error: error.message }), { status: 500, headers: APP_HEADERS, });
     }
 }
