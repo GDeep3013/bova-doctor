@@ -8,14 +8,14 @@ connectDB();
 
 
 export async function POST(req) {
-    const APP_HEADERS = {
-        'Access-Control-Allow-Origin': '*',  // replace with your actual origin if needed
-        'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
-        'Access-Control-Allow-Credentials': 'true',
-        'Content-Type': 'application/json',
-      }
-    try {
 
+    try {
+        const APP_HEADERS = {
+            'Access-Control-Allow-Origin': '*',  // replace with your actual origin if needed
+            'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
+            'Access-Control-Allow-Credentials': 'true',
+            'Content-Type': 'application/json',
+        };
         const { firstName, lastName, email, phone, address, state, city, zipCode } = await req.json();
 
         const errors = {};
@@ -116,7 +116,7 @@ export async function POST(req) {
             JSON.stringify({
                 message: 'Doctor created  successfully',
             }),
-            { status: 201, headers: APP_HEADERS,}
+            { status: 201, headers: APP_HEADERS, }
         );
     } catch (error) {
         console.error('Error in POST request:', error);
