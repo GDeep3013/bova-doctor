@@ -4,14 +4,16 @@ import Doctor from '../../../../../models/Doctor';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 
 connectDB();
-const APP_HEADERS = {
-    'Access-Control-Allow-Origin': '*',  // replace with your actual origin if needed
-    'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
-    'Access-Control-Allow-Credentials': 'true',
-    'Content-Type': 'application/json',
-  }
+
+
 
 export async function POST(req) {
+    const APP_HEADERS = {
+        'Access-Control-Allow-Origin': '*',  // replace with your actual origin if needed
+        'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
+        'Access-Control-Allow-Credentials': 'true',
+        'Content-Type': 'application/json',
+      }
     try {
 
         const { firstName, lastName, email, phone, address, state, city, zipCode } = await req.json();
