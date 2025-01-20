@@ -30,7 +30,7 @@ export async function GET(req, { params }) {
 
     if (!planId) {
       return new Response(
-        JSON.stringify({ success: false, planId:planId,id:id, message: 'Invalid plan ID' }),
+        JSON.stringify({ success: false,planId:planId,id:id, message: 'Invalid plan ID' }),
         { status: 400, headers: APP_HEADERS, }
       );
     }
