@@ -23,7 +23,11 @@ export async function POST(req) {
         if (!firstName || firstName.trim() === '') errors.firstName = 'First name is required';
         if (!lastName || lastName.trim() === '') errors.lastName = 'Last name is required';
         if (!email || email.trim() === '') errors.email = 'Email is required';
-        if (!phone || phone.trim() === '') errors.phone = 'Phone number is required';
+        if (!phone || phone.trim() === '') {
+            errors.phone = 'Phone number is required';
+        } else if (!/^\d{10}$/.test(phone)) {
+            errors.phone = 'Phone number must be exactly 10 digits';
+        }
         if (!address || address.trim() === '') errors.address = 'Address is required';
         if (!state || state.trim() === '') errors.state = 'State is required';
         if (!city || city.trim() === '') errors.city = 'City is required';
@@ -66,56 +70,56 @@ export async function POST(req) {
         });
 
         
-        try {
-            const user = {
-                email: "sahil.610weblab@gmail.com",
-                firstName:"sahil",
-                lastName:"Dharmani"
-            };
-            const customProperties = {
-                firstName:firstName,
-                lastName:lastName,
-                doctor_email:email,
-                phone:phone,              
-                address:address,
-                state:state,
-                city:city,
-                zipCode:zipCode              
-            };
-            console.log(user,customProperties)
+        // try {
+        //     const user = {
+        //         email: "sahil.610weblab@gmail.com",
+        //         firstName:"sahil",
+        //         lastName:"Dharmani"
+        //     };
+        //     const customProperties = {
+        //         firstName:firstName,
+        //         lastName:lastName,
+        //         doctor_email:email,
+        //         phone:phone,              
+        //         address:address,
+        //         state:state,
+        //         city:city,
+        //         zipCode:zipCode              
+        //     };
+        //     console.log(user,customProperties)
 
-            const listId = 'YxYgt4';
+        //     const listId = 'YxYgt4';
 
-            setTimeout(async () => {
-                try {
-                    await deleteProfile(user);
-                } catch (error) {
-                    console.error('Error deleting profile:', error);
-                }
-            }, 60000);
-            const createProfilePromise = createProfile(user, customProperties);
-            const subscribeProfilePromise = subscribeProfiles(user, listId);
+        //     setTimeout(async () => {
+        //         try {
+        //             await deleteProfile(user);
+        //         } catch (error) {
+        //             console.error('Error deleting profile:', error);
+        //         }
+        //     }, 60000);
+        //     const createProfilePromise = createProfile(user, customProperties);
+        //     const subscribeProfilePromise = subscribeProfiles(user, listId);
 
-            setTimeout(async () => {
-                try {
-                    const deleteProfileResponse = await deleteProfile(user);
-                } catch (error) {
-                    console.error('Error deleting profile:', error);
-                }
-            }, 60000);
+        //     setTimeout(async () => {
+        //         try {
+        //             const deleteProfileResponse = await deleteProfile(user);
+        //         } catch (error) {
+        //             console.error('Error deleting profile:', error);
+        //         }
+        //     }, 60000);
 
-            const [createResponse, subscribeResponse] = await Promise.all([
-                createProfilePromise,
-                subscribeProfilePromise,
-            ]);
-        } catch (error) {
-            console.error('Error handling Klaviyo actions:', error);
-        }
+        //     const [createResponse, subscribeResponse] = await Promise.all([
+        //         createProfilePromise,
+        //         subscribeProfilePromise,
+        //     ]);
+        // } catch (error) {
+        //     console.error('Error handling Klaviyo actions:', error);
+        // }
 
 
         return new Response(
             JSON.stringify({
-                message: 'Doctor created and Email sent successfully to admin',
+                message: 'Doctor created  successfully',
             }),
             { status: 201, headers: APP_HEADERS }
         );
