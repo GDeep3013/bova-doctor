@@ -16,10 +16,7 @@ export async function OPTIONS(req) {
     });
 }
 
-
-
 export async function POST(req) {
-
     try {
         const APP_HEADERS = {
             'Access-Control-Allow-Origin': '*',  // Replace with specific origin if needed
@@ -28,9 +25,7 @@ export async function POST(req) {
             'Content-Type': 'application/json',
         };
         const { firstName, lastName, email, phone, address, state, city, zipCode } = await req.json();
-
         const errors = {};
-
         if (!firstName || firstName.trim() === '') errors.firstName = 'First name is required';
         if (!lastName || lastName.trim() === '') errors.lastName = 'Last name is required';
         if (!email || email.trim() === '') errors.email = 'Email is required';
@@ -43,9 +38,8 @@ export async function POST(req) {
         if (!state || state.trim() === '') errors.state = 'State is required';
         if (!city || city.trim() === '') errors.city = 'City is required';
         if (!zipCode || zipCode.trim() === '') errors.zipCode = 'Zip code is required';
-
         if (Object.keys(errors).length > 0) {
-            return new Response(JSON.stringify({ success: false ,error: errors }), { status: 200, headers: APP_HEADERS, });
+            return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
         }
 
         const query = {
@@ -56,17 +50,10 @@ export async function POST(req) {
         };
         const existingDoctor = await Doctor.findOne(query);
         if (existingDoctor) {
-            if (existingDoctor.email === email) {
-                errors.email = 'Email already exists';
-            }
-            if (phone && existingDoctor.phone === phone) {
-                errors.phone = 'Phone number already exists';
-            }
-        }
-
-        // If errors exist, return a keyed response
-        if (Object.keys(errors).length > 0) {
-            return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
+           const errors=[] 
+            if (existingDoctor.email === email) errors.push('Email already exists');
+            if (phone && existingDoctor.phone === phone) errors.push('Phone number already exists');
+            return new Response(JSON.stringify({ success: false,error: errors }), { status: 200, headers: APP_HEADERS });
         }
         await Doctor.create({
             firstName,
