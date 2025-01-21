@@ -25,22 +25,22 @@ export async function POST(req) {
             'Content-Type': 'application/json',
         };
         const { firstName, lastName, email, phone, address, state, city, zipCode } = await req.json();
-        const errors = {};
-        if (!firstName || firstName.trim() === '') errors.firstName = 'First name is required';
-        if (!lastName || lastName.trim() === '') errors.lastName = 'Last name is required';
-        if (!email || email.trim() === '') errors.email = 'Email is required';
-        if (!phone || phone.trim() === '') {
-            errors.phone = 'Phone number is required';
-        } else if (!/^\d{10}$/.test(phone)) {
-            errors.phone = 'Phone number must be exactly 10 digits';
-        }
-        if (!address || address.trim() === '') errors.address = 'Address is required';
-        if (!state || state.trim() === '') errors.state = 'State is required';
-        if (!city || city.trim() === '') errors.city = 'City is required';
-        if (!zipCode || zipCode.trim() === '') errors.zipCode = 'Zip code is required';
-        if (Object.keys(errors).length > 0) {
-            return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
-        }
+        // const errors = {};
+        // if (!firstName || firstName.trim() === '') errors.firstName = 'First name is required';
+        // if (!lastName || lastName.trim() === '') errors.lastName = 'Last name is required';
+        // if (!email || email.trim() === '') errors.email = 'Email is required';
+        // if (!phone || phone.trim() === '') {
+        //     errors.phone = 'Phone number is required';
+        // } else if (!/^\d{10}$/.test(phone)) {
+        //     errors.phone = 'Phone number must be exactly 10 digits';
+        // }
+        // if (!address || address.trim() === '') errors.address = 'Address is required';
+        // if (!state || state.trim() === '') errors.state = 'State is required';
+        // if (!city || city.trim() === '') errors.city = 'City is required';
+        // if (!zipCode || zipCode.trim() === '') errors.zipCode = 'Zip code is required';
+        // if (Object.keys(errors).length > 0) {
+        //     return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
+        // }
 
         const query = {
             $or: [
