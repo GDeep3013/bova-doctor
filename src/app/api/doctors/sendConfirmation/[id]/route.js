@@ -1,5 +1,6 @@
 import connectDB from '../../../../../db/db';
 import Doctor from '../../../../../models/Doctor';
+import bcrypt from 'bcrypt';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 connectDB();
 export async function PUT(req, { params }) {
@@ -12,10 +13,15 @@ export async function PUT(req, { params }) {
         if (!currentDoctor) {
             return new Response(JSON.stringify({ error: 'Doctor not found' }), { status: 404 });
         }
+        const token = await bcrypt.hash(currentDoctor.email + Date.now(), 10);
+
+        // Update doctor record with the reset token
+        currentDoctor.login_token = token;
+        await currentDoctor.save();
 
         if (currentDoctor) {
             try {
-                const login_link = `${process.env.NEXT_PUBLIC_BASE_URL}/create-password?token=${currentDoctor.resetToken}`;
+                const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${token}`;
                 const user = {
                     email: currentDoctor.email,
                     firstName: currentDoctor.firstName,
@@ -28,7 +34,7 @@ export async function PUT(req, { params }) {
                     state: currentDoctor.state,
                     city: currentDoctor.city,
                     zipCode: currentDoctor.zipCode,
-                    login_link: login_link
+                    login_link: confirmationLink
                 };
                 const listId = 'WkSxEa';
                 setTimeout(async () => {
