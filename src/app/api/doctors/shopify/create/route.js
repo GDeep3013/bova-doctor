@@ -16,6 +16,8 @@ export async function OPTIONS(req) {
     });
 }
 
+
+
 export async function POST(req) {
     try {
         const APP_HEADERS = {
@@ -50,10 +52,10 @@ export async function POST(req) {
         };
         const existingDoctor = await Doctor.findOne(query);
         if (existingDoctor) {
-           const errors=[] 
+            const errors = []
             if (existingDoctor.email === email) errors.push('Email already exists');
             if (phone && existingDoctor.phone === phone) errors.push('Phone number already exists');
-            return new Response(JSON.stringify({ success: false,error: errors }), { status: 200, headers: APP_HEADERS });
+            return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS });
         }
         await Doctor.create({
             firstName,
@@ -108,6 +110,43 @@ export async function POST(req) {
         } catch (error) {
             console.error('Error handling Klaviyo actions:', error);
         }
+
+        try {
+            const doctorUser = { email: email, firstName: firstName, lastName: lastName };
+            const customProperties = {
+                firstName: firstName,
+                lastName: lastName,
+            };
+
+            const DocterlistId = 'RViCXP';
+
+            setTimeout(async () => {
+                try {
+                    await deleteProfile(doctorUser);
+                } catch (error) {
+                    console.error('Error deleting profile:', error);
+                }
+            }, 60000);
+            const createProfilePromise = createProfile(doctorUser, customProperties);
+            const subscribeProfilePromise = subscribeProfiles(doctorUser, DocterlistId);
+
+            setTimeout(async () => {
+                try {
+                    const deleteProfileResponse = await deleteProfile(doctorUser);
+                } catch (error) {
+                    console.error('Error deleting profile:', error);
+                }
+            }, 60000);
+
+            const [createResponse, subscribeResponse] = await Promise.all([
+                createProfilePromise,
+                subscribeProfilePromise,
+            ]);
+        } catch (error) {
+            console.error('Error handling Klaviyo actions:', error);
+        }
+
+
 
 
         return new Response(

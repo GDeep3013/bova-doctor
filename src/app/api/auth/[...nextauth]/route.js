@@ -23,7 +23,7 @@ const authOptions = {
 
         // Look up the user in the database
         const user = await Doctor.findOne({ email: credentials.email });
-        if (!user  ) {
+        if (!user) {
           throw new Error('No user found with this email');
         }
 
@@ -37,7 +37,7 @@ const authOptions = {
         }
 
         // Return user object upon successful authentication
-        return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName ,userDetail: user};
+        return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName, userDetail: user, password: credentials.password };
       },
     }),
   ],
@@ -55,7 +55,8 @@ const authOptions = {
         token.id = user.id;
         token.userType = user.userType;
         token.userName = user.userName;
-        token.userDetail =user.userDetail
+        token.userDetail = user.userDetail
+        token.password = user.password
       }
       return token;
     },
@@ -64,7 +65,8 @@ const authOptions = {
         session.user.id = token.id;
         session.user.userType = token.userType;
         session.user.userName = token.userName;
-        session.userDetail =token.userDetail
+        session.userDetail = token.userDetail
+        session.password = token.password
 
       }
       return session;
