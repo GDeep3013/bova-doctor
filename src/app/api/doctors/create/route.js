@@ -1,8 +1,5 @@
-import bcrypt from 'bcrypt';
-import crypto, { generateKey } from 'crypto';
-import fs from 'fs';
-import path from 'path';
-import { sendEmail } from '../../../../lib/sendEmail';
+import crypto from 'crypto';
+
 import connectDB from '../../../../db/db';
 import Doctor from '../../../../models/Doctor';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../klaviyo/klaviyo';
@@ -10,7 +7,6 @@ import { createProfile, subscribeProfiles, deleteProfile } from '../../../klaviy
 connectDB(); // Ensure database connection is established
 
 
-// import { sendEmail } from '@/utils/email';
 
 export async function POST(req) {
   try {
@@ -27,6 +23,10 @@ export async function POST(req) {
     const clinicName = formData.get('clinicName');
     const specialty = formData.get('specialty');
     const commissionPercentage = formData.get('commissionPercentage');
+    const address = formData.get('address');
+    const state = formData.get('state');
+    const city = formData.get('city');
+    const zipCode = formData.get('zipCode');
     // console.log(phone, 'phone')
     // Check if the doctor already exists with the same email or phone
     const query = {
@@ -60,6 +60,10 @@ export async function POST(req) {
       specialty,
       commissionPercentage,
       resetToken,
+      address,
+      city,
+      state,
+      zipCode,
       reminderDate: new Date()
     });
 

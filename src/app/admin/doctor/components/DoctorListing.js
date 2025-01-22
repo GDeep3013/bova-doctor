@@ -30,6 +30,9 @@ export default function DoctorListing() {
     const [totalDoctorsComplete, setTotalDoctorsComplete] = useState('');
     const [totalDoctorsInComplete, setTotalDoctorsInComplete] = useState('');
 
+    const [isConfirmed, setIsConfirmed] = useState(true)
+    const [mailLoader, setMailLoader] = useState(false)
+    const [confirmMailId, setConfirmMailId] = useState('')
 
 
     const handleDelete = async (id) => {
@@ -119,12 +122,19 @@ export default function DoctorListing() {
     }, [session]);
 
 
-    const handleCopy = (link) => {
+    const handleModal = (doctor) => {
         setIsModal(true);
-        const url = process.env.NEXT_PUBLIC_BASE_URL + '/create-password?token=' + link
+        const url = process.env.NEXT_PUBLIC_BASE_URL + '/create-password?token=' + doctor.resetToken
         setResetLink(url)
-    }
+        if (doctor?.address && doctor?.city && doctor?.state && doctor.zipCode) {
+            setConfirmMailId(doctor._id)
+            setIsConfirmed(false)
+        } else {
+            setIsConfirmed(true)
+            setConfirmMailId('')
 
+        }
+    }
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(resetLink);
@@ -164,6 +174,44 @@ export default function DoctorListing() {
 
         return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     };
+
+    const handleSendConfirmationMail = async () => {
+        try {
+            setMailLoader(true)
+            const response = await fetch(`/api/doctors/sendConfirmation/${confirmMailId}`, {
+                method: 'PUT', // Changed to 'POST' if you're sending a mail instead of deleting
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: confirmMailId }), // Pass the ID in the body
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to send confirmation mail");
+            }
+            const data = await response.json();
+            if (data.status) {
+                setMailLoader(false)
+
+                Swal.fire({
+                    title: 'Success!',
+                    iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                    text: `You have successfully send the confirmation mail `,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: "#3c96b5",
+                });
+                setIsModal(false);
+                setIsConfirmed(false);
+                setConfirmMailId('');
+            }
+
+        } catch (error) {
+            setMailLoader(false)
+            console.error("Error sending confirmation mail:", error.message);
+            alert("Failed to send confirmation mail. Please try again later.");
+        }
+    };
+
 
     return (
         <AppLayout>
@@ -319,7 +367,7 @@ export default function DoctorListing() {
                                                     <div
                                                         className="copy"
                                                         title="Copy reset password link"
-                                                        onClick={() => handleCopy(doctor.resetToken)}
+                                                        onClick={() => handleModal(doctor)}
                                                     >
                                                         <CopyIcon />
                                                     </div>
@@ -370,38 +418,76 @@ export default function DoctorListing() {
                             Next
                         </button>
                     </div>
-
                 </>}
             </div>
 
             {
                 isModal && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-                        <div className="bg-white py-9 px-6 rounded-lg shadow-lg w-full max-w-[95%] md:max-w-[480px] relative">
+                        <div className="bg-white py-9 px-6 rounded-lg shadow-lg w-full max-w-[95%] md:max-w-[550px] relative">
                             <div className="flex justify-center items-center mt-6 mb-6">
                                 <h2 className="text-xl font-bold text-center">Copy the Password Link</h2>
 
                                 <button
                                     className="text-gray-500 hover:text-gray-700 absolute top-[21px] right-[21px]"
-                                    onClick={() => { setIsModal(false); setResetLink(''); }}
+                                    onClick={() => { setIsModal(false); setResetLink(''); setConfirmMailId('') }}
                                 >
                                     <CloseIcon />
                                 </button>
                             </div>
-                            <div className='text-center'>
-                                {/* <input
-                                type="text"
-                                value={resetLink}
-                                readOnly
-                                className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:none"
-                            /> */}
+
+                            <p className="text-sm text-gray-600 mb-6 text-center">
+                                Use the buttons below to copy the generated password link or send a confirmation Email.
+                            </p>
+
+                            {/* Buttons Section */}
+                            <div className="space-y-4">
+                                {/* Copy Password Link Button */}
                                 <button
-                                    className="py-2 px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-half min-h-[46px] mb-6"
                                     onClick={handleCopyLink}
+                                    className="flex items-center justify-between w-full text-[14px] md:text-[16px] py-2 px-4 border-2 border-dashed rounded-md text-gray-700 border-gray-400 focus:ring-2 focus:ring-[#25464F] transition copy-link-btn"
                                 >
-                                    Set Your BOVA Password
+                                    Copy the Generate Password Link
+                                    <span><CopyIcon /></span>
+                                </button>
+
+                                <p className='flex items-center py-2'>
+                                    <span className='border-b border-solid border-gray-300 w-full'></span>
+                                    <span className='w-full max-w-[60px] text-center'>OR</span>
+                                    <span className='border-b border-solid border-gray-300 w-full'></span>
+                                </p>
+
+                                {/* Send Confirmation Email Button */}
+                                <button
+                                    onClick={handleSendConfirmationMail}
+                                    className={`py-2 px-4 text-[14px] md:text-[16px] border rounded-[8px] w-full min-w-half min-h-[46px] mb-3 md:mb-6 text-white ${isConfirmed ? 'bg-gray-500 border-gray-500 hover:bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-[#25464F] border-[#25464F] hover:bg-white hover:text-[#25464F]'} max-[574px]:block max-[574px]:m-auto max-[574px]:mt-3`}
+                                    disabled={isConfirmed}
+                                    title={isConfirmed ? "Doctor address missing" : "Send Confirmation Email"}
+                                >
+                                    {mailLoader ? "Please Wait ..." : "Send Confirmation Email"}
                                 </button>
                             </div>
+                            {/* <p className="text-gray-600 mb-6 text-center">
+                                Use the buttons below to copy the generated password link or send a confirmation email.
+                            </p>
+
+                         
+                            <div className='text-center justify-center min-[575px]:flex gap-2'>
+
+                                <button
+                                    className="py-2 px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-half min-h-[46px] mb-3 md:mb-6 max-[574px]:block max-[574px]:m-auto"
+                                    onClick={handleCopyLink}
+                                >
+                                   <CloseIcon/>  Copy the Gernate Password Link 
+                                </button>
+                                <button
+                                    className={`py-2 px-4 border rounded-[8px] min-w-half min-h-[46px] mb-3 md:mb-6 text-white ${isConfirmed ? 'bg-gray-500 border-gray-500 hover:bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-[#25464F] border-[#25464F] hover:bg-white hover:text-[#25464F]'} max-[574px]:block max-[574px]:m-auto max-[574px]:mt-3`}
+                                    disabled={isConfirmed}
+                                    title={isConfirmed ? "Please Enter Complete Address" : "Send Confirmation Email"}
+                                    onClick={handleSendConfirmationMail}                                >
+                                    {mailLoader ? "Please Wait ..." : "Send Confirmation Email"}
+                                </button>
+                            </div> */}
                         </div>
                     </div>
                 )
