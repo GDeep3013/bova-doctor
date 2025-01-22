@@ -64,6 +64,10 @@ export async function PUT(req, { params }) {
     const specialty = formData.get('specialty');
     const clinicName = formData.get('clinicName');
     const commissionPercentage = formData.get('commissionPercentage');
+    const address = formData.get('address');
+    const state = formData.get('state');
+    const city = formData.get('city');
+    const zipCode = formData.get('zipCode');
 
     // Check for existing doctor with the same email or phone (excluding the current doctor)
     const query = {
@@ -92,7 +96,7 @@ export async function PUT(req, { params }) {
     // Update the doctor in the database, including the new profile image if available
     const updatedDoctor = await Doctor.findByIdAndUpdate(
       id,
-      { firstName, lastName, email, phone, userType, clinicName, specialty, commissionPercentage },
+      { firstName, lastName, email, phone, userType, clinicName, specialty, commissionPercentage ,address, city, state, zipCode},
       { new: true, runValidators: true }
     );
     if (isEmailUpdated) {

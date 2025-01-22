@@ -117,6 +117,8 @@ div#swal2-html-container{ color: #29282b; }
 .doctor-tabs button { border-radius: 10px 10px 0 0; }
 .doctor-listing-radius { border-radius: 0 0 10px 10px; }
 
+.copy-link-btn svg{ width: 27px; height:27px; }
+
 @media screen and (min-width:2000px) {
   .login-outer { background-position: 0 75%; }
 }
@@ -162,6 +164,7 @@ div#swal2-html-container{ color: #29282b; }
   .theme-customizer .grid-cols-2 { grid-template-columns: 100%; }
   .product-itm-container { max-height: calc(100vh - 214px); }
   .dashboard-inner .card-icon .card-svg svg { width: 45px; height: 45px; }
+  .copy-link-btn svg{ width: 21px; height:21px; }
 }
 
 @media screen and (max-width:480px) {
