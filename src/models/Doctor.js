@@ -6,6 +6,7 @@ const doctorSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, },
+    login_token: { type: String, },
     userType: {
         type: String,
         required: true,
