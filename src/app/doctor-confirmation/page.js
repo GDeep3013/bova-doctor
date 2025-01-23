@@ -1,8 +1,12 @@
 
 import DoctorConfirmation from './components/DoctorConfirmation'
-
+import { Suspense } from 'react';
 export default function page() {
   return (
-    <DoctorConfirmation />
+
+    <Suspense fallback={<div>Loading...</div>}>
+      <DoctorConfirmation />
+    </Suspense>
+
   )
 }
