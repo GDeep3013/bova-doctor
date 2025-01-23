@@ -14,20 +14,19 @@ const authOptions = {
       credentials: {
         email: { label: 'Email', type: 'text', placeholder: 'you@example.com' },
         password: { label: 'Password', type: 'password' },
+        dummyPassword: { label: 'dummyPassword', type: 'password' },
       },
       async authorize(credentials) {
-        // Validate the credentials
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Please enter both email and password');
         }
 
-        // Look up the user in the database
         const user = await Doctor.findOne({ email: credentials.email });
-        if (!user  ) {
+        if (!user) {
           throw new Error('No user found with this email');
         }
-
-        // Verify the password
+        
         if (!user.password) {
           throw new Error('User has not set a password yet');
         }
@@ -36,18 +35,18 @@ const authOptions = {
           throw new Error('Invalid password');
         }
 
-        // Return user object upon successful authentication
-        return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName ,userDetail: user};
+
+        return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName, userDetail: user, password: credentials.dummyPassword };
       },
     }),
   ],
   pages: {
     signIn: '/login',
-    error: '/login', // Redirect to custom error page on failure
+    error: '/login', 
   },
   session: {
     strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // Session duration: 1 day
+    maxAge: 24 * 60 * 60, 
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -55,7 +54,8 @@ const authOptions = {
         token.id = user.id;
         token.userType = user.userType;
         token.userName = user.userName;
-        token.userDetail =user.userDetail
+        token.userDetail = user.userDetail
+        token.password = user.password
       }
       return token;
     },
@@ -64,7 +64,8 @@ const authOptions = {
         session.user.id = token.id;
         session.user.userType = token.userType;
         session.user.userName = token.userName;
-        session.userDetail =token.userDetail
+        session.userDetail = token.userDetail
+        session.password = token.password
 
       }
       return session;

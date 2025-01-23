@@ -16,6 +16,10 @@ export default function CreateDoctor() {
     const [userType, setUserType] = useState('');
     const [commissionPercentage, setCommissionPercentage] = useState('');
     const [laoding, setLaoding] = useState('');
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [zipCode, setZipCode] = useState('');
     const [fetchLoader, setFetchLoader] = useState(false);
 
 
@@ -24,7 +28,7 @@ export default function CreateDoctor() {
 
     const validateForm = () => {
         let valid = true;
-        const newErrors = { firstName: '', lastName: '', email: '', password: '', phone: '', specialty: "", userType: '', commissionPercentage: '' };
+        const newErrors = { firstName: '', lastName: '', email: '', password: '', phone: '', specialty: "", userType: '', commissionPercentage: '', address: "", city: "", state: '', zipCode: "" };
         if (!firstName) {
             newErrors.firstName = 'First name is required';
             valid = false;
@@ -80,6 +84,10 @@ export default function CreateDoctor() {
                     setUserType(data?.userType);
                     setSpecialty(data?.specialty);
                     setClinicName(data?.clinicName);
+                    setAddress(data?.address)
+                    setState(data?.state)
+                    setCity(data?.city)
+                    setZipCode(data?.zipCode)
                     setCommissionPercentage(data.commissionPercentage);
                     setFetchLoader(false)
 
@@ -108,11 +116,15 @@ export default function CreateDoctor() {
                 formData.append('firstName', firstName);
                 formData.append('lastName', lastName);
                 formData.append('email', email);
-                 formData.append('phone', phone);     
+                formData.append('phone', phone);
                 formData.append('userType', userType);
                 formData.append('specialty', specialty);
                 formData.append('clinicName', clinicName ? clinicName : '');
                 formData.append('commissionPercentage', commissionPercentage);
+                formData.append('address', address ? address : '');
+                formData.append('state', state ? state : '');
+                formData.append('city', city ? city : '');
+                formData.append('zipCode', zipCode ? zipCode : '');
 
                 const response = await fetch(`/api/doctors/edit/${id}`, {
                     method: 'PUT',
@@ -132,8 +144,13 @@ export default function CreateDoctor() {
                     setEmail('');
                     setPhone('');
                     setUserType('');
-                    setSpecialty('');
                     setClinicName('');
+                    setCommissionPercentage('');
+                    setSpecialty('');
+                    setAddress('')
+                    setState('')
+                    setCity('')
+                    setZipCode('')
                     setLaoding(false)
 
                     router.push('/admin/doctor');
@@ -283,6 +300,44 @@ export default function CreateDoctor() {
                                                 className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
                                             />
                                         </div>
+                                        <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Address"
+                                            value={address ?? ""}
+                                            onChange={(e) => { setAddress(e.target.value); }}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
+                                        />
+                                    </div>
+
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="City"
+                                            value={city ?? ""}
+                                            onChange={(e) => { setCity(e.target.value); }}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
+                                        />
+                                    </div>
+
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="State"
+                                            value={state ?? ""}
+                                            onChange={(e) => { setState(e.target.value); }}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
+                                        />
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Zip Code"
+                                            value={zipCode ?? ""}
+                                            onChange={(e) => {setZipCode(e.target.value); }}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
+                                        />
+                                    </div>
 
                                     </div>
                                     <div className="message-text"><p className="text-base text-slate-900 font-light">A plan sent via text message connects better than just email.</p></div>

@@ -1,19 +1,24 @@
 
-'use client';;
-import AppLayout from '../../../components/Applayout'
+'use client';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CheckIcon } from 'components/svg-icons/icons';
+import Swal from 'sweetalert2';
+
 export default function Home() {
     const { data: session } = useSession();
+    console.log(session);
     const [patients, setPatients] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [selectedPatient, setSelectedPatient] = useState(null); // State to track selected patient
     const router = useRouter();
+    const [currentPassword, setCurrentPassword] = useState(session?.password);
+    const [newPassword, setNewPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('');
     const handleRedirect = (id) => {
         if (id) {
             router.push(`/patients/edit/${id}`); // Redirect to the patient's page with ID
@@ -21,6 +26,9 @@ export default function Home() {
             alert("Please select a patient."); // Prompt if no patient is selected
         }
     };
+
+
+
     const fetchPatients = async () => {
         try {
             const response = await fetch(`/api/doctors/dashboard/latestPatients?doctorId=${session?.user?.id}`);
@@ -32,12 +40,13 @@ export default function Home() {
             console.error("Error fetching patients:", error);
         }
     };
-    console.log(session)
-    const fetchTemplate = async () => {
+
+    const fetchTemplate = async (type = 'old') => {
         try {
-            const response = await fetch(`/api/doctors/dashboard/template?doctorId=${session?.user?.id}`);
+            const response = await fetch(`/api/doctors/dashboard/template?doctorId=${session?.user?.id}&type=${type}`);
+
             const result = await response.json();
-        
+
             if (result.success) {
                 const placeholders = [
                     "[Doctor's Name]",
@@ -47,7 +56,7 @@ export default function Home() {
                     "[Doctor's Clinic]",
                     "[Doctor's Commission]"
                 ];
-            
+
                 const replacements = [
                     session?.user?.userName,
                     session?.userDetail?.email,
@@ -57,17 +66,17 @@ export default function Home() {
                     session?.userDetail?.commissionPercentage
 
                 ];
-            
+
                 const replacePlaceholders = (text, placeholders, replacements) => {
                     return placeholders.reduce((updatedText, placeholder, index) => {
                         const replacement = replacements[index] || ""; // Use empty string if replacement is undefined
                         return updatedText.replaceAll(placeholder, replacement);
                     }, text);
                 };
-            
+
                 const updatedTitle = replacePlaceholders(result?.data?.title, placeholders, replacements);
                 const updatedDescription = replacePlaceholders(result?.data?.description, placeholders, replacements);
-            
+
                 setTitle(updatedTitle);
                 setDescription(updatedDescription);
             }
@@ -77,19 +86,89 @@ export default function Home() {
         }
     };
     useEffect(() => {
-        fetchTemplate();
+        if (currentPassword) {
+            fetchTemplate('new');
+
+        }
+        else { fetchTemplate('old') }
         fetchPatients();
+
     }, []);
 
+
+    const handleUpdatePassword = async () => {
+        // Validate the password
+        if (newPassword.length < 8) {
+            setErrorMessage('Password must be at least 8 characters long.');
+            return;
+        }
+
+        setErrorMessage(''); // Clear any previous error message
+
+        try {
+            const response = await fetch('/api/doctors/updatePassword', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: session?.user?.id, password: newPassword }), // Replace with other fields like ID if required
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                Swal.fire({
+                    title: 'Success!',
+                    iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                    text: `Password update successfully`,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: "#3c96b5",
+                });
+                setCurrentPassword('')
+                setNewPassword('')
+                fetchTemplate('old')
+
+            } else {
+                const errorData = await response.json();
+                alert(`Error: ${errorData.message}`);
+            }
+        } catch (error) {
+            alert('An error occurred while updating the password.');
+            console.error(error);
+        }
+    };
 
     return (
         <>
             <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:pb-16 md:p-12 mt-6 rounded-lg">
                 <p className='text-lg font-bold'>{title ? title : "Title is not available"}</p>
                 <p className='my-4 text-lg font-normal text-[#323232] html-content' dangerouslySetInnerHTML={{ __html: description ? description : 'Description is not available' }}></p>
-                {/* <p className="my-4 text-lg font-normal text-[#323232]">{description ? description : 'Description is not available'}</p> */}
                 <p className="mt-2 text-lg font-bold">Team BOVA</p>
             </div>
+
+            {currentPassword &&
+                <div className='update-password-outer w-full max-w-5xl mt-5 items-center border border-solid border-gray-200 px-[16px]  md:px-5 py-3 rounded-[15px] flex gap-3'>
+                    <div className='w-full'>
+                        <p className='text-gray-600 text-lg'>Password: <span className='text-xl ml-2'>{currentPassword}</span></p></div>
+                    <div className='w-full'>
+                        <input
+                            type='password'
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className='w-full border border-gray-200 focus:border-[#25464f] rounded-[8px] p-3 h-[42px] rounded focus:outline-none focus:border-blue-500' />
+                    </div>
+                    {errorMessage && (
+                        <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+                    )}
+                    <div className='w-full max-w-[101px] text-end'>
+                        <button
+                            className={`py-2 px-4 border bg-customBg2 hover:bg-inherit hover:text-customBg2 border-customBg2' } border border-customBg2 text-white rounded-[8px]`}
+                            onClick={handleUpdatePassword}
+                        >
+                            Update
+                        </button>
+                    </div>
+                </div>
+            }
 
             <div className="flex flex-col mt-8">
                 <div className="w-full max-w-5xl bg-white rounded-lg border border-[#AFAAAC]">

@@ -6,6 +6,7 @@ const doctorSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, },
+    login_token: { type: String, },
     userType: {
         type: String,
         required: true,
@@ -20,12 +21,13 @@ const doctorSchema = new mongoose.Schema({
     profileImage: { type: String },
     resetToken: { type: String }, // Token to reset password
     resetTokenExpiry: { type: Date },
-    passwordCreatedDate: { type: Date },    
+    passwordCreatedDate: { type: Date },
     reminderDate: { type: Date, default: Date.now },
     address: { type: String },
-    city :{ type: String },
+    city: { type: String },
     state: { type: String },
-    zipCode:{type: String},
+    zipCode: { type: String },
+    inviteToken: { type: String },
 }, { timestamps: true });
 
 const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);

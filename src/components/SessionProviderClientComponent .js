@@ -10,20 +10,19 @@ export default function SessionProviderClientComponent({ children }) {
   const router = useRouter();
 
   const [session, setSession] = useState(null);
-  const pathname = usePathname(); // Get the current path
-  const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password','/terms-services','/not-found'];
+  const pathname = usePathname(); 
+  const guestRoutes = ['/', '/login', '/forget-password', '/register', '/reset-password', '/create-password','/terms-services','/not-found','/doctor-confirmation'];
 
   useEffect(() => {
-    // Fetch session
+    
     const fetchSession = async () => {
       const sessionData = await getSession();
       setSession(sessionData);
     };
     fetchSession();
   }, [router]);
-
-  // Show loading if no session and current path is not in guestRoutes
-  if (!session && !guestRoutes.includes(pathname)) {
+ 
+  if (!session && !guestRoutes.includes(pathname)) {  
     return (<div className="loader">
       <img src="/images/logo.png" alt="BOVA Logo"/>
     </div>);
