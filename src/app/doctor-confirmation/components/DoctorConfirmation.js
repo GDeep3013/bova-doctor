@@ -56,28 +56,28 @@ const DoctorConfirmation = () => {
     }
   }, [isMounted, searchParams]);
 
-  useEffect(() => {
-    if (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error,
-        confirmButtonText: "Go to Login",
-        confirmButtonColor: "#3c96b5",
-      }).then(() => {
-        window.location.href = "/login";
-      });
-    }
-  }, [error]);
+//   useEffect(() => {
+//     if (error) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: error,
+//         confirmButtonText: "Go to Login",
+//         confirmButtonColor: "#3c96b5",
+//       }).then(() => {
+//         window.location.href = "/login";
+//       });
+//     }
+//   }, [error]);
 
   if (isLoading) {
     return <div className="loader">
       <img src="/images/logo.png" alt="BOVA Logo" />
     </div>;
   }
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return null;
 };
 
