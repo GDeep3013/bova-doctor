@@ -7,7 +7,7 @@ export async function PUT(req, { params }) {
     const { id } = params;
 
     try {
-        console.log(id)
+        // console.log(id)
         const currentDoctor = await Doctor.findById(id);
 
         if (!currentDoctor) {

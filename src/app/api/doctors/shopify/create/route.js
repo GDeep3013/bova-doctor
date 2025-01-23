@@ -1,8 +1,9 @@
 
 import connectDB from '../../../../../db/db';
 import Doctor from '../../../../../models/Doctor';
+import InviteToken from '../../../../../models/inviteToken';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
-
+import bcrypt from 'bcrypt';
 connectDB();
 export async function OPTIONS(req) {
     return new Response(null, {
@@ -19,14 +20,15 @@ export async function OPTIONS(req) {
 
 
 export async function POST(req) {
+    const APP_HEADERS = {
+        'Access-Control-Allow-Origin': '*',  
+        'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
+        'Access-Control-Allow-Credentials': 'true',
+        'Content-Type': 'application/json',
+    };
     try {
-        const APP_HEADERS = {
-            'Access-Control-Allow-Origin': '*',  // Replace with specific origin if needed
-            'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
-            'Access-Control-Allow-Credentials': 'true',
-            'Content-Type': 'application/json',
-        };
-        const { firstName, lastName, email, phone, address, state, city, zipCode } = await req.json();
+        const { firstName, lastName, email, phone, address, state, city, zipCode, inviteToken } = await req.json();
+
         // const errors = {};
         // if (!firstName || firstName.trim() === '') errors.firstName = 'First name is required';
         // if (!lastName || lastName.trim() === '') errors.lastName = 'Last name is required';
@@ -43,6 +45,13 @@ export async function POST(req) {
         // if (Object.keys(errors).length > 0) {
         //     return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
         // }
+       
+        const tokenExists = await InviteToken.findOne({ token: inviteToken });
+        if (!tokenExists) {
+      
+            return new Response(JSON.stringify({ success: false, errors: 'Invitation is invalid or expired ' }), { status: 200, headers: APP_HEADERS });
+        }
+
 
         const query = {
             $or: [
@@ -57,6 +66,8 @@ export async function POST(req) {
             if (phone && existingDoctor.phone === phone) errors.push('Phone number already exists');
             return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS });
         }
+        const token = await bcrypt.hash(email + Date.now(), 10);
+
         await Doctor.create({
             firstName,
             lastName,
@@ -66,8 +77,12 @@ export async function POST(req) {
             address,
             state,
             city,
-            zipCode
+            zipCode,
+            login_token: token,
+            inviteToken: tokenExists.token,
         });
+
+        await InviteToken.deleteOne({ token: inviteToken });
 
         try {
             const user = { email: process.env.ADMIN_EMAIL, firstName: process.env.ADMIN_FIRST_NAME, lastName: process.env.ADMIN_LAST_NAME };
@@ -112,13 +127,21 @@ export async function POST(req) {
         }
 
         try {
+
+            const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${token}`;
             const doctorUser = { email: email, firstName: firstName, lastName: lastName };
             const customProperties = {
                 firstName: firstName,
                 lastName: lastName,
+                address: address,
+                state: state,
+                city: city,
+                zipCode: zipCode,
+                login_link: confirmationLink
             };
 
-            const DocterlistId = 'RViCXP';
+            const DocterlistId = 'WkSxEa';
+
 
             setTimeout(async () => {
                 try {
@@ -145,9 +168,6 @@ export async function POST(req) {
         } catch (error) {
             console.error('Error handling Klaviyo actions:', error);
         }
-
-
-
 
         return new Response(
             JSON.stringify({

@@ -212,6 +212,32 @@ export default function DoctorListing() {
         }
     };
 
+    const generateToken = async () => {
+        try {
+            const response = await fetch('/api/doctors/generateToken', {
+                method: 'POST',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate token');
+            }
+            const data = await response.json();
+            if (data) {
+                await navigator.clipboard.writeText(`https://bovalabs.com/pages/new-sample-page?token=${data.token}`);
+                Swal.fire({
+                    title: 'Success!',
+                    iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                    text: `The Invite link has been copied to your clipboard.`,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: "#3c96b5",
+                });
+            } else {
+                console.log('Failed to retrieve token:', data);
+            }
+        } catch (err) {
+          
+        }
+    };
 
     return (
         <AppLayout>
@@ -233,6 +259,9 @@ export default function DoctorListing() {
                             <Link href='/admin/doctor/create' className="py-2 px-4 min-h-[38px] bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 text-center hover:bg-inherit min-w-[130px]">
                                 Add Doctor
                             </Link>
+                            <button className="py-2 px-4 min-h-[38px] bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 text-center hover:bg-inherit min-w-[130px]" onClick={generateToken}>
+                                Invite Doctor
+                            </button>
                         </div>
                     </div>
 

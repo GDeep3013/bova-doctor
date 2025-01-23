@@ -14,20 +14,19 @@ const authOptions = {
       credentials: {
         email: { label: 'Email', type: 'text', placeholder: 'you@example.com' },
         password: { label: 'Password', type: 'password' },
+        dummyPassword: { label: 'dummyPassword', type: 'password' },
       },
       async authorize(credentials) {
-        // Validate the credentials
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Please enter both email and password');
         }
 
-        // Look up the user in the database
         const user = await Doctor.findOne({ email: credentials.email });
         if (!user) {
           throw new Error('No user found with this email');
         }
-
-        // Verify the password
+        
         if (!user.password) {
           throw new Error('User has not set a password yet');
         }
@@ -36,18 +35,18 @@ const authOptions = {
           throw new Error('Invalid password');
         }
 
-        // Return user object upon successful authentication
-        return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName, userDetail: user, password: credentials.password };
+
+        return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName, userDetail: user, password: credentials.dummyPassword };
       },
     }),
   ],
   pages: {
     signIn: '/login',
-    error: '/login', // Redirect to custom error page on failure
+    error: '/login', 
   },
   session: {
     strategy: 'jwt',
-    maxAge: 24 * 60 * 60, // Session duration: 1 day
+    maxAge: 24 * 60 * 60, 
   },
   callbacks: {
     async jwt({ token, user }) {

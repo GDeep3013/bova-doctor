@@ -16,11 +16,10 @@ export default function AdminDashboard() {
     const [graphMonth, SetGraphMonths] = useState([]);
     const [graphValue, SetGraphValue] = useState([]);
     const [fetchLoader, setFetchLoader] = useState(false);
-
     const [doctorsSignedIn, SetDoctorsSignedIn] = useState('');
     const [inviteSent, SetInviteSent] = useState('');
     const [unitSolds, SetUnitSolds] = useState('');
- 
+
     const fetchData = async () => {
         try {
             setFetchLoader(true)

@@ -3,11 +3,10 @@ import connectDB from '../../../../db/db';
 import Doctor from '../../../../models/Doctor';
 import bcrypt from 'bcryptjs';
 
-// import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 connectDB();
 
 export async function PUT(req, { params }) {
-    // const { id } = params;
+   
     const { id, password } = await req.json();
     try {
         const currentDoctor = await Doctor.findById(id);

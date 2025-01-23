@@ -8,7 +8,8 @@ export async function GET(req) {
         await dbConnect();
         const { searchParams } = req.nextUrl;
         const doctorId = searchParams.get('doctorId');
-
+        const messageType = searchParams.get('type');
+       
         if (!doctorId) {
             return new Response(
                 JSON.stringify({ success: false, error: "Doctor ID is required" }),
@@ -21,12 +22,12 @@ export async function GET(req) {
 
         const totalPlans = await Plan.countDocuments({ patient_id: { $in: patientIds } });
         let template;
-        if (totalPlans >= 1) {
-            template = await Template.findOne({ doctorType: 'old' });
-        } else {
-            template = await Template.findOne({ doctorType: 'new' });
-        }
-
+        // if (totalPlans >= 1) {
+        //     template = await Template.findOne({ doctorType: messageType });
+        // } else {
+        //     template = await Template.findOne({ doctorType:messageType });
+        // }
+        template = await Template.findOne({ doctorType:messageType });
         if (template) {
             return new Response(
                 JSON.stringify({ success: true, data: template }),
