@@ -479,43 +479,9 @@ export default function DoctorListing() {
                                     Copy the Generate Password Link
                                     <span><CopyIcon /></span>
                                 </button>
-
-                                {/* <p className='flex items-center py-2'>
-                                    <span className='border-b border-solid border-gray-300 w-full'></span>
-                                    <span className='w-full max-w-[60px] text-center'>OR</span>
-                                    <span className='border-b border-solid border-gray-300 w-full'></span>
-                                </p>
-
-                                <button
-                                    onClick={handleSendConfirmationMail}
-                                    className={`py-2 px-4 text-[14px] md:text-[16px] border rounded-[8px] w-full min-w-half min-h-[46px] mb-3 md:mb-6 text-white ${isConfirmed ? 'bg-gray-500 border-gray-500 hover:bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-[#25464F] border-[#25464F] hover:bg-white hover:text-[#25464F]'} max-[574px]:block max-[574px]:m-auto max-[574px]:mt-3`}
-                                    disabled={isConfirmed}
-                                    title={isConfirmed ? "Doctor address missing" : "Send Confirmation Email"}
-                                >
-                                    {mailLoader ? "Please Wait ..." : "Send Confirmation Email"}
-                                </button> */}
+                               
                             </div>
-                            {/* <p className="text-gray-600 mb-6 text-center">
-                                Use the buttons below to copy the generated password link or send a confirmation email.
-                            </p>
-
-                         
-                            <div className='text-center justify-center min-[575px]:flex gap-2'>
-
-                                <button
-                                    className="py-2 px-4 bg-[#25464F] border border-[#25464F] text-white rounded-[8px] hover:text-[#25464F] hover:bg-white min-w-half min-h-[46px] mb-3 md:mb-6 max-[574px]:block max-[574px]:m-auto"
-                                    onClick={handleCopyLink}
-                                >
-                                   <CloseIcon/>  Copy the Gernate Password Link 
-                                </button>
-                                <button
-                                    className={`py-2 px-4 border rounded-[8px] min-w-half min-h-[46px] mb-3 md:mb-6 text-white ${isConfirmed ? 'bg-gray-500 border-gray-500 hover:bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-[#25464F] border-[#25464F] hover:bg-white hover:text-[#25464F]'} max-[574px]:block max-[574px]:m-auto max-[574px]:mt-3`}
-                                    disabled={isConfirmed}
-                                    title={isConfirmed ? "Please Enter Complete Address" : "Send Confirmation Email"}
-                                    onClick={handleSendConfirmationMail}                                >
-                                    {mailLoader ? "Please Wait ..." : "Send Confirmation Email"}
-                                </button>
-                            </div> */}
+                        
                         </div>
                     </div>
                 )
