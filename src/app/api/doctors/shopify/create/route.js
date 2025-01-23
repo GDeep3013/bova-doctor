@@ -49,7 +49,7 @@ export async function POST(req) {
         const tokenExists = await InviteToken.findOne({ token: inviteToken });
         if (!tokenExists) {
       
-            return new Response(JSON.stringify({ success: false, errors: 'Invitation is invalid or expired ' }), { status: 200, headers: APP_HEADERS });
+            return new Response(JSON.stringify({ success: false, error: 'Invitation is invalid or expired ' }), { status: 200, headers: APP_HEADERS });
         }
 
 
