@@ -480,13 +480,12 @@ export default function DoctorListing() {
                                     <span><CopyIcon /></span>
                                 </button>
 
-                                <p className='flex items-center py-2'>
+                                {/* <p className='flex items-center py-2'>
                                     <span className='border-b border-solid border-gray-300 w-full'></span>
                                     <span className='w-full max-w-[60px] text-center'>OR</span>
                                     <span className='border-b border-solid border-gray-300 w-full'></span>
                                 </p>
 
-                                {/* Send Confirmation Email Button */}
                                 <button
                                     onClick={handleSendConfirmationMail}
                                     className={`py-2 px-4 text-[14px] md:text-[16px] border rounded-[8px] w-full min-w-half min-h-[46px] mb-3 md:mb-6 text-white ${isConfirmed ? 'bg-gray-500 border-gray-500 hover:bg-gray-500 opacity-50 cursor-not-allowed' : 'bg-[#25464F] border-[#25464F] hover:bg-white hover:text-[#25464F]'} max-[574px]:block max-[574px]:m-auto max-[574px]:mt-3`}
@@ -494,7 +493,7 @@ export default function DoctorListing() {
                                     title={isConfirmed ? "Doctor address missing" : "Send Confirmation Email"}
                                 >
                                     {mailLoader ? "Please Wait ..." : "Send Confirmation Email"}
-                                </button>
+                                </button> */}
                             </div>
                             {/* <p className="text-gray-600 mb-6 text-center">
                                 Use the buttons below to copy the generated password link or send a confirmation email.
