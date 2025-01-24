@@ -9,7 +9,6 @@ import { CloseIcon, CopyIcon, DeleteIcon, EditIcon } from 'components/svg-icons/
 import Loader from 'components/loader';
 
 export default function DoctorListing() {
-
     const { data: session } = useSession();
     const [doctors, setDoctors] = useState([]);
     const [page, setPage] = useState(1);
@@ -22,15 +21,15 @@ export default function DoctorListing() {
     const [sortOrder, setSortOrder] = useState("desc");
     const [sortColumn, setSortColumn] = useState("desc");
     const [searchQuery, setSearchQuery] = useState("");
-
     const itemsPerPage = 30;
 
     // Tab state and pagination for each tab
+
     const [activeTab, setActiveTab] = useState("Completed");
     const [totalDoctorsComplete, setTotalDoctorsComplete] = useState('');
     const [totalDoctorsInComplete, setTotalDoctorsInComplete] = useState('');
-
-    const [isConfirmed, setIsConfirmed] = useState(true)
+    const [isConfirmed, setIsConfirmed] = useState(true) 
+    
     const [mailLoader, setMailLoader] = useState(false)
     const [confirmMailId, setConfirmMailId] = useState('')
 
@@ -174,44 +173,6 @@ export default function DoctorListing() {
 
         return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     };
-
-    const handleSendConfirmationMail = async () => {
-        try {
-            setMailLoader(true)
-            const response = await fetch(`/api/doctors/sendConfirmation/${confirmMailId}`, {
-                method: 'PUT', // Changed to 'POST' if you're sending a mail instead of deleting
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ id: confirmMailId }), // Pass the ID in the body
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to send confirmation mail");
-            }
-            const data = await response.json();
-            if (data.status) {
-                setMailLoader(false)
-
-                Swal.fire({
-                    title: 'Success!',
-                    iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
-                    text: `You have successfully send the confirmation mail `,
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: "#3c96b5",
-                });
-                setIsModal(false);
-                setIsConfirmed(false);
-                setConfirmMailId('');
-            }
-
-        } catch (error) {
-            setMailLoader(false)
-            console.error("Error sending confirmation mail:", error.message);
-            alert("Failed to send confirmation mail. Please try again later.");
-        }
-    };
-
     const generateToken = async () => {
         try {
             const response = await fetch('/api/doctors/generateToken', {
@@ -223,7 +184,7 @@ export default function DoctorListing() {
             }
             const data = await response.json();
             if (data) {
-                await navigator.clipboard.writeText(`https://bovalabs.com/pages/new-sample-page?token=${data.token}`);
+                await navigator.clipboard.writeText(`https://bovalabs.com/pages/doctor-signup?token=${data.token}`);
                 Swal.fire({
                     title: 'Success!',
                     iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
