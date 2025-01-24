@@ -88,9 +88,9 @@ export default function Home() {
     useEffect(() => {
         if (currentPassword) {
             fetchTemplate('new');
-
         }
-        else { fetchTemplate('old') }
+        else
+        { fetchTemplate('old') }
         fetchPatients();
 
     }, []);
@@ -140,13 +140,13 @@ export default function Home() {
     return (
         <>
             <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:pb-16 md:p-12 mt-6 rounded-lg">
-                <p className='text-lg font-bold'>{title ? title : "Title is not available"}</p>
+                <p className='text-lg text-[#323232]'>{title ? title : "Title is not available"}</p>
                 <p className='my-4 text-lg font-normal text-[#323232] html-content' dangerouslySetInnerHTML={{ __html: description ? description : 'Description is not available' }}></p>
-                <p className="mt-2 text-lg font-bold">Team BOVA</p>
-            </div>
+                <p className="mt-2 text-lg text-[#323232]">Team BOVA</p>
+            </div>  
 
             {currentPassword &&
-                <div className='update-password-outer w-full max-w-5xl mt-5 items-center border border-solid border-gray-200 px-[16px]  md:px-5 py-3 rounded-[15px] flex gap-3'>
+                <div className='update-password-outer w-full max-w-5xl mt-5 items-center border border-solid border-[#AFAAAC] px-[16px]  md:px-5 py-3 rounded-[15px] flex gap-3'>
                     <div className='w-full'>
                         <p className='text-gray-600 text-lg'>Password: <span className='text-xl ml-2'>{currentPassword}</span></p></div>
                     <div className='w-full'>
@@ -154,7 +154,7 @@ export default function Home() {
                             type='password'
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className='w-full border border-gray-200 focus:border-[#25464f] rounded-[8px] p-3 h-[42px] rounded focus:outline-none focus:border-blue-500' />
+                            className='w-full border border-[#AFAAAC] focus:border-[#25464f] rounded-[8px] p-3 h-[42px] rounded focus:outline-none ' />
                     </div>
                     {errorMessage && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage}</p>

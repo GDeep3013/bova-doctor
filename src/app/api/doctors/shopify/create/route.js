@@ -79,6 +79,7 @@ export async function POST(req) {
             city,
             zipCode,
             login_token: token,
+            commissionPercentage:'35'   
             // inviteToken: tokenExists.token,
         });
 
@@ -95,7 +96,8 @@ export async function POST(req) {
                 address: address,
                 state: state,
                 city: city,
-                zipCode: zipCode
+                zipCode: zipCode,
+               
             };
 
             const listId = 'YxYgt4';
