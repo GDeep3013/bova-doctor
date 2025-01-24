@@ -46,11 +46,11 @@ export async function POST(req) {
         //     return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
         // }
        
-        const tokenExists = await InviteToken.findOne({ token: inviteToken });
-        if (!tokenExists) {
+        // const tokenExists = await InviteToken.findOne({ token: inviteToken });
+        // if (!tokenExists) {
       
-            return new Response(JSON.stringify({ success: false, error: 'Invitation is invalid or expired ' }), { status: 200, headers: APP_HEADERS });
-        }
+        //     return new Response(JSON.stringify({ success: false, error: 'Invitation is invalid or expired ' }), { status: 200, headers: APP_HEADERS });
+        // }
 
 
         const query = {
@@ -79,10 +79,10 @@ export async function POST(req) {
             city,
             zipCode,
             login_token: token,
-            inviteToken: tokenExists.token,
+            // inviteToken: tokenExists.token,
         });
 
-        await InviteToken.deleteOne({ token: inviteToken });
+        // await InviteToken.deleteOne({ token: inviteToken });
 
         try {
             const user = { email: process.env.ADMIN_EMAIL, firstName: process.env.ADMIN_FIRST_NAME, lastName: process.env.ADMIN_LAST_NAME };
