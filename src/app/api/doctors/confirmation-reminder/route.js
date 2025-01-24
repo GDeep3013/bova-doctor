@@ -7,6 +7,17 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function convertToIST(date) {
+    // Convert UTC to IST (UTC + 5:30)
+    const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+    return new Date(date.getTime() + istOffset);
+}
+
+function getISTHours(date) {
+    // Convert the provided date to IST
+    const istDate = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+    return istDate.getHours();
+}
 export async function GET(req) {
     try {
         await connectDB();
@@ -15,30 +26,30 @@ export async function GET(req) {
             login_token: { $exists: true }
         });
 
-        const currentTime = new Date();
         const eightHoursDoctors = [];
         const twentyFourHoursDoctors = [];
 
         doctors.forEach((doctor) => {
-            const createdDate = new Date(doctor.createdAt);
-            const timeDifference = (currentTime - createdDate) / (1000 * 60 * 60);
-
-            if (timeDifference >= 7.9 && timeDifference < 8) {
+            const currentIST = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+            const currentISTHour = currentIST.getHours();
+            // Convert user creation date to IST
+            const userCreatedDate = new Date(doctor.createdAt);
+            const userCreatedISTHour = getISTHours(userCreatedDate);
+            let hourDifference = currentISTHour - userCreatedISTHour;
+            if (hourDifference >= 8 && hourDifference < 9) {
                 eightHoursDoctors.push(doctor);
-                console.log(timeDifference, 'timeDifference')
-            } else if (timeDifference >= 23.9 && timeDifference < 24) {
+            } else if (hourDifference >= 0 && hourDifference < 1) {
                 twentyFourHoursDoctors.push(doctor);
-                console.log(timeDifference, 'timeDifference')
-
             }
-            console.log(createdDate, doctor?.email)
-            console.log(timeDifference, doctor?.email);
-        });
+        })
 
+
+        // 8hrs mail sent
         for (let doctor of eightHoursDoctors) {
             try {
+                const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${doctor.login_token}`;
                 const doctorUser = { email: doctor.email, firstName: doctor.firstName, lastName: doctor.lastName };
-                const listId = 'UckSDK';
+                const listId = 'VRe747';
                 const customProperties = {
                     firstName: doctor.firstName,
                     lastName: doctor.lastName,
@@ -63,8 +74,6 @@ export async function GET(req) {
                             console.error('Error deleting profile:', error);
                         }
                     }, 60000);
-                    doctor.reminderDate = now;
-                    await doctor.save();
 
                     await delay(1000);
                 } catch (error) {
@@ -74,12 +83,12 @@ export async function GET(req) {
                 console.error(`Failed to send email to ${doctor.email}:`, error);
             }
         }
-
+        //24 hrs mail sent
         for (let doctor of twentyFourHoursDoctors) {
             try {
+                const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${doctor.login_token}`;
                 const doctorUser = { email: doctor.email, firstName: doctor.firstName, lastName: doctor.lastName };
-
-                const listId = 'UckSDK';
+                const listId = 'VBkjZV';
                 const customProperties = {
                     firstName: doctor.firstName,
                     lastName: doctor.lastName,
@@ -118,8 +127,7 @@ export async function GET(req) {
         return new Response(
             JSON.stringify({
                 message: "Emails sent successfully",
-                eightHoursDoctors: eightHoursDoctors.map((doc) => doc.email),
-                twentyFourHoursDoctors: twentyFourHoursDoctors.map((doc) => doc.email)
+                doctorMails: doctors
             }),
             { status: 200, headers: { "Content-Type": "application/json" } }
         );
