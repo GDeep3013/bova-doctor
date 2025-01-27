@@ -84,44 +84,44 @@ export async function GET(req) {
             }
         }
         //24 hrs mail sent
-        for (let doctor of twentyFourHoursDoctors) {
-            try {
-                const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${doctor.login_token}`;
-                const doctorUser = { email: doctor.email, firstName: doctor.firstName, lastName: doctor.lastName };
-                const listId = 'VBkjZV';
-                const customProperties = {
-                    firstName: doctor.firstName,
-                    lastName: doctor.lastName,
-                    login_link: confirmationLink
-                };
+        // for (let doctor of twentyFourHoursDoctors) {
+        //     try {
+        //         const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${doctor.login_token}`;
+        //         const doctorUser = { email: doctor.email, firstName: doctor.firstName, lastName: doctor.lastName };
+        //         const listId = 'VBkjZV';
+        //         const customProperties = {
+        //             firstName: doctor.firstName,
+        //             lastName: doctor.lastName,
+        //             login_link: confirmationLink
+        //         };
 
-                try {
-                    setTimeout(async () => {
-                        try {
-                            const deleteProfileResponse = await deleteProfile(doctorUser);
-                        } catch (error) {
-                            console.error('Error deleting profile:', error);
-                        }
-                    }, 60000);
+        //         try {
+        //             setTimeout(async () => {
+        //                 try {
+        //                     const deleteProfileResponse = await deleteProfile(doctorUser);
+        //                 } catch (error) {
+        //                     console.error('Error deleting profile:', error);
+        //                 }
+        //             }, 60000);
 
-                    await createProfile(doctorUser, customProperties);
-                    await subscribeProfiles(doctorUser, listId);
-                    setTimeout(async () => {
-                        try {
-                            const deleteProfileResponse = await deleteProfile(doctorUser);
-                        } catch (error) {
-                            console.error('Error deleting profile:', error);
-                        }
-                    }, 60000);
+        //             await createProfile(doctorUser, customProperties);
+        //             await subscribeProfiles(doctorUser, listId);
+        //             setTimeout(async () => {
+        //                 try {
+        //                     const deleteProfileResponse = await deleteProfile(doctorUser);
+        //                 } catch (error) {
+        //                     console.error('Error deleting profile:', error);
+        //                 }
+        //             }, 60000);
 
-                    await delay(1000);
-                } catch (error) {
-                    console.error('Error processing doctor:', email, error);
-                }
-            } catch (error) {
-                console.error(`Failed to send email to ${doctor.email}:`, error);
-            }
-        }
+        //             await delay(1000);
+        //         } catch (error) {
+        //             console.error('Error processing doctor:', email, error);
+        //         }
+        //     } catch (error) {
+        //         console.error(`Failed to send email to ${doctor.email}:`, error);
+        //     }
+        // }
 
 
         return new Response(
