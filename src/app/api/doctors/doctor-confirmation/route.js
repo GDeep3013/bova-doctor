@@ -19,7 +19,7 @@ export async function GET(req) {
     if (!currentDoctor) {
       return new Response(JSON.stringify({ error: 'Invalid or expired token' }), { status: 404 });
     }
-    
+
     const generateRandomPassword = (length = 12) => {
       const chars =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
@@ -31,6 +31,7 @@ export async function GET(req) {
     const dummyPassword = generateRandomPassword();
     const hashedPassword = await bcrypt.hash(dummyPassword, 10);
     currentDoctor.password = hashedPassword;
+    currentDoctor.passwordCreatedDate = new Date()
     currentDoctor.login_token = null;
     await currentDoctor.save();
     return new Response(
@@ -38,7 +39,7 @@ export async function GET(req) {
         success: true,
         message: 'Doctor confirmed successfully',
         email: currentDoctor.email,
-        password: dummyPassword,  
+        password: dummyPassword,
       }),
       { status: 200 }
     );

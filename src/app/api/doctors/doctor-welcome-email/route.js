@@ -11,25 +11,23 @@ export async function GET(req) {
         await connectDB();
         const doctors = await Doctor.find({
             password: { $exists: true },
-            // login_token: { $exists: true }
         });
 
         const twentyFourHoursDoctors = [];
-
         const calculateHoursDifference = (createdDate) => {
             const now = dayjs();
             const created = dayjs(createdDate);
             const diffInHours = now.diff(created, 'hour');
             return diffInHours;
         };
-        doctors.forEach((doctor) => {
-            const timeCalculate = calculateHoursDifference(doctor.updatedAt);
-            console.log(timeCalculate, doctor.email, doctor.updatedAt, 'Update');
+        
+        doctors.forEach((doctor) => {        
+            const timeCalculate = calculateHoursDifference(doctor?.passwordCreatedDate);
             if (timeCalculate >= 24 && timeCalculate < 25) {
                 twentyFourHoursDoctors.push(doctor);
             }
         })
-        //24 hrs mail sent
+
         for (let doctor of twentyFourHoursDoctors) {
             try {
                 const doctorUser = { email: doctor.email, firstName: doctor.firstName, lastName: doctor.lastName };
@@ -37,7 +35,7 @@ export async function GET(req) {
                     firstName: doctor.firstName,
                     lastName: doctor.lastName,
                 };
-                const listId = 'SwGDpn';    
+                const listId = 'SwGDpn';
                 try {
                     setTimeout(async () => {
                         try {
@@ -79,6 +77,4 @@ export async function GET(req) {
             { status: 500, headers: { "Content-Type": "application/json" } }
         );
     }
-
-
 }

@@ -28,6 +28,7 @@ const doctorSchema = new mongoose.Schema({
     state: { type: String },
     zipCode: { type: String },
     inviteToken: { type: String },
+
 }, { timestamps: true });
 
 doctorSchema.pre('save', function (next) {
