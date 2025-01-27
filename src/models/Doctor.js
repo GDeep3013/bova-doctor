@@ -30,5 +30,9 @@ const doctorSchema = new mongoose.Schema({
     inviteToken: { type: String },
 }, { timestamps: true });
 
+doctorSchema.pre('save', function (next) {
+    this.updatedAt = Date.now();
+    next();
+});
 const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);
 module.exports = Doctor;
