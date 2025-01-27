@@ -4,6 +4,8 @@ import Doctor from '../../../../../models/Doctor';
 import InviteToken from '../../../../../models/inviteToken';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+
 connectDB();
 export async function OPTIONS(req) {
     return new Response(null, {
@@ -21,7 +23,7 @@ export async function OPTIONS(req) {
 
 export async function POST(req) {
     const APP_HEADERS = {
-        'Access-Control-Allow-Origin': '*',  
+        'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, POST, PUT',
         'Access-Control-Allow-Credentials': 'true',
         'Content-Type': 'application/json',
@@ -45,10 +47,10 @@ export async function POST(req) {
         // if (Object.keys(errors).length > 0) {
         //     return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
         // }
-       
+
         // const tokenExists = await InviteToken.findOne({ token: inviteToken });
         // if (!tokenExists) {
-      
+
         //     return new Response(JSON.stringify({ success: false, error: 'Invitation is invalid or expired ' }), { status: 200, headers: APP_HEADERS });
         // }
 
@@ -67,7 +69,7 @@ export async function POST(req) {
             return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS });
         }
         const token = await bcrypt.hash(email + Date.now(), 10);
-
+        const resetToken = crypto.randomBytes(32).toString('hex');
         await Doctor.create({
             firstName,
             lastName,
@@ -78,8 +80,9 @@ export async function POST(req) {
             state,
             city,
             zipCode,
+            resetToken,
             login_token: token,
-            commissionPercentage:'35'   
+            commissionPercentage: '35'
             // inviteToken: tokenExists.token,
         });
 
@@ -97,7 +100,7 @@ export async function POST(req) {
                 state: state,
                 city: city,
                 zipCode: zipCode,
-               
+
             };
 
             const listId = 'YxYgt4';
