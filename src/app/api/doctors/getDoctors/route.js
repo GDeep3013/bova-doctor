@@ -3,9 +3,9 @@ import Doctor from '../../../../models/Doctor';
 
 export async function GET(req) {
   try {
- 
-    await connectDB();  
-  
+
+    await connectDB();
+
     const url = new URL(req.url);
     const userId = url.searchParams.get('userId');
     const page = parseInt(url.searchParams.get('page') || '1', 30);
@@ -16,23 +16,23 @@ export async function GET(req) {
     const searchQuery = url.searchParams.get('searchQuery') || '';
     const signupStatus = url.searchParams.get('signupStatus') || 'Completed';
 
-        if (!userId) {
+    if (!userId) {
       return new Response(
         JSON.stringify({ error: 'User ID is required' }),
         { status: 400 }
       );
     }
- 
+
     let searchFilter = {
       _id: { $ne: userId },
       userType: "Doctor",
-      password: 'Completed' === signupStatus  ? { $exists: true } : { $exists: false },
+      password: 'Completed' === signupStatus ? { $exists: true } : { $exists: false },
     };
 
     // Add search query filtering
-      if (searchQuery) {
-        searchFilter = {
-          ...searchFilter,
+    if (searchQuery) {
+      searchFilter = {
+        ...searchFilter,
         $or: [
           { firstName: { $regex: searchQuery, $options: 'i' } },
           { lastName: { $regex: searchQuery, $options: 'i' } },
@@ -40,9 +40,9 @@ export async function GET(req) {
           { phone: { $regex: searchQuery, $options: 'i' } },
           { commissionPercentage: { $regex: searchQuery, $options: 'i' } },
           { specialty: { $regex: searchQuery, $options: 'i' } }
-          ]
-        };
-      }
+        ]
+      };
+    }
 
     // Fetch doctors based on the filter
     const doctors = await Doctor.find(searchFilter)
