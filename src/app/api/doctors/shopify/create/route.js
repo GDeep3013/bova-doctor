@@ -74,7 +74,7 @@ export async function POST(req) {
             firstName,
             lastName,
             email,
-            phone,
+            phone,  
             userType: "Doctor",
             address,
             state,
@@ -130,9 +130,7 @@ export async function POST(req) {
         } catch (error) {
             console.error('Error handling Klaviyo actions:', error);
         }
-
         try {
-
             const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${token}`;
             const doctorUser = { email: email, firstName: firstName, lastName: lastName };
             const customProperties = {
@@ -147,7 +145,6 @@ export async function POST(req) {
 
             const DocterlistId = 'WkSxEa';
 
-
             setTimeout(async () => {
                 try {
                     await deleteProfile(doctorUser);
@@ -155,9 +152,9 @@ export async function POST(req) {
                     console.error('Error deleting profile:', error);
                 }
             }, 60000);
+
             const createProfilePromise = createProfile(doctorUser, customProperties);
             const subscribeProfilePromise = subscribeProfiles(doctorUser, DocterlistId);
-
             setTimeout(async () => {
                 try {
                     const deleteProfileResponse = await deleteProfile(doctorUser);

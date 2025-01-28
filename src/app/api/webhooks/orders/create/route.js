@@ -33,7 +33,7 @@ export async function POST(req) {
     }
 
     // Create a new order document with the mainPatientId
-    const newOrder = new Order({
+        const newOrder = new Order({
       order_id: orderData.id,
       order_name: orderData.name,
       note: orderData.note,
