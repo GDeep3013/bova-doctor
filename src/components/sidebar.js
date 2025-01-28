@@ -64,8 +64,8 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/admin/doctor" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
-                      Analytics
+                    <Link href="/admin/doctor?pages=1&status=Complete" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
+                      Analytics              
                     </Link>
                   </li>
                 </ul>

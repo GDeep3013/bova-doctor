@@ -1,7 +1,7 @@
 'use client'
 import AppLayout from '../../../../components/Applayout';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
@@ -11,10 +11,16 @@ import Loader from 'components/loader';
 export default function DoctorListing() {
     const { data: session } = useSession();
     const [doctors, setDoctors] = useState([]);
-    const [page, setPage] = useState(1);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const currentPage = searchParams.get('page');
+    const pageNumber = Number(currentPage);
+    const status = searchParams.get('status');
+    const [page, setPage] = useState(pageNumber);
+
     const [totalPages, setTotalPages] = useState(1);
     const [limit] = useState(10); // Set the limit of doctors per page
-    const router = useRouter();
+
     const [fetchLoader, setFetchLoader] = useState(false);
     const [isModal, setIsModal] = useState(false);
     const [resetLink, setResetLink] = useState('false');
@@ -25,7 +31,8 @@ export default function DoctorListing() {
 
     // Tab state and pagination for each tab
 
-    const [activeTab, setActiveTab] = useState("Completed");
+
+    const [activeTab, setActiveTab] = useState(status);
     const [totalDoctorsComplete, setTotalDoctorsComplete] = useState('');
     const [totalDoctorsInComplete, setTotalDoctorsInComplete] = useState('');
     const [isConfirmed, setIsConfirmed] = useState(true)
@@ -76,17 +83,20 @@ export default function DoctorListing() {
         setSortOrder(newOrder);
         setSortColumn(column);
         setPage(1)
+        console.log(typeof (page))
         fetchDoctors(1, column, newOrder, searchQuery, activeTab);
     };
+
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchQuery(value);
         setPage(1)
         fetchDoctors(1, sortColumn, sortOrder, value, activeTab);
     };
-    const fetchDoctors = async (currentPage = 1, sortColumn = "createdAt", order = "desc", searchQuery = "", activeTab = "Completed") => {
-       try {
-            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}&searchQuery=${searchQuery}&signupStatus=${activeTab}`);
+
+    const fetchDoctors = async (page, sortColumn = "createdAt", order = "desc", searchQuery = "", activeTab) => {
+        try {
+            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${page}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}&searchQuery=${searchQuery}&signupStatus=${status}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
             }
@@ -104,21 +114,22 @@ export default function DoctorListing() {
     const handleTabChange = (tab) => {
         setActiveTab(tab);
         setPage(1)
+        router.push(`/admin/doctor?page=1&status=${tab}`);
         fetchDoctors(1, "createdAt", "desc", searchQuery, tab);
     };
 
     const handlePagination = (page, activeTab) => {
         setPage(page);
+        router.push(`/admin/doctor?page=${page}&status=${activeTab}`);
         fetchDoctors(page, sortColumn, sortOrder, searchQuery, activeTab);
-
     }
 
     useEffect(() => {
         if (session?.user?.id) {
             setFetchLoader(true);
-            fetchDoctors();
+            fetchDoctors(page, sortColumn, sortOrder, searchQuery, activeTab);
         }
-    }, [session]);
+    }, [session, page, activeTab]);
 
 
     const handleModal = (doctor) => {
@@ -173,6 +184,7 @@ export default function DoctorListing() {
 
         return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     };
+
     const generateToken = async () => {
         // try {
         //     const response = await fetch('/api/doctors/generateToken', {
@@ -192,11 +204,6 @@ export default function DoctorListing() {
             confirmButtonColor: "#3c96b5",
         });
     }
-
-
-
-
-
     return (
         <AppLayout>
             <div className="mx-auto">
@@ -409,39 +416,39 @@ export default function DoctorListing() {
             </div>
 
             {isModal && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-                        <div className="bg-white py-9 px-6 rounded-lg shadow-lg w-full max-w-[95%] md:max-w-[550px] relative">
-                            <div className="flex justify-center items-center mt-6 mb-6">
-                                <h2 className="text-xl font-bold text-center">Copy the Password Link</h2>
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                    <div className="bg-white py-9 px-6 rounded-lg shadow-lg w-full max-w-[95%] md:max-w-[550px] relative">
+                        <div className="flex justify-center items-center mt-6 mb-6">
+                            <h2 className="text-xl font-bold text-center">Copy the Password Link</h2>
 
-                                <button
-                                    className="text-gray-500 hover:text-gray-700 absolute top-[21px] right-[21px]"
-                                    onClick={() => { setIsModal(false); setResetLink(''); setConfirmMailId('') }}
-                                >
-                                    <CloseIcon />
-                                </button>
-                            </div>
+                            <button
+                                className="text-gray-500 hover:text-gray-700 absolute top-[21px] right-[21px]"
+                                onClick={() => { setIsModal(false); setResetLink(''); setConfirmMailId('') }}
+                            >
+                                <CloseIcon />
+                            </button>
+                        </div>
 
-                            <p className="text-sm text-gray-600 mb-6 text-center">
-                                Use the buttons below to copy the generated password link or send a confirmation Email.
-                            </p>
+                        <p className="text-sm text-gray-600 mb-6 text-center">
+                            Use the buttons below to copy the generated password link or send a confirmation Email.
+                        </p>
 
-                            {/* Buttons Section */}
-                            <div className="space-y-4">
-                                {/* Copy Password Link Button */}
-                                <button
-                                    onClick={handleCopyLink}
-                                    className="flex items-center justify-between w-full text-[14px] md:text-[16px] py-2 px-4 border-2 border-dashed rounded-md text-gray-700 border-gray-400 focus:ring-2 focus:ring-[#25464F] transition copy-link-btn"
-                                >
-                                    Copy the Generate Password Link
-                                    <span><CopyIcon /></span>
-                                </button>
-
-                            </div>
+                        {/* Buttons Section */}
+                        <div className="space-y-4">
+                            {/* Copy Password Link Button */}
+                            <button
+                                onClick={handleCopyLink}
+                                className="flex items-center justify-between w-full text-[14px] md:text-[16px] py-2 px-4 border-2 border-dashed rounded-md text-gray-700 border-gray-400 focus:ring-2 focus:ring-[#25464F] transition copy-link-btn"
+                            >
+                                Copy the Generate Password Link
+                                <span><CopyIcon /></span>
+                            </button>
 
                         </div>
+
                     </div>
-                )}
+                </div>
+            )}
         </AppLayout >
     );
 }
