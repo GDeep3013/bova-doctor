@@ -16,8 +16,7 @@ export async function GET(req) {
     const searchQuery = url.searchParams.get('searchQuery') || '';
     const signupStatus = url.searchParams.get('signupStatus') || 'Completed';
 
-    
-    if (!userId) {
+        if (!userId) {
       return new Response(
         JSON.stringify({ error: 'User ID is required' }),
         { status: 400 }

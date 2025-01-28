@@ -32,7 +32,7 @@ export default function DoctorListing() {
     // Tab state and pagination for each tab
 
 
-    const [activeTab, setActiveTab] = useState(status ? status : 'Complete');
+    const [activeTab, setActiveTab] = useState(status ? status : 'Completed');
     const [totalDoctorsComplete, setTotalDoctorsComplete] = useState('');
     const [totalDoctorsInComplete, setTotalDoctorsInComplete] = useState('');
     const [isConfirmed, setIsConfirmed] = useState(true)
