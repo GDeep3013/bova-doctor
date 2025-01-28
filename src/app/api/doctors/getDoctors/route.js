@@ -8,8 +8,8 @@ export async function GET(req) {
   
     const url = new URL(req.url);
     const userId = url.searchParams.get('userId');
-    const page = parseInt(url.searchParams.get('page') || '1', 30);
-    const limit = parseInt(url.searchParams.get('limit') || '30', 30);
+    const page = parseInt(url.searchParams.get('page') || '1', 5);
+    const limit = parseInt(url.searchParams.get('limit') || '30', 5);
     const sortOrder = url.searchParams.get('sortOrder') || 'desc';
     const sortColumn = url.searchParams.get("sortColumn") || "createdAt";
     const skip = (page - 1) * limit;

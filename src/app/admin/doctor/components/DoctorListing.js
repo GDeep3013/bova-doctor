@@ -16,7 +16,7 @@ export default function DoctorListing() {
     const currentPage = searchParams.get('page');
     const pageNumber = Number(currentPage);
     const status = searchParams.get('status');
-    const [page, setPage] = useState(pageNumber);
+    const [page, setPage] = useState(pageNumber ? pageNumber : 1);
 
     const [totalPages, setTotalPages] = useState(1);
     const [limit] = useState(10); // Set the limit of doctors per page
@@ -32,7 +32,7 @@ export default function DoctorListing() {
     // Tab state and pagination for each tab
 
 
-    const [activeTab, setActiveTab] = useState(status);
+    const [activeTab, setActiveTab] = useState(status ? status : 'Complete');
     const [totalDoctorsComplete, setTotalDoctorsComplete] = useState('');
     const [totalDoctorsInComplete, setTotalDoctorsInComplete] = useState('');
     const [isConfirmed, setIsConfirmed] = useState(true)
@@ -405,7 +405,7 @@ export default function DoctorListing() {
                         </span>
                         <button
                             disabled={page === totalPages}
-                            onClick={() => handlePagination(page + 1,activeTab)}
+                            onClick={() => handlePagination(page + 1, activeTab)}
                             className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
                                 }`}
                         >
