@@ -96,7 +96,7 @@ export default function DoctorListing() {
 
     const fetchDoctors = async (page, sortColumn = "createdAt", order = "desc", searchQuery = "", activeTab) => {
         try {
-            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${page}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}&searchQuery=${searchQuery}&signupStatus=${status}`);
+            const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${page}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}&searchQuery=${searchQuery}&signupStatus=${activeTab}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
             }
