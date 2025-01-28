@@ -19,7 +19,7 @@ export default function DoctorListing() {
     const [isModal, setIsModal] = useState(false);
     const [resetLink, setResetLink] = useState('false');
     const [sortOrder, setSortOrder] = useState("desc");
-    const [sortColumn, setSortColumn] = useState("desc");
+    const [sortColumn, setSortColumn] = useState("createdAt");
     const [searchQuery, setSearchQuery] = useState("");
     const itemsPerPage = 30;
 
@@ -85,7 +85,7 @@ export default function DoctorListing() {
         fetchDoctors(1, sortColumn, sortOrder, value, activeTab);
     };
     const fetchDoctors = async (currentPage = 1, sortColumn = "createdAt", order = "desc", searchQuery = "", activeTab = "Completed") => {
-        try {
+       try {
             const response = await fetch(`/api/doctors/getDoctors?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${order}&searchQuery=${searchQuery}&signupStatus=${activeTab}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch doctors");
@@ -398,7 +398,7 @@ export default function DoctorListing() {
                         </span>
                         <button
                             disabled={page === totalPages}
-                            onClick={() => handlePagination(page + 1, activeTab)}
+                            onClick={() => handlePagination(page + 1,activeTab)}
                             className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
                                 }`}
                         >
@@ -408,8 +408,7 @@ export default function DoctorListing() {
                 </>}
             </div>
 
-            {
-                isModal && (
+            {isModal && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
                         <div className="bg-white py-9 px-6 rounded-lg shadow-lg w-full max-w-[95%] md:max-w-[550px] relative">
                             <div className="flex justify-center items-center mt-6 mb-6">
@@ -442,8 +441,7 @@ export default function DoctorListing() {
 
                         </div>
                     </div>
-                )
-            }
+                )}
         </AppLayout >
     );
 }

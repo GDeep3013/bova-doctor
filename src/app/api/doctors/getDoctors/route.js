@@ -4,7 +4,7 @@ import Doctor from '../../../../models/Doctor';
 export async function GET(req) {
   try {
  
-    await connectDB();
+    await connectDB();  
   
     const url = new URL(req.url);
     const userId = url.searchParams.get('userId');
