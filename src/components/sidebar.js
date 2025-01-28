@@ -33,8 +33,8 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   // }, []);
 
   const handleLogout = async () => {
-    await signOut({ redirect: false });
-    window.location.reload();
+    await signOut({ redirect: true });
+    window.location.assign('/login');
   };
 
   return (
@@ -65,7 +65,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
                   </li>
                   <li>
                     <Link href="/admin/doctor?pages=1&status=Completed" className={`block text-lg ${isActive('/admin/doctor') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
-                      Analytics              
+                      Analytics
                     </Link>
                   </li>
                 </ul>
@@ -178,7 +178,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
             </Link>
           </>
         )}
-        <button onClick={handleLogout} className="block text-[#3a3c3d] hover:text-gray-900 text-xl">
+        <button onClick={()=>{handleLogout()}} className="block text-[#3a3c3d] hover:text-gray-900 text-xl">
           <LogoutIcon /> Logout
         </button>
 
