@@ -62,12 +62,14 @@ export async function POST(req) {
             ]
         };
         const existingDoctor = await Doctor.findOne(query);
+        
         if (existingDoctor) {
             const errors = []
             if (existingDoctor.email === email) errors.push('Email already exists');
             if (phone && existingDoctor.phone === phone) errors.push('Phone number already exists');
             return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS });
         }
+
         const token = await bcrypt.hash(email + Date.now(), 10);
         const resetToken = crypto.randomBytes(32).toString('hex');
         await Doctor.create({
@@ -100,7 +102,6 @@ export async function POST(req) {
                 state: state,
                 city: city,
                 zipCode: zipCode,
-
             };
 
             const listId = 'YxYgt4';
@@ -108,7 +109,7 @@ export async function POST(req) {
             setTimeout(async () => {
                 try {
                     await deleteProfile(user);
-                } catch (error) {
+                } catch (error) {   
                     console.error('Error deleting profile:', error);
                 }
             }, 60000);

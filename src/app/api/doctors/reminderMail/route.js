@@ -8,11 +8,12 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 export async function GET(req) {
-    await connectDB();
 
+    await connectDB();
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const twoDaysAgo = new Date(startOfToday.getTime() - 48 * 60 * 60 * 1000);
+
     try {
         const pendingDoctors = await Doctor.find({
             password: { $exists: false },
@@ -21,6 +22,7 @@ export async function GET(req) {
                 $lt: startOfToday
             }
         });
+
         const pendingDoctorsCount = await Doctor.countDocuments({
             password: { $exists: false },
             reminderDate: {
@@ -29,7 +31,7 @@ export async function GET(req) {
             }
         });
 
-           if (!pendingDoctors.length) {
+        if (!pendingDoctors.length) {
             return new Response(
                 JSON.stringify({ success: true, message: 'No pending doctors found.' }),
                 { status: 200 }
@@ -70,7 +72,7 @@ export async function GET(req) {
         // }));
 
         for (const doctor of pendingDoctors) {
-            const { firstName, lastName, email, resetToken } = doctor;                    
+            const { firstName, lastName, email, resetToken } = doctor;
             const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/create-password?token=${resetToken}`;
             const user = { email, firstName, lastName };
 
@@ -79,7 +81,9 @@ export async function GET(req) {
                 last_name: lastName,
                 generate_password: resetLink,
             };
-            const listId = 'UckSDK';            
+
+            const listId = 'UckSDK';
+
             try {
                 setTimeout(async () => {
                     try {
@@ -90,8 +94,9 @@ export async function GET(req) {
                 }, 60000);
 
                 await createProfile(user, customProperties);
-                await subscribeProfiles(user, listId);                
-              
+
+                await subscribeProfiles(user, listId);
+
                 setTimeout(async () => {
                     try {
                         const deleteProfileResponse = await deleteProfile(user);
@@ -99,10 +104,11 @@ export async function GET(req) {
                         console.error('Error deleting profile:', error);
                     }
                 }, 60000);
+
                 doctor.reminderDate = now;
                 await doctor.save();
-
                 await delay(1000);
+                
             } catch (error) {
                 console.error('Error processing doctor:', email, error);
             }
