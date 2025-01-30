@@ -1,6 +1,6 @@
 
 'use client';
-import { useSession } from 'next-auth/react';
+import { useSession, update, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react'
 import { useState, useEffect } from "react";
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 
 export default function Home() {
     const { data: session } = useSession();
-    console.log(session);
+
     const [patients, setPatients] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -19,6 +19,7 @@ export default function Home() {
     const [currentPassword, setCurrentPassword] = useState(session?.password);
     const [newPassword, setNewPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
+    const [updateLoader, setUpdateLoader] = useState(false)
     const handleRedirect = (id) => {
         if (id) {
             router.push(`/patients/edit/${id}`); // Redirect to the patient's page with ID
@@ -89,8 +90,7 @@ export default function Home() {
         if (currentPassword) {
             fetchTemplate('new');
         }
-        else
-        { fetchTemplate('old') }
+        else { fetchTemplate('old') }
         fetchPatients();
 
     }, []);
@@ -98,12 +98,13 @@ export default function Home() {
 
     const handleUpdatePassword = async () => {
         // Validate the password
+
         if (newPassword.length < 8) {
             setErrorMessage('Password must be at least 8 characters long.');
             return;
         }
-
         setErrorMessage(''); // Clear any previous error message
+        setUpdateLoader(true)
 
         try {
             const response = await fetch('/api/doctors/updatePassword', {
@@ -127,13 +128,24 @@ export default function Home() {
                 setNewPassword('')
                 fetchTemplate('old')
 
+                await signIn('credentials', {
+                    redirect: false,
+                    email: session?.user?.email,
+                    password: newPassword
+                });
+                setUpdateLoader(false)
+
+
             } else {
                 const errorData = await response.json();
                 alert(`Error: ${errorData.message}`);
+                setUpdateLoader(false)
+
             }
         } catch (error) {
             alert('An error occurred while updating the password.');
             console.error(error);
+            setUpdateLoader(false)
         }
     };
 
@@ -143,9 +155,9 @@ export default function Home() {
                 <p className='text-lg text-[#323232]'>{title ? title : "Title is not available"}</p>
                 <p className='my-4 text-lg font-normal text-[#323232] html-content' dangerouslySetInnerHTML={{ __html: description ? description : 'Description is not available' }}></p>
                 <p className="mt-2 text-lg text-[#323232]">Team BOVA</p>
-            </div>  
+            </div>
 
-            {currentPassword &&
+           {currentPassword &&
                 <div className='update-password-outer w-full max-w-5xl mt-5 items-center border border-solid border-[#AFAAAC] px-[16px]  md:px-5 py-3 rounded-[15px] flex gap-3'>
                     <div className='w-full'>
                         <p className='text-gray-600 text-lg'>Password: <span className='text-xl ml-2'>{currentPassword}</span></p></div>
@@ -156,16 +168,21 @@ export default function Home() {
                             onChange={(e) => setNewPassword(e.target.value)}
                             className='w-full border border-[#AFAAAC] focus:border-[#25464f] rounded-[8px] p-3 h-[42px] rounded focus:outline-none ' />
                     </div>
+                    
                     {errorMessage && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
                     )}
+
                     <div className='w-full max-w-[101px] text-end'>
                         <button
-                            className={`py-2 px-4 border bg-customBg2 hover:bg-inherit hover:text-customBg2 border-customBg2' } border border-customBg2 text-white rounded-[8px]`}
+                            // className={`py-2 px-4 border bg-customBg2 hover:bg-inherit hover:text-customBg2 border-customBg2' } border border-customBg2 text-white rounded-[8px]`}
+                            className=     {`py-2 px-4 border bg-customBg2 ${updateLoader
+                                ? 'bg-gray-300 border-gray-300 text-gray-500 hover:bg-#d1d5db cursor-not-allowed'
+                                : 'hover:bg-inherit hover:text-customBg2 border-customBg2'
+                                } border border-customBg2 text-white rounded-[8px]`}
                             onClick={handleUpdatePassword}
-                        >
-                            Update
-                        </button>
+                            disabled={updateLoader}
+                        > {updateLoader ? 'Updating' : 'Update'} </button>
                     </div>
                 </div>
             }
@@ -207,6 +224,7 @@ export default function Home() {
                                     <span className="text-gray-600">{`${patient.firstName} ${patient.lastName}`}</span>
                                 </div>
                             ))}
+
                             <button
                                 className={`py-2 px-4 border bg-customBg2 ${!selectedPatient
                                     ? 'bg-gray-300 border-gray-300 text-gray-500 hover:bg-#d1d5db cursor-not-allowed'

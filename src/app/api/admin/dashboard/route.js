@@ -8,7 +8,7 @@ export async function GET() {
     await connectDB();
 
     try {
-    
+
         const allDoctors = await Doctor.find({ userType: "Doctor" });
 
         const doctorEarningsData = await Promise.all(
@@ -31,34 +31,39 @@ export async function GET() {
         );
         const totalItemCount = await Order.aggregate([
             {
-              $group: {
-                _id: null, // No grouping key, summing across all documents
-                totalItems: { $sum: { $toInt: "$item_count" } } // Convert item_count to integer and sum
-              }
+                $group: {
+                    _id: null, // No grouping key, summing across all documents
+                    totalItems: { $sum: { $toInt: "$item_count" } } // Convert item_count to integer and sum
+                }
             }
-          ]);
+        ]);
 
-          const units = totalItemCount[0]?.totalItems || 0; // If no documents, total is 0
-        
-          
-        // Sort doctors by revenue in descending order and take the top 8
+        const units = totalItemCount[0]?.totalItems || 0; // If no documents, total is 0
+
         const topEarningDoctors = doctorEarningsData
-            .sort((a, b) => b.revenue - a.revenue)
+            .sort((a, b) => {
+                if (b.revenue !== a.revenue) {
+                    return b.revenue - a.revenue; // Sort by revenue first
+                } else if (b.plans !== a.plans) {
+                    return b.plans - a.plans; // If revenue is same, sort by plans
+                } else {
+                    return b.patients - a.patients; // If plans are also same, sort by patients
+                }
+            })
             .slice(0, 10);
 
         const totalDoctors = await Doctor.countDocuments({ userType: "Doctor" });
         const totalPatient = await Patient.countDocuments();
-        const doctorsSignedIn = await Doctor.countDocuments({ 
-            password: { $exists: true, $ne: '' }, 
-            userType: "Doctor" 
-          });
-          const inviteSent = await Doctor.countDocuments({ 
-            password: { $exists: false }, 
-            resetToken: { $exists: true }, 
-            userType: "Doctor" 
-          });
+        const doctorsSignedIn = await Doctor.countDocuments({
+            password: { $exists: true, $ne: '' },
+            userType: "Doctor"
+        });
 
-    
+        const inviteSent = await Doctor.countDocuments({
+            password: { $exists: false },
+            resetToken: { $exists: true },
+            userType: "Doctor"
+        });
 
         // Get the last 6 months including the current month
         const currentDate = new Date();

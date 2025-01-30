@@ -6,13 +6,11 @@ import { createProfile, subscribeProfiles, deleteProfile } from '../../../klaviy
 
 connectDB(); // Ensure database connection is established
 
-
-
 export async function POST(req) {
   try {
+
     // Parse formData from the request body
     const formData = await req.formData();
-
     // Extract fields from formData
     const firstName = formData.get('firstName');
     const lastName = formData.get('lastName');
@@ -27,17 +25,21 @@ export async function POST(req) {
     const state = formData.get('state');
     const city = formData.get('city');
     const zipCode = formData.get('zipCode');
+
     // console.log(phone, 'phone')
     // Check if the doctor already exists with the same email or phone
+
     const query = {
       $or: [
         { email },
-        ...(phone ? [{ phone }] : []) // Only check phone if provided
+        ...(phone ? [{ phone }] : [])
       ]
     };
+
     const existingDoctor = await Doctor.findOne(query);
     if (existingDoctor) {
       const errors = [];
+      
       if (existingDoctor.email === email) {
         errors.push('Email already exists');
       }
@@ -81,11 +83,12 @@ export async function POST(req) {
 
       setTimeout(async () => {
         try {
-          await deleteProfile(user);
+          const deleteProfileResponse = await deleteProfile(user);
         } catch (error) {
           console.error('Error deleting profile:', error);
         }
       }, 60000);
+
       const createProfilePromise = createProfile(user, customProperties);
       const subscribeProfilePromise = subscribeProfiles(user, listId);
 
@@ -112,8 +115,7 @@ export async function POST(req) {
         message: 'Doctor created and reset email sent successfully',
         doctorData,
       }),
-      { status: 201 }
-    );
+      { status: 201 });
   } catch (error) {
     console.error('Error in POST request:', error);
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
