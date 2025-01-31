@@ -129,7 +129,7 @@ export default function DoctorListing() {
             setFetchLoader(true);
             fetchDoctors(page, sortColumn, sortOrder, searchQuery, activeTab);
         }
-    }, [session, page, activeTab]);
+    }, [page, activeTab]);
 
 
     const handleModal = (doctor) => {

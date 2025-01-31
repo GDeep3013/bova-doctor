@@ -176,7 +176,7 @@ export default function Home() {
                     <div className='w-full max-w-[101px] text-end'>
                         <button
                             // className={`py-2 px-4 border bg-customBg2 hover:bg-inherit hover:text-customBg2 border-customBg2' } border border-customBg2 text-white rounded-[8px]`}
-                            className=     {`py-2 px-4 border bg-customBg2 ${updateLoader
+                            className={`py-2 px-4 border bg-customBg2 ${updateLoader
                                 ? 'bg-gray-300 border-gray-300 text-gray-500 hover:bg-#d1d5db cursor-not-allowed'
                                 : 'hover:bg-inherit hover:text-customBg2 border-customBg2'
                                 } border border-customBg2 text-white rounded-[8px]`}
