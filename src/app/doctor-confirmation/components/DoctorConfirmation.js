@@ -7,7 +7,7 @@ const DoctorConfirmation = () => {
     const [isMounted, setIsMounted] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-  const searchParams = useSearchParams();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         setIsMounted(true);
@@ -15,7 +15,7 @@ const DoctorConfirmation = () => {
 
     useEffect(() => {
         if (isMounted) {
-      const token = searchParams.get('token');
+            const token = searchParams.get('token');
             if (token) {
                 const confirmUser = async () => {
                     try {

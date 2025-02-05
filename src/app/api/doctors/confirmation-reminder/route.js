@@ -34,7 +34,7 @@ export async function GET(req) {
                 twentyFourHoursDoctors.push(doctor);
             }
         });
-        
+
     // 8hrs mail sent        
         for (let doctor of eightHoursDoctors) {
             try {

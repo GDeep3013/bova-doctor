@@ -30,7 +30,7 @@ export async function POST(req) {
         const listId = 'SwGDpn';
 
         try {
-          
+
           setTimeout(async () => {
             try {
               const deleteProfileResponse = await deleteProfile(userData);
@@ -70,7 +70,7 @@ export async function POST(req) {
       }
     );
 
-    return new Response(JSON.stringify({ message: 'Password reset successful' }), { status: 200 });
+    return new Response(JSON.stringify({ message: 'Password reset successful', email: user.email, password: newPassword, }), { status: 200 });
 
   } catch (error) {
     console.error(error);

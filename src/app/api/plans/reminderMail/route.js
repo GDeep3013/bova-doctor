@@ -61,7 +61,7 @@ export async function GET(req) {
                 $gte: twoDaysAgo,
                 $lt: startOfToday
             }
-        }).populate('patient_id');
+        }).populate('patient_id');       
 
         const pendingPlanscountDocuments = await Plan.countDocuments({
         status: 'pending',
