@@ -69,7 +69,7 @@ export default function PatientList() {
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Email</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Associated Doctor</th>
                                 <th className="py-2 px-4 text-left text-[#53595B] ">Phone</th>
-                                <th className="py-2 px-4 text-left text-[#53595B] ">Action</th>
+                                {/* <th className="py-2 px-4 text-left text-[#53595B] ">Action</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -82,19 +82,19 @@ export default function PatientList() {
                             ) : patients.map((patient,index) => (
                                 <tr key={patient._id} className="hover:bg-gray-50 ">
                                     <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>                                 
-                                    <td className="py-2 px-4">{patient.firstName} {patient.lastName}</td>
+                                    <td className="py-2 px-4 cursor-pointer" onClick={() => handleView(patient._id)}>{patient.firstName} {patient.lastName}</td>
                                     <td className="py-2 px-4">{patient.email}</td>
                                     <td className="py-2 px-4">{patient.doctorId ? `${patient.doctorId.firstName} ${patient.doctorId.lastName}` : "Not available"}
                                     </td>
                                     <td className="py-2 px-4">{patient.phone ? formatPhoneNumber(patient.phone) : "Not available"}</td>
-                                    <td className="py-2 px-4 ">
+                                    {/* <td className="py-2 px-4 ">
                                         <img
                                             src='/images/eye-open.svg'
                                             alt="Toggle visibility"
                                             onClick={() => handleView(patient._id)}
                                             className="cursor-pointer"
                                         />
-                                    </td>
+                                    </td> */}
                                 </tr>
                             ))}
                         </tbody>
