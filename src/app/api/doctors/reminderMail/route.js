@@ -17,6 +17,8 @@ export async function GET(req) {
     try {
         const pendingDoctors = await Doctor.find({
             password: { $exists: false },
+            login_token: { $exists: false },
+
             reminderDate: {
                 $gte: twoDaysAgo,
                 $lt: startOfToday
@@ -25,6 +27,7 @@ export async function GET(req) {
 
         const pendingDoctorsCount = await Doctor.countDocuments({
             password: { $exists: false },
+            login_token: { $exists: false },
             reminderDate: {
                 $gte: twoDaysAgo,
                 $lt: startOfToday
@@ -37,39 +40,6 @@ export async function GET(req) {
                 { status: 200 }
             );
         }
-
-
-        // await Promise.all(pendingDoctors.map(async (doctor, index) => {
-        //     const { firstName, lastName, email, resetToken } = doctor;
-
-        //     console.log(firstName, lastName, email, resetToken);
-        //     const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/create-password?token=${resetToken}`;
-        //     const user = { email, firstName, lastName };
-        //     const customProperties = {
-        //         user_name: `${firstName} ${lastName}`,
-        //         last_name: lastName,
-        //         generate_password: resetLink,                               
-        //     }
-
-        //     const listId = 'UckSDK';
-
-        //    await deleteProfile(user);
-
-        //     const createProfilePromise = createProfile(user, customProperties);
-        //     const subscribeProfilePromise = subscribeProfiles(user, listId);
-        //     setTimeout(async () => {
-        //         try {
-        //           const deleteProfileResponse = await deleteProfile(user);
-        //         } catch (error) {
-        //           console.error('Error deleting profile:', error);
-        //         }
-        //     }, 60000);
-
-        //      const [createResponse, subscribeResponse] = await Promise.all([
-        //         createProfilePromise,
-        //         subscribeProfilePromise,
-        //       ]);
-        // }));
 
         for (const doctor of pendingDoctors) {
             const { firstName, lastName, email, resetToken } = doctor;
@@ -108,7 +78,7 @@ export async function GET(req) {
                 doctor.reminderDate = now;
                 await doctor.save();
                 await delay(1000);
-                
+
             } catch (error) {
                 console.error('Error processing doctor:', email, error);
             }
