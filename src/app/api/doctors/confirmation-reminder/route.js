@@ -64,13 +64,13 @@ export async function GET(req) {
                     await createProfile(doctorUser, customProperties);
                     await subscribeProfiles(doctorUser, listId);
 
-            //         setTimeout(async () => {
-            //             try {
-            //                 const deleteProfileResponse = await deleteProfile(doctorUser);
-            //             } catch (error) {
-            //                 console.error('Error deleting profile:', error);
-            //             }
-            //         }, 60000);
+                    setTimeout(async () => {
+                        try {
+                            const deleteProfileResponse = await deleteProfile(doctorUser);
+                        } catch (error) {
+                            console.error('Error deleting profile:', error);
+                        }
+                    }, 60000);
 
                     await delay(1000);
                 } catch (error) {
