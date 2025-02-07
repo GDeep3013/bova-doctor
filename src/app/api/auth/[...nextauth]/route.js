@@ -21,7 +21,7 @@ const authOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Please enter both email and password');
         }
- console.log(credentials.email)
+
         const user = await Doctor.findOne({ email: credentials.email });
         if (!user) {
           throw new Error('No user found with this email');
