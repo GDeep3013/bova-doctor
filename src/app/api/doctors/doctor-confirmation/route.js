@@ -32,7 +32,7 @@ export async function GET(req) {
     const hashedPassword = await bcrypt.hash(dummyPassword, 10);
     currentDoctor.password = hashedPassword;
     currentDoctor.passwordCreatedDate = new Date()
-    currentDoctor.login_token = null;
+    // currentDoctor.login_token = null;
     await currentDoctor.save();
     return new Response(
       JSON.stringify({

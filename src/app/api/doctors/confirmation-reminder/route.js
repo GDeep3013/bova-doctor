@@ -78,10 +78,12 @@ export async function GET(req) {
                 }
             } catch (error) {
                 console.error(`Failed to send email to ${doctor.email}:`, error);
-            }}
+            }
+        }
 
         //24 hrs mail sent
-        for (let doctor of twentyFourHoursDoctors) {
+            for (let doctor of twentyFourHoursDoctors) {
+            
             try {
 
                 const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${doctor.login_token}`;
