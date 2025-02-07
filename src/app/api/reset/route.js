@@ -62,8 +62,7 @@ export async function POST(req) {
     await Doctor.updateOne(
       { _id: user._id },
       {
-        password: hashedPassword,
-        resetToken: null,
+        password: hashedPassword,        
         ...(isPasswordAlreadySet
           ? {}
           : { passwordCreatedDate: new Date() }),
