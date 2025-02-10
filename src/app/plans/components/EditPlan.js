@@ -761,7 +761,7 @@ export default function CreatePlan() {
                                         </div>
                                     </div>
                                 </div>
-                                <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white` }> Doctor commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
+                                <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white` }> Doctor Commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
                             </div>
                         }
                     </div>
