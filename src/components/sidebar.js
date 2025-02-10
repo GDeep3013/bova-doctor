@@ -166,8 +166,8 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/" className={`block text-lg ${isActive('/plans/incomplete') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
-                      Incomplete
+                    <Link href="/" className={`block text-lg ${isActive('/plans/saved') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
+                    Saved
                     </Link>
                   </li>
                 </ul>

@@ -60,8 +60,8 @@ export default function CreatePlan() {
     }
 
     const fetchSavedProduct = async () => {
- 
-         try {
+
+        try {
             const response = await fetch(`/api/products?status=active`);
             if (!response.ok) throw new Error('Failed to fetch product status');
             const data = await response.json();
@@ -132,17 +132,17 @@ export default function CreatePlan() {
                     }))
                 }
             }));
-            if (type === 'All') {                
+            if (type === 'All') {
                 setAllVariants(variants)
             }
             if (type === 'active') {
-                setVariants(variants)                
+                setVariants(variants)
             }
         } catch (error) {
             console.error("Error updating product status:", error);
         }
     };
-    
+
     useEffect(() => {
         fetchAllProduct()
         setFetchLoader(true);
@@ -151,10 +151,10 @@ export default function CreatePlan() {
         // setFetchLoader(false);
     }, []);
 
-    
+
 
     const handleSelectProduct = (variant) => {
-        console.log(variant,'tesrt');
+
         setSelectedItems((prevSelectedItems) => {
             const productExists = prevSelectedItems.some((item) => item.id === variant.id);
             if (productExists) return prevSelectedItems;
@@ -315,7 +315,7 @@ export default function CreatePlan() {
     const filteredProducts = variants.filter(product =>
         product.title.toLowerCase().includes(searchTerm)
     )
- 
+
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
 
 
@@ -428,7 +428,7 @@ export default function CreatePlan() {
 
     // const discount = subtotal * parseFloat(formData.discount);
 
-    
+
 
     // const doctorCommission = subtotal * (commissionPercentage / 100);
     useEffect(() => {
@@ -664,7 +664,7 @@ export default function CreatePlan() {
                                         value={formData.message}
                                         onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}
                                         className="w-full border border-customBorder rounded-md focus:outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none focus:border-indigo-500 text-[#52595b] text-base xl:text-lg"
-                                   rows="4"
+                                        rows="4"
                                         placeholder="Message"
                                     ></textarea>
                                 </div>}
@@ -733,10 +733,10 @@ export default function CreatePlan() {
                                                         <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount ({formData.discount ? formData.discount : 0}%)</td>
                                                         <td className="py-2 text-textColor3 text-sm text-right">-${dicountPrice.toFixed(2)}</td>
                                                     </tr>
-                                                    <tr className="">
+                                                    {/* <tr className="">
                                                         <td className="py-2 text-textColor3 text-sm" colSpan="2">Doctor commission</td>
                                                         <td className="py-2 text-textColor3 text-sm text-right">${doctorCommission.toFixed(2)}</td>
-                                                    </tr>
+                                                    </tr> */}
                                                     <tr className="border-b border-[#AFAAAC] pb-4">
                                                         <td className="py-2 text-textColor3 text-sm" colSpan="2">Subtotal</td>
                                                         <td className="py-2 font-bold text-[#53595B]  text-right">
@@ -761,6 +761,7 @@ export default function CreatePlan() {
                                         </div>
                                     </div>
                                 </div>
+                                <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white` }> Doctor commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
                             </div>
                         }
                     </div>
@@ -886,7 +887,7 @@ export default function CreatePlan() {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                          </div>
+                                                        </div>
                                                     );
                                                 })}
 
