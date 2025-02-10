@@ -257,7 +257,7 @@ export default function CreatePlan() {
     const filteredProducts = variants.filter(variants =>
         variants.product.title.toLowerCase().includes(searchTerm)
     )
-    
+
     useEffect(() => {
         if (id) {
             const matchedPatient = patients.find(patient => patient._id === id);
@@ -287,7 +287,7 @@ export default function CreatePlan() {
 
     // const discount = subtotal * parseFloat(formData.discount);
 
-  
+
 
     useEffect(() => {
         if (subtotal > 0 && parseFloat(commissionPercentage) > 0) {
@@ -541,7 +541,8 @@ export default function CreatePlan() {
                         </div>
                     </div>
                     {/* Right Column - Price Summary */}
-                    {selectedItems.length > 0 &&
+                    {selectedItems.length > 0 && <>
+
                         <div className="space-y-4 w-full max-w-[100%] md:max-w-[310px]">
                             <div className='border border-customBorder p-5 rounded-lg'>
                                 <div class="form-floating">
@@ -590,10 +591,7 @@ export default function CreatePlan() {
                                                     <td className="py-2 text-textColor3 text-sm" colSpan="2">Patient Discount ({formData.discount ? formData.discount : 0}%)</td>
                                                     <td className="py-2 text-textColor3 text-sm text-right">-${dicountPrice.toFixed(2)}</td>
                                                 </tr>
-                                                <tr className="">
-                                                    <td className="py-2 text-textColor3 text-sm" colSpan="2">Doctor commission</td>
-                                                    <td className="py-2 text-textColor3 text-sm text-right">${doctorCommission.toFixed(2)}</td>
-                                                </tr>
+
                                                 <tr className="border-b border-[#AFAAAC] pb-4">
                                                     <td className="py-2 text-textColor3 text-sm" colSpan="2">Subtotal</td>
                                                     <td className="py-2 font-bold text-[#53595B]  text-right">
@@ -618,7 +616,9 @@ export default function CreatePlan() {
                                     </div>
                                 </div>
                             </div>
+                            <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white` }> Doctor commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
                         </div>
+                    </>
                     }
                 </div>
 

@@ -18,7 +18,7 @@ export async function GET(req) {
 
         const twentyFourHoursDoctors = [];
         const eightHoursDoctors = [];
-        
+
         const calculateHoursDifference = (createdDate) => {
             const now = dayjs();
             const created = dayjs(createdDate);
@@ -35,7 +35,7 @@ export async function GET(req) {
             }
         });
 
-    // 8hrs mail sent        
+        // 8hrs mail sent        
         for (let doctor of eightHoursDoctors) {
             try {
                 const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${doctor.login_token}`;
@@ -52,7 +52,7 @@ export async function GET(req) {
                     login_link: confirmationLink
                 };
 
-                try {                
+                try {
                     setTimeout(async () => {
                         try {
                             const deleteProfileResponse = await deleteProfile(doctorUser);
@@ -82,7 +82,7 @@ export async function GET(req) {
         }
 
         //24 hrs mail sent
-            for (let doctor of twentyFourHoursDoctors) {
+        for (let doctor of twentyFourHoursDoctors) {
             
             try {
 
@@ -95,7 +95,7 @@ export async function GET(req) {
                     lastName: doctor.lastName,
                     login_link: confirmationLink
                 };
-
+                
                 try {
                     setTimeout(async () => {
                         try {
@@ -105,7 +105,7 @@ export async function GET(req) {
                         }
                     }, 60000);
 
-                    await createProfile(doctorUser, customProperties);                    
+                    await createProfile(doctorUser, customProperties);
                     await subscribeProfiles(doctorUser, listId);
 
                     setTimeout(async () => {

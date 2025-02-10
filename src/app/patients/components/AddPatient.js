@@ -20,6 +20,8 @@ export default function Home() {
     const [newPassword, setNewPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
     const [updateLoader, setUpdateLoader] = useState(false)
+    const [messageShow, setMessageShow] = useState(true)
+  
     const handleRedirect = (id) => {
         if (id) {
             router.push(`/patients/edit/${id}`); // Redirect to the patient's page with ID
@@ -27,8 +29,6 @@ export default function Home() {
             alert("Please select a patient."); // Prompt if no patient is selected
         }
     };
-
-
 
     const fetchPatients = async () => {
         try {
@@ -98,7 +98,6 @@ export default function Home() {
 
     const handleUpdatePassword = async () => {
         // Validate the password
-
         if (newPassword.length < 8) {
             setErrorMessage('Password must be at least 8 characters long.');
             return;
@@ -149,15 +148,23 @@ export default function Home() {
         }
     };
 
+    const today = new Date();
+    const formattedDate = new Intl.DateTimeFormat("en-GB").format(today).replace(/\//g, ".");
+
     return (
         <>
-            <div className="w-full max-w-5xl bg-[#d6dee5] p-[20px] md:pb-16 md:p-12 mt-6 rounded-lg">
-                <p className='text-lg text-[#323232]'>{title ? title : "Title is not available"}</p>
-                <p className='my-4 text-lg font-normal text-[#323232] html-content' dangerouslySetInnerHTML={{ __html: description ? description : 'Description is not available' }}></p>
-                <p className="mt-2 text-lg text-[#323232]">Team BOVA</p>
+            <div className={`w-full max-w-5xl bg-[#d6dee5] rounded-lg message-box-outer ${messageShow ? 'display-data' : ''}`}>
+                {!messageShow && (<p className='text-lg text-[#323232]'>{title ? title : "Title is not available"}</p>)}
+                <div className='collpase-message relative'>
+                    {messageShow && (<span className="text-[40px] absolute left-0 top-0 leading-[25px] cursor-pointer" onClick={() => { setMessageShow(!messageShow) }}>+</span>)}
+                    {!messageShow && (<span className="text-2xl cursor-pointer close-message" onClick={() => { setMessageShow(!messageShow) }}>x</span>)}
+                    <p className='my-4 text-lg font-normal text-[#323232] html-content' dangerouslySetInnerHTML={{ __html: description ? description : 'Description is not available' }}></p>
+                    {!messageShow && (<p className="mt-2 text-lg text-[#323232]">Team BOVA</p>)}
+                    {messageShow && (<span className="text-[15px] leading-[25px] message-date" >{formattedDate}</span>)}
+                </div>
             </div>
 
-           {currentPassword &&
+            {currentPassword &&
                 <div className='update-password-outer w-full max-w-5xl mt-5 items-center border border-solid border-[#AFAAAC] px-[16px]  md:px-5 py-3 rounded-[15px] flex gap-3'>
                     <div className='w-full'>
                         <p className='text-gray-600 text-lg'>Password: <span className='text-xl ml-2'>{currentPassword}</span></p></div>
@@ -168,7 +175,7 @@ export default function Home() {
                             onChange={(e) => setNewPassword(e.target.value)}
                             className='w-full border border-[#AFAAAC] focus:border-[#25464f] rounded-[8px] p-3 h-[42px] rounded focus:outline-none ' />
                     </div>
-                    
+
                     {errorMessage && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
                     )}
