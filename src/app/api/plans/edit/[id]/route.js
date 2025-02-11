@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { medicationPlan } from '../../../../templates/medicationPlan'
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
-import { createDiscountPriceRule, createDiscountCode ,updateDiscountPriceRule,DeleteDiscountCode} from '../../../../shopify-api/_shopify_api_ShopifyAPI'
+import { createDiscountPriceRule, createDiscountCode, updateDiscountPriceRule, DeleteDiscountCode } from '../../../../shopify-api/_shopify_api_ShopifyAPI'
 
 export async function GET(req, { params }) {
   const { id } = params;
@@ -38,11 +38,17 @@ export async function PUT(req, { params }) {
   await connectDB();
   const crypto = new NextCrypto();
   const { id } = params;
-  const { formData: { items, patient_id, message ,discount}, status = 'pending', selectedItems, doctor ,doctorCommission} = await req.json();
+  const {
+    formData: { items, patient_id, message, discount },
+    status = 'pending',
+    planStatus = 'ordered',
+    selectedItems,
+    doctor,
+    doctorCommission } = await req.json();
   try {
     const updatedPlan = await Plan.findByIdAndUpdate(
       id,
-      { items, status, patient_id, message, discount,doctorCommission,updatedAt: new Date() },
+      { items, status, patient_id, message, discount, doctorCommission, planStatus, updatedAt: new Date() ,reminderDate:new Date(),},
       { new: true }
     ).populate('patient_id');
 
@@ -54,7 +60,7 @@ export async function PUT(req, { params }) {
     let priceRule = null;
     try {
       await DeleteDiscountCode(updatedPlan?.discountId);
-      if (discount) {       
+      if (discount) {
         priceRule = await createDiscountPriceRule(discount, patient);
       }
       // priceRule = await createDiscountPriceRule(discount, patient);

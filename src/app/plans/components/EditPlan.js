@@ -87,7 +87,7 @@ export default function CreatePlan() {
             // Check if the data has products and then map and push variant IDs into an array
             if (Array.isArray(data) && data.length > 0) {
                 const variantIds = data.map(product => product.variant_id); // Adjust 'variantId' according to your data structure
-                getVariants(variantIds,'All')
+                getVariants(variantIds, 'All')
                 // setLoader(false)
             } else {
                 console.log('No products found or data is empty');
@@ -99,7 +99,7 @@ export default function CreatePlan() {
         }
     };
 
-    const getVariants = async (variantIds,type) => {
+    const getVariants = async (variantIds, type) => {
         try {
             const response = await fetch(`/api/shopify/products/variants`, {
                 method: 'POST',
@@ -298,6 +298,52 @@ export default function CreatePlan() {
         }
     };
 
+    const handleSavePlan = async () => {
+        const invalidItems = formData.items.filter(item => (
+            !item.properties.capsule ||
+            !item.properties.frequency ||
+            !item.properties.duration ||
+            !item.properties.takeWith
+        ));
+        // return  invalidItems
+        if (invalidItems.length > 0) {
+            alert("Please fill out all required fields for each item.");
+            return;
+        }
+        try {
+            setLoader(true)
+            let newdata = {
+                selectedItems: selectedItems,
+                formData: formData,
+                doctor: {
+                    name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
+                    email: session?.userDetail?.email,
+                    clinicName: session?.userDetail?.clinicName
+                },
+                doctorCommission: formData.discount ? (commissionPercentage - formData.discount) : commissionPercentage,
+            }
+            const response = await fetch(`/api/plans/savePlans/edit/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newdata),
+            });
+            if (!response.ok) throw new Error('Failed to submit data');
+            Swal.fire({
+                title: 'Success!',
+                iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                text: `You have successfully saved the plan for  ${selectedPatient.firstName} ${selectedPatient.lastName}`,
+                confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
+            });
+            setLoader(false)
+            router.push('/plans/saved');
+        } catch (error) {
+            setLoader(false)
+
+            console.error("Error saving data:", error);
+        }
+    };
+
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
 
 
@@ -365,7 +411,7 @@ export default function CreatePlan() {
                 setFormData(prevData => ({
                     ...prevData,
                     items: mappedItems,
-                    discount: data.discount?data.discount:"",
+                    discount: data.discount ? data.discount : "",
                     mailData: mappedMailData,
                     message: data?.message
                 }));
@@ -670,6 +716,16 @@ export default function CreatePlan() {
                                 </div>}
                                 {/* Send to Patient Button */}
                                 <div className="hidden min-[768px]:block p-4 text-right border-t border-[#AFAAAC]">
+                                <button
+                                    onClick={() => { handleSavePlan() }}
+                                    disabled={formData.items.length === 0 || !formData.patient_id}
+                                    className={`py-2 px-4 min-w-[130px] mr-2 text-sm min-h-[46px] rounded-[8px]
+                                            ${formData.items.length === 0 || !formData.patient_id
+                                            ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                    }>
+                                    {loader ? "Please wait ..." : 'Save Plan'}
+                                </button>
                                     <button
                                         onClick={() => { handleSubmit() }}
                                         disabled={formData.items.length === 0 || !formData.patient_id}
@@ -747,21 +803,32 @@ export default function CreatePlan() {
                                             </table>
                                         </div>
 
-                                        <div className='text-right py-5'>
+                                        <div className='text-right pt-5 flex gap-2'>
                                             <button
-                                                onClick={() => { handleSubmit() }}
+                                                onClick={() => { handleSavePlan() }}
                                                 disabled={formData.items.length === 0 || !formData.patient_id}
-                                                className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
+                                                className={`py-2 px-4 min-w-[100px] text-sm min-h-[46px] rounded-[8px]
                                             ${formData.items.length === 0 || !formData.patient_id
                                                         ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                         : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                                 }>
-                                                {loader ? "Please wait ..." : 'Send to Patient'}
+                                                {loader ? "Please wait ..." : 'Save Plan'}
+                                            </button>
+
+                                            <button
+                                                onClick={() => { handleSubmit() }}
+                                                disabled={formData.items.length === 0 || !formData.patient_id}
+                                                className={`py-2 px-4 min-w-[130px] text-sm min-h-[46px] rounded-[8px]
+                                            ${formData.items.length === 0 || !formData.patient_id
+                                                        ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                                        : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                                }>
+                                                {loader ? "Please wait ..." : 'Update Patient Plan'}
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white` }> Doctor Commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
+                                <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white`}> Doctor Commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
                             </div>
                         }
                     </div>

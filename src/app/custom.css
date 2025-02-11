@@ -119,14 +119,16 @@ div#swal2-html-container{ color: #29282b; }
 
 .copy-link-btn svg{ width: 27px; height:27px; }
 
-.dashboard-inner .card-icon .card-svg svg { width: 31px; height: 31px; }
-.message-box-outer{ transition:all 0.2s ease-in-out;  margin-top: 23px; padding: 48px 48px 64px;}
-.message-box-outer.display-data{ height: 58px; overflow: hidden; padding: 18px !important; }
+.dashboard-inner .doctor-graph .card-icon .card-svg svg { width: 31px; height: 31px; }
+.message-box-outer{ transition:all 0.3s ease-in-out; margin-top: 23px; padding: 48px 48px 64px;}
+.message-box-outer.display-data{ max-height: 58px; overflow: hidden; padding-top: 18px; padding-bottom: 18px; }
 .message-box-outer.display-data p:first-child { text-overflow: ellipsis; white-space: nowrap; max-width: 75%; overflow: hidden; }
 .message-box-outer.display-data .message-date { position: absolute; top: 1px; right: 0; }
 .message-box-outer.display-data p.html-content { font-size: 16px; padding-left: 27px; margin: 0;}
 .message-box-outer .close-message { position: absolute; top: -32px; right: 0; }
 .message-box-outer .close-message { position: absolute; top: -62px; right: -18px; font-size: 34px; color: #fff; }
+.display-data .hidden-title { opacity: 0; visibility: hidden; display: none; }
+
 @media screen and (min-width:2000px) {
   .login-outer { background-position: 0 75%; }
 }

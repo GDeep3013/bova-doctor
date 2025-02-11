@@ -236,19 +236,62 @@ export default function CreatePlan() {
             setLoader(false);
         }
     };
+
+    const handleSavePlan = async () => {
+        const invalidItems = formData.items.filter(item => (
+            !item.properties.capsule ||
+            !item.properties.frequency ||
+            !item.properties.duration ||
+            !item.properties.takeWith
+        ));
+        if (invalidItems.length > 0) {
+            alert("Please fill out all required fields for each item.");
+            return;
+        }
+        try {
+            setLoader(true);
+            let newdata = {
+                selectedItems: selectedItems,
+                formData: formData,
+                doctor: {
+                    name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
+                    email: session?.userDetail?.email,
+                    clinicName: session?.userDetail?.clinicName
+                },
+                doctorCommission: formData.discount ? (commissionPercentage - formData.discount) : commissionPercentage,
+
+            }
+            const response = await fetch('/api/plans/savePlans', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newdata),
+            });
+            if (!response.ok) throw new Error('Failed to submit data');
+            Swal.fire({
+                title: 'Success!',
+                iconHtml: '<img src="/images/succes_icon.png" alt="Success Image" class="custom-icon" style="width: 63px; height: 63px;">',
+                text: `You have successfully saved the plan for ${selectedPatient.firstName} ${selectedPatient.lastName}`,
+                confirmButtonText: 'OK',
+                confirmButtonColor: "#3c96b5",
+            });
+            setLoader(false);
+            router.push('/plans/saved');
+
+        } catch (error) {
+            console.error("Error saving data:", error);
+            setLoader(false);
+        }
+    };
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
 
     const openModal = () => {
         setIsModalOpen(true);
         document.body.classList.add('modal-open');
-
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         document.body.classList.remove('modal-open');
-
-        // setSelectedProduct(null);
     };
 
     const handleSearchChange = (event) => setSearchTerm(event.target.value.toLowerCase());
@@ -282,26 +325,16 @@ export default function CreatePlan() {
     }
 
     const subtotal = formData.items.reduce((acc, item) => {
-        return acc + (parseFloat(item.price) || 0);  // Ensure item.price is treated as a float
+        return acc + (parseFloat(item.price) || 0);  
     }, 0);
-
-    // const discount = subtotal * parseFloat(formData.discount);
-
-
 
     useEffect(() => {
         if (subtotal > 0 && parseFloat(commissionPercentage) > 0) {
             const discountValue = formData.discount === "" ? 0 : parseFloat(formData.discount);
-
-            // Calculate discount amount
             const discount = (subtotal * discountValue) / 100;
-
-            // Calculate doctor commission after discount
             const doctorPrice = (subtotal * parseFloat(commissionPercentage)) / 100 - discount;
-
-            // Update states
-            setDicountPrice(discount); // Discount amount
-            setDoctorCommission(doctorPrice);
+            setDicountPrice(discount); 
+            setDoctorCommission(doctorPrice);            
         }
     }, [formData.discount, commissionPercentage, subtotal]);
     return (
@@ -520,13 +553,23 @@ export default function CreatePlan() {
                                 <textarea
                                     value={formData.message}
                                     onChange={(e) => setFormData((prevFormData) => ({ ...prevFormData, message: e.target.value, }))}
-                                    className="w-full border border-customBorder rounded-md focus:outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none focus:border-indigo-500 text-[#52595b] text-base xl:text-lg"
+                                    className="w-full border border-customBorder focus:outline-none min-h-[50px] rounded-[8px] p-4 mt-1 mb-4 resize-none focus:border-indigo-500 text-[#52595b] text-base xl:text-lg"
                                     rows="4"
                                     placeholder="Message"
                                 ></textarea>
                             </div>}
                             {/* Send to Patient Button */}
                             <div className="hidden min-[768px]:block p-4 text-right border-t border-[#AFAAAC]">
+                                <button
+                                    onClick={() => { handleSavePlan() }}
+                                    disabled={formData.items.length === 0 || !formData.patient_id}
+                                    className={`py-2 px-4 min-w-[130px] mr-2 text-sm min-h-[46px] rounded-[8px]
+                                            ${formData.items.length === 0 || !formData.patient_id
+                                            ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                    }>
+                                    {loader ? "Please wait ..." : 'Save Plan'}
+                                </button>
                                 <button
                                     onClick={() => { handleSubmit() }}
                                     disabled={formData.items.length === 0 || !formData.patient_id}
@@ -602,11 +645,21 @@ export default function CreatePlan() {
                                         </table>
                                     </div>
 
-                                    <div className='text-right py-5'>
+                                    <div className='text-right pt-5 flex gap-2'>
+                                        <button
+                                            onClick={() => { handleSavePlan() }}
+                                            disabled={formData.items.length === 0 || !formData.patient_id}
+                                            className={`py-2 px-4 min-w-[130px] text-sm min-h-[46px] rounded-[8px]
+                                            ${formData.items.length === 0 || !formData.patient_id
+                                                    ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
+                                                    : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
+                                            }>
+                                            {loader ? "Please wait ..." : 'Save Plan'}
+                                        </button>
                                         <button
                                             onClick={() => { handleSubmit() }}
                                             disabled={formData.items.length === 0 || !formData.patient_id}
-                                            className={`py-2 px-4 min-w-[150px] min-h-[46px] rounded-[8px]
+                                            className={`py-2 px-4 min-w-[130px] text-sm min-h-[46px] rounded-[8px]
                                             ${formData.items.length === 0 || !formData.patient_id
                                                     ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                     : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
@@ -616,7 +669,7 @@ export default function CreatePlan() {
                                     </div>
                                 </div>
                             </div>
-                            <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white` }> Doctor Commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
+                            <button className={`py-2 px-4 w-full min-h-[46px] rounded-[8px] bg-[#2080b4] border border-customBg2  cursor-text text-white`}> Doctor Commission : <strong>${doctorCommission.toFixed(2)}</strong> </button>
                         </div>
                     </>
                     }

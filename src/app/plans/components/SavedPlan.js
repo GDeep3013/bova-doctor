@@ -8,7 +8,7 @@ import { DeleteIcon, EditIcon } from 'components/svg-icons/icons';
 import Link from 'next/link'
 import Loader from 'components/loader';
 
-export default function ReviewPlan() {
+export default function SavedPlan() {
     const { data: session } = useSession();
     const [plans, setPlans] = useState([]);
     const router = useRouter();
@@ -67,8 +67,8 @@ export default function ReviewPlan() {
     const fetchPlans = async (currentPage = 1) => {
 
         try {
+            let status = 'saved'
             setFetchLoader(true)
-            let status ='ordered'
             const response = await fetch(`/api/plans/getPlans?userId=${session?.user?.id}&page=${currentPage}&limit=${limit}&status=${status}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch patients");
@@ -105,7 +105,7 @@ export default function ReviewPlan() {
 
 
     const EarningPercentage = (price) => {
-        return session?.userDetail?.commissionPercentage - price +"%"
+        return session?.userDetail?.commissionPercentage - price + "%"
     }
 
     return (
@@ -113,9 +113,8 @@ export default function ReviewPlan() {
             <div className="mx-auto">
                 {
                     fetchLoader ? <Loader /> : <>
-
                         <div className='flex justify-between mt-2 mb-6'>
-                            <h1 className="text-2xl">Plan List</h1>
+                            <h1 className="text-2xl">Saved Plans List</h1>
                             <Link href='/plans/create-plan' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit min-w-[130px] text-center" >
                                 Add Plan
                             </Link>
@@ -148,7 +147,7 @@ export default function ReviewPlan() {
                                             <td className="py-2 px-4">{plan?.patient_id?.email}</td>
                                             <td className="py-2 px-4">{plan.discount ? plan?.discount + '%' : "Not available"}</td>
                                             {/* <td className="py-2 px-4">{plan.order?.doctor.doctor_payment ? ('$ ' + plan?.order?.doctor?.doctor_payment.toFixed(2)) : "Not Available Yet"} </td> */}
-                                            <td className="py-2 px-4">{plan.doctorCommission ? (plan.doctorCommission + "%") : (plan.discount?EarningPercentage(plan.discount) :session?.userDetail?.commissionPercentage+"%")} </td>
+                                            <td className="py-2 px-4">{plan.doctorCommission ? (plan.doctorCommission + "%") : (plan.discount ? EarningPercentage(plan.discount) : session?.userDetail?.commissionPercentage + "%")} </td>
                                             <td className="py-2 px-4">{plan.status ? (
                                                 <span
                                                     className={`px-2 py-1 rounded-full capitalize text-white ${plan.status === "pending"
@@ -156,7 +155,7 @@ export default function ReviewPlan() {
                                                         : "bg-[#3c96b5]"
                                                         }`}
                                                 >
-                                                    {plan.status}
+                                                {plan.status}
                                                 </span>
                                             ) : (
                                                 "Not available"
@@ -178,7 +177,7 @@ export default function ReviewPlan() {
                                                         className={`text-blue-600 hover:underline px-4 w-6 ${plan.status === "ordered" ? "cursor-not-allowed opacity-50" : ""
                                                             }`}
                                                     >
-                                                        <EditIcon />
+                                                    <EditIcon />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(plan._id)}
@@ -189,9 +188,6 @@ export default function ReviewPlan() {
                                                     >
                                                         <DeleteIcon className="w-2 h-2" />
                                                     </button>
-
-
-
                                                 </div>
                                             </td>
 
