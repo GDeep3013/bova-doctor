@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-
 const PlanSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: ['pending', 'completed','ordered'],
+        enum: ['pending', 'completed', 'ordered'],
     },
     message: {
         type: String
@@ -12,9 +11,9 @@ const PlanSchema = new mongoose.Schema({
     patient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true, },
     discount: Number,
     doctorCommission: Number,
-    priceRuleId:Number,
+    priceRuleId: Number,
     discountId: String,
-    discountCode:String, 
+    discountCode: String,
     items: [
         {
             id: { type: Number, required: true },
@@ -22,7 +21,7 @@ const PlanSchema = new mongoose.Schema({
             price: { type: String },
             title: { type: String },
             properties: {
-                capsule:{ type: String, default: '' },
+                capsule: { type: String, default: '' },
                 frequency: { type: String, default: '' },
                 duration: { type: String, default: '' },
                 takeWith: { type: String, default: '' },
@@ -37,7 +36,13 @@ const PlanSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    reminderDate: { type: Date, default: Date.now },
+    planStatus: {
+        type: String,
+        required: true,
+        enum: ['saved', 'ordered'],
+        default:"ordered"
+    },
+    reminderDate: { type: Date},
 });
 PlanSchema.pre('save', function (next) {
     this.updatedAt = Date.now();

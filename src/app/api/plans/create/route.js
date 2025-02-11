@@ -19,7 +19,8 @@ export async function POST(req) {
     status = 'pending',
     selectedItems,
     doctor,
-    doctorCommission
+    doctorCommission,
+    planStatus = 'ordered',
   } = await req.json();
 
 
@@ -30,7 +31,9 @@ export async function POST(req) {
     items,
     discount,
     doctorCommission,
+    planStatus,
     createdAt: new Date(),
+    reminderDate:new Date(),
   };
 
   try {

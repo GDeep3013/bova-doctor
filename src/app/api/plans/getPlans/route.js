@@ -13,6 +13,7 @@ export async function GET(req) {
   const url = new URL(req.url);
   const page = parseInt(url.searchParams.get('page') || '1', 30); // Default to page 1
   const limit = parseInt(url.searchParams.get('limit') || '30', 30); // Default to 10 items per page
+  const planStatus = url.searchParams.get('status'); // Default to 10 items per page
   const skip = (page - 1) * limit;
   if (!userId) {
     return new Response(JSON.stringify({ error: 'User ID is required' }), {
@@ -20,18 +21,20 @@ export async function GET(req) {
     });
   }
 
+
   try {
     // Step 1: Find all patients with the given doctorId
     const patients = await Patient.find({ doctorId: userId }).select('_id').sort({ createdAt: -1 });
     const patientIds = patients.map(patient => patient._id);
 
-    // Step 2: Find all plans where patient_id is in the list of patientIds
-    const plans = await Plan.find({ patient_id: { $in: patientIds } }).sort({ createdAt: -1 })
-    .sort({ createdAt: -1 })
-    .skip(skip)
+
+    const plans = await Plan.find({ patient_id: { $in: patientIds }, planStatus: planStatus }).sort({ createdAt: -1 })
+      .sort({ createdAt: -1 })
+      .skip(skip)
       .limit(limit).populate('patient_id');
+
     const totalPlan = await Plan.countDocuments({ patient_id: { $in: patientIds } });
-    
+
     const plansWithOrders = await Promise.all(
       plans.map(async (plan) => {
         const order = await Order.findOne({ plan_id: plan._id }); // Check for an order linked to the plan
@@ -42,18 +45,18 @@ export async function GET(req) {
       })
     );
 
-      return new Response(
-        JSON.stringify({
-          plans: plansWithOrders,
-          pagination: {
-            total: totalPlan,
-            page,
-            limit,
-            totalPages: Math.ceil(totalPlan / limit),
-          },
-        }),
-        { status: 200 }
-      );
+    return new Response(
+      JSON.stringify({
+        plans: plansWithOrders,
+        pagination: {
+          total: totalPlan,
+          page,
+          limit,
+          totalPages: Math.ceil(totalPlan / limit),
+        },
+      }),
+      { status: 200 }
+    );
     // Respond with the plans data
     // return new Response(JSON.stringify(plans), {
     //   status: 200,

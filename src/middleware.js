@@ -26,9 +26,8 @@ export async function middleware(req) {
     '/plans/review',
     '/plans/plan-detail/',
     '/plans/edit-plan/',
+    '/plans/saved',
     '/earnings',
-
-
   ];
 
 
