@@ -724,7 +724,7 @@ export default function CreatePlan() {
                                             ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                             : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                     }>
-                                    {loader ? "Please wait ..." : 'Save Plan'}
+                                    {loader ? "Please wait ..." : 'Update Only'}
                                 </button>
                                     <button
                                         onClick={() => { handleSubmit() }}
@@ -734,7 +734,7 @@ export default function CreatePlan() {
                                                 ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                 : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                         }>
-                                        {loader ? "Please wait..." : "Update Patient Plan"}
+                                        {loader ? "Please wait..." : "Update and Send"}
                                     </button>
                                 </div>
                             </div>
@@ -812,7 +812,7 @@ export default function CreatePlan() {
                                                         ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                         : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                                 }>
-                                                {loader ? "Please wait ..." : 'Save Plan'}
+                                                {loader ? "Please wait ..." : 'Update Only'}
                                             </button>
 
                                             <button
@@ -823,7 +823,7 @@ export default function CreatePlan() {
                                                         ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed'
                                                         : 'bg-customBg2 border border-customBg2 text-white hover:text-customBg2 hover:bg-white'}`
                                                 }>
-                                                {loader ? "Please wait ..." : 'Update Patient Plan'}
+                                                {loader ? "Please wait ..." : 'Update and Send'}
                                             </button>
                                         </div>
                                     </div>
