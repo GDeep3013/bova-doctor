@@ -60,11 +60,15 @@ export async function GET(req) {
         if (!allPendingPlans.length) {
             return new Response(JSON.stringify({ success: true, message: 'No pending plans found.' }), { status: 200 });
         }
+        // return allPendingPlans;
 
-        const pendingPlans = allPendingPlans.filter(plan =>
-            calculateHoursDifference(plan.createdAt) == 24
-        );
+        const pendingPlans = allPendingPlans.filter(plan => {
+            const hoursSincePatientAdded = calculateHoursDifference(plan.createdAt);
+            console.log('hoursSincePatientAdded',hoursSincePatientAdded)
+            return hoursSincePatientAdded == 24 ||  hoursSincePatientAdded == 120 ||hoursSincePatientAdded == 240
+        });
 
+        console.log('pendingPlans',pendingPlans)
         if (!pendingPlans.length) {
             return new Response(JSON.stringify({ success: true, message: 'No plans  24 hours.' }), { status: 200 });
         }
