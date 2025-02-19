@@ -61,6 +61,8 @@ export async function GET(req) {
             doc.patients.some((patient) => {
                 const hoursSincePatientAdded = calculateHoursDifference(patient.createdAt);
                 return hoursSincePatientAdded >= 23 && hoursSincePatientAdded <= 25;
+                // return patient.email =="yogeshrana.610weblab+patient@gmail.com"
+                // console.log('patient',patient.email =="yogeshrana.610weblab+patient@gmail.com")
             })
         );
 
@@ -82,6 +84,9 @@ export async function GET(req) {
             const associatedPatients = doctorsWithPatients.find(d => d._id.toString() === doctor._id.toString())?.patients || [];
         
             const patientsToNotify = associatedPatients.filter(patient => {
+                console.log('patient', patient)
+                // return patient.email =="yogeshrana.610weblab+patient@gmail.com"
+
                 const hoursSincePatientAdded = calculateHoursDifference(patient.createdAt);
                 return hoursSincePatientAdded >= 23 && hoursSincePatientAdded <= 25;
             });
@@ -110,7 +115,7 @@ export async function GET(req) {
                             console.error('Error deleting profile:', error);
                         }
                     }, 60000);
-                    
+                    console.log('doctorUser',doctorUser)
                     await createProfile(doctorUser, customProperties);
                     await subscribeProfiles(doctorUser, listId);
                     
