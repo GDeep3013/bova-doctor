@@ -48,6 +48,7 @@ export async function GET(req) {
             reminderDate: { $exists: true },
         }).populate('patient_id');
 
+
         const eightHoursPlans = [];
         const twentyFourHoursPlans = [];
         const calculateHoursDifference = (createdDate) => {
@@ -70,9 +71,10 @@ export async function GET(req) {
 
         // 8hrs mail sent        
         for (let plan of eightHoursPlans) {
+
             const { _id, firstName, lastName, doctorId, email } = plan.patient_id;
             const doctor = await Doctor.findOne({ _id: doctorId });
-            const encryptedId = await crypto.encrypt(_id.toString());
+            const encryptedId = await crypto.encrypt(plan?._id.toString());
             const urlSafeEncryptedId = encryptedId.replace(/\//g, '-').replace(/=/g, '_');
             const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
 
@@ -93,7 +95,7 @@ export async function GET(req) {
             const { _id, firstName, lastName, doctorId, email } = plan.patient_id;
             const doctor = await Doctor.findOne({ _id: doctorId });
 
-            const encryptedId = await crypto.encrypt(_id.toString());
+            const encryptedId = await crypto.encrypt(plan?._id.toString());
             const urlSafeEncryptedId = encryptedId.replace(/\//g, '-').replace(/=/g, '_');
             const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
 
