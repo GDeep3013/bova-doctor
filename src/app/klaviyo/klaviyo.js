@@ -162,7 +162,7 @@ async function fetchWithErrorHandling(url, options) {
     return response;
   } catch (error) {
     console.error('Error deleting profile:', error);
-    throw error;
+    return error;
   }
 }
 

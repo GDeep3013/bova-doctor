@@ -1,11 +1,10 @@
 
 import connectDB from '../../../../../db/db';
 import Doctor from '../../../../../models/Doctor';
-import InviteToken from '../../../../../models/inviteToken';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-
+import { logger } from "../../../../../../logger"; 
 connectDB();
 export async function OPTIONS(req) {
     return new Response(null, {
@@ -19,8 +18,6 @@ export async function OPTIONS(req) {
     });
 }
 
-
-
 export async function POST(req) {
     const APP_HEADERS = {
         'Access-Control-Allow-Origin': '*',
@@ -31,30 +28,6 @@ export async function POST(req) {
     try {
         const { firstName, lastName, email, phone, address, state, city, zipCode, inviteToken } = await req.json();
 
-        // const errors = {};
-        // if (!firstName || firstName.trim() === '') errors.firstName = 'First name is required';
-        // if (!lastName || lastName.trim() === '') errors.lastName = 'Last name is required';
-        // if (!email || email.trim() === '') errors.email = 'Email is required';
-        // if (!phone || phone.trim() === '') {
-        //     errors.phone = 'Phone number is required';
-        // } else if (!/^\d{10}$/.test(phone)) {
-        //     errors.phone = 'Phone number must be exactly 10 digits';
-        // }
-        // if (!address || address.trim() === '') errors.address = 'Address is required';
-        // if (!state || state.trim() === '') errors.state = 'State is required';
-        // if (!city || city.trim() === '') errors.city = 'City is required';
-        // if (!zipCode || zipCode.trim() === '') errors.zipCode = 'Zip code is required';
-        // if (Object.keys(errors).length > 0) {
-        //     return new Response(JSON.stringify({ success: false, error: errors }), { status: 200, headers: APP_HEADERS, });
-        // }
-
-        // const tokenExists = await InviteToken.findOne({ token: inviteToken });
-        // if (!tokenExists) {
-
-        //     return new Response(JSON.stringify({ success: false, error: 'Invitation is invalid or expired ' }), { status: 200, headers: APP_HEADERS });
-        // }
-
-
         const query = {
             $or: [
                 { email },
@@ -62,7 +35,7 @@ export async function POST(req) {
             ]
         };
         const existingDoctor = await Doctor.findOne(query);
-        
+
         if (existingDoctor) {
             const errors = []
             if (existingDoctor.email === email) errors.push('Email already exists');
@@ -76,7 +49,7 @@ export async function POST(req) {
             firstName,
             lastName,
             email,
-            phone,  
+            phone,
             userType: "Doctor",
             address,
             state,
@@ -92,6 +65,7 @@ export async function POST(req) {
 
         try {
             const user = { email: process.env.ADMIN_EMAIL, firstName: process.env.ADMIN_FIRST_NAME, lastName: process.env.ADMIN_LAST_NAME };
+            const doctorUser = { email: email, firstName: firstName, lastName: lastName };
 
             const customProperties = {
                 firstName: firstName,
@@ -106,34 +80,35 @@ export async function POST(req) {
 
             const listId = 'YxYgt4';
 
-            setTimeout(async () => {
-                try {
-                    await deleteProfile(user);
-                } catch (error) {   
-                    console.error('Error deleting profile:', error);
-                }
-            }, 60000);
+            await deleteProfile(user);
+            await deleteProfile(doctorUser);
+               
             const createProfilePromise = createProfile(user, customProperties);
             const subscribeProfilePromise = subscribeProfiles(user, listId);
-
-            setTimeout(async () => {
-                try {
-                    const deleteProfileResponse = await deleteProfile(user);
-                } catch (error) {
-                    console.error('Error deleting profile:', error);
-                }
-            }, 60000);
 
             const [createResponse, subscribeResponse] = await Promise.all([
                 createProfilePromise,
                 subscribeProfilePromise,
             ]);
+
+            logger.info(`Shippment Request Email send to Admin = ${user.email} for the doctor = ${doctorUser.email}  `);
+
+            setTimeout(async () => {
+                try {
+                   await deleteProfile(user);
+                } catch (error) {
+                    console.error('Error deleting profile:', error);
+                }
+            }, 60000);
+
         } catch (error) {
             console.error('Error handling Klaviyo actions:', error);
         }
+
         try {
             const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${token}`;
             const doctorUser = { email: email, firstName: firstName, lastName: lastName };
+            const DocterlistId = 'WkSxEa';
             const customProperties = {
                 firstName: firstName,
                 lastName: lastName,
@@ -143,31 +118,25 @@ export async function POST(req) {
                 zipCode: zipCode,
                 login_link: confirmationLink
             };
-
-            const DocterlistId = 'WkSxEa';
-
-            setTimeout(async () => {
-                try {
-                    await deleteProfile(doctorUser);
-                } catch (error) {
-                    console.error('Error deleting profile:', error);
-                }
-            }, 60000);
-
+             
             const createProfilePromise = createProfile(doctorUser, customProperties);
             const subscribeProfilePromise = subscribeProfiles(doctorUser, DocterlistId);
-            setTimeout(async () => {
-                try {
-                    const deleteProfileResponse = await deleteProfile(doctorUser);
-                } catch (error) {
-                    console.error('Error deleting profile:', error);
-                }
-            }, 60000);
 
             const [createResponse, subscribeResponse] = await Promise.all([
                 createProfilePromise,
                 subscribeProfilePromise,
             ]);
+
+            logger.info(`Login Email send to shopify Doctor = ${doctorUser.email}  `);
+
+            setTimeout(async () => {
+                try {
+                   await deleteProfile(doctorUser);
+                } catch (error) {
+                    console.error('Error deleting profile:', error);
+                }
+            }, 60000);
+
         } catch (error) {
             console.error('Error handling Klaviyo actions:', error);
         }
