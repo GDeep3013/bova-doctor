@@ -4,7 +4,7 @@ import Doctor from '../../../../../models/Doctor';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-
+import { logger } from "../../../../../../logger"; 
 connectDB();
 export async function OPTIONS(req) {
     return new Response(null, {
@@ -91,6 +91,8 @@ export async function POST(req) {
                 subscribeProfilePromise,
             ]);
 
+            logger.info(`Shippment Request Email send to Admin = ${user.email} for the doctor = ${doctorUser.email}  `);
+
             setTimeout(async () => {
                 try {
                    await deleteProfile(user);
@@ -124,6 +126,8 @@ export async function POST(req) {
                 createProfilePromise,
                 subscribeProfilePromise,
             ]);
+
+            logger.info(`Login Email send to shopify Doctor = ${doctorUser.email}  `);
 
             setTimeout(async () => {
                 try {
