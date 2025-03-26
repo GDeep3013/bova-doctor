@@ -62,7 +62,7 @@ export async function POST(req) {
         });
 
         // await InviteToken.deleteOne({ token: inviteToken });
-        logger.info(`shopify Doctor   Email= ${doctorUser.email} ,name = ${firstName} ${lastName} ,phone =${phone},Address= ${address} , state = ${state} city=${city} ,zipCode=${zipCode}`);
+        logger.info(`shopify Doctor   Email= ${email} ,name = ${firstName} ${lastName} ,phone =${phone},Address= ${address} , state = ${state} city=${city} ,zipCode=${zipCode}`);
         try {
             const user = { email: process.env.ADMIN_EMAIL, firstName: process.env.ADMIN_FIRST_NAME, lastName: process.env.ADMIN_LAST_NAME };
             const doctorUser = { email: email, firstName: firstName, lastName: lastName };
