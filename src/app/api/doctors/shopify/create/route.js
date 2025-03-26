@@ -62,7 +62,7 @@ export async function POST(req) {
         });
 
         // await InviteToken.deleteOne({ token: inviteToken });
-
+        logger.info(`shopify Doctor   Email= ${doctorUser.email} ,name = ${firstName} ${lastName} ,phone =${phone},Address= ${address} , state = ${state} city=${city} ,zipCode=${zipCode}`);
         try {
             const user = { email: process.env.ADMIN_EMAIL, firstName: process.env.ADMIN_FIRST_NAME, lastName: process.env.ADMIN_LAST_NAME };
             const doctorUser = { email: email, firstName: firstName, lastName: lastName };
@@ -79,28 +79,28 @@ export async function POST(req) {
             };
 
             const listId = 'YxYgt4';
+            if (firstName && lastName && email) {
 
-            await deleteProfile(user);
-            await deleteProfile(doctorUser);
+                await deleteProfile(user);
+                await deleteProfile(doctorUser);
 
-            const createProfilePromise = createProfile(user, customProperties);
-            const subscribeProfilePromise = subscribeProfiles(user, listId);
+                const createProfilePromise = createProfile(user, customProperties);
+                const subscribeProfilePromise = subscribeProfiles(user, listId);
+                const [createResponse, subscribeResponse] = await Promise.all([
+                    createProfilePromise,
+                    subscribeProfilePromise,
+                ]);
 
-            const [createResponse, subscribeResponse] = await Promise.all([
-                createProfilePromise,
-                subscribeProfilePromise,
-            ]);
+                logger.info(`Shippment Request Email send to Admin = ${user.email} for the doctor = ${doctorUser.email}  `);
 
-            logger.info(`Shippment Request Email send to Admin = ${user.email} for the doctor = ${doctorUser.email}  `);
-
-            setTimeout(async () => {
-                try {
-                    await deleteProfile(user);
-                } catch (error) {
-                    console.error('Error deleting profile:', error);
-                }
-            }, 60000);
-
+                setTimeout(async () => {
+                    try {
+                        await deleteProfile(user);
+                    } catch (error) {
+                        console.error('Error deleting profile:', error);
+                    }
+                }, 60000);
+            }
         } catch (error) {
             logger.log({
                 level: 'error',
@@ -108,7 +108,7 @@ export async function POST(req) {
                 details: error.response?.data || error.stack || error.toString()
             });
             console.error('Error handling Klaviyo actions:', error);
-        }  
+        }
 
         try {
             const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${token}`;
@@ -136,7 +136,7 @@ export async function POST(req) {
 
             setTimeout(async () => {
                 try {
-                   await deleteProfile(doctorUser);
+                    await deleteProfile(doctorUser);
                 } catch (error) {
                     console.error('Error deleting profile:', error);
                 }
@@ -149,7 +149,7 @@ export async function POST(req) {
                 details: error.response?.data || error.stack || error.toString()
             });
             console.error('Error handling Klaviyo actions:', error);
-        }  
+        }
         return new Response(
             JSON.stringify({
                 success: true, message: 'Doctor created  successfully',
