@@ -4,7 +4,7 @@ import Doctor from '../../../../../models/Doctor';
 import { createProfile, subscribeProfiles, deleteProfile } from '../../../../klaviyo/klaviyo';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import { logger } from "../../../../../../logger"; 
+import { logger } from "../../../../../../logger";
 connectDB();
 export async function OPTIONS(req) {
     return new Response(null, {
@@ -82,7 +82,7 @@ export async function POST(req) {
 
             await deleteProfile(user);
             await deleteProfile(doctorUser);
-               
+
             const createProfilePromise = createProfile(user, customProperties);
             const subscribeProfilePromise = subscribeProfiles(user, listId);
 
@@ -95,15 +95,20 @@ export async function POST(req) {
 
             setTimeout(async () => {
                 try {
-                   await deleteProfile(user);
+                    await deleteProfile(user);
                 } catch (error) {
                     console.error('Error deleting profile:', error);
                 }
             }, 60000);
 
         } catch (error) {
+            logger.log({
+                level: 'error',
+                message: `Error handling Klaviyo actions: ${error.message}`,
+                details: error.response?.data || error.stack || error.toString()
+            });
             console.error('Error handling Klaviyo actions:', error);
-        }
+        }  
 
         try {
             const confirmationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/doctor-confirmation?token=${token}`;
@@ -118,7 +123,7 @@ export async function POST(req) {
                 zipCode: zipCode,
                 login_link: confirmationLink
             };
-             
+
             const createProfilePromise = createProfile(doctorUser, customProperties);
             const subscribeProfilePromise = subscribeProfiles(doctorUser, DocterlistId);
 
@@ -138,9 +143,13 @@ export async function POST(req) {
             }, 60000);
 
         } catch (error) {
+            logger.log({
+                level: 'error',
+                message: `Error handling Klaviyo actions: ${error.message}`,
+                details: error.response?.data || error.stack || error.toString()
+            });
             console.error('Error handling Klaviyo actions:', error);
-        }
-
+        }  
         return new Response(
             JSON.stringify({
                 success: true, message: 'Doctor created  successfully',
