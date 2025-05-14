@@ -32,7 +32,7 @@ export default function AdminDashboard() {
                 const filteredDoctors = session?.userDetail
                 ? data?.doctorsData.filter(doctor => doctor.id !== session.userDetail._id)
                     : doctors;
-            
+            console.log('filteredDoctors',filteredDoctors)
                 SetDoctorsSignedIn(data?.doctorsSignedIn)
                 SetUnitSolds(data?.unitSolds)
                 SetInviteSent(data?.inviteSent)

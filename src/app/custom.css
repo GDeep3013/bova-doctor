@@ -129,6 +129,12 @@ div#swal2-html-container{ color: #29282b; }
 .message-box-outer .close-message { position: absolute; top: -62px; right: -18px; font-size: 34px; color: #fff; }
 .display-data .hidden-title { opacity: 0; visibility: hidden; display: none; }
 
+.doctor-summary-table tbody tr:last-child td:first-child{ border-bottom-left-radius: 20px; }
+.doctor-summary-table tbody tr:last-child td:last-child{ border-bottom-right-radius: 20px; }
+.doctor-summary-table tbody tr:last-child td{ border-bottom: none; }
+
+.dashboard-inner select.select-month { background-position: 96% 50%; background-size: 12px; min-width: 170px; }
+
 @media screen and (min-width:2000px) {
   .login-outer { background-position: 0 75%; }
 }
