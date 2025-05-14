@@ -1,6 +1,8 @@
 import connectDB from '../../../../db/db';
 import Plan from '../../../../models/plan';
 import NextCrypto from 'next-crypto';
+import Patient from '../../../../models/patient';
+import Doctor from '../../../../models/Doctor';
 export async function GET(req, { params }) {
 
 
@@ -43,6 +45,7 @@ export async function GET(req, { params }) {
         model: 'Doctor',
       },
     });
+
 
     if (!plan) {
       return new Response(

@@ -12,6 +12,7 @@ export async function POST(req) {
   try {
     const orderData = await req.json(); // Parse incoming JSON data
   
+
     // Find the _patient_id from the first line item that has it, or default to null
     const mainPatientId = orderData.line_items.find(item => item.properties?._patient_id)?.properties._patient_id || null;
     const planId = orderData.line_items.find(item => item.properties?._plan_id)?.properties._plan_id || null;
@@ -20,6 +21,7 @@ export async function POST(req) {
     let doctorPayment = 0;
 
     const patient = await Patient.findById(mainPatientId)
+    console.log('patient',patient)
     const plan = await Plan.findById(planId)
     
     if (patient.doctorId) {
@@ -52,7 +54,8 @@ export async function POST(req) {
       doctor: {
         doctor_id: patient ? patient.doctorId : null, 
         doctor_payment: doctorPayment 
-      }
+          }
+      
     });
 
     // Save the order to the database

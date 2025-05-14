@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon, EarningIcon, CloseIcon } from './svg-icons/icons';
+import { HomeIcon, LogoutIcon, PatientIcon, PlanIcon, SettingIcon, ProfileIcon, EarningIcon, CloseIcon ,SummaryIcon} from './svg-icons/icons';
 import { useSession } from 'next-auth/react';
 export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
 
@@ -57,13 +57,18 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
                       Analytics
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/admin/doctor-commission-summary" className={`block text-lg ${isActive('/admin/patients') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
+                     Doctor's Sales Summary
+                  </Link>
+                  </li>
                 </ul>
               )}
             </div>
             <Link href="/admin/patients/" className={`block text-xl ${isActive('/admin/patients') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
               <PatientIcon /> Patient Listing
             </Link>
-
+         
             <div>
               <button onClick={toggleSetting} className={`text-xl font-medium text-[#3a3c3d]`}>
                 <SettingIcon /> Settings

@@ -41,7 +41,7 @@ export default function doctorTable({ doctors }) {
                                     <td className="p-2 flex items-center space-x-4"> <div> <p className="font-semibold text-[#53595B] text-sm">Dr. {doctor.name}</p> </div> </td>
                                     <td className="p-2 text-[#53595B] ">{doctor.patients}</td>
                                     <td className="p-2 text-[#53595B] ">{doctor.plans}</td>
-                                    <td className="p-2 flex items-center space-x-2"> <span className="text-[#53595B] font-medium"> $ {doctor.revenue}</span> </td>
+                                    <td className="p-2 flex items-center space-x-2"> <span className="text-[#53595B] font-medium"> $ {doctor.revenue?.toFixed(2)}</span> </td>
                                 </tr>
                             ))}
                     </tbody>
