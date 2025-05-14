@@ -77,7 +77,7 @@ const formatDate = (isoString) => {
           </div>
           <div className="flex flex-wrap sm:flex-nowrap justify-between items-end md:mt-[16px] mb-4">
             <div>
-            <h1 className="page-title md:pt-2 text-[19px] md:text-2xl">Doctor's Sales Summary</h1>
+            <h1 className="page-title md:pt-2 text-[19px] md:text-2xl">Doctor&apos;s Sales Summary</h1>
               <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
             </div>
             <div>
