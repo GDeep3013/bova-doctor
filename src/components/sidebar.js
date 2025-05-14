@@ -59,7 +59,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
                   </li>
                   <li>
                     <Link href="/admin/doctor-commission-summary" className={`block text-lg ${isActive('/admin/patients') ? 'text-[#53595B] font-bold' : 'text-[#3a3c3d] hover:text-gray-900'}`}>
-                     Doctor's Sales Summary
+                     Doctor&apos;s Sales Summary
                   </Link>
                   </li>
                 </ul>
