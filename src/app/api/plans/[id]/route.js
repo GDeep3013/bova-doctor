@@ -1,5 +1,7 @@
 import connectDB from '../../../../db/db';
 import Plan from '../../../../models/plan';
+import Patient from '../../../../models/patient';
+import Doctor from '../../../../models/Doctor';
 import NextCrypto from 'next-crypto';
 export async function GET(req, { params }) {
 
