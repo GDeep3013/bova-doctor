@@ -87,15 +87,15 @@ export default function DoctorDetailsPage() {
             </div>
 
             <div className="overflow-x-auto mt-[29px]">
-              <table className="doctor-summary-table min-w-[max-content] w-full text-left border border-[#aeaaac] rounded-[20px] border-separate" cellPadding={0} cellSpacing={0}>
+              <table className="doctor-summary-table min-w-[max-content] xl:min-w-[auto] w-full text-left border border-[#aeaaac] rounded-[20px] border-separate" cellPadding={0} cellSpacing={0}>
                 <thead className="bg-customBg">
                   <tr className="border-b">
-                    <th className="py-3 px-4 text-left text-[#53595B] font-normal rounded-tl-[20px] border-b border-[#aeaaac]">Date</th>
+                    <th className="py-3 px-4 text-left text-[#53595B] font-normal rounded-tl-[20px] border-b border-[#aeaaac] w-[10%]">Date</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac]">Patient</th>
-                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[20%]">Item(s)</th>
-                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac]">Units Sold Per Plan</th>
-                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac]">%Earning</th>
-                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac]">Earned Per Plan</th>
+                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Item(s)</th>
+                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Units Sold Per Plan</th>
+                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">%Earning</th>
+                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Earned Per Plan</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] rounded-tr-[20px]"></th>
                   </tr>
                 </thead>
@@ -103,21 +103,21 @@ export default function DoctorDetailsPage() {
                  {doctor?.plans?.map((plan, index) => (
                   <React.Fragment key={index}>
                     <tr className="border-b border-[#aeaaac]">
-                      <td className="px-4 py-3 text-gray-700">
+                      <td className="px-4 py-3 text-gray-700 w-[10%]">
                         {formatDate(plan.date)} {/* Format the date */}
                       </td>
-                      <td className="px-4 py-3 text-gray-700">
+                      <td className="px-4 py-3 text-gray-700 w-[10%]">
                         {plan?.patient?.firstName} {plan?.patient?.lastName}
                       </td>
                       <td className="px-4 py-3 text-gray-700 w-[20%]">
                         {plan?.patient?.items?.[0]?.productName}
                       </td>
-                      <td className="px-4 py-3 text-gray-700">{plan?.patient?.items?.reduce((total, item) => total + item.quantity, 0) || '-'}</td>
-                      <td className="px-4 py-3 text-gray-700">{plan?.doctorCommission || '-'}%</td>
-                      <td className="px-4 py-3 text-gray-700">
-                        ${plan?.patient?.items?.[0]?.price?.toFixed(2)} {/* Calculate total earned */}
+                      <td className="px-4 py-3 text-gray-700 w-[8%]">{plan?.patient?.items?.reduce((total, item) => total + item.quantity, 0) || 0}</td>
+                      <td className="px-4 py-3 text-gray-700 w-[8%]">{plan?.doctorCommission || "0.00"}%</td>
+                      <td className="px-4 py-3 text-gray-700 w-[8%]">
+                        ${plan?.patient?.items?.[0]?.per_item_earning ||"0.00"} {/* Calculate total earned */}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-3 text-right w-[8%]">
                         <button
                           onClick={() => toggleAccordion(index)}
                           className="inline-block align-middle w-[25px] h-[25px] transition-transform"
@@ -146,7 +146,7 @@ export default function DoctorDetailsPage() {
                                   {plan?.doctorCommission || '-'}%
                                 </td>
                                 <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                                  ${item?.price?.toFixed(2)}
+                                  ${item?.per_item_earning}
                                 </td>
                                 <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
                               </tr>

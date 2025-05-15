@@ -14,7 +14,10 @@ export async function GET() {
         const doctorEarningsData = await Promise.all(
             allDoctors.map(async (doctor) => {
                 const orders = await Order.find({ 'doctor.doctor_id': doctor._id });
-                const earnings = orders.reduce((total, order) => total + parseFloat(order.total), 0); // Calculate total earnings
+                let earnings = 0;
+                for (const order of orders) {
+                earnings += order?.doctor?.doctor_payment || 0;
+              }
                 const totalPatients = await Patient.countDocuments({ doctorId: doctor._id });
                 const totalPlans = await Plan.countDocuments({
                     patient_id: { $in: await Patient.find({ doctorId: doctor._id }).distinct('_id') },
