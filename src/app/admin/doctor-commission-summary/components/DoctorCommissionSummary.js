@@ -122,7 +122,7 @@ const formatDate = (isoString) => {
                         </td>
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{formatDate(doctor.joined_date)}</td>
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor.total_patients}</td>
-                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">${formatCurrency(doctor.total_sold)}</td>
+                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor?.total_quantity_sold}</td>
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">${doctor?.revenue}</td>
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
                         <Link href={`/admin/doctor-commission-summary/${doctor.id}`} className="text-gray-700 hover:underline inline-block align-middle w-[25px] h-[25px] hover:translate-x-1 transition-all">

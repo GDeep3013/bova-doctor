@@ -79,35 +79,63 @@ export async function GET(req, { params }) {
 
     // Get doctor's orders
     const orders = await Order.find({ 'doctor.doctor_id': doctorId }).lean();
-    const doctor_earnings = orders.reduce((total, order) => total + parseFloat(order.total || 0), 0);
-
+    let doctor_earnings = 0;
+  
+    
+    for (const order of orders) {
+        doctor_earnings += order?.doctor?.doctor_payment;
+          
+    }
+    
     // Build detailed plans array with OrderItem data
     const formattedPlans = [];
-
+    
     for (const plan of plans) {
       const patient = patientMap[plan.patient_id?.toString()];
       if (!patient) continue;
 
       const relatedOrders = await Order.find({ plan_id: plan._id }).lean();
       let allItems = [];
-
+     let doctorCommission = 0;
       for (const order of relatedOrders) {
         const orderItems = await OrderItem.find({ orderId: order._id }).lean();
+        const hasSubscription = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription');
+        const mappedItems = orderItems.map((item) => {
+          const price = item.price || 0;
+          const totalPrice = price;
+          const quantity = item.quantity || 0;
+          let per_item_earning = 0;
+          const discount = (totalPrice * (plan.discount || 0)) / 100;
+          if (hasSubscription) {
+            doctorCommission = 15;
+            per_item_earning = (totalPrice * doctorCommission) / 100 
+          } else {
+              doctorCommission = doctor.commissionPercentage || 0;
+              per_item_earning = (totalPrice * doctorCommission) / 100 - discount;
+          }
+          // Apply discount on total price if needed
+          // const totalPrice = price;
+          //   
 
-        const mappedItems = orderItems.map(item => ({
-          productName: item.productName || '',
-          quantity: item.quantity || 0,
-          price: item.price || 0,
-        }));
+          //   // Commission calculation
+          //   const commissionRate = doctor.commissionPercentage || 0;
+            // const per_item_earning = (totalPrice * commissionRate) / 100 - discount;
 
-        allItems.push(...mappedItems);
+            return {
+              productName: item.productName || '',
+              quantity,
+              price,
+              per_item_earning: parseFloat(per_item_earning.toFixed(2)),
+            };
+          });
+            allItems.push(...mappedItems);
       }
 
       formattedPlans.push({
         id: plan._id,
         patient_id: plan.patient_id,
         discount: plan.discount || 0,
-        doctorCommission: plan.doctorCommission || 0,
+        doctorCommission: doctorCommission || 0,
         date: plan.createdAt,
         patient: {
           firstName: patient.firstName,

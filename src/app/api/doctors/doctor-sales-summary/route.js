@@ -2,7 +2,8 @@ import connectDB from '../../../../db/db';
 import Doctor from '../../../../models/Doctor';
 import Patient from '../../../../models/patient';
 import Plan from '../../../../models/plan';
-import Order from '../../../../models/order'; // Make sure this is imported
+import Order from '../../../../models/order';
+import OrderItem from '../../../../models/orderItem'; // ✅ Import OrderItem
 
 export async function GET(req) {
   await connectDB();
@@ -13,22 +14,14 @@ export async function GET(req) {
     const limit = parseInt(url.searchParams.get('limit') || '30');
     const skip = (page - 1) * limit;
 
-    // Fetch all doctors
     const doctors = await Doctor.find({ userType: 'Doctor' }).lean();
-
-    // Fetch all patients
     const patients = await Patient.find({}).lean();
-
-    // Map patients by ID for quick lookup
     const patientMap = {};
     for (const patient of patients) {
       patientMap[patient._id.toString()] = patient;
     }
 
-    // Fetch all 'ordered' plans
     const plans = await Plan.find({ planStatus: 'ordered' }).lean();
-
-    // Prepare doctor summary map
     const doctorSummaryMap = {};
 
     for (const plan of plans) {
@@ -54,6 +47,7 @@ export async function GET(req) {
           total_sold: 0,
           total_commission: 0,
           total_patients: 0,
+          total_quantity_sold: 0, // ✅ New field
           monthly_summary: {},
           patients: {},
         };
@@ -61,12 +55,12 @@ export async function GET(req) {
 
       const summary = doctorSummaryMap[doctorId];
 
-      // Calculate item total
       let totalItemAmount = 0;
       for (const item of plan.items) {
         const price = parseFloat(item.price || '0');
         const quantity = item.quantity || 0;
         totalItemAmount += price * quantity;
+        summary.total_quantity_sold += quantity; // ✅ Add quantity from plan.items
       }
 
       const discount = plan.discount || 0;
@@ -106,22 +100,33 @@ export async function GET(req) {
         commission_earned: commissionEarned,
       });
     }
-
-    // Add earnings (revenue) from Order for each doctor
+console.log(doctorSummaryMap, "doctorSummaryMapArray")
+    // Fetch revenue and quantity sold from related Orders and OrderItems
     const fullData = await Promise.all(
       Object.values(doctorSummaryMap).map(async (summary) => {
         const orders = await Order.find({ 'doctor.doctor_id': summary.id }).lean();
-        const earnings = orders.reduce((total, order) => total + parseFloat(order.total || 0), 0);
+        let totalOrderQuantity = 0;
+        let earnings = 0;
+        for (const order of orders) {
+          console.log(summary.id, order?.doctor?.doctor_id, order.order_id, order?.doctor?.doctor_payment, "doctorSummaryMap")
+          earnings += order?.doctor?.doctor_payment || 0;
+          const orderItems = await OrderItem.find({ orderId: order._id }).lean();
+          for (const item of orderItems) {
+            totalOrderQuantity += item.quantity || 0;
+          }
+        }
 
         return {
           ...summary,
           total_commission: summary.total_commission.toFixed(2),
           patients: Object.values(summary.patients),
           revenue: earnings.toFixed(2),
+          total_quantity_sold: totalOrderQuantity, // ✅ Combine both plan & order quantities
         };
       })
     );
 
+    // console.log('fullData',fullData)
     const paginatedData = fullData.slice(skip, skip + limit);
     const total = fullData.length;
     const totalPages = Math.ceil(total / limit);
