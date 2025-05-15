@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 import connectDB from '../../../../../db/db';
 import Order from '../../../../../models/order';
 import OrderItem from '../../../../../models/orderItem';
@@ -5,7 +6,6 @@ import Patient from '../../../../../models/patient';
 import Doctor from '../../../../../models/Doctor';
 import Plan from '../../../../../models/plan';
 import { logger } from "../../../../../../logger";
-
 function getPropertyValue(properties, key) {
   if (!properties || !Array.isArray(properties)) return null;
   const prop = properties.find(p => p.name === key);
@@ -72,24 +72,60 @@ export async function POST(req) {
     );
 
     // Map through line_items to save each as an OrderItem, using the main patientId if individual item _patient_id is absent
-    const orderItems = orderData.line_items.map(item => {
-      const itemPatientId = item.properties?._patient_id || mainPatientId; // Check _patient_id in item properties
+    // const orderItems = orderData.line_items.map(item => {
+    //   const itemPatientId = item.properties?._patient_id || mainPatientId; // Check _patient_id in item properties
 
-      return {
-        orderId: savedOrder._id,        // Reference the saved order's ID
-        productName: item.title,
-        quantity: item.quantity,
-        price: item.price,
-      };
-    });
+    //   return {
+    //     orderId: savedOrder._id,        // Reference the saved order's ID
+    //     productName: item.title,
+    //     quantity: item.quantity,
+    //     price: item.price,
+    //   };
+    // });
 
-    // Save all OrderItems to the database
-    await OrderItem.insertMany(orderItems);
-    await Plan.findByIdAndUpdate(planId, { status: "ordered" }, { new: true })
+
+
+    // // Save all OrderItems to the database
+    // await OrderItem.insertMany(orderItems);
+
+    for (const item of orderData.line_items) {
+      const itemPatientId = getPropertyValue(item.properties, "_patient_id") || mainPatientId;
+      // logger.info('LineItem price', { price:item.price, priceType: typeof item.price  });
+      // let price = Number(item.price); // Convert to number
+      // if (isNaN(price)) {
+      //   price = 0; // default fallback if price is not valid
+      // }
+      await OrderItem.findOneAndUpdate(
+        {
+          orderId: savedOrder._id,
+          lineItemId: item.id,
+          // You can add more unique identifiers here if you have them, like variant_id or SKU
+        },
+        {
+          orderId: savedOrder._id,
+          lineItemId: item.id,
+          productName: item.title,
+          quantity: item.quantity,
+          price: mongoose.Types.Decimal128.fromString(item.price)
+        },
+        {
+          new: true,
+          upsert: true,
+          setDefaultsOnInsert: true,
+        }
+      );
+    }
+
+    // Update plan status if planId is valid
+    if (planId) {
+      await Plan.findByIdAndUpdate(planId, { status: "ordered" }, { new: true, upsert: true, setDefaultsOnInsert: true, });
+    }
+    // await Plan.findByIdAndUpdate(planId, { status: "ordered" }, { new: true })
     return new Response(JSON.stringify({ message: 'Order and items saved successfully' }), { status: 201 });
 
   } catch (error) {
     console.error('Error saving order and items:', error);
+    logger.info('Webhook Error', { error });
     return new Response(JSON.stringify({ message: 'Failed to save order and items' }), { status: 500 });
   }
 }
