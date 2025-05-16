@@ -13,6 +13,7 @@ export default function DoctorDetailsPage() {
   const router = useRouter();
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(false);
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
@@ -23,6 +24,7 @@ export default function DoctorDetailsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const fetchDoctorSales = async (doctorId, page, searchQuery = "", limit) => {
     if (!doctorId) return;
+    setLoading2(true);
     fetch(`/api/doctors/doctor-sales-summary/${doctorId}?search=${searchQuery}&page=${page}&limit=${limit}`)
       .then((res) => {
         if (!res.ok) throw new Error('Doctor not found');
@@ -32,10 +34,12 @@ export default function DoctorDetailsPage() {
         setDoctor(data);
         setTotalPages(data.pagination.totalPages);
         setLoading(false);
+        setLoading2(false);
       })
       .catch((error) => {
         console.error('Error fetching doctor data:', error);
         setLoading(false);
+        setLoading2(false);
         setDoctor(null);
       });
   }
@@ -123,62 +127,112 @@ export default function DoctorDetailsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {doctor?.plans?.map((plan, index) => (
-                    <React.Fragment key={index}>
-                      <tr className="cursor-pointer hover:bg-gray-100 border-b">
-                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[10%]">
-                          {formatDate(plan.date)} {/* Format the date */}
-                        </td>
-                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[10%]">
-                          {plan?.patient?.firstName} {plan?.patient?.lastName}
-                        </td>
-                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[20%]">
-                          {plan?.patient?.items?.[0]?.productName}
-                        </td>
-                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[8%]">{plan?.patient?.items?.reduce((total, item) => total + item.quantity, 0) || 0}</td>
-                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[8%]">{plan?.doctorCommission || "0.00"}%</td>
-                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[8%]">
-                          ${plan?.patient?.items?.[0]?.per_item_earning || "0.00"} {/* Calculate total earned */}
-                        </td>
-                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] text-right w-[8%]">
-                          <button
-                            onClick={() => toggleAccordion(index)}
-                            className="inline-block align-middle w-[25px] h-[25px] transition-transform"
+              {loading2 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-6 h-[300px]">
+                    <Loader />
+                  </td>
+                </tr>
+              ) : doctor?.plans?.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center text-gray-500 py-6">
+                    No records found.
+                  </td>
+                </tr>
+              ) : (
+                doctor.plans.map((plan, index) => (
+                  <React.Fragment key={index}>
+                    <tr className={`
+                      cursor-pointer hover:bg-gray-100
+                      ${(openAccordionIndex !== index) ? 'border-b' : ''}
+                      ${index !== 0 ? 'border-t border-[#aeaaac]' : ''}
+                    `}>
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[10%]`}>
+                        {formatDate(plan.date)}
+                      </td>
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[10%]`}>
+                        {plan?.patient?.firstName} {plan?.patient?.lastName}
+                      </td>
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[20%]`}>
+                        {plan?.patient?.items?.[0]?.productName}
+                      </td>
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
+                        {
+                          !(openAccordionIndex === index && plan?.patient?.items?.length > 1)
+                            ? plan?.patient?.items?.reduce((total, item) => total + item.quantity, 0)
+                            : ''
+                        }
+                      </td>
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
+                        {plan?.doctorCommission || "0.00"}%
+                      </td>
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
+                        ${plan?.patient?.items?.[0]?.per_item_earning || "0.00"}
+                      </td>
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] text-right w-[8%]`}>
+                        <button
+                          onClick={() => toggleAccordion(index)}
+                          className="inline-block align-middle w-[25px] h-[25px] transition-transform"
+                        >
+                          <span
+                            className={`inline-block transition-transform duration-300 ${openAccordionIndex === index ? "rotate-90" : ""}`}
                           >
-                            <span
-                              className={`inline-block transition-transform duration-300 ${openAccordionIndex === index ? 'rotate-90' : ''
-                                }`}
-                            >
-                              <NextArrowIcon />
-                            </span>
-                          </button>
-                        </td>
-                      </tr>
+                            <NextArrowIcon />
+                          </span>
+                        </button>
+                      </td>
+                    </tr>
 
-                      {openAccordionIndex === index && (
-                        plan?.patient?.items?.map((item, idx) => (
-                          idx > 0 && (
-                            <tr key={idx} className="bg-white">
-                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
-                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
-                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
+                    {openAccordionIndex === index &&
+                      plan?.patient?.items?.map((item, idx,array) => (
+                        idx > 0 && (
+                          <tr key={idx} className="bg-white">
+                              <td
+                                className={`px-4 py-3 text-gray-700 ${
+                                  idx === array.length - 1 ? 'border-b' : ''
+                                } border-[#aeaaac]`}
+                              ></td>
+                              <td
+                                className={`px-4 py-3 text-gray-700 ${
+                                  idx === array.length - 1 ? 'border-b' : ''
+                                } border-[#aeaaac]`}
+                              ></td>
+                              <td
+                                className={`px-4 py-3 text-gray-700 ${
+                                  idx === array.length - 1 ? 'border-b' : ''
+                                } border-[#aeaaac]`}
+                              >
                                 {item?.productName}
                               </td>
-                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{item?.quantity || '-'}</td>
-                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                                {plan?.doctorCommission || '-'}%
+                              <td className={`px-4 py-3 text-gray-700 ${
+                                  idx === array.length - 1 ? 'border-b' : ''
+                                } border-[#aeaaac]`}
+                              ></td>
+                              <td className={`px-4 py-3 text-gray-700 ${
+                                  idx === array.length - 1 ? 'border-b' : ''
+                                } border-[#aeaaac]`}
+                              >
+                                {plan?.doctorCommission || "-"}%
                               </td>
-                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
+                              <td
+                                className={`px-4 py-3 text-gray-700 ${
+                                  idx === array.length - 1 ? 'border-b' : ''
+                                } border-[#aeaaac]`}
+                              >
                                 ${item?.per_item_earning}
                               </td>
-                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
+                              <td
+                                className={`px-4 py-3 text-gray-700 ${
+                                  idx === array.length - 1 ? 'border-b' : ''
+                                } border-[#aeaaac]`}
+                              ></td>
                             </tr>
-                          )
-                        ))
-                      )}
-                    </React.Fragment>
-                  ))}
-                </tbody>
+                        )
+                      ))}
+                  </React.Fragment>
+                ))
+              )}
+            </tbody>
               </table>
 
             </div>
