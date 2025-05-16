@@ -128,7 +128,7 @@ export async function POST(req) {
         price: mongoose.Types.Decimal128.fromString(item.price)
       }, {
         new: true,
-        // upsert: true,
+        upsert: true,
         setDefaultsOnInsert: true,
       });
     }
@@ -152,9 +152,7 @@ export async function POST(req) {
 
   } catch (error) {
     console.error('Error saving order and items:', error);
-    logger.info('Webhook Error', {
-      error
-    });
+    logger.error('Webhook Error',error);
     return new Response(JSON.stringify({
       message: 'Failed to save order and items'
     }), {
