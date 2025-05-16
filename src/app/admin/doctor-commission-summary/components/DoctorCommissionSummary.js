@@ -19,6 +19,7 @@ export default function DoctorCommissionSummary() {
   const [totalPages, setTotalPages] = useState(1);
   const [limit] = useState(30);
   const itemsPerPage = 30;
+  const [searchQuery, setSearchQuery] = useState("");
 
   const formatCurrency = (value) => Number(value || 0).toFixed(2);
 
@@ -35,62 +36,76 @@ export default function DoctorCommissionSummary() {
   //       setLoading(false);
   //     });
   // }, []);
-  useEffect(() => {fetchDoctors(page) },[])
-  const fetchDoctors = async (page) => {
+  useEffect(() => { fetchDoctors(page, searchQuery, limit) }, [page, searchQuery, limit])
+  const fetchDoctors = async (page, searchQuery = "", limit) => {
+    const queryParams = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+      ...(searchQuery && { search: searchQuery }),
+    }).toString();
     try {
       setLoading(true)
-        const response = await fetch(`/api/doctors/doctor-sales-summary?page=${page}&limit=${limit}`);
-        if (!response.ok) {
-            throw new Error("Failed to fetch doctors");
-        }
+      const response = await fetch(`/api/doctors/doctor-sales-summary?${queryParams}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch doctors");
+      }
       const data = await response.json();
-      console.log('data',data)
-        setData(data?.data);
-        setTotalPages(data.pagination.totalPages);
-        setLoading(false);
+      console.log('data', data)
+      setData(data?.data);
+      setTotalPages(data.pagination.totalPages);
+      setLoading(false);
 
     } catch (error) {
       setLoading(false);
     }
-};
+  };
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setPage(1)
+    fetchDoctors(1, value, limit);
+  };
+
   const handlePagination = (page) => {
     setPage(page);
-    router.push(`/admin/doctor-commission-summary?page=${page}`);
-    fetchDoctors(page);
-}
-const formatDate = (isoString) => {
-  const date = new Date(isoString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
-};
+    router.push(`/admin/doctor-commission-summary?page=${page}&search=${searchQuery}&limit=${limit}`);
+    fetchDoctors(page, searchQuery, limit);
+  }
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
 
   return (
-     <AppLayout>
+    <AppLayout>
       <div className="mx-auto relative sm:static">
-        {loading ? <Loader /> : <>
+        
           <div className='flex justify-end'>
-          <button className="absolute md:static bg-[#2c444b] text-white text-base px-2 sm:px-6 text-sm sm:text-md py-2 rounded-lg hover:bg-[#0b1214]">
-                Review Plan (2)
-              </button>
+            <button className="absolute md:static bg-[#2c444b] text-white text-base px-2 sm:px-6 text-sm sm:text-md py-2 rounded-lg hover:bg-[#0b1214]">
+              Review Plan (2)
+            </button>
           </div>
           <div className="flex flex-wrap sm:flex-nowrap justify-between items-end md:mt-[16px] mb-4">
             <div>
-            <h1 className="page-title md:pt-2 text-[19px] md:text-2xl">Doctor&apos;s Sales Summary</h1>
+              <h1 className="page-title md:pt-2 text-[19px] md:text-2xl">Doctor&apos;s Sales Summary</h1>
               <button className="text-gray-600 text-sm mb-4 text-left" onClick={() => { router.back() }}>&lt; Back</button>
             </div>
             <div>
-            <div class="flex items-center space-x-2">
-  <label class="text-gray-600 uppercase text-sm tracking-wider">Search</label>
-  <input
-    type="text"
-    placeholder=""
-    class="border border-gray-300 rounded-[7px] px-4 py-1 outline-none focus:ring-none focus:ring-blue-400"
-  />
-</div>
+              <div class="flex items-center space-x-2">
+                <label class="text-gray-600 uppercase text-sm tracking-wider">Search</label>
+                <input
+                  type="text"
+                  placeholder=""
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  class="border border-gray-300 rounded-[7px] px-4 py-1 outline-none focus:ring-none focus:ring-blue-400"
+                />
+              </div>
             </div>
-           </div>
+          </div>
 
 
           <div className="overflow-x-auto mt-[29px]">
@@ -106,8 +121,9 @@ const formatDate = (isoString) => {
                   <th className='py-3 px-4 font-normal border-b border-[#aeaaac] rounded-tr-[20px]'></th>
                 </tr>
               </thead>
-              <tbody>
-                {data.map((doctor, index) => (
+            <tbody>
+              {loading ? <Loader /> :
+                data.map((doctor, index) => (
                   <>
                     <tr
                       key={index}
@@ -116,10 +132,10 @@ const formatDate = (isoString) => {
                     >
 
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                      <Link href={`/admin/doctor-commission-summary/${doctor.id}`} className="text-gray-700 hover:underline">
-                        {doctor.doctor_name}
+                        <Link href={`/admin/doctor-commission-summary/${doctor.id}`} className="text-gray-700 hover:underline">
+                          {doctor.doctor_name}
                         </Link>
-                        </td>
+                      </td>
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{formatDate(doctor.joined_date)}</td>
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor.total_patients}</td>
                       <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor?.total_quantity_sold}</td>
@@ -186,7 +202,8 @@ const formatDate = (isoString) => {
                   </tr>
                 )} */}
                   </>
-                ))}
+                ))
+              }
               </tbody>
             </table>
           </div>
@@ -211,8 +228,8 @@ const formatDate = (isoString) => {
             >
               Next
             </button>
-          </div></>}
+          </div>
       </div>
-      </AppLayout>
+    </AppLayout>
   );
 }
