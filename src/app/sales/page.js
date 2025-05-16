@@ -1,8 +1,8 @@
 
-import Sales from './components/Sales'
+import DoctorSales from './components/DoctorSales'
 
 export default function page() {
   return (
-  <Sales/>
+  <DoctorSales/>
   )
 }

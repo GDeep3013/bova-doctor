@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import AppLayout from 'components/Applayout';
 import Loader from 'components/loader';
 import { NextArrowIcon } from 'components/svg-icons/icons';
+import { useSession } from 'next-auth/react';
 
 export default function DoctorDetailsPage() {
   const { id } = useParams();
@@ -13,17 +14,23 @@ export default function DoctorDetailsPage() {
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
-
-  useEffect(() => {
-    if (!id) return;
-    fetch(`/api/doctors/doctor-sales-summary/${id}`)
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const currentPage = searchParams.get('page');
+  const pageNumber = Number(currentPage);
+  const [limit] = useState(10);
+  const [page, setPage] = useState(pageNumber ? pageNumber : 1);
+  const [totalPages, setTotalPages] = useState(1);
+  const fetchDoctorSales = async (doctorId, page, searchQuery = "", limit) => {
+    if (!doctorId) return;
+    fetch(`/api/doctors/doctor-sales-summary/${doctorId}?search=${searchQuery}&page=${page}&limit=${limit}`)
       .then((res) => {
         if (!res.ok) throw new Error('Doctor not found');
         return res.json();
       })
       .then((data) => {
-        console.log('data',data)
         setDoctor(data);
+        setTotalPages(data.pagination.totalPages);
         setLoading(false);
       })
       .catch((error) => {
@@ -31,19 +38,33 @@ export default function DoctorDetailsPage() {
         setLoading(false);
         setDoctor(null);
       });
-  }, [id]);
+  }
+  useEffect(() => {
+    fetchDoctorSales(id, page, searchQuery, limit)
+  }, [id, searchQuery, limit]);
 
   const toggleAccordion = (index) => {
     setOpenAccordionIndex(openAccordionIndex === index ? null : index);
   };
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setPage(1)
+    fetchDoctorSales(id, 1, value, limit);
+  };
 
+  const handlePagination = (doctorId, page, searchQuery = "", limit) => {
+    setPage(page);
+    router.push(`/sales?page=${page}`);
+    fetchDoctorSales(doctorId, page, searchQuery, limit)
+  }
   const formatDate = (isoString) => {
-  const date = new Date(isoString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
-};
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
   return (
     <AppLayout>
       <div className="mx-auto relative sm:static">
@@ -100,71 +121,95 @@ export default function DoctorDetailsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                 {doctor?.plans?.map((plan, index) => (
-                  <React.Fragment key={index}>
-                    <tr className="border-b border-[#aeaaac]">
-                      <td className="px-4 py-3 text-gray-700 w-[10%]">
-                        {formatDate(plan.date)} {/* Format the date */}
-                      </td>
-                      <td className="px-4 py-3 text-gray-700 w-[10%]">
-                        {plan?.patient?.firstName} {plan?.patient?.lastName}
-                      </td>
-                      <td className="px-4 py-3 text-gray-700 w-[20%]">
-                        {plan?.patient?.items?.[0]?.productName}
-                      </td>
-                      <td className="px-4 py-3 text-gray-700 w-[8%]">{plan?.patient?.items?.reduce((total, item) => total + item.quantity, 0) || 0}</td>
-                      <td className="px-4 py-3 text-gray-700 w-[8%]">{plan?.doctorCommission || "0.00"}%</td>
-                      <td className="px-4 py-3 text-gray-700 w-[8%]">
-                        ${plan?.patient?.items?.[0]?.per_item_earning ||"0.00"} {/* Calculate total earned */}
-                      </td>
-                      <td className="px-4 py-3 text-right w-[8%]">
-                        <button
-                          onClick={() => toggleAccordion(index)}
-                          className="inline-block align-middle w-[25px] h-[25px] transition-transform"
-                        >
-                          <span
-                            className={`inline-block transition-transform duration-300 ${openAccordionIndex === index ? 'rotate-90' : ''
-                              }`}
+                  {doctor?.plans?.map((plan, index) => (
+                    <React.Fragment key={index}>
+                      <tr className="cursor-pointer hover:bg-gray-100 border-b">
+                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[10%]">
+                          {formatDate(plan.date)} {/* Format the date */}
+                        </td>
+                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[10%]">
+                          {plan?.patient?.firstName} {plan?.patient?.lastName}
+                        </td>
+                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[20%]">
+                          {plan?.patient?.items?.[0]?.productName}
+                        </td>
+                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[8%]">{plan?.patient?.items?.reduce((total, item) => total + item.quantity, 0) || 0}</td>
+                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[8%]">{plan?.doctorCommission || "0.00"}%</td>
+                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] w-[8%]">
+                          ${plan?.patient?.items?.[0]?.per_item_earning || "0.00"} {/* Calculate total earned */}
+                        </td>
+                        <td className="py-3 px-4 font-normal border-b border-[#aeaaac] text-right w-[8%]">
+                          <button
+                            onClick={() => toggleAccordion(index)}
+                            className="inline-block align-middle w-[25px] h-[25px] transition-transform"
                           >
-                            <NextArrowIcon />
-                          </span>
-                        </button>
-                      </td>
-                    </tr>
+                            <span
+                              className={`inline-block transition-transform duration-300 ${openAccordionIndex === index ? 'rotate-90' : ''
+                                }`}
+                            >
+                              <NextArrowIcon />
+                            </span>
+                          </button>
+                        </td>
+                      </tr>
 
-                     {openAccordionIndex === index && (
-                          plan?.patient?.items?.map((item, idx) => (
-                            idx > 0 && (
-                              <tr key={idx} className="bg-white">
-                                <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
-                                <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
-                                <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                                  {item?.productName}
-                                </td>
-                                <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{item?.quantity || '-'}</td>
-                                <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                                  {plan?.doctorCommission || '-'}%
-                                </td>
-                                <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                                  ${item?.per_item_earning}
-                                </td>
-                                <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
-                              </tr>
-                            )
-                          ))
-                        )}
-                  </React.Fragment>
-                ))}
+                      {openAccordionIndex === index && (
+                        plan?.patient?.items?.map((item, idx) => (
+                          idx > 0 && (
+                            <tr key={idx} className="bg-white">
+                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
+                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
+                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
+                                {item?.productName}
+                              </td>
+                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{item?.quantity || '-'}</td>
+                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
+                                {plan?.doctorCommission || '-'}%
+                              </td>
+                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
+                                ${item?.per_item_earning}
+                              </td>
+                              <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]"></td>
+                            </tr>
+                          )
+                        ))
+                      )}
+                    </React.Fragment>
+                  ))}
                 </tbody>
-                  </table>
-                
-                </div>
-                <div className='flex justify-end py-4'>
-                  <div class="text-[#53595b] text-base">
-                    Total Earnings to Date:
-                    <span class="font-semibold text"> ${doctor?.doctor_earnings?.toFixed(2)}</span>
-                  </div>
-                </div>
+              </table>
+
+            </div>
+            <div className="flex justify-between items-center mt-6">
+              {/* Pagination - Left Side */}
+              <div className="flex items-center space-x-4">
+                <button
+                  disabled={page === 1}
+                  onClick={() => handlePagination(id, page - 1, searchQuery, limit)}
+                  className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
+                    }`}
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700">
+                  Page {page} of {totalPages}
+                </span>
+                <button
+                  disabled={page === totalPages}
+                  onClick={() => handlePagination(id, page + 1, searchQuery, limit)}
+                  className={`px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg transition duration-200 ${page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-customBg2'
+                    }`}
+                >
+                  Next
+                </button>
+              </div>
+
+              {/* Total Earnings - Right Side */}
+              <div className="text-[#53595b] text-base">
+                Total Earnings to Date:
+                <span className="font-semibold"> ${doctor?.doctor_earnings?.toFixed(2)}</span>
+              </div>
+            </div>
           </>
         )}
       </div>

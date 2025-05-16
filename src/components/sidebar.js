@@ -114,6 +114,12 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
                       'text-[#3a3c3d] hover:text-gray-900'}`}>
                       Privacy & Policies
                     </Link>
+                    </li>
+                    <li>
+                    <Link href="/sales" className={`block text-lg ${isActive('/sales') ? 'text-[#53595B] font-bold' :
+                      'text-[#3a3c3d] hover:text-gray-900'}`}>
+                      Sales
+                    </Link>
                   </li>
                 </ul>
               )}
