@@ -10,7 +10,8 @@ import { NextArrowIcon } from 'components/svg-icons/icons';
 export default function DoctorCommissionSummary() {
   const [data, setData] = useState([]);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(false);
   const [expandedDoctor, setExpandedDoctor] = useState(null);
   const searchParams = useSearchParams();
   const currentPage = searchParams.get('page');
@@ -44,7 +45,7 @@ export default function DoctorCommissionSummary() {
       ...(searchQuery && { search: searchQuery }),
     }).toString();
     try {
-      setLoading(true)
+      setLoading2(true)
       const response = await fetch(`/api/doctors/doctor-sales-summary?${queryParams}`);
       if (!response.ok) {
         throw new Error("Failed to fetch doctors");
@@ -54,9 +55,11 @@ export default function DoctorCommissionSummary() {
       setData(data?.data);
       setTotalPages(data.pagination.totalPages);
       setLoading(false);
+      setLoading2(false);
 
     } catch (error) {
       setLoading(false);
+      setLoading2(false);
     }
   };
   const handleSearchChange = (e) => {
@@ -83,11 +86,9 @@ export default function DoctorCommissionSummary() {
     <AppLayout>
       <div className="mx-auto relative sm:static">
         
-          <div className='flex justify-end'>
-            <button className="absolute md:static bg-[#2c444b] text-white text-base px-2 sm:px-6 text-sm sm:text-md py-2 rounded-lg hover:bg-[#0b1214]">
-              Review Plan (2)
-            </button>
-          </div>
+        {loading ? <Loader /> : <>    <div className='flex justify-end'>
+      
+        </div>
           <div className="flex flex-wrap sm:flex-nowrap justify-between items-end md:mt-[16px] mb-4">
             <div>
               <h1 className="page-title md:pt-2 text-[19px] md:text-2xl">Doctor&apos;s Sales Summary</h1>
@@ -121,33 +122,45 @@ export default function DoctorCommissionSummary() {
                   <th className='py-3 px-4 font-normal border-b border-[#aeaaac] rounded-tr-[20px]'></th>
                 </tr>
               </thead>
-            <tbody>
-              {loading ? <Loader /> :
-                data.map((doctor, index) => (
-                  <>
-                    <tr
-                      key={index}
-                      className="cursor-pointer hover:bg-gray-100 border-b"
-                      onClick={() => setExpandedDoctor(expandedDoctor === index ? null : index)}
-                    >
+              <tbody>
+              {loading2 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-6 h-[300px]">
+                    <Loader />
+                  </td>
+                </tr>
+              ) : data?.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center text-gray-500 py-6">
+                    No doctors found.
+                  </td>
+                </tr>
+                        ) : (
+                  data.map((doctor, index) => (
+                    <>
+                      <tr
+                        key={index}
+                        className="cursor-pointer hover:bg-gray-100 border-b"
+                        onClick={() => setExpandedDoctor(expandedDoctor === index ? null : index)}
+                      >
 
-                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                        <Link href={`/admin/doctor-commission-summary/${doctor.id}`} className="text-gray-700 hover:underline">
-                          {doctor.doctor_name}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{formatDate(doctor.joined_date)}</td>
-                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor.total_patients}</td>
-                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor?.total_quantity_sold}</td>
-                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">${doctor?.revenue}</td>
-                      <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
-                        <Link href={`/admin/doctor-commission-summary/${doctor.id}`} className="text-gray-700 hover:underline inline-block align-middle w-[25px] h-[25px] hover:translate-x-1 transition-all">
-                          <NextArrowIcon />
-                        </Link>
-                      </td>
-                      {/* <td className="px-4 py-2 text-gray-700">${formatCurrency(doctor.total_commission)}</td> */}
-                    </tr>
-                    {/* {expandedDoctor === index && (
+                        <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
+                          <Link href={`/admin/doctor-commission-summary/${doctor.id}`} className="text-gray-700 hover:underline">
+                            {doctor.doctor_name}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{formatDate(doctor.joined_date)}</td>
+                        <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor.total_patients}</td>
+                        <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">{doctor?.total_quantity_sold}</td>
+                        <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">${doctor?.revenue}</td>
+                        <td className="px-4 py-3 text-gray-700 border-b border-[#aeaaac]">
+                          <Link href={`/admin/doctor-commission-summary/${doctor.id}`} className="text-gray-700 hover:underline inline-block align-middle w-[25px] h-[25px] hover:translate-x-1 transition-all">
+                            <NextArrowIcon />
+                          </Link>
+                        </td>
+                        {/* <td className="px-4 py-2 text-gray-700">${formatCurrency(doctor.total_commission)}</td> */}
+                      </tr>
+                      {/* {expandedDoctor === index && (
                   <tr>
                     <td colSpan="6" className="bg-gray-50 px-6 py-4">
                       <div className="mb-6">
@@ -201,9 +214,9 @@ export default function DoctorCommissionSummary() {
                     </td>
                   </tr>
                 )} */}
-                  </>
-                ))
-              }
+                    </>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -228,7 +241,7 @@ export default function DoctorCommissionSummary() {
             >
               Next
             </button>
-          </div>
+          </div></>}
       </div>
     </AppLayout>
   );

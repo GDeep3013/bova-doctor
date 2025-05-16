@@ -78,11 +78,7 @@ export default function DoctorDetailsPage() {
           <p className="p-4 text-red-500">Doctor not found</p>
         ) : (
           <>
-            <div className="flex justify-end">
-              <button className="absolute md:static bg-[#2c444b] text-white text-base px-2 sm:px-6 text-sm sm:text-md py-2 rounded-lg hover:bg-[#0b1214]">
-                Review Plan (2)
-              </button>
-            </div>
+           
 
             <div className="flex flex-wrap sm:flex-nowrap justify-between items-end md:mt-[16px] mb-4">
               <div>
