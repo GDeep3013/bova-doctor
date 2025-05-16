@@ -55,7 +55,7 @@ export default function DoctorDetailsPage() {
 
   const handlePagination = (doctorId, page, searchQuery = "", limit) => {
     setPage(page);
-    router.push(`/sales?page=${page}`);
+    router.push(`/admin/doctor-commission-summary/${id}?page=${page}`);
     fetchDoctorSales(doctorId, page, searchQuery, limit)
   }
   const formatDate = (isoString) => {
@@ -101,6 +101,8 @@ export default function DoctorDetailsPage() {
                   <input
                     type="text"
                     placeholder=""
+                    value={searchQuery}
+                    onChange={handleSearchChange}
                     className="border border-gray-300 rounded-[7px] px-4 py-1 outline-none focus:ring-none focus:ring-blue-400"
                   />
                 </div>
