@@ -8,7 +8,8 @@ import Loader from 'components/loader';
 import { NextArrowIcon } from 'components/svg-icons/icons';
 import { useSession } from 'next-auth/react';
 export default function DoctorSales() {
-    const { data: session } = useSession();
+  const { data: session } = useSession();
+  
     const router = useRouter();
     const [doctor, setDoctor] = useState(null);
     const [loading, setLoading] = useState(true);
