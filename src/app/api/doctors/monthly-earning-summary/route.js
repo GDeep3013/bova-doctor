@@ -85,7 +85,7 @@ export async function GET(req) {
 
       for (const doctor of result) { 
            const doctorUser = {
-                email: "yogeshrana.610weblab+"+doctor.firstName+"@gmail.com",
+                email: doctor.email,
                 firstName: doctor.firstName,
                 lastName: doctor.lastName
             };
