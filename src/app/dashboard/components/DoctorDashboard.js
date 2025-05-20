@@ -91,9 +91,9 @@ export default function AdminDashboard() {
                             <Link href='/patients/create' className="py-2 px-4 bg-[#4e768a] border border-[#4e768a] text-white rounded-[8px] hover:text-customBg2 hover:border-customBg2 hover:bg-inherit ml-4">
                                 Add Patient
                             </Link>
-                            <Link href='/sales' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit ml-4">
+                            {/* <Link href='/sales' className="py-2 px-4 bg-customBg2 border border-customBg2 text-white rounded-[8px] hover:text-customBg2 hover:bg-inherit ml-4">
                                 Sales
-                            </Link>
+                            </Link> */}
                             
                            
                         </div>
