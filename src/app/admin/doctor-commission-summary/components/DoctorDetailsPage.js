@@ -160,7 +160,7 @@ export default function DoctorDetailsPage() {
                         }
                       </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
-                        {plan?.doctorCommission || "0.00"}%
+                        {plan?.patient?.items?.[0]?.doctorCommission  || "0"}%
                       </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
                         ${plan?.patient?.items?.[0]?.per_item_earning || "0.00"}
@@ -181,7 +181,7 @@ export default function DoctorDetailsPage() {
 
                     {openAccordionIndex === index &&
                       plan?.patient?.items?.map((item, idx,array) => (
-                        idx > 0 && (
+                      idx > 0  && (
                           <tr key={idx} className="bg-white">
                               <td
                                 className={`px-4 py-3 text-gray-700 ${
@@ -208,7 +208,7 @@ export default function DoctorDetailsPage() {
                                   idx === array.length - 1 ? 'border-b' : ''
                                 } border-[#aeaaac]`}
                               >
-                                {plan?.doctorCommission || "-"}%
+                                {item?.doctorCommission || "0"}%
                               </td>
                               <td
                                 className={`px-4 py-3 text-gray-700 ${

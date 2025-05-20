@@ -93,7 +93,8 @@ export async function GET(req, { params }) {
       for (const order of relatedOrders) {
         const orderItems = await OrderItem.find({ orderId: order._id }).lean();
         const hasSubscription = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription');
-        
+         const SubscriptionFirstOrder = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription First Order');
+         const SubscriptionRecurringOrder = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription Recurring Order');
 
         const mappedItems = orderItems.map((item) => {
           const price = item.price || 0;
@@ -102,21 +103,28 @@ export async function GET(req, { params }) {
           const discount = (totalPrice * (plan.discount || 0)) / 100;
 
           let per_item_earning = 0;
-          if (hasSubscription) {
+          if (hasSubscription && SubscriptionFirstOrder) {
             doctorCommission = 15;
+            per_item_earning = (totalPrice * doctorCommission) / 100;
+          } else if (hasSubscription && SubscriptionRecurringOrder) {
+            doctorCommission = 0;
             per_item_earning = (totalPrice * doctorCommission) / 100;
           } else {
             doctorCommission = doctor.commissionPercentage || 0;
             per_item_earning = (totalPrice * doctorCommission) / 100 - discount;
           }
 
-          return {
-            productName: item.productName || '',
-            quantity,
-            price,
-            per_item_earning: parseFloat(per_item_earning.toFixed(2)),
-          };
-        });
+          if (doctorCommission > 0) {
+            return {
+              productName: item.productName || '',
+              quantity,
+              price,
+              per_item_earning: parseFloat(per_item_earning.toFixed(2)),
+              doctorCommission: doctorCommission
+            };
+          }
+          return null;
+        }).filter((item) => item !== null);
 
         allItems.push(...mappedItems);
       }
