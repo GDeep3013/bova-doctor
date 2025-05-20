@@ -58,88 +58,91 @@ export async function POST(req) {
     }
 
     // Create a new order document with the mainPatientId
-    const savedOrder = await Order.findOneAndUpdate({
+    if (planId && mainPatientId) {
+    
+      const savedOrder = await Order.findOneAndUpdate({
         order_id: orderData.id
       }, // Find order by Shopify order ID
-      {
-        order_id: orderData.id,
-        order_name: orderData.name,
-        note: orderData.note,
-        customer_id: orderData.customer.id,
-        customer_name: `${orderData.customer.first_name} ${orderData.customer.last_name}`,
-        customer_email: orderData.customer.email,
-        item_count: orderData.line_items.length,
-        total: orderData.total_price,
-        payment_status: orderData.financial_status,
-        delivery_status: orderData.fulfillment_status || "pending",
-        delivery_method: orderData.shipping_lines[0] ?.title || "Not Specified",
-        fulfillment: orderData.fulfillment_status || "unfulfilled",
-        order_date: new Date(orderData.created_at),
-        patient_id: mainPatientId,
-        plan_id: planId,
-        tags: orderData.tags,
-        doctor: {
-          doctor_id: patient ? patient?.doctorId : null,
-          doctor_payment: doctorPayment,
-          doctor_commission: doctCommission
-        }
-      }, {
+        {
+          order_id: orderData.id,
+          order_name: orderData.name,
+          note: orderData.note,
+          customer_id: orderData.customer.id,
+          customer_name: `${orderData.customer.first_name} ${orderData.customer.last_name}`,
+          customer_email: orderData.customer.email,
+          item_count: orderData.line_items.length,
+          total: orderData.total_price,
+          payment_status: orderData.financial_status,
+          delivery_status: orderData.fulfillment_status || "pending",
+          delivery_method: orderData.shipping_lines[0]?.title || "Not Specified",
+          fulfillment: orderData.fulfillment_status || "unfulfilled",
+          order_date: new Date(orderData.created_at),
+          patient_id: mainPatientId,
+          plan_id: planId,
+          tags: orderData.tags,
+          doctor: {
+            doctor_id: patient ? patient?.doctorId : null,
+            doctor_payment: doctorPayment,
+            doctor_commission: doctCommission
+          }
+        }, {
         new: true, // Return the updated document
         upsert: true, // Create the document if it doesn't exist
         setDefaultsOnInsert: true
       }
-    );
+      );
 
-    // Map through line_items to save each as an OrderItem, using the main patientId if individual item _patient_id is absent
-    // const orderItems = orderData.line_items.map(item => {
-    //   const itemPatientId = item.properties?._patient_id || mainPatientId; // Check _patient_id in item properties
+      // Map through line_items to save each as an OrderItem, using the main patientId if individual item _patient_id is absent
+      // const orderItems = orderData.line_items.map(item => {
+      //   const itemPatientId = item.properties?._patient_id || mainPatientId; // Check _patient_id in item properties
 
-    //   return {
-    //     orderId: savedOrder._id,        // Reference the saved order's ID
-    //     productName: item.title,
-    //     quantity: item.quantity,
-    //     price: item.price,
-    //   };
-    // });
+      //   return {
+      //     orderId: savedOrder._id,        // Reference the saved order's ID
+      //     productName: item.title,
+      //     quantity: item.quantity,
+      //     price: item.price,
+      //   };
+      // });
 
 
 
-    // // Save all OrderItems to the database
-    // await OrderItem.insertMany(orderItems);
+      // // Save all OrderItems to the database
+      // await OrderItem.insertMany(orderItems);
 
-    for (const item of orderData.line_items) {
-      const itemPatientId = getPropertyValue(item.properties, "_patient_id") || mainPatientId;
-      // logger.info('LineItem price', { price:item.price, priceType: typeof item.price  });
-      // let price = Number(item.price); // Convert to number
-      // if (isNaN(price)) {
-      //   price = 0; // default fallback if price is not valid
-      // }
-      await OrderItem.findOneAndUpdate({
-        orderId: savedOrder._id,
-        lineItemId: item.id,
-        // You can add more unique identifiers here if you have them, like variant_id or SKU
-      }, {
-        orderId: savedOrder._id,
-        lineItemId: item.id,
-        productName: item.title,
-        quantity: item.quantity,
-        price: mongoose.Types.Decimal128.fromString(item.price)
-      }, {
-        new: true,
-        upsert: true,
-        setDefaultsOnInsert: true,
-      });
-    }
+      for (const item of orderData.line_items) {
+        const itemPatientId = getPropertyValue(item.properties, "_patient_id") || mainPatientId;
+        // logger.info('LineItem price', { price:item.price, priceType: typeof item.price  });
+        // let price = Number(item.price); // Convert to number
+        // if (isNaN(price)) {
+        //   price = 0; // default fallback if price is not valid
+        // }
+        await OrderItem.findOneAndUpdate({
+          orderId: savedOrder._id,
+          lineItemId: item.id,
+          // You can add more unique identifiers here if you have them, like variant_id or SKU
+        }, {
+          orderId: savedOrder._id,
+          lineItemId: item.id,
+          productName: item.title,
+          quantity: item.quantity,
+          price: mongoose.Types.Decimal128.fromString(item.price)
+        }, {
+          new: true,
+          upsert: true,
+          setDefaultsOnInsert: true,
+        });
+      }
 
-    // Update plan status if planId is valid
-    if (planId) {
-      await Plan.findByIdAndUpdate(planId, {
-        status: "ordered"
-      }, {
-        new: true,
-        upsert: true,
-        setDefaultsOnInsert: true,
-      });
+      // Update plan status if planId is valid
+      if (planId) {
+        await Plan.findByIdAndUpdate(planId, {
+          status: "ordered"
+        }, {
+          new: true,
+          upsert: true,
+          setDefaultsOnInsert: true,
+        });
+      }
     }
     // await Plan.findByIdAndUpdate(planId, { status: "ordered" }, { new: true })
     return new Response(JSON.stringify({
@@ -147,6 +150,7 @@ export async function POST(req) {
     }), {
       status: 201
     });
+   
 
   } catch (error) {
     console.error('Error saving order and items:', error);
