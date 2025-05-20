@@ -36,8 +36,7 @@ export async function POST(req) {
     const patient = await Patient.findById(mainPatientId);
     const plan = await Plan.findById(planId);
     const hasSubscription = orderData?.tags?.split(',').map(tag => tag.trim()).includes('Subscription');
-    const SubscriptionFirstOrder = orderData?.tags?.split(',').map(tag => tag.trim()).includes('Subscription First Order');
-    const SubscriptionRecurringOrder = orderData?.tags?.split(',').map(tag => tag.trim()).includes('Subscription Recurring Order');
+    
     
     console.log('hasSubscription',hasSubscription)
 
@@ -45,12 +44,13 @@ export async function POST(req) {
       const doctor = await Doctor.findById(patient.doctorId)
       if (doctor) {
         const totalPrice = parseFloat(orderData.total_price);
-        if (hasSubscription && SubscriptionFirstOrder) {
+        // let discount = (totalPrice * plan.discount) / 100;
+        // let commission = (totalPrice * doctor.commissionPercentage)/ 100  ;
+        // let doctorCommission = commission - discount;
+        // doctorPayment = doctorCommission
+        if (hasSubscription) {
           doctCommission = 15;
           doctorPayment = (totalPrice * doctCommission) / 100;
-
-        } else if(hasSubscription && SubscriptionRecurringOrder){
-          doctorPayment = 0;
         } else {
           doctCommission = doctor.commissionPercentage;
           const discount = (totalPrice * plan.discount) / 100;
