@@ -24,11 +24,11 @@ export async function POST(req) {
     logger.info('Shopify Create and Update Webhook Triggred', {
       orderID: orderData.id
     });
-    const mainPatientId = orderData.line_items
-      .map(item => getPropertyValue(item.properties, "_patient_id"))
+    const mainPatientId = orderData?.line_items
+      .map(item => getPropertyValue(item?.properties, "_patient_id"))
       .find(value => value != null) || null;
     const planId = orderData.line_items
-      .map(item => getPropertyValue(item.properties, "_plan_id"))
+      .map(item => getPropertyValue(item?.properties, "_plan_id"))
       .find(value => value != null) || null;
     let doctorPayment = 0;
     let doctCommission = 0;
@@ -40,10 +40,10 @@ export async function POST(req) {
     
     console.log('hasSubscription',hasSubscription)
 
-    if (patient.doctorId) {
-      const doctor = await Doctor.findById(patient.doctorId)
+    if (patient?.doctorId) {
+      const doctor = await Doctor.findById(patient?.doctorId)
       if (doctor) {
-        const totalPrice = parseFloat(orderData.total_price);
+        const totalPrice = parseFloat(orderData?.total_price);
         // let discount = (totalPrice * plan.discount) / 100;
         // let commission = (totalPrice * doctor.commissionPercentage)/ 100  ;
         // let doctorCommission = commission - discount;
@@ -82,7 +82,7 @@ export async function POST(req) {
         plan_id: planId,
         tags: orderData.tags,
         doctor: {
-          doctor_id: patient ? patient.doctorId : null,
+          doctor_id: patient ? patient?.doctorId : null,
           doctor_payment: doctorPayment,
           doctor_commission: doctCommission
         }
