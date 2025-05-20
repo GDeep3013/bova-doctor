@@ -99,7 +99,7 @@ export async function GET(req, { params }) {
         const mappedItems = orderItems.map((item) => {
           const price = item.price || 0;
           const quantity = item.quantity || 0;
-          const totalPrice = price;
+          const totalPrice = order?.total;
           const discount = (totalPrice * (plan.discount || 0)) / 100;
 
           let per_item_earning = 0;
