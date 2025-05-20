@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import AppLayout from 'components/Applayout';
 import Loader from 'components/loader';
+import Link from 'next/link';
 import { NextArrowIcon } from 'components/svg-icons/icons';
 import { useSession } from 'next-auth/react';
 export default function DoctorSales() {
@@ -132,12 +133,22 @@ export default function DoctorSales() {
                                                     <Loader />
                                                   </td>
                                                 </tr>
-                                              ) : doctor?.plans?.length === 0 ? (
+                                            ) : doctor?.plans?.length === 0 ? (
+                                                <>
+                                                <tr>
+                                                  <td colSpan={7} className="text-center text-gray-500 pt-6">
+                                                      You currently have zero sales 
+                                              
+                                                      </td>
+                                                </tr>
                                                 <tr>
                                                   <td colSpan={7} className="text-center text-gray-500 py-6">
-                                                    No records found.
-                                                  </td>
+                                                    <Link href='/patients/create' className="py-2 px-4 bg-[#4e768a] border border-[#4e768a] text-white rounded-[8px] hover:text-customBg2 hover:border-customBg2 hover:bg-inherit ml-4">
+                                                        Add Patient
+                                                    </Link>
+                                                    </td> 
                                                 </tr>
+                                                </>
                                               ) : (
                                                 doctor.plans.map((plan, index) => (
                                                   <React.Fragment key={index}>
