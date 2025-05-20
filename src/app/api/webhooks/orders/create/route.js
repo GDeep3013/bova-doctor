@@ -25,10 +25,10 @@ export async function POST(req) {
       orderID: orderData.id
     });
     const mainPatientId = orderData?.line_items
-      .map(item => getPropertyValue(item?.properties, "_patient_id"))
+      .map(item => getPropertyValue(item.properties, "_patient_id"))
       .find(value => value != null) || null;
     const planId = orderData.line_items
-      .map(item => getPropertyValue(item?.properties, "_plan_id"))
+      .map(item => getPropertyValue(item.properties, "_plan_id"))
       .find(value => value != null) || null;
     let doctorPayment = 0;
     let doctCommission = 0;
@@ -37,10 +37,7 @@ export async function POST(req) {
     const plan = await Plan.findById(planId);
     const hasSubscription = orderData?.tags?.split(',').map(tag => tag.trim()).includes('Subscription');
     
-    
-    console.log('hasSubscription',hasSubscription)
-
-    if (patient?.doctorId) {
+    if (patient) {
       const doctor = await Doctor.findById(patient?.doctorId)
       if (doctor) {
         const totalPrice = parseFloat(orderData?.total_price);
