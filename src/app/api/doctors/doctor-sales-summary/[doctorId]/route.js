@@ -2,7 +2,7 @@ import connectDB from '../../../../../db/db';
 import Doctor from '../../../../../models/Doctor';
 import Patient from '../../../../../models/patient';
 import Plan from '../../../../../models/plan';
-import Order from '../../../../../models/order'; // fixed import
+import Order from '../../../../../models/order';
 import OrderItem from '../../../../../models/orderItem';
 
 export async function GET(req, { params }) {
@@ -18,126 +18,39 @@ export async function GET(req, { params }) {
       return new Response('Doctor not found', { status: 404 });
     }
 
-    const patients = await Patient.find({ doctorId }).lean();
-
-    const patientMap = {};
-    for (const patient of patients) {
-      const patientIdStr = patient._id.toString();
-      patientMap[patientIdStr] = patient;
-    }
-
-    const patientIds = Object.keys(patientMap);
-    const plans = await Plan.find({
-      patient_id: { $in: patientIds },
-      planStatus: 'ordered',
-    }).lean();
-
-    let totalSold = 0;
-    let totalCommission = 0;
-    const patientPaymentsMap = {};
-    let totalPatients = 0;
-
-    for (const plan of plans) {
-      const patient = patientMap[plan.patient_id?.toString()];
-      if (!patient) continue;
-
-      let totalItemAmount = 0;
-      for (const item of plan.items) {
-        const price = parseFloat(item.price || '0');
-        const quantity = item.quantity || 0;
-        totalItemAmount += price * quantity;
-      }
-
-      const discount = plan.discount || 0;
-      const amountPaid = totalItemAmount - discount;
-      const commissionRate = plan.doctorCommission || 0;
-      const commissionEarned = (amountPaid * commissionRate) / 100;
-
-      totalSold += amountPaid;
-      totalCommission += commissionEarned;
-
-      const patientKey = `${patient.firstName} ${patient.lastName}`;
-      if (!patientPaymentsMap[patientKey]) {
-        patientPaymentsMap[patientKey] = {
-          patient_name: patientKey,
-          payments: [],
-        };
-        totalPatients += 1;
-      }
-
-      patientPaymentsMap[patientKey].payments.push({
-        date: plan.createdAt,
-        amount_paid: amountPaid,
-        commission_rate: commissionRate,
-        commission_earned: commissionEarned,
-      });
-    }
-
     const orders = await Order.find({ 'doctor.doctor_id': doctorId }).lean();
     let doctor_earnings = 0;
-
-    for (const order of orders) {
-      doctor_earnings += order?.doctor?.doctor_payment || 0;
-    }
-
     const formattedPlans = [];
 
-    for (const plan of plans) {
-      const patient = patientMap[plan.patient_id?.toString()];
-      if (!patient) continue;
+    for (const order of orders) {
+      const patient = await Patient.findOne({ _id: order.patient_id }).lean();
+      const plan = await Plan.findOne({ _id: order.plan_id }).lean();
+      if (!patient || !plan) continue;
 
-      const relatedOrders = await Order.find({ plan_id: plan._id }).lean();
+      doctor_earnings += order?.doctor?.doctor_payment || 0;
+
+      const orderItems = await OrderItem.find({ orderId: order._id }).lean();
       let allItems = [];
-      let doctorCommission = 0;
-
-      for (const order of relatedOrders) {
-        const orderItems = await OrderItem.find({ orderId: order._id }).lean();
-        const hasSubscription = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription');
-         const SubscriptionFirstOrder = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription First Order');
-         const SubscriptionRecurringOrder = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription Recurring Order');
-
         const mappedItems = orderItems.map((item) => {
-          const price = item.price || 0;
           const quantity = item.quantity || 0;
-          const totalPrice = order?.total;
-          const discount = (totalPrice * (plan.discount || 0)) / 100;
-
-          let per_item_earning = 0;
-          if (hasSubscription && SubscriptionFirstOrder) {
-            doctorCommission = 15;
-            per_item_earning = (totalPrice * doctorCommission) / 100;
-          } else if (hasSubscription && SubscriptionRecurringOrder) {
-            doctorCommission = 0;
-            per_item_earning = (totalPrice * doctorCommission) / 100;
-          } else {
-            doctorCommission = doctor.commissionPercentage || 0;
-            per_item_earning = (totalPrice * doctorCommission) / 100 - discount;
-          }
-
-          if (doctorCommission > 0) {
             return {
               productName: item.productName || '',
               quantity,
-              price,
-              per_item_earning: parseFloat(per_item_earning.toFixed(2)),
-              doctorCommission: doctorCommission
             };
-          }
-          return null;
         }).filter((item) => item !== null);
+      allItems.push(...mappedItems);
 
-        allItems.push(...mappedItems);
-      }
-
-      const planDateStr = new Date(plan.createdAt).toLocaleDateString('en-GB'); // "dd/mm/yyyy"
-
+      const planDateStr = new Date(order.order_date).toLocaleDateString('en-GB'); // dd/mm/yyyy
+      if (order?.doctor?.doctor_payment <= 0) continue;
+      
       formattedPlans.push({
         id: plan._id,
         patient_id: plan.patient_id,
         discount: plan.discount || 0,
-        doctorCommission: doctorCommission || 0,
-        date: plan.createdAt,
+        date: order.order_date,
         formattedDate: planDateStr,
+        per_item_earning:order?.doctor?.doctor_payment?.toFixed(2) || 0,
+        doctorCommission: order?.doctor?.doctor_commission || 0,
         patient: {
           firstName: patient.firstName,
           lastName: patient.lastName,
@@ -152,10 +65,7 @@ export async function GET(req, { params }) {
     const filteredPlans = formattedPlans.filter(plan => {
       const fullName = `${plan.patient.firstName} ${plan.patient.lastName}`.toLowerCase();
       const formattedDate = new Date(plan.date).toLocaleDateString('en-GB'); // dd/mm/yyyy
-      return (
-        fullName.includes(search) ||
-        formattedDate.includes(search)
-      );
+      return fullName.includes(search) || formattedDate.includes(search);
     });
 
     // Pagination
@@ -168,15 +78,7 @@ export async function GET(req, { params }) {
       id: doctor._id,
       doctor_name: `${doctor.firstName} ${doctor.lastName}`,
       email: doctor.email,
-      phone: doctor.phone,
-      clinicName: doctor.clinicName,
-      specialty: doctor.specialty,
-      commissionPercentage: doctor.commissionPercentage,
-      total_sold: totalSold,
-      total_commission: totalCommission.toFixed(2),
-      total_patients: totalPatients,
-      doctor_earnings: doctor_earnings,
-      patients: Object.values(patientPaymentsMap),
+      doctor_earnings: parseFloat(doctor_earnings.toFixed(2)),
       plans: paginatedPlans,
       pagination: {
         total: totalPlans,
@@ -194,4 +96,3 @@ export async function GET(req, { params }) {
     return new Response('Internal Server Error', { status: 500 });
   }
 }
-

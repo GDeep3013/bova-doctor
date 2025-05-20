@@ -114,6 +114,7 @@ export async function GET(req) {
         for (const order of orders) {
           earnings += order?.doctor?.doctor_payment || 0;
           const orderItems = await OrderItem.find({ orderId: order._id }).lean();
+          if (order?.doctor?.doctor_payment <= 0) continue;
           for (const item of orderItems) {
             totalOrderQuantity += item.quantity || 0;
           }

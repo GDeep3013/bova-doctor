@@ -119,7 +119,7 @@ export default function DoctorDetailsPage() {
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Units Sold Per Plan</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">%Earning</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Earned Per Plan</th>
-                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] rounded-tr-[20px]"></th>
+                    {/* <th className="py-3 px-4 font-normal border-b border-[#aeaaac] rounded-tr-[20px]"></th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -160,12 +160,12 @@ export default function DoctorDetailsPage() {
                         }
                       </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
-                        {plan?.patient?.items?.[0]?.doctorCommission  || "0"}%
+                        {plan?.doctorCommission  || "0"}%
                       </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
-                        ${plan?.patient?.items?.[0]?.per_item_earning || "0.00"}
+                        ${plan?.per_item_earning || "0.00"}
                       </td>
-                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] text-right w-[8%]`}>
+                      {/* <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] text-right w-[8%]`}>
                         <button
                           onClick={() => toggleAccordion(index)}
                           className="inline-block align-middle w-[25px] h-[25px] transition-transform"
@@ -176,10 +176,10 @@ export default function DoctorDetailsPage() {
                             <NextArrowIcon />
                           </span>
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
 
-                    {openAccordionIndex === index &&
+                    {/* {openAccordionIndex === index &&
                       plan?.patient?.items?.map((item, idx,array) => (
                       idx > 0  && (
                           <tr key={idx} className="bg-white">
@@ -224,7 +224,7 @@ export default function DoctorDetailsPage() {
                               ></td>
                             </tr>
                         )
-                      ))}
+                      ))} */}
                   </React.Fragment>
                 ))
               )}
