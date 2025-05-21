@@ -48,28 +48,29 @@ export async function POST(req) {
     // }, 0);
     const totalPrice = parseFloat(orderData?.total_price);
 
-    console.log('orderData?.total_price',orderData?.total_price)
+    // if (patient) {
+    const doctor = await Doctor.findById('676f7f3f5ca43fd7089f95cb');
 
-    if (patient) {
-      const doctor = await Doctor.findById(patient?.doctorId)
-      if (doctor) {
+    if (doctor) {
+
+        doctCommission = doctor.commissionPercentage;
+      
         if (hasSubscription && SubscriptionFirstOrder) {
-          doctCommission = 15;
-          DrcommissionAmount = (totalPrice * doctCommission) / 100;
-        } else if (hasSubscription && SubscriptionRecurringOrder) {
-          doctCommission = 0;
-          DrcommissionAmount = (totalPrice * doctCommission) / 100;
-        } else {
-          doctCommission = doctor.commissionPercentage;
           if (plan.discount > 0) {
             doctCommission  = doctor.commissionPercentage - plan.discount;
           }
-          DrcommissionAmount = (totalPrice * doctCommission) / 100;
+        } else if (hasSubscription && SubscriptionRecurringOrder) {
+          doctCommission = 0;
+        } else {
+            if (plan.discount > 0) {
+              doctCommission  = doctor.commissionPercentage - plan.discount;
+            }
         }
+       DrcommissionAmount = (totalPrice * doctCommission) / 100;
       }
-    }
+    // }
 
-    if (planId && mainPatientId) {
+    if (planId) {
       const savedOrder = await Order.findOneAndUpdate({
         order_id: orderData.id
       }, {
@@ -90,7 +91,7 @@ export async function POST(req) {
         plan_id: planId,
         tags: orderData.tags,
         doctor: {
-          doctor_id: patient ? patient?.doctorId : null,
+          doctor_id: doctor?._id,
           doctor_payment: DrcommissionAmount,
           doctor_commission: doctCommission
         }

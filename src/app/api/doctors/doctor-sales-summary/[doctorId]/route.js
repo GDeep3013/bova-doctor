@@ -28,7 +28,7 @@ export async function GET(req, { params }) {
       const patient = await Patient.findOne({ _id: order.patient_id }).lean();
       const plan = await Plan.findOne({ _id: order.plan_id }).lean();
 
-      if (!patient || !plan) continue;
+      if (!plan) continue;
 
       doctor_earnings += order?.doctor?.doctor_payment || 0;
 
@@ -44,8 +44,8 @@ export async function GET(req, { params }) {
       allItems.push(...mappedItems);
 
       const planDateStr = new Date(order.order_date).toLocaleDateString('en-GB'); // dd/mm/yyyy
-      if (order?.doctor?.doctor_payment <= 0) continue;
-      
+      // if (order?.doctor?.doctor_payment <= 0) continue;
+      let patient_name = patient?.firstName + '' + patient?.lastName
       formattedPlans.push({
         id: plan._id,
         patient_id: plan.patient_id,
@@ -56,10 +56,10 @@ export async function GET(req, { params }) {
         per_item_earning:order?.doctor?.doctor_payment?.toFixed(2) || 0,
         doctorCommission: order?.doctor?.doctor_commission || 0,
         patient: {
-          firstName: patient.firstName,
-          lastName: patient.lastName,
-          email: patient.email,
-          doctorId: patient.doctorId,
+          firstName: patient?.firstName,
+          customer_name: patient? patient?.firstName + ' ' + patient?.lastName: order?.customer_name,
+          email: patient?.email,
+          doctorId: patient?.doctorId,
           items: allItems,
         },
       });

@@ -148,7 +148,7 @@ export default function DoctorDetailsPage() {
                         {formatDate(plan.date)}
                       </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[10%]`}>
-                        {plan?.patient?.firstName} {plan?.patient?.lastName}
+                        {plan?.patient?.customer_name}
                       </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[20%]`}>
                         {plan?.patient?.items?.[0]?.productName}
