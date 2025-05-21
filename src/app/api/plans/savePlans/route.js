@@ -17,7 +17,7 @@ export async function POST(req) {
 
     const planData = {
         patient_id,
-        doctorID : doctor.id,
+        doctorId : doctor.id,
         message,
         status,
         items,
