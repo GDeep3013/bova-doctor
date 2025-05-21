@@ -47,9 +47,22 @@ export async function POST(req) {
     //   return sum + price * quantity;
     // }, 0);
     const totalPrice = parseFloat(orderData?.total_price);
+ let doctor =null
+    if (patient) {
+         doctor = await Doctor.findById(patient?.doctorId)
+    } else {
+        const fallbackOrderIds = [
+        '6641358733603',
+        '6639618490659',
+        '6549547024675',
+        '6654248223011',
+        '6637507248419',
+      ];
 
-    // if (patient) {
-    const doctor = await Doctor.findById('676f7f3f5ca43fd7089f95cb');
+      if (fallbackOrderIds.includes(orderData.id)) {
+        doctor = await Doctor.findById('676f7f3f5ca43fd7089f95cb');
+      }
+    }
 
     if (doctor) {
 
@@ -68,7 +81,7 @@ export async function POST(req) {
         }
        DrcommissionAmount = (totalPrice * doctCommission) / 100;
       }
-    // }
+    
 
     if (planId) {
       const savedOrder = await Order.findOneAndUpdate({
