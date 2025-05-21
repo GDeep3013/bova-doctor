@@ -29,6 +29,7 @@ export async function GET(req) {
     const doctorSummaryMap = {};
 
     for (const plan of plans) {
+      
       const patient = patientMap[plan.patient_id?.toString()];
       if (!patient) continue;
 

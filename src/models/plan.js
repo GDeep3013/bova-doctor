@@ -8,7 +8,8 @@ const PlanSchema = new mongoose.Schema({
     message: {
         type: String
     },
-    patient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true, },
+    patient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true},
+    doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor', required: true}, 
     discount: Number,
     doctorCommission: Number,
     priceRuleId: Number,

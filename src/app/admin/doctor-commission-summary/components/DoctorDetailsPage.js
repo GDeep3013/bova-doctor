@@ -117,6 +117,7 @@ export default function DoctorDetailsPage() {
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac]">Patient</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Item(s)</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Units Sold Per Plan</th>
+                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] "> Order Total</th>    
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">%Earning</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Earned Per Plan</th>
                     {/* <th className="py-3 px-4 font-normal border-b border-[#aeaaac] rounded-tr-[20px]"></th> */}
@@ -159,6 +160,11 @@ export default function DoctorDetailsPage() {
                             : ''
                         }
                       </td>
+
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
+                        {plan?.order_total  || "0"}
+                      </td>
+
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
                         {plan?.doctorCommission  || "0"}%
                       </td>

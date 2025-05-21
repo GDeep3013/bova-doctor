@@ -19,12 +19,15 @@ export async function GET(req, { params }) {
     }
 
     const orders = await Order.find({ 'doctor.doctor_id': doctorId }).lean();
+
     let doctor_earnings = 0;
     const formattedPlans = [];
 
     for (const order of orders) {
+
       const patient = await Patient.findOne({ _id: order.patient_id }).lean();
       const plan = await Plan.findOne({ _id: order.plan_id }).lean();
+
       if (!patient || !plan) continue;
 
       doctor_earnings += order?.doctor?.doctor_payment || 0;
@@ -48,6 +51,7 @@ export async function GET(req, { params }) {
         patient_id: plan.patient_id,
         discount: plan.discount || 0,
         date: order.order_date,
+        order_total: order.total,
         formattedDate: planDateStr,
         per_item_earning:order?.doctor?.doctor_payment?.toFixed(2) || 0,
         doctorCommission: order?.doctor?.doctor_commission || 0,

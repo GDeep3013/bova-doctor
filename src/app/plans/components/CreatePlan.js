@@ -23,6 +23,7 @@ export default function CreatePlan() {
     const [formData, setFormData] = useState({ items: [], message: '', patient_id: null, discount: "" });
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
+
     const DISCOUNT_CODE_PERCENTAGE = [
         { label: "Select discount", value: "" },
         { label: "5% OFF", value: "5" },
@@ -208,6 +209,7 @@ export default function CreatePlan() {
                 selectedItems: selectedItems,
                 formData: formData,
                 doctor: {
+                    id: session?.user?.id,
                     name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
                     email: session?.userDetail?.email,
                     clinicName: session?.userDetail?.clinicName
@@ -250,17 +252,17 @@ export default function CreatePlan() {
         }
         try {
             setLoader(true);
+
             let newdata = {
                 selectedItems: selectedItems,
                 formData: formData,
                 doctor: {
-                    name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
-                    email: session?.userDetail?.email,
-                    clinicName: session?.userDetail?.clinicName
+                    id : session?.user?.id
                 },
                 doctorCommission: formData.discount ? (commissionPercentage - formData.discount) : commissionPercentage,
-
             }
+          
+            //return;
             const response = await fetch('/api/plans/savePlans', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -282,6 +284,7 @@ export default function CreatePlan() {
             setLoader(false);
         }
     };
+
     const isProductSelected = (productId) => selectedItems.some(item => item.id === productId);
 
     const openModal = () => {

@@ -30,35 +30,39 @@ export async function POST(req) {
       .map(item => getPropertyValue(item.properties, "_plan_id"))
       .find(value => value != null) || null;
 
-    let doctorPayment = 0;
+    let DrcommissionAmount = 0;
     let doctCommission = 0;
 
     const patient = await Patient.findById(mainPatientId);
+
     const plan = await Plan.findById(planId);
+
     const hasSubscription = orderData?.tags?.split(',').map(tag => tag.trim()).includes('Subscription');
     const SubscriptionFirstOrder = orderData?.tags?.split(',').map(tag => tag.trim()).includes('Subscription First Order');
     const SubscriptionRecurringOrder = orderData?.tags?.split(',').map(tag => tag.trim()).includes('Subscription Recurring Order');
 
-    const totalPrice = orderData.line_items.reduce((sum, item) => {
-      const price = parseFloat(item.price) || 0;
-      const quantity = parseInt(item.quantity) || 1;
-      return sum + price * quantity;
-    }, 0);
+    // const totalPrice = orderData.line_items.reduce((sum, item) => {
+    //   const price = parseFloat(item.price) || 0;
+    //   const quantity = parseInt(item.quantity) || 1;
+    //   return sum + price * quantity;
+    // }, 0);
+    const totalPrice = orderData.total_price;
 
     if (patient) {
       const doctor = await Doctor.findById(patient?.doctorId)
       if (doctor) {
         if (hasSubscription && SubscriptionFirstOrder) {
           doctCommission = 15;
-          doctorPayment = (totalPrice * doctCommission) / 100;
+          DrcommissionAmount = (totalPrice * doctCommission) / 100;
         } else if (hasSubscription && SubscriptionRecurringOrder) {
           doctCommission = 0;
-          doctorPayment = (totalPrice * doctCommission) / 100;
+          DrcommissionAmount = (totalPrice * doctCommission) / 100;
         } else {
           doctCommission = doctor.commissionPercentage;
-          const discount = (totalPrice * plan.discount) / 100;
-          const commission = (totalPrice * doctor.commissionPercentage) / 100;
-          doctorPayment = commission - discount;
+          if (plan.discount > 0) {
+            doctCommission  = doctor.commissionPercentage - plan.discount;
+          }
+          DrcommissionAmount = (totalPrice * doctCommission) / 100;
         }
       }
     }
@@ -85,7 +89,7 @@ export async function POST(req) {
         tags: orderData.tags,
         doctor: {
           doctor_id: patient ? patient?.doctorId : null,
-          doctor_payment: doctorPayment,
+          doctor_payment: DrcommissionAmount,
           doctor_commission: doctCommission
         }
       }, {

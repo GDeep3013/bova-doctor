@@ -8,6 +8,7 @@ export async function POST(req) {
 
     const {
         formData: { items, patient_id, message, discount },
+        doctor,
         status = 'pending',
         doctorCommission,
         planStatus = 'saved',
@@ -16,6 +17,7 @@ export async function POST(req) {
 
     const planData = {
         patient_id,
+        doctorID : doctor.id,
         message,
         status,
         items,
@@ -27,6 +29,8 @@ export async function POST(req) {
 
     try {
         // Fetch patient details
+
+        console.log(planData);
 
         const patient = await Patient.findOne({ _id: patient_id });
         if (!patient) {

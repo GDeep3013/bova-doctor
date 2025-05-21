@@ -11,6 +11,7 @@ import { createProfile, subscribeProfiles, deleteProfile } from '../../../klaviy
 import { createDiscountPriceRule, createDiscountCode } from '../../../shopify-api/_shopify_api_ShopifyAPI'
 
 export async function POST(req) {
+
   await connectDB();
   const crypto = new NextCrypto();
 
@@ -25,6 +26,7 @@ export async function POST(req) {
 
 
   const planData = {
+    doctorID : doctor.id,
     patient_id,
     message,
     status,
@@ -35,6 +37,8 @@ export async function POST(req) {
     createdAt: new Date(),
     reminderDate:new Date(),
   };
+
+  
 
   try {
     // Fetch patient details
@@ -130,6 +134,7 @@ export async function POST(req) {
       }, 120000);
 
       await Promise.all([createProfilePromise, subscribeProfilePromise]);
+
     } catch (error) {
       console.error('Error handling Klaviyo actions:', error.message);
     }
@@ -139,6 +144,7 @@ export async function POST(req) {
     console.error("Error processing request:", error.message);
     return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500 });
   }
+
 }
 
 
