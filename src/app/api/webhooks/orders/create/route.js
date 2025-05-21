@@ -46,7 +46,9 @@ export async function POST(req) {
     //   const quantity = parseInt(item.quantity) || 1;
     //   return sum + price * quantity;
     // }, 0);
-    const totalPrice = orderData.total_price;
+    const totalPrice = parseFloat(orderData?.total_price);
+
+    console.log('orderData?.total_price',orderData?.total_price)
 
     if (patient) {
       const doctor = await Doctor.findById(patient?.doctorId)
@@ -78,7 +80,7 @@ export async function POST(req) {
         customer_name: `${orderData.customer.first_name} ${orderData.customer.last_name}`,
         customer_email: orderData.customer.email,
         item_count: orderData.line_items.length,
-        total: totalPrice.toFixed(2), // updated to use manually calculated total
+        total: totalPrice?.toFixed(2), // updated to use manually calculated total
         payment_status: orderData.financial_status,
         delivery_status: orderData.fulfillment_status || "pending",
         delivery_method: orderData.shipping_lines[0]?.title || "Not Specified",
