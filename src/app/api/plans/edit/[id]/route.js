@@ -48,7 +48,7 @@ export async function PUT(req, { params }) {
   try {
     const updatedPlan = await Plan.findByIdAndUpdate(
       id,
-      { items, status, patient_id, message, discount, doctorCommission, planStatus, updatedAt: new Date() ,reminderDate:new Date(),},
+      { items, status,doctorId : doctor.id, patient_id, message, discount, doctorCommission, planStatus, updatedAt: new Date() ,reminderDate:new Date(),},
       { new: true }
     ).populate('patient_id');
 

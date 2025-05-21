@@ -272,6 +272,7 @@ export default function CreatePlan() {
                 selectedItems: selectedItems,
                 formData: formData,
                 doctor: {
+                    id: session?.user?.id,
                     name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
                     email: session?.userDetail?.email,
                     clinicName: session?.userDetail?.clinicName
@@ -318,6 +319,7 @@ export default function CreatePlan() {
                 selectedItems: selectedItems,
                 formData: formData,
                 doctor: {
+                    id: session?.user?.id,
                     name: session?.userDetail?.firstName + ' ' + session?.userDetail?.lastName,
                     email: session?.userDetail?.email,
                     clinicName: session?.userDetail?.clinicName
