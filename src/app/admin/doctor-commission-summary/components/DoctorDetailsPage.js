@@ -162,7 +162,7 @@ export default function DoctorDetailsPage() {
                       </td>
 
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
-                        {plan?.order_total  || "0"}
+                        ${plan?.order_total  || "0.00"}
                       </td>
 
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
