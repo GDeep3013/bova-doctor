@@ -121,40 +121,40 @@ export async function PUT(req, { params }) {
     };
     const mailData = mergeArrays(selectedItems, items);
 
-    try {
-      const customProperties = {
-        patient_name: patient.firstName + ' ' + patient.lastName,
-        doctor_name: doctor.name,
-        doctor_email: doctor.email,
-        doctor_clinic_name: doctor.clinicName,
-        payment_link: link,
-        product_details: mailData,
-      };
-      const listId = 'XY5765';
-      setTimeout(async () => {
-        try {
-          await deleteProfile(patient);
-        } catch (error) {
-          console.error('Error deleting profile:', error);
-        }
-      }, 60000);
+    // try {
+    //   const customProperties = {
+    //     patient_name: patient.firstName + ' ' + patient.lastName,
+    //     doctor_name: doctor.name,
+    //     doctor_email: doctor.email,
+    //     doctor_clinic_name: doctor.clinicName,
+    //     payment_link: link,
+    //     product_details: mailData,
+    //   };
+    //   const listId = 'XY5765';
+    //   setTimeout(async () => {
+    //     try {
+    //       await deleteProfile(patient);
+    //     } catch (error) {
+    //       console.error('Error deleting profile:', error);
+    //     }
+    //   }, 60000);
 
-      const createProfilePromise = createProfile(patient, customProperties);
-      const subscribeProfilePromise = subscribeProfiles(patient, listId);
+    //   const createProfilePromise = createProfile(patient, customProperties);
+    //   const subscribeProfilePromise = subscribeProfiles(patient, listId);
 
-      setTimeout(async () => {
-        try {
-          const deleteProfileResponse = await deleteProfile(patient);
-        } catch (error) {
-          console.error('Error deleting profile:', error);
-        }
-      }, 120000);
+    //   setTimeout(async () => {
+    //     try {
+    //       const deleteProfileResponse = await deleteProfile(patient);
+    //     } catch (error) {
+    //       console.error('Error deleting profile:', error);
+    //     }
+    //   }, 120000);
 
-      await Promise.all([createProfilePromise, subscribeProfilePromise]);
-    }
-    catch (error) {
-      console.error('Error handling Klaviyo actions:', error);
-    }
+    //   await Promise.all([createProfilePromise, subscribeProfilePromise]);
+    // }
+    // catch (error) {
+    //   console.error('Error handling Klaviyo actions:', error);
+    // }
 
 
     return new Response(JSON.stringify({ success: true, data: updatedPlan }), { status: 200 });
