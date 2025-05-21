@@ -24,6 +24,8 @@ export default function CreatePlan() {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
 
+    console.log('selectedPatient',selectedPatient)
+
     const DISCOUNT_CODE_PERCENTAGE = [
         { label: "Select discount", value: "" },
         { label: "5% OFF", value: "5" },
@@ -135,7 +137,7 @@ export default function CreatePlan() {
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended),',
                     takeWith: 'Water',
-                    _patient_id: selectedPatient?.id || id,
+                    _patient_id: selectedPatient?._id || id,
                     notes: '',
                 }
             };
@@ -161,7 +163,7 @@ export default function CreatePlan() {
                             properties: {
                                 ...item.properties,
                                 [field]: value,
-                                _patient_id: selectedPatient?.id || id,
+                                _patient_id: selectedPatient?._id || id,
                             },
                         };
                     }
@@ -203,6 +205,8 @@ export default function CreatePlan() {
             alert("Please fill out all required fields for each item.");
             return;
         }
+
+        console.log('formData',formData)
         try {
             setLoader(true);
             let newdata = {

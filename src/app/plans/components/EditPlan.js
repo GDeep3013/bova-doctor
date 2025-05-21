@@ -42,6 +42,7 @@ export default function CreatePlan() {
         { label: "50% OFF", value: "50" },
     ];
 
+    console.log('selectedPatient',selectedPatient)
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
     const fetchPatients = async () => {
 
@@ -179,7 +180,7 @@ export default function CreatePlan() {
                     frequency: 'Once Per Day (Anytime)',
                     duration: 'Monthly (Recommended)',
                     takeWith: 'Water',
-                    _patient_id: selectedPatient?.id || id,
+                    _patient_id: selectedPatient?._id || id,
                     notes: '',
                 }
             };
@@ -222,7 +223,7 @@ export default function CreatePlan() {
                             properties: {
                                 ...item.properties,
                                 [field]: value,
-                                _patient_id: selectedPatient?.id || id, // Ensure _patient_id is added here
+                                _patient_id: selectedPatient?._id || id, // Ensure _patient_id is added here
                             },
                         };
                     }
@@ -264,6 +265,7 @@ export default function CreatePlan() {
             alert("Please fill out all required fields for each item.");
             return;
         }
+           console.log('formData',formData)
         try {
             setLoader(true)
             let newdata = {
@@ -383,7 +385,14 @@ export default function CreatePlan() {
             const response = await fetch(`/api/plans/edit/${id}`);
             const data = await response.json();
             if (response.ok) {
-
+             const matchedPatient = patients.find(patient => patient._id === data?.patient_id?._id);
+                if (matchedPatient) {
+                    setSelectedPatient(matchedPatient);
+                    setFormData((prevData) => ({
+                        ...prevData,
+                        patient_id: matchedPatient._id,
+                    }));
+                }
                 const mappedItems = data.items.map(item => ({
                     id: item.id,
                     quantity: item.quantity || 1,
@@ -398,7 +407,7 @@ export default function CreatePlan() {
                         frequency: item.properties.frequency || 'Once Per Day (Anytime)',
                         duration: item.properties.duration || 'Once Per Day',
                         takeWith: item.properties.takeWith || 'Water',
-                        _patient_id: item.properties._patient_id || '',
+                        _patient_id: matchedPatient?._id || '',
                         notes: item.properties.notes || ''
                     }
                 }));
@@ -424,14 +433,7 @@ export default function CreatePlan() {
                         handleSelectProduct(matchingProduct);
                     }
                 });
-                const matchedPatient = patients.find(patient => patient._id === data?.patient_id?._id);
-                if (matchedPatient) {
-                    setSelectedPatient(matchedPatient);
-                    setFormData((prevData) => ({
-                        ...prevData,
-                        patient_id: matchedPatient._id,
-                    }));
-                }
+         
                 setFetchLoader(false)
                 // setFormData(prevData => ({ ...prevData, items: mappedItems, message: data?.message }))
 
