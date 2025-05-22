@@ -138,14 +138,14 @@ export default function PatientList() {
                                     >
                                         <EditIcon />
                                     </button>
-                                    <button
+                                    {/* <button
                                             onClick={() => handleDelete(patient._id)}
                                             title='Delete Patient'
 
                                         className="text-red-600 hover:underline "
                                     >
                                         <DeleteIcon />
-                                        </button>
+                                        </button> */}
                                         </div>
                                 </td>
                             </tr>
