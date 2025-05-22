@@ -48,6 +48,7 @@ export async function GET(req, { params }) {
       let patient_name = patient?.firstName + '' + patient?.lastName
       formattedPlans.push({
         id: plan._id,
+        order_number:order.order_name,
         patient_id: plan.patient_id,
         discount: plan.discount || 0,
         date: order.order_date,
