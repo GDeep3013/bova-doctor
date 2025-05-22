@@ -21,6 +21,7 @@ export async function POST(req) {
     const clinicName = formData.get('clinicName');
     const specialty = formData.get('specialty');
     const commissionPercentage = formData.get('commissionPercentage');
+    const recurringCommission = formData.get('recurringCommission');
     const address = formData.get('address');
     const state = formData.get('state');
     const city = formData.get('city');
@@ -61,6 +62,7 @@ export async function POST(req) {
       userType,
       specialty,
       commissionPercentage,
+      recurringCommission,
       resetToken,
       address,
       city,

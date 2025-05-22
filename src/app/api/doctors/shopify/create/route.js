@@ -57,7 +57,8 @@ export async function POST(req) {
             zipCode,
             resetToken,
             login_token: token,
-            commissionPercentage: '35'
+            commissionPercentage: '35', 
+            recurringCommission: '20' 
             // inviteToken: tokenExists.token,
         });
 

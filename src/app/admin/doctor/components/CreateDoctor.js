@@ -15,10 +15,11 @@ export default function CreateDoctor() {
     const [specialty, setSpecialty] = useState('');
     const [userType, setUserType] = useState('');
     const [address, setAddress] = useState('');
-    const [city, setCity] = useState(''); 
+    const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zipCode, setZipCode] = useState('');
     const [commissionPercentage, setCommissionPercentage] = useState('30');
+    const [recurringCommission, setRecurringCommission] = useState('20');
     const [laoding, setLaoding] = useState(false);
 
     const validateForm = () => {
@@ -82,6 +83,7 @@ export default function CreateDoctor() {
             formData.append('specialty', specialty);
             formData.append('userType', userType);
             formData.append('commissionPercentage', commissionPercentage);
+            formData.append('recurringCommission', recurringCommission);
             formData.append('clinicName', clinicName ? clinicName : '');
             formData.append('address', address ? address : '');
             formData.append('state', state ? state : '');
@@ -109,6 +111,7 @@ export default function CreateDoctor() {
                     setUserType('');
                     setClinicName('');
                     setCommissionPercentage('');
+                    setRecurringCommission('');
                     setSpecialty('');
                     setAddress('')
                     setState('')
@@ -285,6 +288,20 @@ export default function CreateDoctor() {
                                             onChange={(e) => {setZipCode(e.target.value); }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
                                         />
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="number"
+                                            placeholder="Recurring Commission"
+                                            value={recurringCommission ?? ""}
+                                            title="Recurring Commission"
+                                            max='100'
+                                            onChange={(e) => { setRecurringCommission(e.target.value); if (errors.recurringCommission) setErrors({ ...errors, recurringCommission: '' }); }}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.recurringCommission ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
+                                        />
+                                        <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
+
+                                        {/* {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>} */}
                                     </div>
                                 </div>
                                 <div className="message-text"><p className="text-base text-slate-900 font-light">A plan sent via text message connects better than just email.</p></div>

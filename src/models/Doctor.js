@@ -17,6 +17,7 @@ const doctorSchema = new mongoose.Schema({
     specialty: { type: String, },
     clinicName: { type: String },
     commissionPercentage: { type: String, },
+    recurringCommission: { type: String, },
     message: { type: String, },
     profileImage: { type: String },
     resetToken: { type: String }, // Token to reset password
