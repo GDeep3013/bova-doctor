@@ -113,11 +113,12 @@ export default function DoctorDetailsPage() {
               <table className="doctor-summary-table min-w-[max-content] xl:min-w-[auto] w-full text-left border border-[#aeaaac] rounded-[20px] border-separate" cellPadding={0} cellSpacing={0}>
                 <thead className="bg-customBg">
                     <tr className="border-b">
-                    <th className="py-3 px-4 text-left text-[#53595B] font-normal rounded-tl-[20px] border-b border-[#aeaaac] w-[10%]">Order</th>
+                    <th className="py-3 px-4 text-left  font-normal rounded-tl-[20px] border-b border-[#aeaaac] w-[5%]">Order</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac]">Date</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac]">Patient</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Item(s)</th>
-                    <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Units Sold Per Plan</th>
+                        <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Units Sold Per Plan</th>
+                        <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Order Type</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] "> Order Total</th>
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">Patient Discount</th>     
                     <th className="py-3 px-4 font-normal border-b border-[#aeaaac] ">%Earning</th>
@@ -146,7 +147,7 @@ export default function DoctorDetailsPage() {
                       ${(openAccordionIndex !== index) ? 'border-b' : ''}
                       ${index !== 0 ? 'border-t border-[#aeaaac]' : ''}
                     `}>
-                        <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[10%]`}>
+                        <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[4%]`}>
                         {plan?.order_number}
                       </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[10%]`}>
@@ -165,7 +166,9 @@ export default function DoctorDetailsPage() {
                             : ''
                         }
                       </td>
-
+                      <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
+                        {plan?.order_type}
+                      </td>
                       <td className={`py-3 px-4 font-normal ${(openAccordionIndex !== index) ? 'border-b' : ''} border-[#aeaaac] w-[8%]`}>
                         ${plan?.order_total  || "0.00"}
                       </td>

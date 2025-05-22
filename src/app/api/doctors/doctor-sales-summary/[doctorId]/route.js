@@ -29,6 +29,25 @@ export async function GET(req, { params }) {
       const plan = await Plan.findOne({ _id: order.plan_id }).lean();
 
       if (!plan) continue;
+    const hasSubscription = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription');
+    const SubscriptionFirstOrder = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription First Order');
+      const SubscriptionRecurringOrder = order?.tags?.split(',').map(tag => tag.trim()).includes('Subscription Recurring Order');
+      let patient_discount = 0;
+
+      if (SubscriptionRecurringOrder) {
+        patient_discount = 0;
+      } else {
+        patient_discount = plan.discount || 0;
+      }
+
+      let order_type2 = "One Time";
+      if (SubscriptionFirstOrder) {
+        order_type2 = 'Subscription';
+      } else if (SubscriptionRecurringOrder) {
+        order_type2 = 'Recurring';
+      }else {
+        order_type2 = "One Time";
+      }
 
       doctor_earnings += order?.doctor?.doctor_payment || 0;
 
@@ -48,9 +67,10 @@ export async function GET(req, { params }) {
       let patient_name = patient?.firstName + '' + patient?.lastName
       formattedPlans.push({
         id: plan._id,
+        order_type: order_type2,
         order_number:order.order_name,
         patient_id: plan.patient_id,
-        discount: plan.discount || 0,
+        discount: patient_discount || 0,
         date: order.order_date,
         order_total: order.total,
         formattedDate: planDateStr,
