@@ -3,7 +3,7 @@ import Doctor from '../../../../models/Doctor';
 import Patient from '../../../../models/patient';
 import Plan from '../../../../models/plan';
 import Order from '../../../../models/order';
-import OrderItem from '../../../../models/orderItem'; // ✅ Import OrderItem
+import OrderItem from '../../../../models/orderItem';
 
 export async function GET(req) {
   await connectDB();
@@ -13,31 +13,28 @@ export async function GET(req) {
     const page = parseInt(url.searchParams.get('page') || '1');
     const limit = parseInt(url.searchParams.get('limit') || '30');
     const skip = (page - 1) * limit;
-    const search = req.nextUrl.searchParams.get('search')?.toLowerCase() || '';
+    const search = url.searchParams.get('search')?.toLowerCase() || '';
 
-    const doctors = await Doctor.find({ userType: 'Doctor' }).lean();
-    const patients = await Patient.find({}).lean();
-
-    // Map patients by ID
-    const patientMap = {};
-    for (const patient of patients) {
-      patientMap[patient._id.toString()] = patient;
-    }
-
-    const plans = await Plan.find({ planStatus: 'ordered' }).lean();
+    // Fetch ordered plans with populated patient and doctor
+    const plans = await Plan.find({ status: 'ordered' })
+      .populate({
+        path: 'patient_id',
+        populate: {
+          path: 'doctorId',
+          model: 'Doctor',
+        },
+      })
+      .lean();
 
     const doctorSummaryMap = {};
 
     for (const plan of plans) {
-      
-      const patient = patientMap[plan.patient_id?.toString()];
-      if (!patient) continue;
+      const patient = plan.patient_id;
+      const doctor = patient?.doctorId;
 
-      const doctorId = patient.doctorId?.toString();
-      if (!doctorId) continue;
-
-      const doctor = doctors.find((d) => d._id.toString() === doctorId);
       if (!doctor) continue;
+
+      const doctorId = doctor._id.toString();
 
       if (!doctorSummaryMap[doctorId]) {
         doctorSummaryMap[doctorId] = {
@@ -49,61 +46,14 @@ export async function GET(req) {
           clinicName: doctor.clinicName,
           specialty: doctor.specialty,
           commissionPercentage: doctor.commissionPercentage,
-          total_sold: 0,
-          total_commission: 0,
           total_patients: 0,
-          total_quantity_sold: 0,
-          monthly_summary: {},
-          patients: {},
         };
       }
 
-      const summary = doctorSummaryMap[doctorId];
-
-      let totalItemAmount = 0;
-      for (const item of plan.items) {
-        const price = parseFloat(item.price || '0');
-        const quantity = item.quantity || 0;
-        totalItemAmount += price * quantity;
-        summary.total_quantity_sold += quantity;
+      // Check if patient already counted
+      if (patient) {
+        doctorSummaryMap[doctorId].total_patients += 1;
       }
-
-      const discount = plan.discount || 0;
-      const amountPaid = totalItemAmount - discount;
-      const commissionRate = plan.doctorCommission || 0;
-      const commissionEarned = (amountPaid * commissionRate) / 100;
-
-      const date = new Date(plan.createdAt);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-
-      if (!summary.monthly_summary[monthKey]) {
-        summary.monthly_summary[monthKey] = {
-          total_sold: 0,
-          total_commission: 0,
-        };
-      }
-
-      summary.monthly_summary[monthKey].total_sold += amountPaid;
-      summary.monthly_summary[monthKey].total_commission += commissionEarned;
-
-      summary.total_sold += amountPaid;
-      summary.total_commission += commissionEarned;
-
-      const patientKey = `${patient.firstName} ${patient.lastName}`;
-      if (!summary.patients[patientKey]) {
-        summary.patients[patientKey] = {
-          patient_name: patientKey,
-          payments: [],
-        };
-        summary.total_patients += 1;
-      }
-
-      summary.patients[patientKey].payments.push({
-        date: plan.createdAt,
-        amount_paid: amountPaid,
-        commission_rate: commissionRate,
-        commission_earned: commissionEarned,
-      });
     }
 
     const fullData = await Promise.all(
@@ -115,7 +65,6 @@ export async function GET(req) {
         for (const order of orders) {
           earnings += order?.doctor?.doctor_payment || 0;
           const orderItems = await OrderItem.find({ orderId: order._id }).lean();
-          if (order?.doctor?.doctor_payment <= 0) continue;
           for (const item of orderItems) {
             totalOrderQuantity += item.quantity || 0;
           }
@@ -123,8 +72,6 @@ export async function GET(req) {
 
         return {
           ...summary,
-          total_commission: summary.total_commission.toFixed(2),
-          patients: Object.values(summary.patients),
           revenue: earnings.toFixed(2),
           total_quantity_sold: totalOrderQuantity,
           doctor_earnings: earnings,
@@ -132,18 +79,14 @@ export async function GET(req) {
       })
     );
 
-    // 🔍 Filter by doctor name or joined date
+    // Filter by name or date
     const filteredData = fullData.filter((doctor) => {
       const nameMatch = doctor.doctor_name?.toLowerCase();
-      const dateStr = new Date(doctor.joined_date).toLocaleDateString('en-GB').replace(/\//g, '.');  // "YYYY-MM-DD"
-      // const dateMatch = dateStr.includes(search);
-      return (
-        nameMatch.includes(search) ||
-        dateStr.includes(search)
-      );
+      const dateStr = new Date(doctor.joined_date).toLocaleDateString('en-GB').replace(/\//g, '.');
+      return nameMatch.includes(search) || dateStr.includes(search);
     });
 
-    // 📄 Paginate
+    // Pagination
     const paginatedData = filteredData.slice(skip, skip + limit);
     const total = filteredData.length;
     const totalPages = Math.ceil(total / limit);
@@ -162,6 +105,3 @@ export async function GET(req) {
     return new Response('Internal Server Error', { status: 500 });
   }
 }
-
-
-
