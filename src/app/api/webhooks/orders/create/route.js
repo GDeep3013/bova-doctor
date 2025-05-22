@@ -58,7 +58,7 @@ export async function POST(req) {
             doctCommission  = doctor.commissionPercentage - plan.discount;
           }
         } else if (hasSubscription && SubscriptionRecurringOrder) {
-          doctCommission = 20;
+          doctCommission = parseInt(doctor?.recurringCommission);
         } else {
             if (plan.discount > 0) {
               doctCommission  = doctor.commissionPercentage - plan.discount;
