@@ -27,20 +27,13 @@ export async function GET(req) {
         $gte: startOfPrevMonth,
         $lte: endOfPrevMonth,
       },
-    })
-      .populate({
-        path: 'patient_id',
-        populate: {
-          path: 'doctorId',
-          model: Doctor,
-        },
-        model: Patient,
-      });
+    }).populate('doctorId')
+      .lean();
 
     const groupedData = {};
 
     for (const plan of plans) {
-      const doctor = plan.patient_id?.doctorId;
+      const doctor = plan?.doctorId;
       const doctorId = doctor?._id?.toString();
 
       if (!doctorId) {
@@ -76,7 +69,8 @@ export async function GET(req) {
       }, }).lean();
 
         for (const order of orders) {
-          groupedData[doctorId].earnings += order?.doctor?.doctor_payment || 0;
+console.log('orders',order?.order_name)
+          groupedData[doctorId].earnings += order?.doctor?.doctor_payment|| 0;
         }
       }
     }
@@ -85,7 +79,7 @@ export async function GET(req) {
 
       for (const doctor of result) { 
            const doctorUser = {
-                email: doctor.email,
+                email: "yogeshrana.610weblab+123@gmail.com",
                 firstName: doctor.firstName,
                 lastName: doctor.lastName
             };

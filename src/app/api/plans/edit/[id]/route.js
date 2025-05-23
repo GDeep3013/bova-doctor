@@ -1,7 +1,6 @@
 import connectDB from '../../../../../db/db';
 import Patient from '../../../../../models/patient';
 import Plan from '../../../../../models/plan'
-
 import NextCrypto from 'next-crypto';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
@@ -60,6 +59,8 @@ export async function PUT(req, { params }) {
     let priceRule = null;
     try {
       await DeleteDiscountCode(updatedPlan?.discountId);
+     
+     
       if (discount) {
         priceRule = await createDiscountPriceRule(discount, patient);
       }
@@ -140,6 +141,10 @@ export async function PUT(req, { params }) {
       }, 60000);
 
       const createProfilePromise = createProfile(patient, customProperties);
+
+
+
+
       const subscribeProfilePromise = subscribeProfiles(patient, listId);
 
       setTimeout(async () => {
@@ -178,3 +183,8 @@ export async function DELETE(req, { params }) {
     });
   }
 }
+
+
+
+
+
