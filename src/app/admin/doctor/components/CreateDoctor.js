@@ -24,7 +24,7 @@ export default function CreateDoctor() {
 
     const validateForm = () => {
         let valid = true;
-        const newErrors = { firstName: '', lastName: '', email: '', password: '', phone: '', specialty: "", userType: '', commissionPercentage: '', address: "", city: "", state: '', zipCode: ""};
+        const newErrors = { firstName: '', lastName: '', email: '', password: '', phone: '', specialty: "", userType: '', commissionPercentage: '', address: "", city: "", state: '', zipCode: "" };
         if (!firstName) {
             newErrors.firstName = 'First name is required';
             valid = false;
@@ -212,6 +212,30 @@ export default function CreateDoctor() {
                                         {/* {errors.specialty && <p className="text-red-500 text-sm mt-1">{errors.specialty}</p> */}
 
                                     </div>
+                                    
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Clinic Name"
+                                            value={clinicName ?? ""}
+                                            onChange={(e) => { setClinicName(e.target.value); }}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
+                                        />
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="number"
+                                            placeholder="Recurring Commission"
+                                            value={recurringCommission ?? ""}
+                                            title="Recurring Commission"
+                                            max='100'
+                                            onChange={(e) => { setRecurringCommission(e.target.value); if (errors.recurringCommission) setErrors({ ...errors, recurringCommission: '' }); }}
+                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.recurringCommission ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
+                                        />
+                                        <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
+
+                                        {/* {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>} */}
+                                    </div>
                                     <div className="relative">
                                         <input
                                             type="number"
@@ -228,7 +252,7 @@ export default function CreateDoctor() {
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="relative">
+                                  <div className="relative">
                                         <select
                                             value={userType}
                                             onChange={(e) => { setUserType(e.target.value); if (errors.userType) setErrors({ ...errors, userType: '' }); }}
@@ -239,17 +263,8 @@ export default function CreateDoctor() {
                                             <option value="Doctor">Doctor</option>
                                         </select>
                                         {errors.userType && <p className="text-red-500 text-sm mt-1">{errors.userType}</p>}
-                                    </div>
+                                    </div>                                                                   
 
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            placeholder="Clinic Name"
-                                            value={clinicName ?? ""}
-                                            onChange={(e) => { setClinicName(e.target.value); }}
-                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
-                                        />
-                                    </div>
 
                                     <div className="relative">
                                         <input
@@ -285,24 +300,11 @@ export default function CreateDoctor() {
                                             type="text"
                                             placeholder="Zip Code"
                                             value={zipCode ?? ""}
-                                            onChange={(e) => {setZipCode(e.target.value); }}
+                                            onChange={(e) => { setZipCode(e.target.value); }}
                                             className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42 border-gray-300 rounded focus:outline-none focus:border-[#25464f]  rounded focus:outline-none focus:border-[#25464f]`}
                                         />
                                     </div>
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            placeholder="Recurring Commission"
-                                            value={recurringCommission ?? ""}
-                                            title="Recurring Commission"
-                                            max='100'
-                                            onChange={(e) => { setRecurringCommission(e.target.value); if (errors.recurringCommission) setErrors({ ...errors, recurringCommission: '' }); }}
-                                            className={`w-full border border-[#AFAAAC] focus:border-[#25464f] min-h-[50px] rounded-[8px] p-3 mt-1 mb-42border-gray-300 rounded focus:outline-none focus:border-[#25464f] ${errors.recurringCommission ? 'border-red-500' : 'border-gray-300'} rounded focus:outline-none focus:border-[#25464f]`}
-                                        />
-                                        <span className="absolute right-4 top-[28px] transform -translate-y-1/2 text-gray-500">%</span>
 
-                                        {/* {errors.commissionPercentage && <p className="text-red-500 text-sm mt-1">{errors.commissionPercentage}</p>} */}
-                                    </div>
                                 </div>
                                 <div className="message-text"><p className="text-base text-slate-900 font-light">A plan sent via text message connects better than just email.</p></div>
 

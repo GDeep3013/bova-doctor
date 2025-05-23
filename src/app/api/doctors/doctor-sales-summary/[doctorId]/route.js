@@ -85,6 +85,11 @@ export async function GET(req, { params }) {
         },
       });
     }
+     formattedPlans.sort((a, b) => {
+      const numA = parseInt(a.order_number.replace('#', ''), 10);
+      const numB = parseInt(b.order_number.replace('#', ''), 10);
+      return numA - numB; // descending
+    });
 
     // Search filter logic (by patient name or plan date)
     const filteredPlans = formattedPlans.filter(plan => {
