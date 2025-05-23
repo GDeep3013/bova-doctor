@@ -23,6 +23,7 @@ export async function GET(req, { params }) {
     let doctor_earnings = 0;
     const formattedPlans = [];
 
+   
     for (const order of orders) {
 
       const patient = await Patient.findOne({ _id: order.patient_id }).lean();

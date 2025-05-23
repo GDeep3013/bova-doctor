@@ -51,7 +51,7 @@ const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_DOMAIN}/admin/api/2024-10
 
 
 
-export async function createDiscountPriceRule(discount, patient,) {
+export async function createDiscountPriceRule(discount, patient,variantGIDs) {
     const query = `
       mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
         discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) {
@@ -112,7 +112,9 @@ export async function createDiscountPriceRule(discount, patient,) {
                 appliesOnOneTimePurchase: true,
                 appliesOnSubscription: true,
                 items: {
-                    all: true
+                    products: {
+                    productVariantsToAdd:variantGIDs
+                }
                 },
                 value: {
                     percentage: discount / 100
@@ -130,7 +132,6 @@ export async function createDiscountPriceRule(discount, patient,) {
             usageLimit: 1
         }
     };
-
     try {
         const response = await fetch(SHOPIFY_API_URL, {
             method: 'POST',

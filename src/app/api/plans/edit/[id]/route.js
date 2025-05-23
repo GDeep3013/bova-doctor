@@ -55,14 +55,16 @@ export async function PUT(req, { params }) {
     if (!patient) {
       return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
     }
-
+   const variantGIDs = items.map(
+      (item) => `gid://shopify/ProductVariant/${item.id}`
+    );
     let priceRule = null;
     try {
       await DeleteDiscountCode(updatedPlan?.discountId);
      
      
       if (discount) {
-        priceRule = await createDiscountPriceRule(discount, patient);
+        priceRule = await createDiscountPriceRule(discount, patient, variantGIDs);
       }
       // priceRule = await createDiscountPriceRule(discount, patient);
       // if (priceRule) {

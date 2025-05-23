@@ -23,6 +23,8 @@ const authOptions = {
         }
 
         const user = await Doctor.findOne({ email: credentials.email });
+
+        
         if (!user) {
           throw new Error('No user found with this email');
         }

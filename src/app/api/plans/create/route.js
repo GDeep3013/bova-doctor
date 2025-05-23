@@ -46,13 +46,16 @@ export async function POST(req) {
     if (!patient) {
       return new Response(JSON.stringify({ success: false, message: "Patient not found" }), { status: 404 });
     }
+    const variantGIDs = items.map(
+      (item) => `gid://shopify/ProductVariant/${item.id}`
+    );
 
     // Create price rule and discount code
     let priceRule = null;
     try {
 
       if (discount) {       
-        priceRule = await createDiscountPriceRule(discount, patient);
+        priceRule = await createDiscountPriceRule(discount, patient,variantGIDs);
       }
       // if (priceRule) {
       //   discountCode = await createDiscountCode(priceRule);
@@ -60,7 +63,6 @@ export async function POST(req) {
     } catch (error) {
       console.error("Error creating discount code:", error.message);
     }
-
     // Create plan
     const plan = await Plan.create(planData);
 
