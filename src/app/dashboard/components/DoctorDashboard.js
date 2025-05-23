@@ -41,7 +41,7 @@ export default function AdminDashboard() {
 
     const cards = [
         {
-            title: `$ ` + totalEarning,
+            title: `$ ` + totalEarning?.toFixed(2),
             subtitle: 'Total earnings',
             icon: <WalletIcon />,
         },

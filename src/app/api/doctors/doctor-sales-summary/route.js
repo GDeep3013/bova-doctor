@@ -17,20 +17,16 @@ export async function GET(req) {
 
     // Fetch ordered plans with populated patient and doctor
     const plans = await Plan.find({ status: 'ordered' })
-      .populate({
-        path: 'patient_id',
-        populate: {
-          path: 'doctorId',
-          model: 'Doctor',
-        },
-      })
+      .populate('patient_id').populate('doctorId')
       .lean();
 
     const doctorSummaryMap = {};
 
+
     for (const plan of plans) {
+
       const patient = plan.patient_id;
-      const doctor = patient?.doctorId;
+      const doctor = plan?.doctorId;
 
       if (!doctor) continue;
 
