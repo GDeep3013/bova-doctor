@@ -31,12 +31,10 @@ const authOptions = {
           throw new Error('User has not set a password yet');
         }
         
-        //if (credentials.email == "") {
-          // const isValid = await bcrypt.compare(credentials.password, user.password);  
-          // if (!isValid) {
-          //   throw new Error('Invalid password');
-          // }
-        //}
+          const isValid = await bcrypt.compare(credentials.password, user.password);  
+          if (!isValid) {
+            throw new Error('Invalid password');
+          }
 
 
         return { id: user._id, email: user.email, userType: user.userType, userName: user.firstName + ' ' + user.lastName, userDetail: user, password: credentials.dummyPassword };
