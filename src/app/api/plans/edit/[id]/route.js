@@ -74,7 +74,6 @@ export async function PUT(req, { params }) {
       console.error("Error creating discount code:", error.message);
     }
 
-      return new Response(JSON.stringify({ success: false, message: priceRule }), { status: 404 });
 
 
     // Update plan with discount details if available
@@ -135,13 +134,11 @@ export async function PUT(req, { params }) {
         product_details: mailData,
       };
       const listId = 'XY5765';
-      setTimeout(async () => {
         try {
           await deleteProfile(patient);
         } catch (error) {
           console.error('Error deleting profile:', error);
         }
-      }, 60000);
 
       const createProfilePromise = createProfile(patient, customProperties);
 
@@ -150,13 +147,6 @@ export async function PUT(req, { params }) {
 
       const subscribeProfilePromise = subscribeProfiles(patient, listId);
 
-      setTimeout(async () => {
-        try {
-          const deleteProfileResponse = await deleteProfile(patient);
-        } catch (error) {
-          console.error('Error deleting profile:', error);
-        }
-      }, 120000);
 
       await Promise.all([createProfilePromise, subscribeProfilePromise]);
     }
