@@ -132,6 +132,7 @@ export async function createDiscountPriceRule(discount, patient,variantGIDs) {
             usageLimit: 1
         }
     };
+
     try {
         const response = await fetch(SHOPIFY_API_URL, {
             method: 'POST',

@@ -116,24 +116,16 @@ export async function POST(req) {
     // Klaviyo actions
     try {
       const listId = 'XY5765';
-     setTimeout(async () => {
         try {
           await deleteProfile(patient);
         } catch (error) {
           console.error('Error deleting profile:', error);
         }
-     }, 60000);
+
       
       const createProfilePromise = createProfile(patient, customProperties);
       const subscribeProfilePromise = subscribeProfiles(patient, listId);
 
-      setTimeout(async () => {
-        try {
-          await deleteProfile(patient);
-        } catch (error) {
-          console.error('Error deleting profile:', error.message);
-        }
-      }, 120000);
 
       await Promise.all([createProfilePromise, subscribeProfilePromise]);
 

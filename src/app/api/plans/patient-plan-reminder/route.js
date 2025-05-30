@@ -42,11 +42,7 @@ async function klaviyoMail(doctorUser, customProperties, listId) {
 export async function GET(req) {
     try {
         await connectDB();
-        const allPendingPlans = await Plan.find({
-            status: "pending",
-            planStatus: "ordered",
-            reminderDate: { $exists: true },
-        }).populate('patient_id');
+        const allPendingPlans = await Plan.find({_id:"675bc7562dbde6f4ffceaa9b"}).populate('patient_id');
 
 
         const eightHoursPlans = [];
@@ -59,12 +55,12 @@ export async function GET(req) {
         };
 
         allPendingPlans.forEach((Plans) => {
-            const timeCalculate = calculateHoursDifference(Plans.reminderDate);
-            if (timeCalculate >= 8 && timeCalculate < 9) {
+            // const timeCalculate = calculateHoursDifference(Plans.reminderDate);
+            // if (timeCalculate >= 8 && timeCalculate < 9) {
                 eightHoursPlans.push(Plans);
-            } else if (timeCalculate >= 24 && timeCalculate < 25) {
-                twentyFourHoursPlans.push(Plans);
-            }
+            // } else if (timeCalculate >= 24 && timeCalculate < 25) {
+            //     twentyFourHoursPlans.push(Plans);
+            // }
         });
 
         const crypto = new NextCrypto();
@@ -79,7 +75,11 @@ export async function GET(req) {
             const link = `https://bovalabs.com/pages/view-plans?id=${urlSafeEncryptedId}`;
 
             const listId = 'VkpjUr';
-            const user = { email: email, firstName: firstName, lastName: lastName }
+            const user = {
+                email: "yogeshrana.610weblab@gmail.com",
+                firstName: "Test",
+                lastName: "User"
+            }
             const customProperties = {
                 doctor_name: doctor.firstName + ' ' + doctor.lastName,
                 login_link: link,

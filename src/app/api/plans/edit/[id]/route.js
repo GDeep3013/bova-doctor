@@ -74,6 +74,7 @@ export async function PUT(req, { params }) {
       console.error("Error creating discount code:", error.message);
     }
 
+      return new Response(JSON.stringify({ success: false, message: priceRule }), { status: 404 });
 
 
     // Update plan with discount details if available
