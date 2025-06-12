@@ -81,7 +81,7 @@ export default function DoctorDetailsPage() {
 
             <div className="flex flex-wrap sm:flex-nowrap justify-between items-end md:mt-[16px] mb-4">
               <div>
-                <h2 className="page-title md:pt-2 text-[19px] sm:text-2xl">Doctor&apos;s Sales Summary</h2>
+                <h2 className="page-title md:pt-2 text-[19px] sm:text-2xl">Doctor &apos;s Sales Summary</h2>
                 <h1 className="page-title md:pt-2 text-sm sm:text-xl font-bold text-[#53595b] !m-0">
                   {doctor.doctor_name} - Summary
                 </h1>
