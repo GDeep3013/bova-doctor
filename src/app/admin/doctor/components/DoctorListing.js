@@ -83,7 +83,7 @@ export default function DoctorListing() {
         setSortOrder(newOrder);
         setSortColumn(column);
         setPage(1)
-        console.log(typeof (page))
+      
         fetchDoctors(1, column, newOrder, searchQuery, activeTab);
     };
 

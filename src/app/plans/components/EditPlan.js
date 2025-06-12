@@ -42,7 +42,7 @@ export default function CreatePlan() {
         { label: "50% OFF", value: "50" },
     ];
 
-    console.log('selectedPatient',selectedPatient)
+    // console.log('selectedPatient',selectedPatient)
     const commissionPercentage = session?.userDetail?.commissionPercentage || 0;
     const fetchPatients = async () => {
 
@@ -265,7 +265,7 @@ export default function CreatePlan() {
             alert("Please fill out all required fields for each item.");
             return;
         }
-           console.log('formData',formData)
+        //    console.log('formData',formData)
         try {
             setLoader(true)
             let newdata = {

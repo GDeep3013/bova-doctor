@@ -84,7 +84,7 @@ export async function GET(req) {
             const associatedPatients = doctorsWithPatients.find(d => d._id.toString() === doctor._id.toString())?.patients || [];
         
             const patientsToNotify = associatedPatients.filter(patient => {
-                console.log('patient', patient)
+                // console.log('patient', patient)
                 // return patient.email =="yogeshrana.610weblab+patient@gmail.com"
 
                 const hoursSincePatientAdded = calculateHoursDifference(patient.createdAt);

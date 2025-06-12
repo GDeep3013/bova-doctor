@@ -24,7 +24,7 @@ export default function CreatePlan() {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [loader, setLoader] = useState(false);
 
-    console.log('selectedPatient',selectedPatient)
+    // console.log('selectedPatient',selectedPatient)
 
     const DISCOUNT_CODE_PERCENTAGE = [
         { label: "Select discount", value: "" },
@@ -206,7 +206,7 @@ export default function CreatePlan() {
             return;
         }
 
-        console.log('formData',formData)
+        // console.log('formData',formData)
         try {
             setLoader(true);
             let newdata = {

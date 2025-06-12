@@ -162,7 +162,7 @@ export async function createDiscountPriceRule(discount, patient,variantGIDs) {
             throw new Error(userErrors[0].message);
         }
 
-        console.log('Discount Code Created:', codeDiscountNode, codeDiscountNode?.codeDiscount?.codes?.nodes)
+        // console.log('Discount Code Created:', codeDiscountNode, codeDiscountNode?.codeDiscount?.codes?.nodes)
         return codeDiscountNode;
     } catch (error) {
         console.error('Error creating discount code:', error);
@@ -173,7 +173,7 @@ export async function createDiscountPriceRule(discount, patient,variantGIDs) {
 
 
 export async function DeleteDiscountCode(discountCodeId) {
-    console.log(discountCodeId)
+    // console.log(discountCodeId)
     const query = `
     mutation discountCodeDelete($id: ID!) {
       discountCodeDelete(id: $id) {
