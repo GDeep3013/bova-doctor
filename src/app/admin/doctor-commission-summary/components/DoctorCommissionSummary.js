@@ -51,7 +51,7 @@ export default function DoctorCommissionSummary() {
         throw new Error("Failed to fetch doctors");
       }
       const data = await response.json();
-      console.log('data', data)
+      // console.log('data', data)
       setData(data?.data);
       setTotalPages(data.pagination.totalPages);
       setLoading(false);
